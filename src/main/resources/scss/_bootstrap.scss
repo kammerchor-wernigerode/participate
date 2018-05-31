@@ -1,0 +1,39 @@
+// _bootstrap.scss
+
+.table {
+    button,
+    a[role="button"],
+    input[type="button"],
+    input[type="submit"] {
+        display: block;
+        margin: 0 auto;
+
+        &.btn-xs {
+            display: block;
+            margin: 0 auto;
+        }
+    }
+}
+
+.select2 {
+    width: 100% !important;
+}
+
+.input-group > .select2-container--bootstrap {
+    min-width: 200px;
+}
+
+.tab-content {
+    margin-top: 30px;
+}
+
+.tooltip,
+.tooltip-inner {
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+}
+
+.tooltip .tooltip-inner {
+    max-width: 350px;
+}

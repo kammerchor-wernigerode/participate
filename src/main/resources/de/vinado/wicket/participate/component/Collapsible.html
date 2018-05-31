@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<wicket:panel>
+    <div class="panel panel-default" wicket:id="tabs">
+        <div class="panel-heading">
+            <span><a wicket:id="title" class="accordion-toggle" data-toggle="collapse">Title</a></span>
+        </div>
+        <div wicket:id="body" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div wicket:id="content">Content</div>
+            </div>
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/c_list_of_value.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/communication.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/addresses.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/attribute.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/persons.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/users.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/user_rec_tokens.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/members.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/groups.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/roles.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/events.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_person_role.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_role_permission.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_member_event.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_member_group.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_group_event.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_address_person.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_address_event.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_attribute_person.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_communication_person.xml"/>
+</databaseChangeLog>

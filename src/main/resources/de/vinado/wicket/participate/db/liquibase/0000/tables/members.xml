@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="0000-tables-members" author="Julius Felchow">
+        <createTable tableName="members">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_members"/>
+            </column>
+            <column name="person_id" type="BIGINT">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uc_members"/>
+            </column>
+            <column name="voice_id" type="BIGINT"/>
+            <column name="is_active" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="members"
+                                 baseColumnNames="person_id"
+                                 constraintName="fk_member_person"
+                                 referencedTableName="persons"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="members"
+                                 baseColumnNames="voice_id"
+                                 constraintName="fk_member_voice"
+                                 referencedTableName="c_list_of_value"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

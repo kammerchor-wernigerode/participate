@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="0000-data-persons" author="Vincent Nadoll">
+        <insert tableName="groups">
+            <column name="identifier" value="ALLE"/>
+            <column name="name" value="Alle"/>
+            <column name="description" value="In dieser Gruppe sind automatisch alle Mitglieder."/>
+            <column name="is_editable" valueBoolean="false"/>
+        </insert>
+        <insert tableName="groups">
+            <column name="identifier" value="AKTUELLEKONZERTBESETZUNG"/>
+            <column name="name" value="Aktuelle Konzertbesetzung"/>
+            <column name="description"
+                    value="In dieser Gruppe befinden sich alle Mitglieder der aktuellen Konzertbesetzung."/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

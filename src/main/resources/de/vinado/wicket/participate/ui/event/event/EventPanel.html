@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<wicket:panel>
+    <form wicket:id="form">
+        <div wicket:id="wmc">
+            <dl class="dl-horizontal">
+                <dt><wicket:message key="name"/>:</dt>
+                <dd wicket:id="name"></dd>
+                <dt><wicket:message key="event"/>:</dt>
+                <dd wicket:id="eventType"></dd>
+                <dt><wicket:message key="date"/>:</dt>
+                <dd wicket:id="displayDate"></dd>
+                <dt><wicket:message key="location"/>:</dt>
+                <dd wicket:id="location"></dd>
+                <wicket:enclosure>
+                    <dt><wicket:message key="description"/>:</dt>
+                    <dd wicket:id="description"></dd>
+                </wicket:enclosure>
+            </dl>
+            <fieldset>
+                <legend>
+                    <wicket:message key="cast"/>: <span wicket:id="cast">[Cast name]</span>
+                </legend>
+                <div wicket:id="filterPanel"></div>
+                <div class="table-responsive">
+                    <table wicket:id="dataTable"></table>
+                </div>
+            </fieldset>
+        </div>
+    </form>
+</wicket:panel>
+</body>
+</html>

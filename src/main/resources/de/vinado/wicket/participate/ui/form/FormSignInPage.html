@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<wicket:extend>
+    <div class="container">
+    <div class="clearfix" style="margin-top: 70px;"></div>
+    <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="panel-title">
+                        <i class="fa fa-user"></i>
+                        <wicket:message key="login">Login</wicket:message>
+                    </span>
+                </div>
+                <div class="panel-body">
+                    <fieldset>
+                        <legend>
+                            Participate
+                            <small><wicket:message key="loginForMembers">(Participation Feedback)</wicket:message></small>
+                        </legend>
+                        <form wicket:id="form">
+                            <div class="form-group">
+                                <label class="control-label sr-only">
+                                    <wicket:message key="email"/>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="fa fa-user"></i></div>
+                                    <input class="form-control" placeholder="Email" wicket:message="placeholder:Email" wicket:id="username">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label sr-only">
+                                    <wicket:message key="password"/>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                    <input type="password" class="form-control" placeholder="Password" wicket:message="placeholder:password" wicket:id="password">
+                                </div>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" wicket:id="rememberMe">
+                                    <wicket:message key="rememberMe"/>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label sr-only">
+                                    <wicket:message key="event"/>
+                                </label>
+                                <select class="form-control" wicket:id="memberToEvent"></select>
+                            </div>
+                            <div class="form-group">
+                                <div class="btn-group">
+                                    <button type="submit" class="btn btn-primary">
+                                        <wicket:message key="login"/>
+                                    </button>
+                                    <button wicket:id="declineBtn"></button>
+                                </div>
+                            </div>
+                        </form>
+                        <span wicket:id="feedback"></span>
+                    </fieldset>
+                </div>
+            </div>
+            <div wicket:id="collapsible"></div>
+        </div>
+    </div>
+    </div>
+</wicket:extend>
+</body>
+</html>

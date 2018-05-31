@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<wicket:panel>
+    <div class="container-fluid">
+        <div class="row text-muted">
+            <div class="col-md-4">
+                <span wicket:id="developmentMode"></span>
+                <a wicket:id="feedback"><wicket:message key="feedback"/></a>
+            </div>
+            <div class="col-md-4 text-center">
+                &copy; 2017 - <span wicket:id="year"></span> <span wicket:id="applicationName"></span>
+            </div>
+            <div class="col-md-4 text-right">
+                <a class="pull-right nobusy" target="_blank" wicket:id="documentation"><i class="fa fa-info-circle"></i>
+                    <wicket:message key="documentation">User guide</wicket:message>
+                </a>
+            </div>
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>

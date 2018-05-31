@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<wicket:panel>
+    <wicket:extend>
+        <div class="form-horizontal">
+            <select wicket:id="invitationStatus"></select>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <a wicket:id="inviteMemberBtn"></a>
+                </div>
+            </div>
+            <input type="text" wicket:id="fromDate">
+            <input type="text" wicket:id="toDate">
+            <input type="checkbox" wicket:id="needsDinner"/>
+            <textarea wicket:id="needsDinnerComment"></textarea>
+            <input type="checkbox" wicket:id="needsPlaceToSleep"/>
+            <textarea wicket:id="needsPlaceToSleepComment"></textarea>
+            <textarea wicket:id="comment"></textarea>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-3 control-label">
+                    <wicket:message key="link"/>
+                </label>
+                <div class="col-sm-9">
+                    <p class="form-control-static" wicket:id="token"></p>
+                </div>
+            </div>
+        </div>
+    </wicket:extend>
+</wicket:panel>
+</body>
+</html>

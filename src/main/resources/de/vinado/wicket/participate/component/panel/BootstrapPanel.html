@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<wicket:panel>
+    <div class="panel-heading clearfix" wicket:enclosure child="panelTitle">
+        <span class="pull-left" wicket:id="panelTitle"></span>
+        <div class="btn-group btn-group-xs pull-right" role="group" aria-label="..." wicket:id="btnGroup">
+            <button type="button" class="btn btn-default" wicket:id="defaultBtn">
+                <span wicket:id="icon"></span>
+            </button>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false" wicket:enclosure="dropDownMenu">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li wicket:id="dropDownMenu">
+                    <a wicket:id="link">
+                        <i wicket:id="icon"></i> <span wicket:id="label">[label]</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel-body" wicket:id="panelBody"></div>
+    <wicket:child/>
+    <div class="panel-footer" wicket:id="panelFooter"></div>
+</wicket:panel>
+</body>
+</html>

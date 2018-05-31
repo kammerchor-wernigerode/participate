@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="0000-tables-addresses" author="Vincent Nadoll">
+        <createTable tableName="addresses">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_addresses"/>
+            </column>
+            <column name="street_address" type="VARCHAR(250)"/>
+            <column name="postal_code" type="VARCHAR(250)"/>
+            <column name="locality" type="VARCHAR(250)"/>
+            <column name="country_id" type="BIGINT"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="addresses"
+                                 baseColumnNames="country_id"
+                                 constraintName="fk_country_address"
+                                 referencedTableName="c_list_of_value"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

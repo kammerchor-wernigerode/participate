@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="0000-data-m_member_group" author="Vincent Nadoll">
+        <sql>
+            INSERT INTO m_member_group (member_id, group_id)
+            SELECT
+            mem.id AS member_id,
+            (SELECT g.id
+            FROM groups g
+            WHERE g.identifier = 'ALLE') AS group_id
+            FROM (
+            SELECT DISTINCT m.id
+            FROM members m
+            ) mem;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<wicket:panel>
+    <wicket:extend>
+        <div class="form-horizontal">
+            <input wicket:id="firstName">
+            <input wicket:id="lastName">
+            <input type="email" wicket:id="email">
+            <select wicket:id="voice"></select>
+            <select wicket:id="groups"></select>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button class="pull-right" wicket:id="removeBtn"></button>
+                </div>
+            </div>
+        </div>
+    </wicket:extend>
+</wicket:panel>
+</body>
+</html>

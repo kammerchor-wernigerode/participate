@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="0000-tables-m_address_event" author="Vincent Nadoll">
+        <createTable tableName="m_address_event">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_m_address_event"/>
+            </column>
+            <column name="address_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="m_address_event"
+                                 baseColumnNames="address_id"
+                                 constraintName="fk_address_events"
+                                 referencedTableName="addresses"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="m_address_event"
+                                 baseColumnNames="event_id"
+                                 constraintName="fk_event_events"
+                                 referencedTableName="events"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

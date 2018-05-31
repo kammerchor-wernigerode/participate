@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="0000-data-c_list_of_value" author="Vincent Nadoll">
+        <!-- VOICE -->
+        <insert tableName="c_list_of_value">
+            <column name="dtype" value="voice"/>
+            <column name="identifier" value="SOPRANO"/>
+            <column name="name" value="Sopran"/>
+            <column name="sort_order" valueNumeric="0"/>
+        </insert>
+        <insert tableName="c_list_of_value">
+            <column name="dtype" value="voice"/>
+            <column name="identifier" value="ALTO"/>
+            <column name="name" value="Alt"/>
+            <column name="sort_order" valueNumeric="1"/>
+        </insert>
+        <insert tableName="c_list_of_value">
+            <column name="dtype" value="voice"/>
+            <column name="identifier" value="TENOR"/>
+            <column name="name" value="Tenor"/>
+            <column name="sort_order" valueNumeric="2"/>
+        </insert>
+        <insert tableName="c_list_of_value">
+            <column name="dtype" value="voice"/>
+            <column name="identifier" value="BASS"/>
+            <column name="name" value="Bass"/>
+            <column name="sort_order" valueNumeric="3"/>
+        </insert>
+
+        <!-- INVITATION_STATUS -->
+        <insert tableName="c_list_of_value">
+            <column name="dtype" value="invitationStatus"/>
+            <column name="identifier" value="ACCEPTED"/>
+            <column name="name" value="Zugesagt"/>
+            <column name="sort_order" valueNumeric="0"/>
+        </insert>
+        <insert tableName="c_list_of_value">
+            <column name="dtype" value="invitationStatus"/>
+            <column name="identifier" value="DECLINED"/>
+            <column name="name" value="Abgelehnt"/>
+            <column name="sort_order" valueNumeric="1"/>
+        </insert>
+        <insert tableName="c_list_of_value">
+            <column name="dtype" value="invitationStatus"/>
+            <column name="identifier" value="PENDING"/>
+            <column name="name" value="Ausstehend"/>
+            <column name="is_default" valueBoolean="true"/>
+            <column name="sort_order" valueNumeric="2"/>
+        </insert>
+
+        <!-- COUNTRIES -->
+        <insert tableName="c_list_of_value">
+            <column name="dtype" value="country"/>
+            <column name="identifier" value="DE"/>
+            <column name="name" value="Deutschland"/>
+            <column name="is_default" valueBoolean="true"/>
+        </insert>
+
+        <!-- COMMUNICATION_TYPE -->
+        <insert tableName="c_list_of_value">
+            <column name="dType" value="communicationType"/>
+            <column name="identifier" value="TELEPHONE"/>
+            <column name="name" value="Telefon"/>
+            <column name="sort_order" valueNumeric="0"/>
+        </insert>
+        <insert tableName="c_list_of_value">
+            <column name="dType" value="communicationType"/>
+            <column name="identifier" value="MOBILE_PHONE"/>
+            <column name="name" value="Mobil"/>
+            <column name="sort_order" valueNumeric="1"/>
+        </insert>
+        <insert tableName="c_list_of_value">
+            <column name="dType" value="communicationType"/>
+            <column name="identifier" value="EMAIL"/>
+            <column name="name" value="Email"/>
+            <column name="sort_order" valueNumeric="2"/>
+            <column name="is_default" valueBoolean="true"/>
+        </insert>
+
+        <!-- PERMISSION -->
+        <insert tableName="c_list_of_value">
+            <column name="dtype" value="permission"/>
+            <column name="identifier" value="CREATE_EVENT"/>
+            <column name="name" value="Event anlegen"/>
+        </insert>
+        <insert tableName="c_list_of_value">
+            <column name="dtype" value="permission"/>
+            <column name="identifier" value="EDIT_EVENT"/>
+            <column name="name" value="Event bearbeiten"/>
+        </insert>
+        <insert tableName="c_list_of_value">
+            <column name="dtype" value="permission"/>
+            <column name="identifier" value="REMOVE_EVENT"/>
+            <column name="name" value="Event entfernen"/>
+        </insert>
+        <insert tableName="c_list_of_value">
+            <column name="dtype" value="permission"/>
+            <column name="identifier" value="SHOW_EVENT"/>
+            <column name="name" value="Event anzeigen"/>
+        </insert>
+        <insert tableName="c_list_of_value">
+            <column name="dtype" value="permission"/>
+            <column name="identifier" value="SHOW_EVENT_DETAILS"/>
+            <column name="name" value="Eventdetails anzeigen"/>
+        </insert>
+        <insert tableName="c_list_of_value">
+            <column name="dtype" value="permission"/>
+            <column name="identifier" value="CREATE_MEMBER"/>
+            <column name="name" value="Mitglied anlegen"/>
+        </insert>
+        <insert tableName="c_list_of_value">
+            <column name="dtype" value="permission"/>
+            <column name="identifier" value="EDIT_MEMBER"/>
+            <column name="name" value="Mitglied bearbeiten"/>
+        </insert>
+        <insert tableName="c_list_of_value">
+            <column name="dtype" value="permission"/>
+            <column name="identifier" value="REMOVE_MEMBER"/>
+            <column name="name" value="Mitglied entfernen"/>
+        </insert>
+        <insert tableName="c_list_of_value">
+            <column name="dtype" value="permission"/>
+            <column name="identifier" value="SHOW_MEMBER"/>
+            <column name="name" value="Mitglied anzeigen"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

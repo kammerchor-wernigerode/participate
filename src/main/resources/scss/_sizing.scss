@@ -1,0 +1,22 @@
+// _sizing.scss
+
+@each $size, $length in $sizes {
+    .td-max-width-#{$size} {
+        max-width: $length;
+        // padding-right: 20px !important;
+
+        div {
+            -ms-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            display: block;
+        }
+    }
+}
+
+@each $size, $length in $sizes {
+    .width-fix-#{$size} {
+        width: $length;
+    }
+}

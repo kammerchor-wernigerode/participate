@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<wicket:panel>
+    <wicket:extend>
+        <div class="form-horizontal">
+            <input type="text" wicket:id="name"/>
+            <input type="checkbox" wicket:id="isSeveralDays"/>
+            <select wicket:id="eventType"></select>
+            <input type="datetime" wicket:id="startDate"/>
+            <input type="datetime" wicket:id="endDate"/>
+            <select wicket:id="locality"></select>
+            <textarea rows="6" wicket:id="description"></textarea>
+            <select wicket:id="group"></select>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button class="pull-right" wicket:id="removeBtn"></button>
+                </div>
+            </div>
+        </div>
+    </wicket:extend>
+</wicket:panel>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/data/c_list_of_value.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/data/persons.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/data/roles.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/data/m_person_role.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/data/m_role_permission.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/data/users.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/data/members.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/data/groups.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0000/data/m_member_group.xml"/>
+</databaseChangeLog>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<wicket:panel>
+    <form wicket:id="form">
+        <div wicket:id="wmc">
+            <h3><i class="fa fa-pencil"></i> <wicket:message key="form">Form</wicket:message></h3>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span>&nbsp;</span>
+                </div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="col-sm-3 control-label">
+                                <wicket:message key="name"/>
+                            </label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static" wicket:id="member.person.displayName"></p>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label class="col-sm-3 control-label">
+                                <wicket:message key="period"/>
+                            </label>
+                            <div class="col-sm-9">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" placeholder="From" wicket:message="placeholder:from" wicket:id="fromDate">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" placeholder="To" wicket:message="placeholder:to" wicket:id="toDate">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <p class="help-block"><wicket:message key="periodH"/></p>
+                            </div>
+                        </div>
+                        <input type="checkbox" wicket:id="needsDinner">
+                        <textarea wicket:id="needsDinnerComment"></textarea>
+                        <input type="checkbox" wicket:id="needsPlaceToSleep">
+                        <textarea wicket:id="needsPlaceToSleepComment"></textarea>
+                        <textarea wicket:id="comment"></textarea>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <a wicket:id="submit"></a>
+                                <a class="pull-right" wicket:id="decline"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</wicket:panel>
+</body>
+</html>

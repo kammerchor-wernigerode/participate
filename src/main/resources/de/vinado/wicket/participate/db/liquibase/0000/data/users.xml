@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="0000-data-users" author="Vincent Nadoll">
+        <insert tableName="users">
+            <column name="username" value="admin"/>
+            <column name="pwd_sha256" value="addb0f5e7826c857d7376d1bd9bc33c0c544790a2eac96144a8af22b1298c940"/>
+            <column name="is_admin" valueBoolean="true"/>
+        </insert>
+        <insert tableName="users">
+            <column name="username" value="vnl"/>
+            <column name="is_admin" valueBoolean="true"/>
+            <column name="person_id"
+                    valueComputed="(SELECT p.id FROM persons p WHERE email = 'vincent.nadoll@gmail.com')"/>
+        </insert>
+        <insert tableName="users">
+            <column name="username" value="jfw"/>
+            <column name="is_admin" valueBoolean="true"/>
+            <column name="person_id"
+                    valueComputed="(SELECT p.id FROM persons p WHERE email = 'julius.felchow@gmail.com')"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

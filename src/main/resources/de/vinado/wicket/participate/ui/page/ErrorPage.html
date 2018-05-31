@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body class="exception-page">
+<wicket:extend>
+    <div class="container-fluid">
+        <form wicket:id="form">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="page-header">
+                        <h1 wicket:id="error"></h1>
+                    </div>
+                    <p>Die Anweisung konnte nicht ausgeführt werden. In der Anwendung ist ein Fehler aufgetreten:</p>
+                    <pre wicket:id="message"></pre>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <p>Für eine schnelle Fehleranalyse kannst du eine detailierte Fehlermeldung anzeigen.</p>
+                    <p><a wicket:id="showStackTrace"></a> <a wicket:id="homePageLink"></a></p>
+                </div>
+            </div>
+
+            <div wicket:id="markupWmc">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>
+                            <wicket:message key="markup">Markup</wicket:message>
+                        </h2>
+                        <p>
+                            <wicket:message key="resourceProblem">The problem is in</wicket:message>
+                            "<span class="resource" wicket:id="resource"></span>":
+                        </p>
+                        <pre class="markup" wicket:id="markup"></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div wicket:id="stacktraceWmc">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>
+                            <wicket:message key="stacktrace">Stacktrace</wicket:message>
+                        </h2>
+                        <pre class="stacktrace" wicket:id="stacktrace"></pre>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <style>
+        pre p {
+            margin: 0;
+        }
+    </style>
+</wicket:extend>
+</body>
+</html>

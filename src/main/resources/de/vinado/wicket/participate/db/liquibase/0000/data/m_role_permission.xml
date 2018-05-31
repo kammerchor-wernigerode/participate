@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="0000-data-m_role_permission" author="Vincent Nadoll">
+        <insert tableName="m_role_permission">
+            <column name="role_id" valueComputed="(SELECT r.id FROM roles r WHERE identifier = 'ADMIN')"/>
+            <column name="permission_id"
+                    valueComputed="(SELECT lov.id FROM c_list_of_value lov WHERE identifier = 'CREATE_EVENT')"/>
+        </insert>
+        <insert tableName="m_role_permission">
+            <column name="role_id" valueComputed="(SELECT r.id FROM roles r WHERE identifier = 'ADMIN')"/>
+            <column name="permission_id"
+                    valueComputed="(SELECT lov.id FROM c_list_of_value lov WHERE identifier = 'EDIT_EVENT')"/>
+        </insert>
+        <insert tableName="m_role_permission">
+            <column name="role_id" valueComputed="(SELECT r.id FROM roles r WHERE identifier = 'ADMIN')"/>
+            <column name="permission_id"
+                    valueComputed="(SELECT lov.id FROM c_list_of_value lov WHERE identifier = 'REMOVE_EVENT')"/>
+        </insert>
+        <insert tableName="m_role_permission">
+            <column name="role_id" valueComputed="(SELECT r.id FROM roles r WHERE identifier = 'ADMIN')"/>
+            <column name="permission_id"
+                    valueComputed="(SELECT lov.id FROM c_list_of_value lov WHERE identifier = 'SHOW_EVENT')"/>
+        </insert>
+        <insert tableName="m_role_permission">
+            <column name="role_id" valueComputed="(SELECT r.id FROM roles r WHERE identifier = 'ADMIN')"/>
+            <column name="permission_id"
+                    valueComputed="(SELECT lov.id FROM c_list_of_value lov WHERE identifier = 'SHOW_EVENT_DETAILS')"/>
+        </insert>
+        <insert tableName="m_role_permission">
+            <column name="role_id" valueComputed="(SELECT r.id FROM roles r WHERE identifier = 'ADMIN')"/>
+            <column name="permission_id"
+                    valueComputed="(SELECT lov.id FROM c_list_of_value lov WHERE identifier = 'CREATE_MEMBER')"/>
+        </insert>
+        <insert tableName="m_role_permission">
+            <column name="role_id" valueComputed="(SELECT r.id FROM roles r WHERE identifier = 'ADMIN')"/>
+            <column name="permission_id"
+                    valueComputed="(SELECT lov.id FROM c_list_of_value lov WHERE identifier = 'EDIT_MEMBER')"/>
+        </insert>
+        <insert tableName="m_role_permission">
+            <column name="role_id" valueComputed="(SELECT r.id FROM roles r WHERE identifier = 'ADMIN')"/>
+            <column name="permission_id"
+                    valueComputed="(SELECT lov.id FROM c_list_of_value lov WHERE identifier = 'REMOVE_MEMBER')"/>
+        </insert>
+        <insert tableName="m_role_permission">
+            <column name="role_id" valueComputed="(SELECT r.id FROM roles r WHERE identifier = 'ADMIN')"/>
+            <column name="permission_id"
+                    valueComputed="(SELECT lov.id FROM c_list_of_value lov WHERE identifier = 'SHOW_MEMBER')"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

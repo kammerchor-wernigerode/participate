@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="0000-tables-m_member_event" author="Vincent Nadoll">
+        <createTable tableName="m_member_event">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_m_member_event"/>
+            </column>
+            <column name="event_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="member_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="token" type="VARCHAR(20)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uc_event_to_member"/>
+            </column>
+            <column name="invitation_status_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="from_date" type="DATETIME" valueDate="null"/>
+            <column name="to_date" type="DATETIME" valueDate="null"/>
+            <column name="needs_dinner" type="BOOLEAN"/>
+            <column name="dinner_comment" type="CLOB"/>
+            <column name="needs_place_to_sleep" type="BOOLEAN"/>
+            <column name="needs_place_to_sleep_comment" type="CLOB"/>
+            <column name="comment" type="CLOB"/>
+            <column name="is_reviewed" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="m_member_event"
+                                 baseColumnNames="event_id"
+                                 constraintName="fk_m_ev_member_events"
+                                 referencedTableName="events"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="m_member_event"
+                                 baseColumnNames="member_id"
+                                 constraintName="fk_m_ev_member_members"
+                                 referencedTableName="members"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="m_member_event"
+                                 baseColumnNames="invitation_status_id"
+                                 constraintName="fk_m_ev_member_invite_status"
+                                 referencedTableName="c_list_of_value"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

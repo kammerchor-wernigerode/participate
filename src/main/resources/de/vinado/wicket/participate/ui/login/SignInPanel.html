@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<wicket:panel>
+    <form wicket:id="signInForm">
+        <div class="form-group">
+            <label class="control-label sr-only">
+                <wicket:message key="usernameOrEmail"/>
+            </label>
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-user"></i></div>
+                <input class="form-control" wicket:id="username">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label sr-only">
+                <wicket:message key="password"/>
+            </label>
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                <input type="password" class="form-control" wicket:id="password">
+            </div>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" wicket:id="rememberMe">
+                <wicket:message key="rememberMe"/>
+            </label>
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-success" wicket:message="value:login"/>
+        </div>
+    </form>
+    <span wicket:id="feedback"></span>
+</wicket:panel>
+</body>
+</html>
