@@ -482,17 +482,18 @@ public class EventService extends DataService {
     }
 
     /**
-     * Returns the mapping between {@link Event Events} and {@link de.vinado.wicket.participate.data.Event Users} from
-     * the database.
+     * Fetches all {@link MemberToEvent} where the {@link Event} is present. The result is ordered by
+     * {@link Person#lastName}.
      *
-     * @param event {@link Event}
-     * @return List of {@link MemberToEvent}
+     * @param event The {@link Event} to filter for.
+     * @return The list of ordered {@link MemberToEvent}.
      */
     public List<MemberToEvent> getMemberToEventList(final Event event) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<MemberToEvent> criteriaQuery = criteriaBuilder.createQuery(MemberToEvent.class);
         final Root<MemberToEvent> root = criteriaQuery.from(MemberToEvent.class);
         criteriaQuery.where(criteriaBuilder.equal(root.<Event>get("event"), event));
+        criteriaQuery.orderBy(criteriaBuilder.asc(root.join("member").join("person").get("lastName")));
         try {
             return entityManager.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
@@ -511,6 +512,14 @@ public class EventService extends DataService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
+    /**
+     * Fetches all {@link MemberToEvent} where the {@link Event} is present and {@link MemberToEvent#invited}. The
+     * result is ordered by {@link Person#lastName}.
+     *
+     * @param event   The {@link Event} to filter for.
+     * @param invited Whether the {@link MemberToEvent} is {@link MemberToEvent#invited}.
+     * @return The list of ordered {@link MemberToEvent}.
+     */
     public List<MemberToEvent> getMemberToEventList4Invited(final Event event, final boolean invited) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<MemberToEvent> criteriaQuery = criteriaBuilder.createQuery(MemberToEvent.class);
@@ -518,6 +527,7 @@ public class EventService extends DataService {
         final Predicate forEvent = criteriaBuilder.equal(root.<Event>get("event"), event);
         final Predicate forInvited = criteriaBuilder.equal(root.get("invited"), invited);
         criteriaQuery.where(forEvent, forInvited);
+        criteriaQuery.orderBy(criteriaBuilder.asc(root.join("member").join("person").get("lastName")));
         try {
             return entityManager.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
@@ -583,6 +593,14 @@ public class EventService extends DataService {
         }
     }
 
+    /**
+     * Fetches all {@link MemberToEvent} where the {@link Member} is present, is {@link Member#active} and the
+     * {@link Event#endDate} is greater than today. The result is ordered by {@link Event#startDate} and
+     * {@link Person#lastName}.
+     *
+     * @param member {@link Member} to filter for.
+     * @return The list of ordered {@link MemberToEvent}.
+     */
     public List<MemberToEvent> getMemberToEventList(final Member member) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<MemberToEvent> criteriaQuery = criteriaBuilder.createQuery(MemberToEvent.class);
@@ -592,10 +610,19 @@ public class EventService extends DataService {
         final Predicate forEndDate = criteriaBuilder.greaterThanOrEqualTo(eventJoin.get("endDate"), new Date());
         final Predicate forActive = criteriaBuilder.equal(eventJoin.get("active"), true);
         criteriaQuery.where(forMember, forActive, forEndDate);
-        criteriaQuery.orderBy(criteriaBuilder.asc(eventJoin.get("startDate")));
+        criteriaQuery.orderBy(
+            criteriaBuilder.asc(eventJoin.get("startDate")),
+            criteriaBuilder.asc(root.join("member").join("person").get("lastName")));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
+    /**
+     * Fetches all {@link MemberToEvent} where the {@link Event} is present and the invitation equals
+     * {@link InvitationStatus#PENDING}. The result is ordered by {@link Person#lastName}.
+     *
+     * @param event {@link Event} to filter for.
+     * @return The list of ordered {@link MemberToEvent}.
+     */
     public List<MemberToEvent> getEventToMember4PendingStatus(final Event event) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<MemberToEvent> criteriaQuery = criteriaBuilder.createQuery(MemberToEvent.class);
@@ -604,6 +631,7 @@ public class EventService extends DataService {
         final Join<MemberToEvent, ListOfValue> lovJoin = root.join("invitationStatus");
         final Predicate forPending = criteriaBuilder.equal(lovJoin.get("identifier"), "PENDING");
         criteriaQuery.where(forEvent, forPending);
+        criteriaQuery.orderBy(criteriaBuilder.asc(root.join("member").join("person").get("lastName")));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
@@ -832,6 +860,14 @@ public class EventService extends DataService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
+    /**
+     * Fetches all {@link MemberToEvent} where the {@link Event} is present. The result is filtered by
+     * {@link MemberToEventFilter} and ordered by {@link Person#lastName}.
+     *
+     * @param event  The {@link Event} to filter for.
+     * @param filter The filter criteria.
+     * @return An filtered and ordered list of {@link MemberToEvent}.
+     */
     public List<MemberToEvent> getFilteredEventToMemberList(final Event event, final MemberToEventFilter filter) {
         if (null == filter) {
             return getMemberToEventList(event);
@@ -848,7 +884,7 @@ public class EventService extends DataService {
 
         final String searchTerm = filter.getSearchTerm();
         if (!Strings.isEmpty(searchTerm))
-            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(personJoin.get("searchName")), "%" + searchTerm + "%"));
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(personJoin.get("displayName")), "%" + searchTerm + "%"));
 
         final Voice voice = filter.getVoice();
         if (null != voice)
@@ -863,9 +899,18 @@ public class EventService extends DataService {
         }
 
         criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]));
+        criteriaQuery.orderBy(criteriaBuilder.asc(personJoin.get("lastName")));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
+    /**
+     * A more in detail filter that fetches all {@link MemberToEvent} where the {@link Event} is present. The result
+     * is filtered by {@link DetailedMemberToEventFilter} and ordered by {@link Person#lastName}.
+     *
+     * @param event  The {@link Event} to filter for.
+     * @param filter The filter criteria.
+     * @return An filtered and ordered list of {@link MemberToEvent}.
+     */
     public List<MemberToEvent> getDetailedFilteredMemberToEventList(final Event event, final DetailedMemberToEventFilter filter) {
         if (null == filter) {
             return getMemberToEventList(event);
@@ -927,6 +972,7 @@ public class EventService extends DataService {
             criteriaQuery.where(and, or);
         }
 
+        criteriaQuery.orderBy(criteriaBuilder.asc(personJoin.get("lastName")));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 }
