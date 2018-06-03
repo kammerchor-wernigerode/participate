@@ -7,8 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.util.UriUtils;
 
-import java.io.UnsupportedEncodingException;
-
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
@@ -54,11 +52,7 @@ public class MailToBehavior extends Behavior {
         }
 
         if (!Strings.isEmpty(mailToString)) {
-            try {
-                component.getResponse().write("<a href=\"" + UriUtils.encodeQuery(mailToString, "UTF-8") + "\" class=\"nobusy\"");
-            } catch (UnsupportedEncodingException e) {
-                LOGGER.error("Unable to encode email address", e);
-            }
+            component.getResponse().write("<a href=\"" + UriUtils.encodeQuery(mailToString, "UTF-8") + "\" class=\"nobusy\"");
             valid = true;
         }
     }
