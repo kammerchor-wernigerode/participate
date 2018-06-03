@@ -5,12 +5,15 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
 import de.vinado.wicket.participate.component.panel.Footer;
 import de.vinado.wicket.participate.data.MemberToEvent;
+import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
+import de.vinado.wicket.participate.data.view.EventView;
 import de.vinado.wicket.participate.service.EventService;
 import de.vinado.wicket.participate.ui.event.event.EventPanel;
 import de.vinado.wicket.participate.ui.page.BasePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -37,39 +40,37 @@ public class FormPage extends BasePage {
     }
 
     public FormPage(final PageParameters parameters) {
-        this(parameters, null, false);
+        this(parameters, Model.of(), false);
     }
 
-    public FormPage(final PageParameters parameters, IModel<MemberToEvent> model, final boolean signedIn) {
+    public FormPage(final PageParameters parameters, final IModel<MemberToEvent> model, final boolean signedIn) {
         super(parameters);
+        this.signedIn = signedIn;
+        this.model = model;
 
         setOutputMarkupId(true);
 
-        this.signedIn = signedIn;
-
-        final String tokenParameter = parameters.get("token").to(String.class);
-
-        if (null != model) {
+        final String token = parameters.get("token").to(String.class);
+        if (null == model.getObject() && eventService.hasEventToken(token)) {
+            model.setObject(eventService.getMemberToEvent(token));
             this.model = model;
+            setDefaultModel(this.model);
         } else {
-            model = new CompoundPropertyModel<>(eventService.getMemberToEvent(tokenParameter));
-            this.model = model;
+            onConfigure();
         }
-        setDefaultModel(model);
 
         final Navbar navbar = new Navbar("navbar");
         navbar.setOutputMarkupId(true);
         navbar.setPosition(Navbar.Position.STATIC_TOP);
         navbar.fluid();
         navbar.setBrandName(Model.of(""));
-        final IModel<MemberToEvent> finalModel = model;
         navbar.addComponents(new AbstractNavbarComponent(Navbar.ComponentPosition.RIGHT) {
             @Override
             public Component create(final String markupId) {
-                return new EventDropDownForm(markupId, finalModel) {
+                return new EventDropDownForm(markupId, FormPage.this.model) {
                     @Override
                     protected void onEventChange(final MemberToEvent memberToEvent) {
-                        setResponsePage(new FormPage(new CompoundPropertyModel<>(memberToEvent), true));
+                        setResponsePage(new FormPage(new CompoundPropertyModel<>(memberToEvent), signedIn));
                     }
                 };
             }
@@ -82,10 +83,21 @@ public class FormPage extends BasePage {
         add(breadcrumb);
 
         final EventPanel eventPanel = new EventPanel("eventPanel", breadcrumb,
-            new CompoundPropertyModel<>(eventService.getEventView(this.model.getObject().getEvent())), false);
+            new LoadableDetachableModel<EventView>() {
+                @Override
+                protected EventView load() {
+                    if (null == model.getObject()) {
+                        return eventService.getLatestEventView();
+                    } else {
+                        return eventService.getEventView(FormPage.this.model.getObject().getEvent());
+                    }
+                }
+            }, false);
         add(eventPanel);
 
-        final FormPanel formPanel = new FormPanel("formPanel", breadcrumb, this.model);
+        final FormPanel formPanel = new FormPanel("formPanel", breadcrumb,
+            new CompoundPropertyModel<>(null == FormPage.this.model.getObject() ?
+                new MemberToEventDTO() : new MemberToEventDTO(FormPage.this.model.getObject())));
         add(formPanel);
 
         add(new Footer("footer"));
@@ -94,7 +106,8 @@ public class FormPage extends BasePage {
     @Override
     protected void onConfigure() {
         if (!signedIn) {
-            setResponsePage(new FormSignInPage(model));
+            setResponsePage(new FormSignInPage(new CompoundPropertyModel<>(null == FormPage.this.model.getObject() ?
+                new MemberToEventDTO() : new MemberToEventDTO(FormPage.this.model.getObject()))));
         }
     }
 }

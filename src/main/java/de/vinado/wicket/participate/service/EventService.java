@@ -256,11 +256,6 @@ public class EventService extends DataService {
         return saveEventToMember(dto);
     }
 
-    @Transactional
-    public MemberToEvent declineEvent(final MemberToEvent memberToEvent) {
-        return declineEvent(new MemberToEventDTO(memberToEvent));
-    }
-
     public boolean hasEventToken(final String accessToken) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
@@ -295,6 +290,24 @@ public class EventService extends DataService {
         }
     }
 
+    /**
+     * Fetches the {@link MemberToEvent} where {@link Person#email} or {@link MemberToEvent#token} exists.
+     *
+     * @param emailOrToken
+     * @return
+     */
+    /*public MemberToEvent getMemberToEvent(final String emailOrToken) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<MemberToEvent> criteriaQuery = criteriaBuilder.createQuery(MemberToEvent.class);
+        final Root<MemberToEvent> root = criteriaQuery.from(MemberToEvent.class);
+        final Join<MemberToEvent, Member> memberJoin = root.join("member");
+        final Join<Member, Person> personJoin = memberJoin.join("person");
+        final Predicate forToken = criteriaBuilder.equal(root.get("token"), emailOrToken);
+        final Predicate forEmail = criteriaBuilder.equal(personJoin.get("email"), emailOrToken.toLowerCase());
+        final Predicate forActive = criteriaBuilder.equal(memberJoin.get("active"), true);
+        criteriaQuery.where(forToken, forEmail, forActive);
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
+    }*/
     public EventView getLatestEventView() {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<EventView> criteriaQuery = criteriaBuilder.createQuery(EventView.class);

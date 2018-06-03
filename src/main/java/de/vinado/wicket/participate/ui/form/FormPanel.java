@@ -38,24 +38,27 @@ public class FormPanel extends BreadCrumbPanel {
     @SpringBean
     private EventService eventService;
 
-    public FormPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<MemberToEvent> model) {
+    public FormPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<MemberToEventDTO> model) {
         super(id, breadCrumbModel, model);
 
         final DatetimePickerConfig fromConfig = new DatetimePickerConfig();
         fromConfig.useLocale("de");
         fromConfig.useCurrent(false);
-        fromConfig.withMinDate(model.getObject().getEvent().getStartDate());
-        fromConfig.withMaxDate(model.getObject().getEvent().getEndDate());
         fromConfig.withFormat("dd.MM.yyyy HH:mm");
         fromConfig.withMinuteStepping(30);
 
         final DatetimePickerConfig toConfig = new DatetimePickerConfig();
         toConfig.useLocale("de");
         toConfig.useCurrent(false);
-        toConfig.withMinDate(model.getObject().getEvent().getStartDate());
-        toConfig.withMaxDate(model.getObject().getEvent().getEndDate());
         toConfig.withFormat("dd.MM.yyyy HH:mm");
         toConfig.withMinuteStepping(30);
+
+        if (null != model.getObject().getEvent()) {
+            fromConfig.withMinDate(model.getObject().getEvent().getStartDate());
+            fromConfig.withMaxDate(model.getObject().getEvent().getEndDate());
+            toConfig.withMinDate(model.getObject().getEvent().getStartDate());
+            toConfig.withMaxDate(model.getObject().getEvent().getEndDate());
+        }
 
         final Form form = new Form("form");
         add(form);
@@ -122,8 +125,8 @@ public class FormPanel extends BreadCrumbPanel {
             @Override
             protected void onSubmit(final AjaxRequestTarget target, final Form<?> inner) {
                 send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(
-                        eventService.acceptEvent(new MemberToEventDTO(model.getObject())).getEvent(),
-                        target));
+                    eventService.acceptEvent(model.getObject()).getEvent(),
+                    target));
                 Snackbar.show(target, new ResourceModel("acceptInvitationA", "Your data has been saved. You can leave this page now."));
                 target.add(form);
             }
@@ -135,7 +138,7 @@ public class FormPanel extends BreadCrumbPanel {
         final BootstrapAjaxButton declineBtn = new BootstrapAjaxButton("decline", Buttons.Type.Default) {
             @Override
             protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-                final MemberToEvent savedMemberToEvent = eventService.declineEvent(new MemberToEventDTO(model.getObject()));
+                final MemberToEvent savedMemberToEvent = eventService.declineEvent(model.getObject());
                 send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(savedMemberToEvent.getEvent(), target));
                 Snackbar.show(target, new ResourceModel("declineInvitationA", "Your cancellation was saved. You can leave this page now."));
                 target.add(form);
