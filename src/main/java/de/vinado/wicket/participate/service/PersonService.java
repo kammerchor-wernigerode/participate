@@ -382,8 +382,8 @@ public class PersonService extends DataService {
         final CriteriaQuery<Person> criteriaQuery = criteriaBuilder.createQuery(Person.class);
         final Root<Person> root = criteriaQuery.from(Person.class);
         final Predicate forSearchParam = criteriaBuilder.like(
-                criteriaBuilder.lower(root.get("searchName")),
-                "%" + term.toLowerCase().trim() + "%");
+            criteriaBuilder.lower(root.get("searchName")),
+            "%" + term.toLowerCase().trim() + "%");
         criteriaQuery.where(forSearchParam);
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
@@ -394,8 +394,8 @@ public class PersonService extends DataService {
         final Root<Member> root = criteriaQuery.from(Member.class);
         final Join<Member, Person> personJoin = root.join("person");
         criteriaQuery.where(criteriaBuilder.like(
-                criteriaBuilder.lower(personJoin.get("searchName")),
-                "%" + term.toLowerCase() + "%"
+            criteriaBuilder.lower(personJoin.get("searchName")),
+            "%" + term.toLowerCase() + "%"
         ));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
@@ -462,8 +462,11 @@ public class PersonService extends DataService {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Member> criteriaQuery = criteriaBuilder.createQuery(Member.class);
         final Root<MemberToGroup> root = criteriaQuery.from(MemberToGroup.class);
-        criteriaQuery.select(root.get("member"));
-        criteriaQuery.where(criteriaBuilder.equal(root.get("group"), group));
+        final Join<MemberToGroup, Member> memberJoin = root.join("member");
+        final Predicate forGroup = criteriaBuilder.equal(root.get("group"), group);
+        final Predicate forActive = criteriaBuilder.equal(memberJoin.get("active"), true);
+        criteriaQuery.select(memberJoin);
+        criteriaQuery.where(forGroup, forActive);
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
