@@ -1,10 +1,8 @@
 package de.vinado.wicket.participate.ui.page;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxButton;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.heading.Heading;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
@@ -12,6 +10,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -24,6 +23,8 @@ import java.io.Writer;
 public class ErrorPage extends AbstractErrorPage {
 
     private boolean showStacktrace = false;
+
+    private Form form;
 
     private String message;
 
@@ -43,18 +44,9 @@ public class ErrorPage extends AbstractErrorPage {
         exception.printStackTrace(printWriter);
         stacktrace = writer.toString();
 
-        final Form form = new Form("form");
-        add(form);
-
         form.add(new Heading("error", new ResourceModel("error", "Error")));
 
         form.add(new MultiLineLabel("message", new PropertyModel<>(this, "message")));
-
-        final BootstrapBookmarkablePageLink<String> homePageLink = new BootstrapBookmarkablePageLink<>("homePageLink",
-                getApplication().getHomePage(), Buttons.Type.Primary);
-        homePageLink.setIconType(FontAwesomeIconType.home);
-        homePageLink.setLabel(new ResourceModel("navigate.homepage", "Goto Homepage"));
-        form.add(homePageLink);
 
         final WebMarkupContainer stacktraceWmc = new WebMarkupContainer("stacktraceWmc") {
             @Override
@@ -118,5 +110,17 @@ public class ErrorPage extends AbstractErrorPage {
 
     public String getStacktrace() {
         return stacktrace;
+    }
+
+    @Override
+    protected void addHomePageLink(final AbstractLink homePageLink) {
+        form = new Form("form");
+        form.add(homePageLink);
+        add(form);
+    }
+
+    @Override
+    protected int getStatusCode() {
+        return 500;
     }
 }
