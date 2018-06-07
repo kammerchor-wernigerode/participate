@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<wicket:panel>
+    <div wicket:id="feedback"></div>
+    <form wicket:id="importForm">
+        <fieldset>
+            <legend><wicket:message key="tools.import.persons">Import Persons</wicket:message></legend>
+            <div wicket:id="importWmc">
+                <div class="form-group from-group-sm">
+                    <label for="file-input"><wicket:message key="tools.import.file">Input File</wicket:message></label>
+                    <input type="file" class="form-control" id="file-input" placeholder="Email" wicket:id="file">
+                </div>
+                <button wicket:id="submitBtn"></button>
+            </div>
+        </fieldset>
+    </form>
+    <form wicket:id="exportForm" style="margin-top: 20px;">
+        <fieldset>
+            <legend><wicket:message key="tools.export.persons">Export Persons</wicket:message></legend>
+            <div wicket:id="exportWmc">
+                <button wicket:id="exportBtn"></button>
+            </div>
+        </fieldset>
+    </form>
+</wicket:panel>
+</body>
+</html>

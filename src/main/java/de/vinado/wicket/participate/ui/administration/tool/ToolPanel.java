@@ -10,6 +10,7 @@ import de.vinado.wicket.participate.common.MemberGenerator;
 import de.vinado.wicket.participate.component.BootstrapForm;
 import de.vinado.wicket.participate.component.Collapsible;
 import de.vinado.wicket.participate.component.Snackbar;
+import de.vinado.wicket.participate.component.behavoir.AjaxDownload;
 import de.vinado.wicket.participate.component.behavoir.decorator.BootstrapFormDecorator;
 import de.vinado.wicket.participate.component.link.BootstrapAjaxButton;
 import de.vinado.wicket.participate.data.database.DatabasePopulator;
@@ -73,10 +74,10 @@ public class ToolPanel extends Panel {
                 return new PasswordPanel(panelId);
             }
         });
-        tabs.add(new AbstractTab(new ResourceModel("tools.import.persons", "Import Persons")) {
+        tabs.add(new AbstractTab(new ResourceModel("tools.import-export.persons", "Import/Export Persons")) {
             @Override
             public WebMarkupContainer getPanel(final String panelId) {
-                return new ImportPersonCSVPanel(panelId);
+                return new ImportExportPersonCSVPanel(panelId);
             }
         });
         if (developmentMode) {
@@ -106,30 +107,28 @@ public class ToolPanel extends Panel {
         }
     }
 
-    private class ImportPersonCSVPanel extends Panel {
+    private class ImportExportPersonCSVPanel extends Panel {
 
         private FileUpload file;
 
-
-        private ImportPersonCSVPanel(final String id) {
+        private ImportExportPersonCSVPanel(final String id) {
             super(id);
 
             final NotificationPanel feedback = new NotificationPanel("feedback");
             add(feedback);
 
-            final Form form = new Form("form", new CompoundPropertyModel(this));
-            add(form);
+            final Form importForm = new Form("importForm", new CompoundPropertyModel(this));
+            add(importForm);
 
-            final WebMarkupContainer wmc = new WebMarkupContainer("wmc");
-            wmc.setOutputMarkupId(true);
-            form.add(wmc);
+            final WebMarkupContainer importWmc = new WebMarkupContainer("importWmc");
+            importWmc.setOutputMarkupId(true);
+            importForm.add(importWmc);
 
             final FileUploadField fileUpload = new FileUploadField("file");
-            fileUpload.add(BootstrapFormDecorator.decorate());
-            wmc.add(fileUpload);
+            importWmc.add(fileUpload);
 
             final BootstrapAjaxButton submitBtn = new BootstrapAjaxButton("submitBtn", new ResourceModel("import", "Import"),
-                    Buttons.Type.Primary) {
+                Buttons.Type.Primary) {
                 @Override
                 protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
                     if (null != file) {
@@ -142,9 +141,35 @@ public class ToolPanel extends Panel {
                     return feedback;
                 }
             };
-            submitBtn.setIconType(FontAwesomeIconType.save);
+            submitBtn.setIconType(FontAwesomeIconType.database);
             submitBtn.setSize(Buttons.Size.Small);
-            wmc.add(submitBtn);
+            importWmc.add(submitBtn);
+
+            final Form exportForm = new Form("exportForm", new CompoundPropertyModel(this));
+            add(exportForm);
+
+            final WebMarkupContainer exportWmc = new WebMarkupContainer("exportWmc");
+            exportForm.setOutputMarkupId(true);
+            exportForm.add(exportWmc);
+
+            final AjaxDownload export = new AjaxDownload();
+
+            final BootstrapAjaxButton exportBtn = new BootstrapAjaxButton("exportBtn", new ResourceModel("export", "Export"), Buttons.Type.Primary) {
+                @Override
+                protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+                    export.go(target, personService.exportMembers(), "member-export.csv");
+                    target.add(exportForm);
+                }
+
+                @Override
+                protected FeedbackPanel getFeedbackPanel() {
+                    return feedback;
+                }
+            };
+            exportBtn.setIconType(FontAwesomeIconType.save);
+            exportBtn.setSize(Buttons.Size.Small);
+            exportBtn.add(export);
+            exportWmc.add(exportBtn);
         }
 
         public FileUpload getFile() {
@@ -291,7 +316,7 @@ public class ToolPanel extends Panel {
             wmc.add(dbUrlTf);
 
             final BootstrapAjaxButton submitBtn = new BootstrapAjaxButton("submit",
-                    new ResourceModel("submit", "Submit"), form, Buttons.Type.Primary) {
+                new ResourceModel("submit", "Submit"), form, Buttons.Type.Primary) {
                 @Override
                 protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
                     databasePopulator.run();

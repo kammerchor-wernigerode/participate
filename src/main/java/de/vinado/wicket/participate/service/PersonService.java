@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.service;
 
+import de.vinado.wicket.participate.component.provider.SimpleDataProvider;
 import de.vinado.wicket.participate.data.AddressToPerson;
 import de.vinado.wicket.participate.data.Attribute;
 import de.vinado.wicket.participate.data.AttributeToPerson;
@@ -16,7 +17,15 @@ import de.vinado.wicket.participate.data.dto.MemberToGroupDTO;
 import de.vinado.wicket.participate.data.dto.PersonDTO;
 import de.vinado.wicket.participate.data.filter.MemberFilter;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.export.CSVDataExporter;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.export.IExportableColumn;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
+import org.apache.wicket.markup.repeater.data.IDataProvider;
+import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.util.io.ByteArrayOutputStream;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +52,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import static org.apache.commons.codec.CharEncoding.UTF_8;
 
 /**
  * Provides interaction with the database. This service takes care of {@link Member} and member related objects.
@@ -568,5 +579,34 @@ public class PersonService extends DataService {
         criteriaQuery.select(criteriaBuilder.count(root));
         criteriaQuery.where(criteriaBuilder.equal(personJoin.get("email"), email));
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
+    }
+
+    public IResourceStream exportMembers() {
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        final IDataProvider<Member> dataProvider = new SimpleDataProvider<Member, String>(getAll(Member.class)) {
+            @Override
+            public String getDefaultSort() {
+                return "person.lastName";
+            }
+        };
+
+        final List<IExportableColumn<Member, ?>> columns = new ArrayList<>();
+        columns.add(new PropertyColumn<>(new ResourceModel("lastName", "Surname"), "person.lastName"));
+        columns.add(new PropertyColumn<>(new ResourceModel("firstName", "Given Name"), "person.firstName"));
+        columns.add(new PropertyColumn<>(new ResourceModel("email", "Email"), "person.email"));
+        columns.add(new PropertyColumn<>(new ResourceModel("voice", "Voice"), "voice.name"));
+        columns.add(new PropertyColumn<>(new ResourceModel("active", "Active"), "active"));
+
+        final CSVDataExporter dataExporter = new CSVDataExporter();
+        dataExporter.setDelimiter(';');
+        dataExporter.setCharacterSet(UTF_8);
+        try {
+            dataExporter.exportData(dataProvider, columns, outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new StringResourceStream(new String(outputStream.toByteArray()));
     }
 }
