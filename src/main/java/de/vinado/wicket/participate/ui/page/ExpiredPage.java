@@ -10,6 +10,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.time.Duration;
 
@@ -29,7 +30,7 @@ public class ExpiredPage extends AbstractErrorPage {
         final BootstrapBookmarkablePageLink<String> homePageLink = new BootstrapBookmarkablePageLink<>("homePageLink",
                 getApplication().getHomePage(), Buttons.Type.Primary);
         homePageLink.setIconType(FontAwesomeIconType.home);
-        homePageLink.setLabel(new ResourceModel("homepage", "Return to home page"));
+        homePageLink.setLabel(new ResourceModel("navigate.homepage", "Goto Homepage"));
         add(homePageLink);
 
         final Model<Integer> model = new Model<Integer>() {
@@ -38,19 +39,19 @@ public class ExpiredPage extends AbstractErrorPage {
             }
         };
 
-        add(new Heading("heading", new ResourceModel("sessionExpired", "The session is expired")));
+        add(new Heading("heading", new ResourceModel("page.error.expired.session", "The session is expired")));
 
-        final Label counterLabel = new Label("counter", model);
-        counterLabel.setOutputMarkupId(true);
-        counterLabel.add(new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
+        final Label message = new Label("message", new StringResourceModel("page.error.expired.message").setParameters(model.getObject()));
+        message.setOutputMarkupId(true);
+        message.add(new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
             @Override
             protected void onTimer(final AjaxRequestTarget target) {
-                target.add(counterLabel);
+                target.add(message);
                 if (COUNTDOWN == 0) {
                     setResponsePage(ParticipateApplication.get().getHomePage());
                 }
             }
         });
-        add(counterLabel);
+        add(message);
     }
 }

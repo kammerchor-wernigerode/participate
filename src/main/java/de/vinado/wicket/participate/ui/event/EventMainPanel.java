@@ -71,19 +71,19 @@ public class EventMainPanel extends BreadCrumbPanel {
 
             @Override
             protected AbstractLink newDefaultBtn(final String id, final IModel<List<EventView>> model) {
-                setDefaultBtnLabelModel(new ResourceModel("addEvent", "addEvent"));
+                setDefaultBtnLabelModel(new ResourceModel("event.add", "Add Event"));
                 setDefaultBtnIcon(FontAwesomeIconType.plus);
                 return new AjaxLink(id) {
                     @Override
                     public void onClick(final AjaxRequestTarget target) {
                         final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                        modal.setContent(new AddEditEventPanel(modal, new ResourceModel("addEvent", "Add event"), new CompoundPropertyModel<>(new EventDTO())) {
+                        modal.setContent(new AddEditEventPanel(modal, new ResourceModel("event.add", "Add Event"), new CompoundPropertyModel<>(new EventDTO())) {
                             @Override
                             public void onUpdate(final Event savedEvent, final AjaxRequestTarget target) {
                                 ParticipateSession.get().setEvent(savedEvent);
                                 send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(savedEvent, target));
                                 send(getPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
-                                Snackbar.show(target, new ResourceModel("addEventS"));
+                                Snackbar.show(target, new ResourceModel("event.add.success", "A new event has been added"));
                                 target.add(eventPanel);
                             }
                         });
@@ -133,7 +133,7 @@ public class EventMainPanel extends BreadCrumbPanel {
             @Override
             protected AbstractLink newDefaultBtn(final String id, final IModel<EventView> model) {
                 setDefaultBtnIcon(FontAwesomeIconType.check);
-                setDefaultBtnLabelModel(new ResourceModel("showEventSummary", "Show event summary"));
+                setDefaultBtnLabelModel(new ResourceModel("show.event.summary", "Show Event Summary"));
                 return new BreadCrumbPanelLink(id, breadCrumbModel, (IBreadCrumbPanelFactory) (componentId, breadCrumbModel1)
                     -> new EventSummaryPanel(componentId, breadCrumbModel1,
                     new CompoundPropertyModel<>(eventService.getViewEventDetails(model.getObject().getEvent())),
@@ -148,7 +148,7 @@ public class EventMainPanel extends BreadCrumbPanel {
                 }
 
                 final RepeatingView dropDownMenu = super.newDropDownMenu(id, model);
-                dropDownMenu.add(new DropDownItem(dropDownMenu.newChildId(), new ResourceModel("sendInvitation", "Send invitation"),
+                dropDownMenu.add(new DropDownItem(dropDownMenu.newChildId(), new ResourceModel("email.send.invitation", "Send Invitation"),
                     FontAwesomeIconType.envelope_square) {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
@@ -175,7 +175,7 @@ public class EventMainPanel extends BreadCrumbPanel {
                             + "versandt.");
                     }
                 });
-                dropDownMenu.add(new DropDownItem(dropDownMenu.newChildId(), new ResourceModel("remindMembers", "Remind Members"),
+                dropDownMenu.add(new DropDownItem(dropDownMenu.newChildId(), new ResourceModel("email.send.reminder", "Send Reminder"),
                     FontAwesomeIconType.exclamation) {
                     @Override
                     protected void onClick(AjaxRequestTarget target) {
@@ -183,9 +183,8 @@ public class EventMainPanel extends BreadCrumbPanel {
                         if (eventService.hasInvitedMemberToEvent(event)) {
                             final BootstrapModal modal = ((ParticipatePage) getWebPage()).getModal();
                             modal.setContent(new BootstrapModalConfirmationPanel(modal,
-                                new ResourceModel("remindMembers", "Send Reminder"),
-                                new ResourceModel("remindMembersQ", "Some members received an invitation. " +
-                                    "Remind them?")) {
+                                new ResourceModel("email.send.reminder", "Send Reminder"),
+                                new ResourceModel("email.send.reminder.question", "Some members have already received an invitation. Should they be remembered?")) {
                                 @Override
                                 protected void onConfirm(AjaxRequestTarget target) {
                                     int count;
@@ -216,7 +215,7 @@ public class EventMainPanel extends BreadCrumbPanel {
                         }
                     }
                 });
-                dropDownMenu.add(new DropDownItem(dropDownMenu.newChildId(), new ResourceModel("sendEmail", "Send Email"),
+                dropDownMenu.add(new DropDownItem(dropDownMenu.newChildId(), new ResourceModel("email.send", "Send Email"),
                     FontAwesomeIconType.envelope) {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
@@ -228,21 +227,21 @@ public class EventMainPanel extends BreadCrumbPanel {
                         modal.show(target);
                     }
                 });
-                dropDownMenu.add(new DropDownItem(dropDownMenu.newChildId(), new ResourceModel("editEvent", "Edit event"),
+                dropDownMenu.add(new DropDownItem(dropDownMenu.newChildId(), new ResourceModel("event.edit", "Edit Event"),
                     FontAwesomeIconType.pencil) {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
                         final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                        modal.setContent(new AddEditEventPanel(modal, new ResourceModel("editEvent"), new CompoundPropertyModel<>(
-                            new EventDTO(model.getObject().getEvent(), eventService.getAddressToEvent(
-                                model.getObject().getEvent()).getAddress(),
+                        modal.setContent(new AddEditEventPanel(modal, new ResourceModel("event.edit", "Edit Event"),
+                            new CompoundPropertyModel<>(new EventDTO(model.getObject().getEvent(),
+                                eventService.getAddressToEvent(model.getObject().getEvent()).getAddress(),
                                 eventService.getGroup(model.getObject().getEvent())))) {
                             @Override
                             public void onUpdate(final Event savedEvent, final AjaxRequestTarget target) {
                                 model.setObject(eventService.getEventView(savedEvent));
                                 ParticipateSession.get().setEvent(model.getObject().getEvent());
                                 send(getPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
-                                Snackbar.show(target, new ResourceModel("editEventS"));
+                                Snackbar.show(target, new ResourceModel("event.edit.success", "The event was successfully edited"));
                             }
                         });
                         modal.show(target);

@@ -8,7 +8,7 @@
     <form wicket:id="signInForm">
         <div class="form-group">
             <label class="control-label sr-only">
-                <wicket:message key="usernameOrEmail"/>
+                <wicket:message key="username-email">Username/Email</wicket:message>
             </label>
             <div class="input-group">
                 <div class="input-group-addon"><i class="fa fa-user"></i></div>
@@ -17,7 +17,7 @@
         </div>
         <div class="form-group">
             <label class="control-label sr-only">
-                <wicket:message key="password"/>
+                <wicket:message key="password">Password</wicket:message>
             </label>
             <div class="input-group">
                 <div class="input-group-addon"><i class="fa fa-lock"></i></div>
@@ -27,11 +27,11 @@
         <div class="checkbox">
             <label>
                 <input type="checkbox" wicket:id="rememberMe">
-                <wicket:message key="rememberMe"/>
+                <wicket:message key="rememberMe">Remember Me</wicket:message>
             </label>
         </div>
         <div class="form-group">
-            <input type="submit" class="btn btn-success" wicket:message="value:login"/>
+            <input type="submit" class="btn btn-success" value="Login" wicket:message="value:login"/>
         </div>
     </form>
     <span wicket:id="feedback"></span>

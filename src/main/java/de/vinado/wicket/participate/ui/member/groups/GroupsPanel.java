@@ -61,7 +61,7 @@ public class GroupsPanel extends Panel {
             @Override
             protected void populateItem(final ListItem<Group> item) {
                 final BootstrapPanel<Group> groupPanel = new BootstrapPanel<Group>("group",
-                        new CompoundPropertyModel<>(item.getModelObject()), new PropertyModel<>(item.getModel(), "title")) {
+                    new CompoundPropertyModel<>(item.getModelObject()), new PropertyModel<>(item.getModel(), "title")) {
                     @Override
                     protected Panel newBodyPanel(final String id, final IModel<Group> model) {
                         return new GroupPanel(id, model);
@@ -69,16 +69,16 @@ public class GroupsPanel extends Panel {
 
                     @Override
                     protected AbstractLink newDefaultBtn(final String id, final IModel<Group> model) {
-                        setDefaultBtnLabelModel(new ResourceModel("addPerson", "Add person"));
+                        setDefaultBtnLabelModel(new ResourceModel("person.add", "Add Person"));
                         setDefaultBtnIcon(FontAwesomeIconType.plus);
                         return new AjaxLink<Group>(id, model) {
                             @Override
                             public void onClick(final AjaxRequestTarget target) {
                                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                                 modal.setContent(new AddMemberToGroupPanel(modal,
-                                        new ResourceModel("addMemberToGroup", "Add member to group"),
-                                        new CompoundPropertyModel<>(new MemberToGroupDTO(
-                                                model.getObject(), personService.getGroupMemberList(model.getObject())))));
+                                    new ResourceModel("cast.add", "Add Member to Cast"),
+                                    new CompoundPropertyModel<>(new MemberToGroupDTO(
+                                        model.getObject(), personService.getGroupMemberList(model.getObject())))));
                                 modal.show(target);
                             }
                         };
@@ -87,15 +87,17 @@ public class GroupsPanel extends Panel {
                     @Override
                     protected RepeatingView newDropDownMenu(final String id, final IModel<Group> groupModel) {
                         final RepeatingView dropDownMenu = super.newDropDownMenu(id, groupModel);
-                        dropDownMenu.add(new DropDownItem(dropDownMenu.newChildId(), new ResourceModel("editGroup", "Edit group"), FontAwesomeIconType.edit) {
+                        dropDownMenu.add(new DropDownItem(dropDownMenu.newChildId(),
+                            new ResourceModel("group.edit", "Edit Group"), FontAwesomeIconType.edit) {
                             @Override
                             protected void onClick(final AjaxRequestTarget target) {
                                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                                modal.setContent(new AddEditGroupPanel(modal, new ResourceModel("editGroup", "Edit Group"), new CompoundPropertyModel<>(new GroupDTO(groupModel.getObject()))) {
+                                modal.setContent(new AddEditGroupPanel(modal, new ResourceModel("group.edit", "Edit Group"),
+                                    new CompoundPropertyModel<>(new GroupDTO(groupModel.getObject()))) {
                                     @Override
                                     protected void onUpdate(final Group savedGroup, final AjaxRequestTarget target) {
                                         target.add(form);
-                                        Snackbar.show(target, new ResourceModel("editGroupA"));
+                                        Snackbar.show(target, new ResourceModel("group.edit.success", "The group was successfully edited"));
                                     }
                                 });
                                 modal.show(target);
@@ -120,17 +122,18 @@ public class GroupsPanel extends Panel {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                modal.setContent(new AddEditGroupPanel(modal, new ResourceModel("addGroup", "Add group"), new CompoundPropertyModel<>(new GroupDTO())) {
+                modal.setContent(new AddEditGroupPanel(modal, new ResourceModel("group.add", "Add Group"),
+                    new CompoundPropertyModel<>(new GroupDTO())) {
                     @Override
                     protected void onUpdate(final Group savedGroup, final AjaxRequestTarget target) {
-                        Snackbar.show(target, new ResourceModel("addGroupS", "A new group has been created"));
+                        Snackbar.show(target, new ResourceModel("group.add.success", "A new group has been added"));
                         target.add(form);
                     }
                 });
                 modal.show(target);
             }
         };
-        createGroupBtn.setLabel(new ResourceModel("addGroup", "Add Group"));
+        createGroupBtn.setLabel(new ResourceModel("group.add", "Add Group"));
         createGroupBtn.setIconType(FontAwesomeIconType.plus);
         createGroupBtn.setSize(Buttons.Size.Small);
         wmc.add(createGroupBtn);

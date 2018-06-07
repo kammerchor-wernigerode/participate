@@ -62,7 +62,7 @@ public class RolesPanel extends Panel {
                         protected void onRemove(final AjaxRequestTarget target) {
                             model.setObject(roleService.getRoles());
                             target.add(wmc);
-                            Snackbar.show(target, new ResourceModel("removeRoleConf"));
+                            Snackbar.show(target, new ResourceModel("role.remove.success", "The role has been removed"));
                         }
                     };
                 }
@@ -76,19 +76,19 @@ public class RolesPanel extends Panel {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                modal.setContent(new AddEditRolePanel(modal, new ResourceModel("addRole", "Add Role"), new CompoundPropertyModel<>(new RoleDTO())) {
+                modal.setContent(new AddEditRolePanel(modal, new ResourceModel("role.add", "Add Role"), new CompoundPropertyModel<>(new RoleDTO())) {
                     @Override
                     protected void onUpdate(final Role role, final AjaxRequestTarget target) {
                         model.setObject(roleService.getRoles());
                         target.add(wmc);
-                        Snackbar.show(target, new ResourceModel("addRoleConf"));
+                        Snackbar.show(target, new ResourceModel("role.add.success"));
                     }
                 });
                 modal.show(target);
             }
         };
         createRoleBtn.setIconType(FontAwesomeIconType.plus);
-        createRoleBtn.setLabel(new ResourceModel("addRole", "Add role"));
+        createRoleBtn.setLabel(new ResourceModel("role.add", "Add Role"));
         createRoleBtn.setSize(Buttons.Size.Small);
         form.add(createRoleBtn);
     }

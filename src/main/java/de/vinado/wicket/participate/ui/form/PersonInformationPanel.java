@@ -27,7 +27,7 @@ public class PersonInformationPanel extends BootstrapModalPanel<Attribute> {
     private PersonService personService;
 
     public PersonInformationPanel(final BootstrapModal modal, final IModel<Attribute> model) {
-        super(modal, new ResourceModel("personalDetails", "Personal Details"), model);
+        super(modal, new ResourceModel("account.personal-details", "Personal Details"), model);
 
         final CheckBox isVegetarianCb = new CheckBox("attr.vegetarian");
         isVegetarianCb.setLabel(new ResourceModel("lookAtMeImSpecial", "I am vegetarian/vegan"));
@@ -60,6 +60,6 @@ public class PersonInformationPanel extends BootstrapModalPanel<Attribute> {
 
     @Override
     protected void onSaveSubmit(final IModel<Attribute> model, final AjaxRequestTarget target) {
-        Snackbar.show(target, new ResourceModel("editDataA"));
+        Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
     }
 }

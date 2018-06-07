@@ -31,7 +31,7 @@ public class SendFeedbackPanel extends BootstrapModalPanel<SendFeedbackDTO> {
      * @param model Model
      */
     public SendFeedbackPanel(final BootstrapModal modal, final IModel<SendFeedbackDTO> model) {
-        super(modal, new ResourceModel("sendFeedback", "Send feedback"), model);
+        super(modal, new ResourceModel("send.feedback", "Send Feedback"), model);
 
         inner.add(new TextField<>("name"));
         inner.add(new EmailTextField("email"));
@@ -57,6 +57,6 @@ public class SendFeedbackPanel extends BootstrapModalPanel<SendFeedbackDTO> {
 
         emailService.sendMail(mailData, "fm-feedback.ftl");
 
-        Snackbar.show(target, new ResourceModel("sentMessage", "Message sent"));
+        Snackbar.show(target, new ResourceModel("send.feedback.success", "Thanks for your feedback"));
     }
 }

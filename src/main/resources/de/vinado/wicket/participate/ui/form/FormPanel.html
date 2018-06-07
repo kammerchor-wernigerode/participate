@@ -16,7 +16,7 @@
                     <div class="form-horizontal">
                         <div class="form-group form-group-sm">
                             <label class="col-sm-3 control-label">
-                                <wicket:message key="name"/>
+                                <wicket:message key="name">Name</wicket:message>
                             </label>
                             <div class="col-sm-9">
                                 <p class="form-control-static" wicket:id="member.person.displayName"></p>
@@ -24,7 +24,7 @@
                         </div>
                         <div class="form-group form-group-sm">
                             <label class="col-sm-3 control-label">
-                                <wicket:message key="period"/>
+                                <wicket:message key="period">Period</wicket:message>
                             </label>
                             <div class="col-sm-9">
                                 <div class="row">
@@ -37,7 +37,11 @@
                                 </div>
                             </div>
                             <div class="col-sm-offset-3 col-sm-9">
-                                <p class="help-block"><wicket:message key="periodH"/></p>
+                                <p class="help-block">
+                                    <wicket:message key="period.help">If you do not specify a time period, we assume
+                                        that you are present throughout.
+                                    </wicket:message>
+                                </p>
                             </div>
                         </div>
                         <input type="checkbox" wicket:id="needsDinner">

@@ -36,7 +36,7 @@ public abstract class AddEditPersonPanel extends BootstrapModalPanel<PersonDTO> 
 
         final EmailTextField emailTf = new EmailTextField("email");
         emailTf.setRequired(true);
-        emailTf.add(new ConditionalValidator<String>(new ResourceModel("uniqueEmail", "Email address has to be unique")) {
+        emailTf.add(new ConditionalValidator<String>(new ResourceModel("unique.email", "A person with this e-mail address already exists")) {
             @Override
             public boolean getCondition(final String value) {
                 if (Strings.isEmpty(model.getObject().getEmail())) {

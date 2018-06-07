@@ -36,11 +36,11 @@ public class AddMemberToGroupPanel extends BootstrapModalPanel<MemberToGroupDTO>
         memberS2mc.getSettings().setCloseOnSelect(true);
         memberS2mc.getSettings().setTheme(new Select2BootstrapTheme(true));
         memberS2mc.getSettings().setMinimumInputLength(3);
-        memberS2mc.getSettings().setPlaceholder(new ResourceModel("pleaseChoose", "Please choose").getObject());
+        memberS2mc.getSettings().setPlaceholder(new ResourceModel("select.placeholder", "Please Choose").getObject());
         memberS2mc.setRequired(true);
         memberS2mc.setOutputMarkupPlaceholderTag(true);
         memberS2mc.setEnabled(true);
-        memberS2mc.setLabel(new ResourceModel("selectMember", "Select member"));
+        memberS2mc.setLabel(new ResourceModel("member.select", "Select Member"));
         inner.add(memberS2mc);
 
         addBootstrapFormDecorator(inner);
@@ -49,7 +49,7 @@ public class AddMemberToGroupPanel extends BootstrapModalPanel<MemberToGroupDTO>
     @Override
     protected void onSaveSubmit(final IModel<MemberToGroupDTO> model, final AjaxRequestTarget target) {
         personService.assignMemberToGroup(model.getObject());
-        Snackbar.show(target, new ResourceModel("addMembersToGroupA", "Members has been "));
+        Snackbar.show(target, new ResourceModel("cast.add.success", "The members were assigned to the group"));
         send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
     }
 }

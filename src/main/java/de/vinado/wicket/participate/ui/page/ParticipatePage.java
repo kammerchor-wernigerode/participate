@@ -103,12 +103,12 @@ public class ParticipatePage extends BasePage {
                                         ParticipateApplication.get().getSecuritySettings().getAuthenticationStrategy().remove();
                                         userLabel = ParticipateSession.get().getUser().getPerson().getDisplayName();
                                         target.add(navbar);
-                                        Snackbar.show(target, new ResourceModel("editDataA"));
+                                        Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
                                     }
                                 });
                                 modal.show(target);
                             }
-                        }.setBody(new ResourceModel("editAccount", "Edit Account")));
+                        }.setBody(new ResourceModel("account.edit", "Edit Account")));
                         if (null != ParticipateSession.get().getUser() && ParticipateSession.get().getRoles().hasRole(Roles.ADMIN)) {
                             menuButtons.add(new BookmarkablePageLink(buttonMarkupId, AdminPage.class)
                                     .setBody(new ResourceModel("administration", "Administration")));

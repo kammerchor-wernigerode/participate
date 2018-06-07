@@ -38,7 +38,7 @@ public class SignInPage extends BasePage {
         add(new SignInPanel("signInPanel"));
 
         final List<ITab> tabs = new ArrayList<>();
-        tabs.add(new AbstractTab(new ResourceModel("resetPasswordQ")) {
+        tabs.add(new AbstractTab(new ResourceModel("resetPasswordQ", "Forgot Password?")) {
             @Override
             public Panel getPanel(final String panelId) {
                 return new ResetPasswordPanel(panelId, new CompoundPropertyModel<>(new ResetPassword()));
@@ -68,13 +68,13 @@ public class SignInPage extends BasePage {
                 @Override
                 protected void onSubmit(final AjaxRequestTarget target, final Form<?> inner) {
                     if (Strings.isEmpty(model.getObject().getEmail())) {
-                        Snackbar.show(target, new ResourceModel("enterEmail", "Enter your email address"));
+                        Snackbar.show(target, new ResourceModel("password.reset.email", "Enter your email address"));
                         return;
                     }
                     if (userService.startPasswordReset(model.getObject().getEmail(), false)) {
-                        Snackbar.show(target, new ResourceModel("resetPasswordA", "An email has been sent. Check your inbox."));
+                        Snackbar.show(target, new ResourceModel("password.reset.success", "An email has been sent. Check your inbox."));
                     } else {
-                        Snackbar.show(target, new ResourceModel("resetPasswordE", "Error sending the email"));
+                        Snackbar.show(target, new ResourceModel("email.send.error", "There was an error while sending the email"));
                     }
                 }
             };

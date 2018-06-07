@@ -67,26 +67,26 @@ public class ToolPanel extends Panel {
         final boolean developmentMode = ParticipateApplication.get().isInDevelopmentMode();
 
         final List<ITab> tabs = new ArrayList<>();
-        tabs.add(new AbstractTab(new ResourceModel("participatePassword", "Participate password")) {
+        tabs.add(new AbstractTab(new ResourceModel("application-password", "Form Password")) {
             @Override
             public WebMarkupContainer getPanel(final String panelId) {
                 return new PasswordPanel(panelId);
             }
         });
-        tabs.add(new AbstractTab(new ResourceModel("importPersons", "Import persons")) {
+        tabs.add(new AbstractTab(new ResourceModel("tools.import.persons", "Import Persons")) {
             @Override
             public WebMarkupContainer getPanel(final String panelId) {
                 return new ImportPersonCSVPanel(panelId);
             }
         });
         if (developmentMode) {
-            tabs.add(new AbstractTab(new ResourceModel("syncWithProductionDatabase", "Sync with production database")) {
+            tabs.add(new AbstractTab(new ResourceModel("tools.mirror.database", "Mirror Database")) {
                 @Override
                 public WebMarkupContainer getPanel(final String panelId) {
                     return new SyncDatabasePanel(panelId);
                 }
             });
-            tabs.add(new AbstractTab(new ResourceModel("generateSampleData", "Generate sample data")) {
+            tabs.add(new AbstractTab(new ResourceModel("tools.generate.data", "Generate Data")) {
                 @Override
                 public WebMarkupContainer getPanel(final String panelId) {
                     return new GenerateSampleData(panelId);
@@ -199,7 +199,7 @@ public class ToolPanel extends Panel {
                 }
             };
             generateMembersBtn.setSize(Buttons.Size.Small);
-            generateMembersBtn.setLabel(new ResourceModel("generateMembers", "Generate members"));
+            generateMembersBtn.setLabel(new ResourceModel("tools.generate.members", "Generate Members"));
             generateMembersBtn.setIconType(FontAwesomeIconType.cog);
             wmc.add(generateMembersBtn);
 
@@ -226,14 +226,14 @@ public class ToolPanel extends Panel {
                 }
             };
             generateEventsBtn.setSize(Buttons.Size.Small);
-            generateEventsBtn.setLabel(new ResourceModel("generateEvents", "Generate events"));
+            generateEventsBtn.setLabel(new ResourceModel("tools.generate.events", "Generate Events"));
             generateEventsBtn.setIconType(FontAwesomeIconType.calendar);
             wmc.add(generateEventsBtn);
         }
 
         private void onSuccess(final AjaxRequestTarget target, final Form form) {
             target.add(form);
-            Snackbar.show(target, new ResourceModel("generateSampleContentS", "Generierung erfolgreich"));
+            Snackbar.show(target, new ResourceModel("tools.generate.success", "The generation was successful"));
         }
 
         public Long getMemberCount() {
@@ -255,11 +255,11 @@ public class ToolPanel extends Panel {
 
     private class SyncDatabasePanel extends Panel {
 
-        private String url = "jdbc:mysql://srv.vinado.de:3306/participate";
+        private String url;
 
-        private String username = "participate";
+        private String username;
 
-        private String passwd = "";
+        private String password;
 
         public SyncDatabasePanel(final String id) {
             super(id);
@@ -275,15 +275,14 @@ public class ToolPanel extends Panel {
             wmc.setOutputMarkupId(true);
             form.add(wmc);
 
-            final Label label = new Label("label", new ResourceModel("sourceDatabase", "Source database"));
+            final Label label = new Label("label", new ResourceModel("tools.mirror.database.source", "Source Database"));
             wmc.add(label);
 
             final TextField usernameTf = new TextField("username");
             usernameTf.setRequired(true);
             wmc.add(usernameTf);
 
-            final PasswordTextField passwordTf = new PasswordTextField("passwd");
-            passwordTf.setLabel(new ResourceModel("password", "Password"));
+            final PasswordTextField passwordTf = new PasswordTextField("password");
             passwordTf.setRequired(true);
             wmc.add(passwordTf);
 
@@ -330,12 +329,12 @@ public class ToolPanel extends Panel {
             this.username = username;
         }
 
-        public String getPasswd() {
-            return passwd;
+        public String getPassword() {
+            return password;
         }
 
-        public void setPasswd(final String passwd) {
-            this.passwd = passwd;
+        public void setPassword(final String password) {
+            this.password = password;
         }
     }
 }

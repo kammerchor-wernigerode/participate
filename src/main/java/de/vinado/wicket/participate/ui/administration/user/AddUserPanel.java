@@ -25,13 +25,13 @@ public abstract class AddUserPanel extends BootstrapModalPanel<AddUserDTO> {
     private UserService userService;
 
     public AddUserPanel(final BootstrapModal modal, final IModel<AddUserDTO> model) {
-        super(modal, new ResourceModel("addUser", "Add user"), model);
+        super(modal, new ResourceModel("user.add", "Add User"), model);
 
         final TextField<String> usernameTf = new TextField<>("username");
         usernameTf.add(BootstrapHorizontalFormDecorator.decorate());
         usernameTf.setRequired(true);
         usernameTf.add(new FocusBehavior());
-        usernameTf.add(new ConditionalValidator<String>(new ResourceModel("uniqueUsername", "The username is already assigned")) {
+        usernameTf.add(new ConditionalValidator<String>(new ResourceModel("unique.user", "A user with this username already exists")) {
             @Override
             public boolean getCondition(final String value) {
                 if (Strings.isEmpty(model.getObject().getUsername())) {

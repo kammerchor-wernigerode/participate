@@ -119,11 +119,11 @@ public class EventListPanel extends Panel {
             }
         });
         columns.add(new PropertyColumn<>(new ResourceModel("location", "Location"), "location", "location"));
-        columns.add(new PropertyColumn<EventView, String>(Model.of(""), "countAcceptedDeclinedPending") {
+        columns.add(new PropertyColumn<EventView, String>(new ResourceModel("event.a-d-p.short", "A/D/P"), "countAcceptedDeclinedPending") {
             @Override
             public void populateItem(final Item<ICellPopulator<EventView>> item, final String componentId, final IModel<EventView> rowModel) {
                 final Label eventTypeLabel = new Label(componentId, getDataModel(rowModel));
-                eventTypeLabel.add(new TooltipBehavior(new ResourceModel("aOraOra"), tooltipConfig));
+                eventTypeLabel.add(new TooltipBehavior(new ResourceModel("event.a-d-p", "Accepted/Declined/Pending"), tooltipConfig));
                 item.add(eventTypeLabel);
             }
         });

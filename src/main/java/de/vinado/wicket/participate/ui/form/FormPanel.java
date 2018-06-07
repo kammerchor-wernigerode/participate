@@ -116,7 +116,7 @@ public class FormPanel extends BreadCrumbPanel {
         wmc.add(sleepingPlaceCommentTa);
 
         final TextArea commentTa = new TextArea("comment");
-        commentTa.setLabel(new ResourceModel("moreComments", "More comments"));
+        commentTa.setLabel(new ResourceModel("comments", "More comments"));
         commentTa.add(BootstrapHorizontalFormDecorator.decorate());
         commentTa.add(new AutosizeBehavior());
         wmc.add(commentTa);
@@ -127,7 +127,7 @@ public class FormPanel extends BreadCrumbPanel {
                 send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(
                     eventService.acceptEvent(model.getObject()).getEvent(),
                     target));
-                Snackbar.show(target, new ResourceModel("acceptInvitationA", "Your data has been saved. You can leave this page now."));
+                Snackbar.show(target, new ResourceModel("invitation.accept.success", "Your data has been saved. You can leave this page now."));
                 target.add(form);
             }
         };
@@ -140,7 +140,7 @@ public class FormPanel extends BreadCrumbPanel {
             protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
                 final MemberToEvent savedMemberToEvent = eventService.declineEvent(model.getObject());
                 send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(savedMemberToEvent.getEvent(), target));
-                Snackbar.show(target, new ResourceModel("declineInvitationA", "Your cancellation was saved. You can leave this page now."));
+                Snackbar.show(target, new ResourceModel("invitation.decline.success", "Your cancellation has been saved. You can leave this page now."));
                 target.add(form);
             }
         };

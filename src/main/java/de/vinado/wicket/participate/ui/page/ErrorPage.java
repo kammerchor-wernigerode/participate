@@ -53,7 +53,7 @@ public class ErrorPage extends AbstractErrorPage {
         final BootstrapBookmarkablePageLink<String> homePageLink = new BootstrapBookmarkablePageLink<>("homePageLink",
                 getApplication().getHomePage(), Buttons.Type.Primary);
         homePageLink.setIconType(FontAwesomeIconType.home);
-        homePageLink.setLabel(new ResourceModel("homepage", "Return to home page"));
+        homePageLink.setLabel(new ResourceModel("navigate.homepage", "Goto Homepage"));
         form.add(homePageLink);
 
         final WebMarkupContainer stacktraceWmc = new WebMarkupContainer("stacktraceWmc") {
@@ -101,7 +101,7 @@ public class ErrorPage extends AbstractErrorPage {
         stacktraceLabel.setOutputMarkupPlaceholderTag(true);
         stacktraceWmc.add(stacktraceLabel);
 
-        form.add(new BootstrapAjaxButton("showStackTrace", new ResourceModel("showStacktrace", "Show Stacktrace"), Buttons.Type.Primary) {
+        form.add(new BootstrapAjaxButton("showStackTrace", new ResourceModel("show.stacktrace", "Show Stacktrace"), Buttons.Type.Primary) {
             @Override
             protected void onSubmit(final AjaxRequestTarget target, final Form<?> inner) {
                 showStacktrace = !showStacktrace;

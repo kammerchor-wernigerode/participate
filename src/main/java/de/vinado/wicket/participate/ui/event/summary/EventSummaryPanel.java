@@ -89,7 +89,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
                 setResponsePage(EventPage.class);
             }
         };
-        backBtn.setLabel(new ResourceModel("showEventOverview", "Show event overview"));
+        backBtn.setLabel(new ResourceModel("show.event.overview", "Show Event Overview"));
         backBtn.setSize(Buttons.Size.Small);
         backBtn.setIconType(FontAwesomeIconType.calendar);
         wmc.add(backBtn);
@@ -143,7 +143,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
 
             @Override
             protected AbstractLink newDefaultBtn(final String id, final IModel<List<MemberToEvent>> model) {
-                setDefaultBtnLabelModel(new ResourceModel("showAllProperties", "Show all properties"));
+                setDefaultBtnLabelModel(new ResourceModel("show.all.properties", "Show all Properties"));
                 setDefaultBtnIcon(FontAwesomeIconType.refresh);
                 return new AjaxLink(id) {
                     @Override
@@ -171,6 +171,6 @@ public class EventSummaryPanel extends BreadCrumbPanel {
 
     @Override
     public IModel<String> getTitle() {
-        return new ResourceModel("eventSummary", "Summary");
+        return new ResourceModel("event.summary", "Event Summary");
     }
 }

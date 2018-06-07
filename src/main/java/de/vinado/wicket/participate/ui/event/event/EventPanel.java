@@ -170,9 +170,9 @@ public class EventPanel extends BreadCrumbPanel {
             }
         });
         columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "member.person.sortName", "member.person.sortName"));
-        columns.add(new PropertyColumn<>(new ResourceModel("voiceGroup", "Voice"), "member.voice.sortOrder", "member.voice.name"));
+        columns.add(new PropertyColumn<>(new ResourceModel("voice", "Voice"), "member.voice.sortOrder", "member.voice.name"));
         if (editable) {
-            columns.add(new BootstrapAjaxLinkColumn<MemberToEvent, String>(FontAwesomeIconType.pencil, new ResourceModel("editInvitation", "Edit invitation")) {
+            columns.add(new BootstrapAjaxLinkColumn<MemberToEvent, String>(FontAwesomeIconType.pencil, new ResourceModel("invitation.edit", "Edit Invitation")) {
                 @Override
                 public void onClick(final AjaxRequestTarget target, final IModel<MemberToEvent> rowModel) {
                     final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
@@ -182,14 +182,14 @@ public class EventPanel extends BreadCrumbPanel {
                             savedModel.getObject().setReviewed(false);
                             model.setObject(eventService.getEventView(eventService.saveEventToMember(savedModel.getObject()).getEvent()));
                             dataProvider.set(eventService.getMemberToEventList(model.getObject().getEvent()));
-                            Snackbar.show(target, new ResourceModel("editDataA"));
+                            Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
                             target.add(form);
                         }
                     });
                     modal.show(target);
                 }
             });
-            columns.add(new BootstrapAjaxLinkColumn<MemberToEvent, String>(FontAwesomeIconType.envelope, new ResourceModel("sendMessage", "Send message")) {
+            columns.add(new BootstrapAjaxLinkColumn<MemberToEvent, String>(FontAwesomeIconType.envelope, new ResourceModel("email.send", "Send Email")) {
                 @Override
                 public void onClick(final AjaxRequestTarget target, final IModel<MemberToEvent> rowModel) {
                     final MailData mailData = new MailData();

@@ -104,10 +104,10 @@ public class FormSignInPage extends BasePage {
         add(form);
 
         final List<ITab> tabs = new ArrayList<>();
-        tabs.add(new AbstractTab(new ResourceModel("usage")) {
+        tabs.add(new AbstractTab(new ResourceModel("usage", "Usage")) {
             @Override
             public Panel getPanel(final String panelId) {
-                return new TextPanel(panelId, new ResourceModel("formUsageDescription"));
+                return new TextPanel(panelId, new ResourceModel("formUsageDescription", ""));
             }
         });
 

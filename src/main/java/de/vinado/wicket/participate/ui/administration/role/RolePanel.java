@@ -23,7 +23,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -84,7 +83,7 @@ public abstract class RolePanel extends Panel {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                modal.setContent(new AddEditRolePanel(modal, new ResourceModel("editRole", "Edit role"), new CompoundPropertyModel<>(new RoleDTO(model.getObject()))) {
+                modal.setContent(new AddEditRolePanel(modal, new ResourceModel("role.edit", "Edit Role"), new CompoundPropertyModel<>(new RoleDTO(model.getObject()))) {
                     @Override
                     protected void onUpdate(final Role role, final AjaxRequestTarget target) {
                         model.setObject(role);
@@ -100,8 +99,8 @@ public abstract class RolePanel extends Panel {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                modal.setContent(new BootstrapModalConfirmationPanel(modal, new ResourceModel("removeRole", "Remove role"),
-                        new ResourceModel("removeRoleQuestion")) {
+                modal.setContent(new BootstrapModalConfirmationPanel(modal, new ResourceModel("role.remove", "Remove Role"),
+                    new ResourceModel("role.remove.question", "Are you sure you want to remove this role?")) {
                     @Override
                     protected void onConfirm(final AjaxRequestTarget target) {
                         roleService.removeRole(model.getObject());
@@ -121,8 +120,8 @@ public abstract class RolePanel extends Panel {
         };
 
         final List<IColumn<Person, String>> columns = new ArrayList<>();
-        columns.add(new PropertyColumn<>(Model.of("ID"), "id", "id"));
-        columns.add(new PropertyColumn<>(new ResourceModel("firstName", "Given name"), "firstName", "firstName"));
+        columns.add(new PropertyColumn<>(new ResourceModel("id", "ID"), "id", "id"));
+        columns.add(new PropertyColumn<>(new ResourceModel("firstName", "Given Name"), "firstName", "firstName"));
         columns.add(new PropertyColumn<>(new ResourceModel("lastName", "Surname"), "lastName", "lastName"));
         columns.add(new PropertyColumn<>(new ResourceModel("email", "Email"), "email", "email"));
 

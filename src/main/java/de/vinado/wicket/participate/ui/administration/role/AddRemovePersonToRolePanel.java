@@ -24,13 +24,13 @@ public class AddRemovePersonToRolePanel extends BootstrapModalPanel<PersonRoleDT
         super(modal, new ResourceModel("roles", "Roles"), model);
 
         final List<ITab> tabs = new ArrayList<>();
-        tabs.add(new AbstractTab(new ResourceModel("add", "Add")) {
+        tabs.add(new AbstractTab(new ResourceModel("role.add", "Add Role")) {
             @Override
             public Panel getPanel(final String panelId) {
                 return new AddPersonToRole(panelId);
             }
         });
-        tabs.add(new AbstractTab(new ResourceModel("remove", "Remove")) {
+        tabs.add(new AbstractTab(new ResourceModel("role.remove", "Remove Role")) {
             @Override
             public Panel getPanel(final String panelId) {
                 return new RemovePersonToRole(panelId);

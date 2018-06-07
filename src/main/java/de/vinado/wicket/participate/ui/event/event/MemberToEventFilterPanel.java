@@ -50,12 +50,12 @@ public abstract class MemberToEventFilterPanel extends AbstractTableFilterPanel<
 
         final DropDownChoice<Configurable> invitationStatusDdc = new DropDownChoice<>("invitationStatus",
                 listOfValueService.getConfigurableList(InvitationStatus.class), new ChoiceRenderer<>("name"));
-        invitationStatusDdc.setLabel(new ResourceModel("invitationStatus", "Invitation status"));
+        invitationStatusDdc.setLabel(new ResourceModel("invitationStatus", "Invitation Status"));
         inner.add(invitationStatusDdc);
 
         final DropDownChoice<Configurable> voiceDdc = new DropDownChoice<>("voice",
                 listOfValueService.getConfigurableList(Voice.class), new ChoiceRenderer<>("name"));
-        voiceDdc.setLabel(new ResourceModel("voiceGroup", "Voice"));
+        voiceDdc.setLabel(new ResourceModel("voice", "Voice"));
         inner.add(voiceDdc);
 
         final CheckBox showAllCb = new CheckBox("notInvited");

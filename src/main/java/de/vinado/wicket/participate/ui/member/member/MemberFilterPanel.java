@@ -42,7 +42,7 @@ public abstract class MemberFilterPanel extends AbstractTableFilterPanel<Member,
 
         final DropDownChoice<Configurable> voiceDdc = new DropDownChoice<>("voice",
                 listOfValueService.getConfigurableList(Voice.class), new ChoiceRenderer<>("name"));
-        voiceDdc.setLabel(new ResourceModel("voiceGroup", "Voice"));
+        voiceDdc.setLabel(new ResourceModel("voice", "Voice"));
         inner.add(voiceDdc);
 
         final CheckBox showAllCb = new CheckBox("showAll");

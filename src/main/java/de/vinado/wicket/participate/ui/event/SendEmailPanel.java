@@ -33,7 +33,7 @@ public class SendEmailPanel extends BootstrapModalPanel<MailData> {
     private EmailService emailService;
 
     public SendEmailPanel(final BootstrapModal modal, final IModel<MailData> model) {
-        super(modal, new ResourceModel("newEmail", "New Email"), model);
+        super(modal, new ResourceModel("email.new", "New Email"), model);
         setModalSize(ModalSize.Large);
 
         model.getObject().setSender(ParticipateApplication.get().getApplicationName()
@@ -47,8 +47,8 @@ public class SendEmailPanel extends BootstrapModalPanel<MailData> {
         toTf.getSettings().setLanguage(getLocale().getLanguage());
         toTf.getSettings().setCloseOnSelect(true);
         toTf.getSettings().setTheme(new Select2BootstrapTheme(true));
-        toTf.getSettings().setPlaceholder(new ResourceModel("pleaseChoose", "Please choose").getObject());
-        toTf.setLabel(new ResourceModel("recipient", "Recipient"));
+        toTf.getSettings().setPlaceholder(new ResourceModel("select.placeholder", "Please Choose").getObject());
+        toTf.setLabel(new ResourceModel("email.recipient", "Recipient"));
         inner.add(toTf);
 
         final TextField<String> subjectTf = new TextField<>("subject");
@@ -63,7 +63,7 @@ public class SendEmailPanel extends BootstrapModalPanel<MailData> {
     @Override
     protected void onSaveSubmit(final IModel<MailData> model, final AjaxRequestTarget target) {
         emailService.sendMail(model.getObject());
-        Snackbar.show(target, new ResourceModel("messageSent", "Message sent"));
+        Snackbar.show(target, new ResourceModel("email.send.success", "Email sent"));
     }
 
     @Override

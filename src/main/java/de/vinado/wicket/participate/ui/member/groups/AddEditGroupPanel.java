@@ -71,13 +71,13 @@ public abstract class AddEditGroupPanel extends BootstrapModalPanel<GroupDTO> {
                     setLabel(new ResourceModel("groupWillBeRemoved", "Group will be removed"));
                     setIconType(FontAwesomeIconType.exclamation_circle);
                 } else {
-                    setLabel(new ResourceModel("removeGroup", "Remove group"));
+                    setLabel(new ResourceModel("group.remove", "Remove Group"));
                     setIconType(FontAwesomeIconType.trash);
                 }
                 target.add(this);
             }
         };
-        removeBtn.setLabel(new ResourceModel("removeGroup", "Remove group"));
+        removeBtn.setLabel(new ResourceModel("group.remove", "Remove Group"));
         removeBtn.setIconType(FontAwesomeIconType.trash);
         removeBtn.setSize(Buttons.Size.Mini);
         removeBtn.setOutputMarkupId(true);
@@ -92,7 +92,7 @@ public abstract class AddEditGroupPanel extends BootstrapModalPanel<GroupDTO> {
             if (remove) {
                 personService.removeGroup(model.getObject().getGroup());
                 send(getWebPage(), Broadcast.BREADTH, new GroupUpdateEvent(target));
-                Snackbar.show(target, new ResourceModel("removeGroupS"));
+                Snackbar.show(target, new ResourceModel("group.remove.success", "The group has been removed"));
                 return;
             }
             onUpdate(personService.saveGroup(model.getObject()), target);

@@ -63,21 +63,21 @@ public abstract class DetailedMemberToEventFilterPanel extends AbstractTableFilt
         toDateConfig.autoClose(true);
 
         searchTermTf = new TextField("name");
-        searchTermTf.setLabel(new ResourceModel("searchNames", "Search"));
+        searchTermTf.setLabel(new ResourceModel("filter.names", "Filter by Name"));
         inner.add(searchTermTf);
 
         final TextField commentTf = new TextField("comment");
-        commentTf.setLabel(new ResourceModel("searchComment", "Search for Comments"));
+        commentTf.setLabel(new ResourceModel("filter.comments", "Filter by comments"));
         inner.add(commentTf);
 
         final DropDownChoice<Configurable> invitationStatusDdc = new DropDownChoice<>("invitationStatus",
                 listOfValueService.getConfigurableList(InvitationStatus.class), new ChoiceRenderer<>("name"));
-        invitationStatusDdc.setLabel(new ResourceModel("invitationStatus", "Invitation status"));
+        invitationStatusDdc.setLabel(new ResourceModel("invitationStatus", "Invitation Status"));
         inner.add(invitationStatusDdc);
 
         final DropDownChoice<Configurable> voiceDdc = new DropDownChoice<>("voice",
                 listOfValueService.getConfigurableList(Voice.class), new ChoiceRenderer<>("name"));
-        voiceDdc.setLabel(new ResourceModel("voiceGroup", "Voice"));
+        voiceDdc.setLabel(new ResourceModel("voice", "Voice"));
         inner.add(voiceDdc);
 
         final DateTextField endDateTf = new DateTextField("toDate", toDateConfig);

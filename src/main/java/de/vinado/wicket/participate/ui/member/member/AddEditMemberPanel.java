@@ -68,7 +68,7 @@ public class AddEditMemberPanel extends BootstrapModalPanel<MemberDTO> {
         final EmailTextField emailTf = new EmailTextField("email");
         emailTf.setLabel(new ResourceModel("email", "Email"));
         emailTf.setRequired(true);
-        emailTf.add(new ConditionalValidator<String>(new ResourceModel("uniqueEmail", "Email address has to be unique")) {
+        emailTf.add(new ConditionalValidator<String>(new ResourceModel("unique.email", "A person with this e-mail address already exists")) {
             @Override
             public boolean getCondition(final String value) {
                 if (Strings.isEmpty(model.getObject().getEmail())) {
@@ -84,7 +84,7 @@ public class AddEditMemberPanel extends BootstrapModalPanel<MemberDTO> {
 
         final DropDownChoice<Configurable> voiceDd = new DropDownChoice<>("voice",
             listOfValueService.getConfigurableList(Voice.class), new ChoiceRenderer<>("name"));
-        voiceDd.setLabel(new ResourceModel("voiceGroup", "Voice"));
+        voiceDd.setLabel(new ResourceModel("voice", "Voice"));
         inner.add(voiceDd);
 
         final Select2MultiChoice<Group> groupS2mc = new Select2MultiChoice<Group>("groups",
@@ -92,8 +92,8 @@ public class AddEditMemberPanel extends BootstrapModalPanel<MemberDTO> {
         groupS2mc.getSettings().setLanguage(getLocale().getLanguage());
         groupS2mc.getSettings().setCloseOnSelect(true);
         groupS2mc.getSettings().setTheme(new Select2BootstrapTheme(true));
-        groupS2mc.getSettings().setPlaceholder(new ResourceModel("pleaseChoose", "Please choose").getObject());
-        groupS2mc.setLabel(new ResourceModel("selectGroup", "Select group"));
+        groupS2mc.getSettings().setPlaceholder(new ResourceModel("select.placeholder", "Please Choose").getObject());
+        groupS2mc.setLabel(new ResourceModel("group.select", "Select Group"));
         inner.add(groupS2mc);
 
         final BootstrapAjaxLink removeBtn = new BootstrapAjaxLink("removeBtn", Buttons.Type.Link) {
@@ -107,16 +107,16 @@ public class AddEditMemberPanel extends BootstrapModalPanel<MemberDTO> {
             public void onClick(final AjaxRequestTarget target) {
                 remove = !remove;
                 if (remove) {
-                    setLabel(new ResourceModel("memberWillBeRemoved", "Member will be removed"));
+                    setLabel(new ResourceModel("member.remove.hint", "Member will be removed"));
                     setIconType(FontAwesomeIconType.exclamation_circle);
                 } else {
-                    setLabel(new ResourceModel("removeMember", "Remove member"));
+                    setLabel(new ResourceModel("member.remove", "Remove Member"));
                     setIconType(FontAwesomeIconType.trash);
                 }
                 target.add(this);
             }
         };
-        removeBtn.setLabel(new ResourceModel("removeMember", "Remove member"));
+        removeBtn.setLabel(new ResourceModel("member.remove", "Remove Member"));
         removeBtn.setIconType(FontAwesomeIconType.trash);
         removeBtn.setSize(Buttons.Size.Mini);
         removeBtn.setOutputMarkupId(true);
@@ -131,7 +131,7 @@ public class AddEditMemberPanel extends BootstrapModalPanel<MemberDTO> {
             if (remove) {
                 personService.removeMember(model.getObject().getMember());
                 send(getWebPage(), Broadcast.BREADTH, new MemberUpdateEvent(target));
-                Snackbar.show(target, new ResourceModel("removeMemberS", "Member removed successfully"));
+                Snackbar.show(target, new ResourceModel("member.remove.success", "The member has been removed"));
                 return;
             }
             personService.saveMember(model.getObject());

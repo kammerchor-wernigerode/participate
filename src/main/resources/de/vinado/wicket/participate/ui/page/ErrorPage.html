@@ -12,14 +12,22 @@
                     <div class="page-header">
                         <h1 wicket:id="error"></h1>
                     </div>
-                    <p>Die Anweisung konnte nicht ausgeführt werden. In der Anwendung ist ein Fehler aufgetreten:</p>
+                    <p>
+                        <wicket:message key="page.error.message">The statement could not be executed. An error has
+                            occurred in the application.
+                        </wicket:message>
+                    </p>
                     <pre wicket:id="message"></pre>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-xs-12">
-                    <p>Für eine schnelle Fehleranalyse kannst du eine detailierte Fehlermeldung anzeigen.</p>
+                    <p>
+                        <wicket:message key="page.error.stacktrace">For a quick error analysis, you can display a
+                            detailed error message.
+                        </wicket:message>
+                    </p>
                     <p><a wicket:id="showStackTrace"></a> <a wicket:id="homePageLink"></a></p>
                 </div>
             </div>
@@ -31,7 +39,7 @@
                             <wicket:message key="markup">Markup</wicket:message>
                         </h2>
                         <p>
-                            <wicket:message key="resourceProblem">The problem is in</wicket:message>
+                            <wicket:message key="page.error.resource-problem-in">The problem is in</wicket:message>
                             "<span class="resource" wicket:id="resource"></span>":
                         </p>
                         <pre class="markup" wicket:id="markup"></pre>

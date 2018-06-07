@@ -54,17 +54,18 @@ public class GroupPanel extends Panel {
 
         final List<IColumn<Member, String>> columns = new ArrayList<>();
         columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "person.sortName", "person.sortName"));
-        columns.add(new PropertyColumn<>(new ResourceModel("voiceGroup", "Voice"), "voice.sortOrder", "voice.name"));
+        columns.add(new PropertyColumn<>(new ResourceModel("voice", "Voice"), "voice.sortOrder", "voice.name"));
         columns.add(new AbstractColumn<Member, String>(Model.of()) {
             @Override
             public void populateItem(final Item<ICellPopulator<Member>> item, final String componentId, final IModel<Member> rowModel) {
-                item.add(new BootstrapAjaxLinkPanel(componentId, Buttons.Type.Link, FontAwesomeIconType.times, new ResourceModel("removeMemberToGroup", "Remove person to group")) {
+                item.add(new BootstrapAjaxLinkPanel(componentId, Buttons.Type.Link, FontAwesomeIconType.times,
+                    new ResourceModel("group.remove.member", "Remove member from group")) {
                     @Override
                     public void onClick(final AjaxRequestTarget target) {
                         personService.dissociateMemberToGroup(rowModel.getObject(), model.getObject());
                         dataProvider.set(personService.getGroupMemberList(model.getObject()));
                         target.add(dataTable);
-                        Snackbar.show(target, new ResourceModel("removeMemberToGroupA", "Removed person to group"));
+                        Snackbar.show(target, new ResourceModel("group.remove.member.success", "The member was removed from the group"));
                     }
                 });
             }

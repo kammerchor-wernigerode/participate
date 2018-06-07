@@ -19,13 +19,12 @@
                 <div class="panel-body">
                     <fieldset>
                         <legend>
-                            Participate
-                            <small><wicket:message key="loginForMembers">(Participation Feedback)</wicket:message></small>
+                            <wicket:message key="login.form">Participation Form</wicket:message>
                         </legend>
                         <form wicket:id="form">
                             <div class="form-group" wicket:id="usernameWmc">
                                 <label class="control-label sr-only">
-                                    <wicket:message key="email"/>
+                                    <wicket:message key="email">Email</wicket:message>
                                 </label>
                                 <div class="input-group">
                                     <div class="input-group-addon"><i class="fa fa-user fa-fw"></i></div>
@@ -45,7 +44,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label sr-only">
-                                    <wicket:message key="password"/>
+                                    <wicket:message key="password">Password</wicket:message>
                                 </label>
                                 <div class="input-group">
                                     <div class="input-group-addon"><i class="fa fa-lock fa-fw"></i></div>
@@ -55,12 +54,12 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" wicket:id="rememberMe">
-                                    <wicket:message key="rememberMe"/>
+                                    <wicket:message key="rememberMe">Remember Me</wicket:message>
                                 </label>
                             </div>
                             <div class="form-group" wicket:id="eventWmc">
                                 <label class="control-label sr-only">
-                                    <wicket:message key="event"/>
+                                    <wicket:message key="event">Event</wicket:message>
                                 </label>
                                 <select class="form-control" wicket:id="memberToEvent"></select>
                             </div>

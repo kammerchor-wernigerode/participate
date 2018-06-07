@@ -11,7 +11,7 @@ import java.util.List;
  */
 public abstract class FilterableDateProvider<T, S, R extends IFilter<T>> extends SimpleDataProvider<T, S> implements IFilterStateLocator<R> {
 
-    // TODO Data privider ignores rows with NULL properties. Fix this
+    // TODO Data provider ignores rows with NULL properties. Fix this
 
     private R filter;
 

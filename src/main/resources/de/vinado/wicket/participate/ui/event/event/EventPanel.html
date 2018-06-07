@@ -8,22 +8,32 @@
     <form wicket:id="form">
         <div wicket:id="wmc">
             <dl class="dl-horizontal">
-                <dt><wicket:message key="name"/>:</dt>
+                <dt>
+                    <wicket:message key="name">Name</wicket:message>:
+                </dt>
                 <dd wicket:id="name"></dd>
-                <dt><wicket:message key="event"/>:</dt>
+                <dt>
+                    <wicket:message key="event">Event</wicket:message>:
+                </dt>
                 <dd wicket:id="eventType"></dd>
-                <dt><wicket:message key="date"/>:</dt>
+                <dt>
+                    <wicket:message key="date">Date</wicket:message>:
+                </dt>
                 <dd wicket:id="displayDate"></dd>
-                <dt><wicket:message key="location"/>:</dt>
+                <dt>
+                    <wicket:message key="location">Location</wicket:message>:
+                </dt>
                 <dd wicket:id="location"></dd>
                 <wicket:enclosure>
-                    <dt><wicket:message key="description"/>:</dt>
+                    <dt>
+                        <wicket:message key="description">Description</wicket:message>:
+                    </dt>
                     <dd wicket:id="description"></dd>
                 </wicket:enclosure>
             </dl>
             <fieldset>
                 <legend>
-                    <wicket:message key="cast"/>: <span wicket:id="cast">[Cast name]</span>
+                    <wicket:message key="cast">Cast</wicket:message>: <span wicket:id="cast">[Cast name]</span>
                 </legend>
                 <div wicket:id="filterPanel"></div>
                 <div class="table-responsive">

@@ -54,7 +54,7 @@ public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<Memb
     private ListOfValueService listOfValueService;
 
     public EditMemberInvitationPanel(final BootstrapModal modal, final IModel<MemberToEventDTO> model) {
-        super(modal, new ResourceModel("editInvitation", "Edit invitation"), model);
+        super(modal, new ResourceModel("invitation.edit", "Edit Invitation"), model);
 
         final DatetimePickerConfig fromConfig = new DatetimePickerConfig();
         fromConfig.useLocale("de");
@@ -183,7 +183,6 @@ public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<Memb
             }
         };
         commentTa.add(new AutosizeBehavior());
-        commentTa.setLabel(new ResourceModel("moreComments", "More comments"));
         commentTa.add(BootstrapHorizontalFormDecorator.decorate());
         commentTa.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
@@ -195,17 +194,17 @@ public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<Memb
 
         final BootstrapAjaxLink<MemberToEventDTO> inviteMemberBtn = new BootstrapAjaxLink<MemberToEventDTO>(
             "inviteMemberBtn", model, Buttons.Type.Default, model.getObject().isInvited()
-            ? new ResourceModel("sendReminder", "Send reminder")
-            : new ResourceModel("sendInvitation", "Send invitation")) {
+            ? new ResourceModel("email.send.reminder", "Send Reminder")
+            : new ResourceModel("email.send.invitation", "Send Invitation")) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 eventService.inviteMembersToEvent(model.getObject().getEvent(),
                     Collections.singletonList(model.getObject().getMemberToEvent()), model.getObject().isInvited());
                 modal.close(target);
                 if (model.getObject().isInvited()) {
-                    Snackbar.show(target, new ResourceModel("sentReminder", "Reminder sent"));
+                    Snackbar.show(target, new ResourceModel("email.send.reminder.success", "A reminder has been sent"));
                 } else {
-                    Snackbar.show(target, new ResourceModel("sentInvitation", "Invitation sent"));
+                    Snackbar.show(target, new ResourceModel("email.send.invitation.success", "An invitation has been sent"));
                 }
             }
 

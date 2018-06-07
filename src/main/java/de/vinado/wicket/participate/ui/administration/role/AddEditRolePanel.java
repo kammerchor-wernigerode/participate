@@ -31,9 +31,8 @@ public abstract class AddEditRolePanel extends BootstrapModalPanel<RoleDTO> {
         modifyState = null != model.getObject().getRole();
 
         final TextField<String> nameTf = new TextField<>("name");
-        nameTf.setLabel(new ResourceModel("romeName", "Role name"));
         nameTf.add(BootstrapHorizontalFormDecorator.decorate());
-        nameTf.add(new ConditionalValidator<String>(new ResourceModel("uniqueRoleE", "A role with this name already exists!")) {
+        nameTf.add(new ConditionalValidator<String>(new ResourceModel("unique.role", "A role with this name already exists")) {
             @Override
             public boolean getCondition(final String value) {
                 return roleService.roleExist(value);

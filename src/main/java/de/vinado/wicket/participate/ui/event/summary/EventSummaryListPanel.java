@@ -127,7 +127,7 @@ public class EventSummaryListPanel extends Panel {
             }
         });
         columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "member.person.sortName", "member.person.sortName"));
-        columns.add(new PropertyColumn<>(new ResourceModel("voiceGroup", "voice"), "member.voice.sortOrder", "member.voice.name"));
+        columns.add(new PropertyColumn<>(new ResourceModel("voice", "voice"), "member.voice.sortOrder", "member.voice.name"));
         columns.add(new AbstractColumn<MemberToEvent, String>(new ResourceModel("period", "Period")) {
             @Override
             public void populateItem(final Item<ICellPopulator<MemberToEvent>> cellItem, final String componentId, final IModel<MemberToEvent> rowModel) {
@@ -201,7 +201,7 @@ public class EventSummaryListPanel extends Panel {
                 return "sr-only";
             }
         });
-        columns.add(new PropertyColumn<MemberToEvent, String>(new ResourceModel("moreComments", "More comments"), "comment") {
+        columns.add(new PropertyColumn<MemberToEvent, String>(new ResourceModel("comments", "Comments"), "comment") {
             @Override
             public String getCssClass() {
                 if (showAllProperties) {
@@ -211,7 +211,7 @@ public class EventSummaryListPanel extends Panel {
             }
         });
         if (editable) {
-            columns.add(new BootstrapAjaxLinkColumn<MemberToEvent, String>(FontAwesomeIconType.pencil, new ResourceModel("editInvitation", "Edit invitation")) {
+            columns.add(new BootstrapAjaxLinkColumn<MemberToEvent, String>(FontAwesomeIconType.pencil, new ResourceModel("invitation.edit", "Edit Invitation")) {
                 @Override
                 public void onClick(final AjaxRequestTarget target, final IModel<MemberToEvent> rowModel) {
                     final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
@@ -226,14 +226,14 @@ public class EventSummaryListPanel extends Panel {
                                 target));
                             dataProvider.set(eventService.getMemberToEventList(event));
                             target.add(dataTable);
-                            Snackbar.show(target, new ResourceModel("editDataA"));
+                            Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
                         }
                     });
                     modal.show(target);
 
                 }
             });
-            columns.add(new BootstrapAjaxLinkColumn<MemberToEvent, String>(FontAwesomeIconType.envelope, new ResourceModel("sendMessage", "Send message")) {
+            columns.add(new BootstrapAjaxLinkColumn<MemberToEvent, String>(FontAwesomeIconType.envelope, new ResourceModel("email.send", "Send Email")) {
                 @Override
                 public void onClick(final AjaxRequestTarget target, final IModel<MemberToEvent> rowModel) {
                     final MailData mailData = new MailData();

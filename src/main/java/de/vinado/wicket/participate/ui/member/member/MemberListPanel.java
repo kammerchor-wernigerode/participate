@@ -70,18 +70,18 @@ public class MemberListPanel extends Panel {
         final List<IColumn<Member, String>> columns = new ArrayList<>();
         columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "person.sortName", "person.sortName"));
         columns.add(new PropertyColumn<>(new ResourceModel("email", "Email"), "person.email", "person.email"));
-        columns.add(new PropertyColumn<>(new ResourceModel("voiceGroup", "Voice"), "voice.sortOrder", "voice.name"));
-        columns.add(new BootstrapAjaxLinkColumn<Member, String>(FontAwesomeIconType.pencil, new ResourceModel("editMember", "Edit member")) {
+        columns.add(new PropertyColumn<>(new ResourceModel("voice", "Voice"), "voice.sortOrder", "voice.name"));
+        columns.add(new BootstrapAjaxLinkColumn<Member, String>(FontAwesomeIconType.pencil, new ResourceModel("member.edit", "Edit Member")) {
             @Override
             public void onClick(final AjaxRequestTarget target, final IModel<Member> rowModel) {
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                 final Member member = rowModel.getObject();
-                modal.setContent(new AddEditMemberPanel(modal, new ResourceModel("editMember", "Edit member"), new CompoundPropertyModel<>(new
+                modal.setContent(new AddEditMemberPanel(modal, new ResourceModel("member.edit", "Edit Member"), new CompoundPropertyModel<>(new
                     MemberDTO(member, personService.getGroupList(member)))));
                 modal.show(target);
             }
         });
-        columns.add(new BootstrapAjaxLinkColumn<Member, String>(FontAwesomeIconType.envelope, new ResourceModel("sendMessage", "Send message")) {
+        columns.add(new BootstrapAjaxLinkColumn<Member, String>(FontAwesomeIconType.envelope, new ResourceModel("email.send", "Send Email")) {
             @Override
             public void onClick(final AjaxRequestTarget target, final IModel<Member> rowModel) {
                 final MailData mailData = new MailData();

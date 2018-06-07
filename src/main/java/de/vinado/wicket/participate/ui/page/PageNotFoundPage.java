@@ -17,7 +17,7 @@ public class PageNotFoundPage extends AbstractErrorPage {
                 getApplication().getHomePage(), Buttons.Type.Primary);
         homePageLink.setIconType(FontAwesomeIconType.home);
         homePageLink.setSize(Buttons.Size.Large);
-        homePageLink.setLabel(new ResourceModel("homepage", "Return to home page"));
+        homePageLink.setLabel(new ResourceModel("navigate.homepage", "Goto Homepage"));
         add(homePageLink);
     }
 

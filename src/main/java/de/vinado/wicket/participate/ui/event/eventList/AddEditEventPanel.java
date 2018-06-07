@@ -85,7 +85,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         endDateConfig.autoClose(true);
 
         final TextField<String> nameTf = new TextField<>("name");
-        nameTf.setLabel(new ResourceModel("eventName", "Event name"));
+        nameTf.setLabel(new ResourceModel("event.name", "Event Name"));
         nameTf.add(BootstrapHorizontalFormDecorator.decorate());
         nameTf.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
@@ -100,7 +100,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
                 target.add(inner);
             }
         };
-        isSeveralDaysCb.setLabel(new ResourceModel("multiDayEvent", "Multi-day event"));
+        isSeveralDaysCb.setLabel(new ResourceModel("event.multi-day", "Multi-day Event"));
         isSeveralDaysCb.add(BootstrapHorizontalFormDecorator.decorate());
         inner.add(isSeveralDaysCb);
 
@@ -186,7 +186,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         groupDdc.setLabel(new ResourceModel("cast", "Cast"));
         groupDdc.setVisible(!edit);
         groupDdc.setRequired(!edit);
-        groupDdc.add(BootstrapHorizontalFormDecorator.decorateWithHelperBlock(new ResourceModel("groupHelp",
+        groupDdc.add(BootstrapHorizontalFormDecorator.decorateWithHelperBlock(new ResourceModel("cast.add.hint",
                 "The cast can not be edited later.")));
         inner.add(groupDdc);
 
@@ -201,16 +201,16 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
             public void onClick(final AjaxRequestTarget target) {
                 remove = !remove;
                 if (remove) {
-                    setLabel(new ResourceModel("eventWillBeRemoved", "Event will be removed"));
+                    setLabel(new ResourceModel("event.remove.hint", "Event will be removed"));
                     setIconType(FontAwesomeIconType.exclamation_circle);
                 } else {
-                    setLabel(new ResourceModel("removeEvent", "Remove event"));
+                    setLabel(new ResourceModel("event.remove", "Remove event"));
                     setIconType(FontAwesomeIconType.trash);
                 }
                 target.add(this);
             }
         };
-        removeBtn.setLabel(new ResourceModel("removeEvent", "Remove event"));
+        removeBtn.setLabel(new ResourceModel("event.remove", "Remove Event"));
         removeBtn.setIconType(FontAwesomeIconType.trash);
         removeBtn.setSize(Buttons.Size.Mini);
         removeBtn.setOutputMarkupId(true);
@@ -233,7 +233,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
                 eventService.removeEvent(model.getObject().getEvent());
                 send(getPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
                 send(getWebPage(), Broadcast.BREADTH, new RemoveEventUpdateEvent(target));
-                Snackbar.show(target, new ResourceModel("removeEventS", "Event removed successfully"));
+                Snackbar.show(target, new ResourceModel("event.remove.success", "The event has been removed"));
                 return;
             }
             onUpdate(eventService.saveEvent(model.getObject()), target);

@@ -64,9 +64,9 @@ public class UserPanel extends Panel {
             };
 
         final List<IColumn<User, String>> columns = new ArrayList<>();
-        columns.add(new PropertyColumn<>(new ResourceModel("userId", "User ID"), "id", "id"));
+        columns.add(new PropertyColumn<>(new ResourceModel("user.id", "User ID"), "id", "id"));
         columns.add(new PropertyColumn<>(new ResourceModel("username", "Username"), "username", "username"));
-        columns.add(new PropertyColumn<User, String>(new ResourceModel("admin", "Administrator"), "admin", "admin") {
+        columns.add(new PropertyColumn<User, String>(new ResourceModel("administrator", "Administrator"), "admin", "admin") {
             @Override
             public void populateItem(final Item<ICellPopulator<User>> item, final String componentId, final IModel<User> rowModel) {
                 item.add(new IconPanel(
@@ -80,7 +80,7 @@ public class UserPanel extends Panel {
                 return "width-fix-70";
             }
         });
-        columns.add(new PropertyColumn<User, String>(new ResourceModel("active", "Active"), "enabled", "enabled") {
+        columns.add(new PropertyColumn<User, String>(new ResourceModel("enabled", "Enabled"), "enabled", "enabled") {
             @Override
             public void populateItem(final Item<ICellPopulator<User>> item, final String componentId, final IModel<User> rowModel) {
                 item.add(new IconPanel(
@@ -105,7 +105,8 @@ public class UserPanel extends Panel {
                         final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                         if (null != rowModel.getObject().getPerson()) {
                             modal.setContent(new BootstrapModalConfirmationPanel(modal,
-                                new ResourceModel("removePersonUser", "Remove person-user association"), new ResourceModel("removePersonQuestion")) {
+                                new ResourceModel("user.remove.person", "Remove user-person association"),
+                                new ResourceModel("user.remove.person.question", "Are you sure you want to remove the user-person association?")) {
                                 @Override
                                 protected void onConfirm(final AjaxRequestTarget target) {
                                     userService.removePersonFromUser(rowModel.getObject());
@@ -119,9 +120,9 @@ public class UserPanel extends Panel {
                                 protected void onConfirm(final Person savedPerson, final AjaxRequestTarget target) {
                                     dataProvider.set(userService.getAll(User.class));
                                     if (userService.startPasswordReset(savedPerson.getEmail(), true)) {
-                                        Snackbar.show(target, new ResourceModel("invitationSent", "An invitation has been sent"));
+                                        Snackbar.show(target, new ResourceModel("email.send.invitation.success", "An invitation has been sent"));
                                     } else {
-                                        Snackbar.show(target, new ResourceModel("invitationSentError", "Error while try to send an invitation"));
+                                        Snackbar.show(target, new ResourceModel("email.send.invitation.error", "There was an error sending the invitation"));
                                     }
                                     target.add(dataTable);
                                 }
@@ -133,7 +134,7 @@ public class UserPanel extends Panel {
                 item.add(button);
             }
         });
-        columns.add(new PropertyColumn<>(new ResourceModel("personId", "Person ID"), "person.id", "person.id"));
+        columns.add(new PropertyColumn<>(new ResourceModel("person.id", "Person ID"), "person.id", "person.id"));
         columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "person.lastName", "person.lastName"));
         columns.add(new PropertyColumn<>(new ResourceModel("firstName", "Given name"), "person.firstName", "person.firstName"));
         columns.add(new PropertyColumn<>(new ResourceModel("email", "Email"), "person.email", "person.email"));
@@ -146,13 +147,13 @@ public class UserPanel extends Panel {
                         @Override
                         public void onClick(final AjaxRequestTarget target) {
                             final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                            modal.setContent(new AddEditPersonPanel(modal, new ResourceModel("editPerson", "Edit Person"),
+                            modal.setContent(new AddEditPersonPanel(modal, new ResourceModel("person.edit", "Edit Person"),
                                 new CompoundPropertyModel<>(new PersonDTO(person))) {
                                 @Override
                                 protected void onUpdate(final AjaxRequestTarget target) {
                                     dataProvider.set(userService.getAll(User.class));
                                     target.add(dataTable);
-                                    Snackbar.show(target, new ResourceModel("...editedConf", "The Person has been edited"));
+                                    Snackbar.show(target, new ResourceModel("person.edit.success", "The person was successfully edited"));
                                 }
                             });
                             modal.show(target);
@@ -178,14 +179,14 @@ public class UserPanel extends Panel {
                     protected void onConfirm(final User user, final AjaxRequestTarget target) {
                         dataProvider.set(userService.getAll(User.class));
                         target.add(dataTable);
-                        Snackbar.show(target, new ResourceModel("addUserConf", "A new user has been created"));
+                        Snackbar.show(target, new ResourceModel("user.add.success", "A new user has been added"));
                     }
                 });
                 modal.show(target);
             }
         };
         createUserBtn.add(new CssClassNameAppender(Model.of("pull-right")));
-        createUserBtn.setLabel(new ResourceModel("addUser", "Add user"));
+        createUserBtn.setLabel(new ResourceModel("user.add", "Add User"));
         createUserBtn.setSize(Buttons.Size.Mini);
         createUserBtn.setIconType(FontAwesomeIconType.plus);
         add(createUserBtn);

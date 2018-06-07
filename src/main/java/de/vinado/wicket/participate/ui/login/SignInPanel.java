@@ -179,7 +179,7 @@ public class SignInPanel extends Panel {
             setModel(new CompoundPropertyModel<>(SignInPanel.this));
 
             final TextField usernameTf = new RequiredTextField("username");
-            usernameTf.setLabel(new ResourceModel("usernameOrEmail", "Username/Email"));
+            usernameTf.setLabel(new ResourceModel("username-email", "Username/Email"));
             usernameTf.add(new AttributeModifier("placeholder", new ResourceModel("username", "Username")));
             usernameTf.add(new FocusBehavior());
             add(usernameTf);

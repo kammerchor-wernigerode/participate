@@ -8,8 +8,18 @@
     <div class="container">
         <div class="clearfix" style="margin-top: 70px;"></div>
         <div class="jumbotron text-center">
-            <h1>Seite nicht gefunden <small class="text-danger">Fehler 404</small></h1>
-            <p>Sorry, Ein Fehler ist aufgetreten. Die angeforderte Seite konnte nicht gefunden werden.</p>
+            <h1>
+                <wicket:message key="page.error.not-found">Page not found</wicket:message>
+                <small class="text-danger">
+                    <wicket:message key="error">Error</wicket:message>
+                    404
+                </small>
+            </h1>
+            <p>
+                <wicket:message key="page.error.not-found.message">An error has occurred. The requested page could not
+                    be found.
+                </wicket:message>
+            </p>
             <button wicket:id="homePageLink"></button>
         </div>
     </div>

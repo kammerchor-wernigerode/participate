@@ -61,8 +61,8 @@ public abstract class AbstractTableFilterPanel<T, F> extends Panel implements IF
             public void onClick(final AjaxRequestTarget target) {
                 visible = !visible;
                 setLabel(visible
-                        ? new ResourceModel("filterDisable", "Disable Filter")
-                        : new ResourceModel("filterEnable", "Enable filter"));
+                    ? new ResourceModel("filter.hide", "Hide Filter")
+                    : new ResourceModel("filter.enable", "Show Filter"));
 
                 if (!visible) {
                     onReset(target);
@@ -77,7 +77,7 @@ public abstract class AbstractTableFilterPanel<T, F> extends Panel implements IF
         showButton.add(new AttributeModifier("href", "#" + inner.getMarkupId(true)));
         showButton.setSize(Buttons.Size.Mini);
         showButton.setIconType(FontAwesomeIconType.filter);
-        showButton.setLabel(new ResourceModel("filterEnable", "Enable filter"));
+        showButton.setLabel(new ResourceModel("filter.enable", "Show Filter"));
         form.add(showButton);
 
         final BootstrapAjaxButton filterBtn = new BootstrapAjaxButton("filterBtn", Model.of(""), form, Buttons.Type.Primary) {

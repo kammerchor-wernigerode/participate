@@ -31,7 +31,7 @@ public class Footer extends Panel {
         final boolean developmentMode = ParticipateApplication.get().isInDevelopmentMode();
         final boolean signedIn = ParticipateSession.get().isSignedIn();
 
-        add(new Label("developmentMode", "Development mode") {
+        add(new Label("developmentMode", "Development Mode") {
             @Override
             protected void onConfigure() {
                 setVisible(developmentMode);

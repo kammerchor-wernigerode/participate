@@ -26,7 +26,7 @@ public class EditPermissionPanel<T extends EditRolePermissionDTO> extends Bootst
     private RoleService roleService;
 
     public EditPermissionPanel(final BootstrapModal modal, final IModel<T> model) {
-        super(modal, new ResourceModel("editRole", "Edit role"), model);
+        super(modal, new ResourceModel("role.edit", "Edit Role"), model);
 
         model.getObject().setPermissions(roleService.getRoleToPermission4Role(model.getObject().getRole()));
 

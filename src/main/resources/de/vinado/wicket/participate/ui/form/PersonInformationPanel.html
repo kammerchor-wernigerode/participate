@@ -8,7 +8,7 @@
     <wicket:extend>
         <div class="text-center">
             <p>
-                <wicket:message key="iPersonalDetails"/>
+                <wicket:message key="person.details">Personal Details</wicket:message>
             </p>
         </div>
         <div class="form-horizontal">
@@ -17,7 +17,11 @@
             <input type="checkbox" wicket:id="attr.car">
             <hr>
             <div class="form-group">
-                <label class="col-sm-3 control-label">Straße/Hausnr.</label>
+                <label class="col-sm-3 control-label">
+                    <wicket:message key="street">Street</wicket:message>
+                    /
+                    <wicket:message key="houseNumber">House Number</wicket:message>
+                </label>
                 <div class="col-sm-7">
                     <input type="text" class="form-control" wicket:id="address.street">
                 </div>
@@ -26,7 +30,11 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">PLZ/Stadt</label>
+                <label class="col-sm-3 control-label">
+                    <wicket:message key="zipCode">ZIP-Code</wicket:message>
+                    /
+                    <wicket:message key="city">Town</wicket:message>
+                </label>
                 <div class="col-sm-2">
                     <input type="text" class="form-control" wicket:id="address.zipCode">
                 </div>

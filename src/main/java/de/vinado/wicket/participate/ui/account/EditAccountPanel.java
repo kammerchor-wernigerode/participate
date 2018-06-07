@@ -57,17 +57,17 @@ public abstract class EditAccountPanel extends BootstrapModalPanel<EditAccountDT
     private ListOfValueService listOfValueService;
 
     public EditAccountPanel(final BootstrapModal modal, final IModel<EditAccountDTO> model) {
-        super(modal, new ResourceModel("editAccount", "Edit Account"), model);
+        super(modal, new ResourceModel("account.edit", "Edit Account"), model);
 
         final List<ITab> tabs = new ArrayList<>();
-        tabs.add(new AbstractTab(new ResourceModel("userAccount", "User account")) {
+        tabs.add(new AbstractTab(new ResourceModel("account.user", "User Account")) {
             @Override
             public Panel getPanel(final String panelId) {
                 return new EditUserPanel(panelId, model);
             }
         });
         if (null != model.getObject().getPerson()) {
-            tabs.add(new AbstractTab(new ResourceModel("personalDetails", "Personal details")) {
+            tabs.add(new AbstractTab(new ResourceModel("account.personal-details", "Personal Details")) {
                 @Override
                 public Panel getPanel(final String panelId) {
                     return new EditPersonPanel(panelId, model);
@@ -166,9 +166,9 @@ public abstract class EditAccountPanel extends BootstrapModalPanel<EditAccountDT
                 public void validate(final Form<?> form) {
                     if (!Strings.isEmpty(passwordTf.getConvertedInput())) {
                         if (!Strings.isEmpty(oldPasswordTf.getConvertedInput())) {
-                            oldPasswordTf.error((IValidationError) messageSource -> new ResourceModel("oldPasswordE", "Your input does not match your current password"));
+                            oldPasswordTf.error((IValidationError) messageSource -> new ResourceModel("account.password.error", "Your input does not match your current password"));
                         } else if (!model.getObject().getUser().getPasswordSha256().equals(DigestUtils.sha256Hex(oldPasswordTf.getConvertedInput()))) {
-                            oldPasswordTf.error((IValidationError) messageSource -> new ResourceModel("oldPasswordE", "Your input does not match your current password"));
+                            oldPasswordTf.error((IValidationError) messageSource -> new ResourceModel("account.password.error", "Your input does not match your current password"));
                         }
                     }
                 }
@@ -215,7 +215,6 @@ public abstract class EditAccountPanel extends BootstrapModalPanel<EditAccountDT
                     setVisible(null != model.getObject().getMember());
                 }
             };
-            voiceDd.setLabel(new ResourceModel("voiceGroup", "Voice"));
             voiceDd.add(BootstrapHorizontalFormDecorator.decorate());
             voiceDd.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override

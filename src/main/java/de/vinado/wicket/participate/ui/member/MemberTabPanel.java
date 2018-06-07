@@ -54,13 +54,14 @@ public class MemberTabPanel extends BreadCrumbPanel {
 
                     @Override
                     protected AbstractLink newDefaultBtn(final String id, final IModel<List<Member>> model) {
-                        setDefaultBtnLabelModel(new ResourceModel("addMember", "Add member"));
+                        setDefaultBtnLabelModel(new ResourceModel("member.add", "Add Member"));
                         setDefaultBtnIcon(FontAwesomeIconType.plus);
                         return new AjaxLink(id) {
                             @Override
                             public void onClick(final AjaxRequestTarget target) {
                                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                                modal.setContent(new AddEditMemberPanel(modal, new ResourceModel("addMember", "Add member"), new CompoundPropertyModel<>(new MemberDTO())));
+                                modal.setContent(new AddEditMemberPanel(modal, new ResourceModel("member.add", "Add Member"),
+                                    new CompoundPropertyModel<>(new MemberDTO())));
                                 modal.show(target);
                             }
                         };

@@ -41,7 +41,7 @@ public abstract class InviteMembersToEventPanel extends BootstrapModalPanel<Even
      * @param model Model
      */
     public InviteMembersToEventPanel(final BootstrapModal modal, final IModel<Event> model) {
-        super(modal, new ResourceModel("inviteMembers", "Invite members"), model);
+        super(modal, new ResourceModel("members.invite", "Invite Members"), model);
         setModalSize(ModalSize.Large);
 
         final SimpleDataProvider<MemberToEvent, String> dataProvider = new SimpleDataProvider<MemberToEvent, String>(eventService.getMemberToEventList(model.getObject())) {
@@ -59,7 +59,7 @@ public abstract class InviteMembersToEventPanel extends BootstrapModalPanel<Even
             }
         });
         columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "member.displayName", "member.displayName"));
-        columns.add(new PropertyColumn<>(new ResourceModel("voiceGroup", "Voice"), "member.voice.sortOrder", "member.voice.name"));
+        columns.add(new PropertyColumn<>(new ResourceModel("voice", "Voice"), "member.voice.sortOrder", "member.voice.name"));
 
         final BootstrapAjaxDataTable<MemberToEvent, String> dataTable = new BootstrapAjaxDataTable<>("dataTable", columns, dataProvider, 30);
         dataTable.hover();

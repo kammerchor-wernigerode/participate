@@ -9,8 +9,10 @@
     <form wicket:id="form">
         <div wicket:id="wmc">
             <div class="form-group from-group-sm">
-                <label for="importPersons">File input</label>
-                <input type="file" class="form-control" id="importPersons" placeholder="Email" wicket:id="file">
+                <label for="file-input">
+                    <wicket:message key="tools.import.file">Input File</wicket:message>
+                </label>
+                <input type="file" class="form-control" id="file-input" placeholder="Email" wicket:id="file">
             </div>
             <button wicket:id="submitBtn"></button>
         </div>

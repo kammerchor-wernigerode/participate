@@ -32,13 +32,13 @@ public class AdminTabPanel extends BreadCrumbPanel {
                 return new ToolPanel(panelId);
             }
         });
-        tabs.add(new AbstractTab(new ResourceModel("userManagement", "User management")) {
+        tabs.add(new AbstractTab(new ResourceModel("tools.user-management", "User Management")) {
             @Override
             public WebMarkupContainer getPanel(final String panelId) {
                 return new UserPanel(panelId);
             }
         });
-        tabs.add(new AbstractTab(new ResourceModel("rolesAndPermissions", "Roles and Permissions")) {
+        tabs.add(new AbstractTab(new ResourceModel("tools.roles-permissions", "Roles and Permissions")) {
             @Override
             public WebMarkupContainer getPanel(final String panelId) {
                 return new RolesPanel(panelId);

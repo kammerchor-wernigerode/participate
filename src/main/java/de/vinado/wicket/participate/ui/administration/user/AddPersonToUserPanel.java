@@ -30,8 +30,8 @@ import org.wicketstuff.select2.Select2Choice;
  */
 public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDTO> {
 
-    public static final String SELECTED_ASSIGN_PERSON = "assignPerson";
-    public static final String SELECTED_CREATE_PERSON = "addPerson";
+    public static final String SELECTED_ASSIGN_PERSON = "person.assign";
+    public static final String SELECTED_CREATE_PERSON = "person.add";
 
     private final IModel<String> selectedModel = Model.of();
 
@@ -50,7 +50,7 @@ public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDT
      * @param model Model
      */
     public AddPersonToUserPanel(final BootstrapModal modal, final IModel<AddUserDTO> model) {
-        super(modal, new ResourceModel("assignPerson", "Assign person"), model);
+        super(modal, new ResourceModel("person.assign", "Assign Person"), model);
 
         selectedModel.setObject(SELECTED_ASSIGN_PERSON);
 
@@ -98,7 +98,7 @@ public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDT
         final EmailTextField emailTf = new EmailTextField("email");
         emailTf.add(BootstrapHorizontalFormDecorator.decorate());
         emailTf.setRequired(true);
-        emailTf.add(new ConditionalValidator<String>(new ResourceModel("uniqueEmail", "The email address is already assigned")) {
+        emailTf.add(new ConditionalValidator<String>(new ResourceModel("unique.email", "A person with this e-mail address already exists")) {
             @Override
             public boolean getCondition(final String value) {
                 if (Strings.isEmpty(model.getObject().getEmail())) {
@@ -120,13 +120,13 @@ public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDT
         personS2c.getSettings().setCloseOnSelect(true);
         personS2c.getSettings().setTheme(new Select2BootstrapTheme(true));
         personS2c.getSettings().setMinimumInputLength(3);
-        personS2c.getSettings().setPlaceholder(new ResourceModel("pleaseChoose", "Please choose").getObject());
+        personS2c.getSettings().setPlaceholder(new ResourceModel("select.placeholder", "Please Choose").getObject());
         personS2c.setRequired(true);
         personS2c.setOutputMarkupPlaceholderTag(true);
         personS2c.setEnabled(true);
-        personS2c.setLabel(new ResourceModel("selectPerson", "Select person"));
+        personS2c.setLabel(new ResourceModel("person.select", "Select Person"));
         personS2c.add(BootstrapHorizontalFormDecorator.decorate());
-        personS2c.add(new ConditionalValidator<Person>(new ResourceModel("...isAlreadyAssignedToUser", "The person is already assigned")) {
+        personS2c.add(new ConditionalValidator<Person>(new ResourceModel("person.assign.error", "The person is already assigned to a user")) {
             @Override
             public boolean getCondition(final Person value) {
                 return userService.isPersonAssigned(value);
