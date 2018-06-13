@@ -5,13 +5,12 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.component.panel.BootstrapPanel;
-import de.vinado.wicket.participate.data.MemberToEvent;
 import de.vinado.wicket.participate.data.EventDetails;
+import de.vinado.wicket.participate.data.MemberToEvent;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.EventSummaryUpdateEvent;
 import de.vinado.wicket.participate.event.ShowHidePropertiesEvent;
 import de.vinado.wicket.participate.service.EventService;
-import de.vinado.wicket.participate.service.ListOfValueService;
 import de.vinado.wicket.participate.ui.event.EventPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -41,10 +40,6 @@ public class EventSummaryPanel extends BreadCrumbPanel {
     @SuppressWarnings("unused")
     private EventService eventService;
 
-    @SpringBean
-    @SuppressWarnings("unused")
-    private ListOfValueService listOfValueService;
-
     private IModel<EventDetails> model;
 
     private Form form;
@@ -69,7 +64,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 final EventDetails previousEvent =
-                        eventService.getPreviousEventDetailsView(model.getObject().getId());
+                    eventService.getPreviousEventDetailsView(model.getObject().getId());
                 if (null != previousEvent) {
                     ParticipateSession.get().setEvent(previousEvent.getEvent());
                     send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
@@ -130,12 +125,12 @@ public class EventSummaryPanel extends BreadCrumbPanel {
 
         // Unterer Bereich
         final BootstrapPanel<List<MemberToEvent>> listPanel = new BootstrapPanel<List<MemberToEvent>>("listPanel",
-                new LoadableDetachableModel<List<MemberToEvent>>() {
-                    @Override
-                    protected List<MemberToEvent> load() {
-                        return eventService.getMemberToEventList(model.getObject().getEvent());
-                    }
-                }, new PropertyModel<>(model, "name")) {
+            new LoadableDetachableModel<List<MemberToEvent>>() {
+                @Override
+                protected List<MemberToEvent> load() {
+                    return eventService.getMemberToEventList(model.getObject().getEvent());
+                }
+            }, new PropertyModel<>(model, "name")) {
             @Override
             protected Panel newBodyPanel(final String id, final IModel<List<MemberToEvent>> model) {
                 return new EventSummaryListPanel(id, model, editable);

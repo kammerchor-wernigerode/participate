@@ -17,7 +17,6 @@ import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.User;
 import de.vinado.wicket.participate.data.dto.AddUserDTO;
 import de.vinado.wicket.participate.data.dto.PersonDTO;
-import de.vinado.wicket.participate.service.EmailService;
 import de.vinado.wicket.participate.service.UserService;
 import de.vinado.wicket.participate.ui.page.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -45,10 +44,6 @@ public class UserPanel extends Panel {
     @SpringBean
     @SuppressWarnings("unused")
     private UserService userService;
-
-    @SpringBean
-    @SuppressWarnings("unused")
-    private EmailService emailService;
 
     private BootstrapAjaxDataTable<User, String> dataTable;
 

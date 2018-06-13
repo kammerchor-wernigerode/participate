@@ -12,7 +12,6 @@ import de.vinado.wicket.participate.data.Group;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.MemberDTO;
 import de.vinado.wicket.participate.event.MemberUpdateEvent;
-import de.vinado.wicket.participate.service.ListOfValueService;
 import de.vinado.wicket.participate.service.PersonService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
@@ -41,10 +40,6 @@ public class AddEditMemberPanel extends BootstrapModalPanel<MemberDTO> {
     @SpringBean
     @SuppressWarnings("unused")
     private PersonService personService;
-
-    @SpringBean
-    @SuppressWarnings("unused")
-    private ListOfValueService listOfValueService;
 
     private boolean edit;
     private boolean remove = false;

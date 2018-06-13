@@ -9,7 +9,6 @@ import de.vinado.wicket.participate.component.modal.BootstrapModal;
 import de.vinado.wicket.participate.data.dto.RoleDTO;
 import de.vinado.wicket.participate.data.permission.Role;
 import de.vinado.wicket.participate.service.RoleService;
-import de.vinado.wicket.participate.service.UserService;
 import de.vinado.wicket.participate.ui.page.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
@@ -30,10 +29,6 @@ import java.util.List;
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
 public class RolesPanel extends Panel {
-
-    @SpringBean
-    @SuppressWarnings("unused")
-    private UserService userService;
 
     @SpringBean
     @SuppressWarnings("unused")

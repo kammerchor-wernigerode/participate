@@ -13,9 +13,7 @@ import de.vinado.wicket.participate.component.modal.BootstrapModal;
 import de.vinado.wicket.participate.component.modal.BootstrapModalPanel;
 import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
-import de.vinado.wicket.participate.service.EmailService;
 import de.vinado.wicket.participate.service.EventService;
-import de.vinado.wicket.participate.service.ListOfValueService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.basic.Label;
@@ -40,18 +38,7 @@ public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<Memb
 
     @SuppressWarnings("unused")
     @SpringBean
-    private EmailService emailService;
-
-    @SuppressWarnings("unused")
-    @SpringBean
     private EventService eventService;
-
-    /**
-     * {@link ListOfValueService}
-     */
-    @SpringBean
-    @SuppressWarnings("unused")
-    private ListOfValueService listOfValueService;
 
     public EditMemberInvitationPanel(final BootstrapModal modal, final IModel<MemberToEventDTO> model) {
         super(modal, new ResourceModel("invitation.edit", "Edit Invitation"), model);

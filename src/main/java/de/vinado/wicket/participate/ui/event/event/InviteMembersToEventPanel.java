@@ -7,7 +7,6 @@ import de.vinado.wicket.participate.component.table.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.MemberToEvent;
 import de.vinado.wicket.participate.service.EventService;
-import de.vinado.wicket.participate.service.PersonService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
@@ -30,10 +29,6 @@ public abstract class InviteMembersToEventPanel extends BootstrapModalPanel<Even
     @SpringBean
     @SuppressWarnings("unused")
     private EventService eventService;
-
-    @SpringBean
-    @SuppressWarnings("unused")
-    private PersonService personService;
 
     /**
      * @param modal {@link BootstrapModal}

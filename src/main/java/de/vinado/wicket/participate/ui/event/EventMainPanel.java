@@ -15,7 +15,6 @@ import de.vinado.wicket.participate.data.dto.EventDTO;
 import de.vinado.wicket.participate.data.email.MailData;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.EventUpdateEvent;
-import de.vinado.wicket.participate.service.EmailService;
 import de.vinado.wicket.participate.service.EventService;
 import de.vinado.wicket.participate.ui.event.event.EventPanel;
 import de.vinado.wicket.participate.ui.event.eventList.AddEditEventPanel;
@@ -51,10 +50,6 @@ public class EventMainPanel extends BreadCrumbPanel {
     @SpringBean
     @SuppressWarnings("unused")
     private EventService eventService;
-
-    @SpringBean
-    @SuppressWarnings("unused")
-    private EmailService emailService;
 
     private BootstrapPanel<EventDetails> eventPanel;
 

@@ -10,7 +10,6 @@ import de.vinado.wicket.participate.data.MemberToEvent;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.filter.DetailedMemberToEventFilter;
 import de.vinado.wicket.participate.service.EventService;
-import de.vinado.wicket.participate.service.ListOfValueService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -36,10 +35,6 @@ public abstract class DetailedMemberToEventFilterPanel extends AbstractTableFilt
     @SuppressWarnings("unused")
     @SpringBean
     private EventService eventService;
-
-    @SuppressWarnings("unused")
-    @SpringBean
-    private ListOfValueService listOfValueService;
 
     private final Event event = ParticipateSession.get().getEvent();
 

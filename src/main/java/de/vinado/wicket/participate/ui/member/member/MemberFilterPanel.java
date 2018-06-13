@@ -5,7 +5,6 @@ import de.vinado.wicket.participate.component.panel.AbstractTableFilterPanel;
 import de.vinado.wicket.participate.data.Member;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.filter.MemberFilter;
-import de.vinado.wicket.participate.service.ListOfValueService;
 import de.vinado.wicket.participate.service.PersonService;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -26,10 +25,6 @@ public abstract class MemberFilterPanel extends AbstractTableFilterPanel<Member,
     @SuppressWarnings("unused")
     @SpringBean
     private PersonService personService;
-
-    @SuppressWarnings("unused")
-    @SpringBean
-    private ListOfValueService listOfValueService;
 
     private TextField searchTermTf;
 

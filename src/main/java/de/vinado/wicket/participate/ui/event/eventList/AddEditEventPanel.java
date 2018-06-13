@@ -17,7 +17,6 @@ import de.vinado.wicket.participate.data.Group;
 import de.vinado.wicket.participate.data.dto.EventDTO;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.RemoveEventUpdateEvent;
-import de.vinado.wicket.participate.service.AddressService;
 import de.vinado.wicket.participate.service.EventService;
 import de.vinado.wicket.participate.service.PersonService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -47,10 +46,6 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
     @SpringBean
     @SuppressWarnings("unused")
     private EventService eventService;
-
-    @SpringBean
-    @SuppressWarnings("unused")
-    private AddressService addressService;
 
     @SpringBean
     @SuppressWarnings("unused")

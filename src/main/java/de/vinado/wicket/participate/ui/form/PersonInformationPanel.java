@@ -6,14 +6,12 @@ import de.vinado.wicket.participate.component.behavoir.decorator.BootstrapHorizo
 import de.vinado.wicket.participate.component.modal.BootstrapModal;
 import de.vinado.wicket.participate.component.modal.BootstrapModalPanel;
 import de.vinado.wicket.participate.data.Attribute;
-import de.vinado.wicket.participate.service.PersonService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -21,10 +19,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 public class PersonInformationPanel extends BootstrapModalPanel<Attribute> {
 
     // TODO: Uebersetzung aktualisieren (HTML)
-
-    @SpringBean
-    @SuppressWarnings("unused")
-    private PersonService personService;
 
     public PersonInformationPanel(final BootstrapModal modal, final IModel<Attribute> model) {
         super(modal, new ResourceModel("account.personal-details", "Personal Details"), model);

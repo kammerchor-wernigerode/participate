@@ -21,10 +21,7 @@ import de.vinado.wicket.participate.data.filter.MemberToEventFilter;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.EventUpdateEvent;
 import de.vinado.wicket.participate.event.RemoveEventUpdateEvent;
-import de.vinado.wicket.participate.service.AddressService;
-import de.vinado.wicket.participate.service.EmailService;
 import de.vinado.wicket.participate.service.EventService;
-import de.vinado.wicket.participate.service.UserService;
 import de.vinado.wicket.participate.ui.event.SendEmailPanel;
 import de.vinado.wicket.participate.ui.page.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -62,18 +59,6 @@ public class EventPanel extends BreadCrumbPanel {
     @SpringBean
     @SuppressWarnings("unused")
     private EventService eventService;
-
-    @SpringBean
-    @SuppressWarnings("unused")
-    private AddressService addressService;
-
-    @SpringBean
-    @SuppressWarnings("unused")
-    private EmailService emailService;
-
-    @SpringBean
-    @SuppressWarnings("unused")
-    private UserService userService;
 
     private IModel<EventDetails> model;
 

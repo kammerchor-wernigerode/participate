@@ -7,7 +7,6 @@ import de.vinado.wicket.participate.data.MemberToEvent;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.filter.MemberToEventFilter;
 import de.vinado.wicket.participate.service.EventService;
-import de.vinado.wicket.participate.service.ListOfValueService;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -29,10 +28,6 @@ public abstract class MemberToEventFilterPanel extends AbstractTableFilterPanel<
     @SuppressWarnings("unused")
     @SpringBean
     private EventService eventService;
-
-    @SuppressWarnings("unused")
-    @SpringBean
-    private ListOfValueService listOfValueService;
 
     private IModel<Event> event;
 

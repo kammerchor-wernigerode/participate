@@ -11,7 +11,6 @@ import de.vinado.wicket.participate.data.dto.AddUserDTO;
 import de.vinado.wicket.participate.data.dto.EditAccountDTO;
 import de.vinado.wicket.participate.data.dto.MemberDTO;
 import de.vinado.wicket.participate.data.dto.PersonDTO;
-import de.vinado.wicket.participate.service.ListOfValueService;
 import de.vinado.wicket.participate.service.PersonService;
 import de.vinado.wicket.participate.service.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -52,10 +51,6 @@ public abstract class EditAccountPanel extends BootstrapModalPanel<EditAccountDT
     @SpringBean
     @SuppressWarnings("unused")
     private PersonService personService;
-
-    @SpringBean
-    @SuppressWarnings("unused")
-    private ListOfValueService listOfValueService;
 
     public EditAccountPanel(final BootstrapModal modal, final IModel<EditAccountDTO> model) {
         super(modal, new ResourceModel("account.edit", "Edit Account"), model);

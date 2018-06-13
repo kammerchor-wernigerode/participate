@@ -83,9 +83,6 @@ public class EventService extends DataService {
     private PersonService personService;
 
     @Autowired
-    private ListOfValueService listOfValueService;
-
-    @Autowired
     private AddressService addressService;
 
     @Autowired
