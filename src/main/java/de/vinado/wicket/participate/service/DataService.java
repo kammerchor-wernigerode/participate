@@ -4,6 +4,9 @@ import de.vinado.wicket.participate.data.Identifiable;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.List;
 
@@ -81,5 +84,20 @@ public abstract class DataService {
     @Transactional
     public <T extends Identifiable> void remove(final T object) {
         entityManager.remove(merge(object));
+    }
+
+    /**
+     * Return whether the {@link Identifiable} exists.
+     *
+     * @param identifiable The {@link Identifiable}
+     * @return Whether the {@link Identifiable} exists.
+     */
+    public boolean exists(final Identifiable identifiable) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        final Root<Identifiable> root = criteriaQuery.from(Identifiable.class);
+        criteriaQuery.select(criteriaBuilder.count(root));
+        criteriaQuery.where(criteriaBuilder.equal(root.get("id"), identifiable.getId()));
+        return entityManager.createQuery(criteriaQuery).getSingleResult() > 0;
     }
 }
