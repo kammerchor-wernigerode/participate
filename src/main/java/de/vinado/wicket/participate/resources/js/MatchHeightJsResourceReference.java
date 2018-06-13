@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.resources.js;
 
-import com.google.common.collect.Lists;
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -21,7 +20,7 @@ public class MatchHeightJsResourceReference extends JavaScriptResourceReference 
 
     @Override
     public List<HeaderItem> getDependencies() {
-        final List<HeaderItem> dependencies = Lists.newArrayList(super.getDependencies());
+        final List<HeaderItem> dependencies = super.getDependencies();
         dependencies.add(JavaScriptHeaderItem.forReference(Application.get().getJavaScriptLibrarySettings().getJQueryReference()));
 
         return dependencies;

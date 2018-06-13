@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.resources.js;
 
-import com.google.common.collect.Lists;
 import de.vinado.wicket.participate.resources.css.SnackbarCssResourceReference;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.HeaderItem;
@@ -22,7 +21,7 @@ public class SnackbarJsResourceReference extends CssResourceReference {
 
     @Override
     public List<HeaderItem> getDependencies() {
-        final List<HeaderItem> dependencies = Lists.newArrayList(super.getDependencies());
+        final List<HeaderItem> dependencies = super.getDependencies();
         dependencies.add(CssHeaderItem.forReference(SnackbarCssResourceReference.INSTANCE));
 
         return dependencies;

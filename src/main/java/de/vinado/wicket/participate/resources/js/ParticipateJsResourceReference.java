@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.resources.js;
 
-import com.google.common.collect.Lists;
 import de.agilecoders.wicket.core.Bootstrap;
 import de.vinado.wicket.participate.resources.css.ParticipateCssResourceReference;
 import org.apache.wicket.Application;
@@ -24,7 +23,7 @@ public class ParticipateJsResourceReference extends JavaScriptResourceReference 
 
     @Override
     public List<HeaderItem> getDependencies() {
-        final List<HeaderItem> dependencies = Lists.newArrayList(super.getDependencies());
+        final List<HeaderItem> dependencies = super.getDependencies();
         dependencies.add(CssHeaderItem.forReference(ParticipateCssResourceReference.INSTANCE));
         dependencies.add(JavaScriptHeaderItem.forReference(Application.get().getJavaScriptLibrarySettings().getJQueryReference()));
         dependencies.add(JavaScriptHeaderItem.forReference(Bootstrap.getSettings().getJsResourceReference()));
