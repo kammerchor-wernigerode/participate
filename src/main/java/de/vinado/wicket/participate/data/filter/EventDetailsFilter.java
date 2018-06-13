@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.data.filter;
 
+import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.Group;
-import de.vinado.wicket.participate.data.view.EventView;
 import org.apache.wicket.util.string.Strings;
 
 import java.io.Serializable;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class EventViewFilter implements Serializable, IFilter<EventView> {
+public class EventDetailsFilter implements Serializable, IFilter<EventDetails> {
 
     private String name;
 
@@ -27,9 +27,9 @@ public class EventViewFilter implements Serializable, IFilter<EventView> {
     private Group group;
 
     @Override
-    public List<EventView> filter(final List<EventView> list) {
-        final List<EventView> result = new ArrayList<>();
-        for (EventView event : list) {
+    public List<EventDetails> filter(final List<EventDetails> list) {
+        final List<EventDetails> result = new ArrayList<>();
+        for (EventDetails event : list) {
             if (validate(event.getName(), name))
                 continue;
 

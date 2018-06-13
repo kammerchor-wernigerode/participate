@@ -6,7 +6,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.component.panel.BootstrapPanel;
 import de.vinado.wicket.participate.data.MemberToEvent;
-import de.vinado.wicket.participate.data.view.EventDetailsView;
+import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.EventSummaryUpdateEvent;
 import de.vinado.wicket.participate.event.ShowHidePropertiesEvent;
@@ -45,11 +45,11 @@ public class EventSummaryPanel extends BreadCrumbPanel {
     @SuppressWarnings("unused")
     private ListOfValueService listOfValueService;
 
-    private IModel<EventDetailsView> model;
+    private IModel<EventDetails> model;
 
     private Form form;
 
-    public EventSummaryPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<EventDetailsView> model,
+    public EventSummaryPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<EventDetails> model,
                              final boolean editable) {
         super(id, breadCrumbModel, model);
 
@@ -68,7 +68,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         final BootstrapAjaxLink previousEventBtn = new BootstrapAjaxLink("previousEventBtn", Buttons.Type.Link) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                final EventDetailsView previousEvent =
+                final EventDetails previousEvent =
                         eventService.getPreviousEventDetailsView(model.getObject().getId());
                 if (null != previousEvent) {
                     ParticipateSession.get().setEvent(previousEvent.getEvent());
@@ -97,7 +97,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         final BootstrapAjaxLink nextEventBtn = new BootstrapAjaxLink("nextEventBtn", Buttons.Type.Link) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                final EventDetailsView nextEvent = eventService.getNextEventDetailsView(model.getObject().getId());
+                final EventDetails nextEvent = eventService.getNextEventDetailsView(model.getObject().getId());
                 if (null != nextEvent) {
                     ParticipateSession.get().setEvent(nextEvent.getEvent());
                     send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
@@ -162,9 +162,9 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         final Object payload = event.getPayload();
         if (payload instanceof EventSummaryUpdateEvent) {
             final EventSummaryUpdateEvent updateEvent = (EventSummaryUpdateEvent) payload;
-            final EventDetailsView eventDetailsView = updateEvent.getEventDetailsView();
+            final EventDetails eventDetails = updateEvent.getEventDetails();
             final AjaxRequestTarget target = updateEvent.getTarget();
-            model.setObject(eventDetailsView);
+            model.setObject(eventDetails);
             target.add(form);
         }
     }

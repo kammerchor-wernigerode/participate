@@ -4,9 +4,9 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.AbstractNavbarCom
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
 import de.vinado.wicket.participate.component.panel.Footer;
+import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.MemberToEvent;
 import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
-import de.vinado.wicket.participate.data.view.EventView;
 import de.vinado.wicket.participate.service.EventService;
 import de.vinado.wicket.participate.ui.event.event.EventPanel;
 import de.vinado.wicket.participate.ui.page.BasePage;
@@ -83,13 +83,13 @@ public class FormPage extends BasePage {
         add(breadcrumb);
 
         final EventPanel eventPanel = new EventPanel("eventPanel", breadcrumb,
-            new LoadableDetachableModel<EventView>() {
+            new LoadableDetachableModel<EventDetails>() {
                 @Override
-                protected EventView load() {
+                protected EventDetails load() {
                     if (null == model.getObject()) {
                         return eventService.getLatestEventView();
                     } else {
-                        return eventService.getEventView(FormPage.this.model.getObject().getEvent());
+                        return eventService.getEventDetails(FormPage.this.model.getObject().getEvent());
                     }
                 }
             }, false);

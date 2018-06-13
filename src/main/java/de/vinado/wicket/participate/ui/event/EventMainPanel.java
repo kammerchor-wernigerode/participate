@@ -9,10 +9,10 @@ import de.vinado.wicket.participate.component.modal.BootstrapModal;
 import de.vinado.wicket.participate.component.modal.BootstrapModalConfirmationPanel;
 import de.vinado.wicket.participate.component.panel.BootstrapPanel;
 import de.vinado.wicket.participate.data.Event;
+import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.MemberToEvent;
 import de.vinado.wicket.participate.data.dto.EventDTO;
 import de.vinado.wicket.participate.data.email.MailData;
-import de.vinado.wicket.participate.data.view.EventView;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.EventUpdateEvent;
 import de.vinado.wicket.participate.service.EmailService;
@@ -56,21 +56,21 @@ public class EventMainPanel extends BreadCrumbPanel {
     @SuppressWarnings("unused")
     private EmailService emailService;
 
-    private BootstrapPanel<EventView> eventPanel;
+    private BootstrapPanel<EventDetails> eventPanel;
 
     public EventMainPanel(final String id, final IBreadCrumbModel breadCrumbModel) {
         super(id, breadCrumbModel);
 
         ((Breadcrumb) getBreadCrumbModel()).setVisible(false);
 
-        final BootstrapPanel<List<EventView>> eventListPanel = new BootstrapPanel<List<EventView>>("events", new CompoundPropertyModel<>(eventService.getUpcomingEventViewList()), new ResourceModel("overview", "Overview")) {
+        final BootstrapPanel<List<EventDetails>> eventListPanel = new BootstrapPanel<List<EventDetails>>("events", new CompoundPropertyModel<>(eventService.getUpcomingDetailedEventListList()), new ResourceModel("overview", "Overview")) {
             @Override
-            protected Panel newBodyPanel(final String id, final IModel<List<EventView>> model) {
+            protected Panel newBodyPanel(final String id, final IModel<List<EventDetails>> model) {
                 return new EventListPanel(id, model);
             }
 
             @Override
-            protected AbstractLink newDefaultBtn(final String id, final IModel<List<EventView>> model) {
+            protected AbstractLink newDefaultBtn(final String id, final IModel<List<EventDetails>> model) {
                 setDefaultBtnLabelModel(new ResourceModel("event.add", "Add Event"));
                 setDefaultBtnIcon(FontAwesomeIconType.plus);
                 return new AjaxLink(id) {
@@ -95,18 +95,18 @@ public class EventMainPanel extends BreadCrumbPanel {
         eventListPanel.setOutputMarkupId(true);
         add(eventListPanel);
 
-        final EventView eventView;
+        final EventDetails eventView;
         if (null == ParticipateSession.get().getEvent()) {
             if (eventService.hasUpcomingEvents()) {
                 eventView = eventService.getLatestEventView();
             } else {
-                eventView = new EventView();
+                eventView = new EventDetails();
             }
         } else {
-            eventView = eventService.getEventView(ParticipateSession.get().getEvent());
+            eventView = eventService.getEventDetails(ParticipateSession.get().getEvent());
         }
 
-        eventPanel = new BootstrapPanel<EventView>("event", new CompoundPropertyModel<>(eventView),
+        eventPanel = new BootstrapPanel<EventDetails>("event", new CompoundPropertyModel<>(eventView),
             new ResourceModel("event", "Event")) {
             @Override
             protected void onConfigure() {
@@ -114,7 +114,7 @@ public class EventMainPanel extends BreadCrumbPanel {
             }
 
             @Override
-            protected Panel newBodyPanel(final String id, final IModel<EventView> model) {
+            protected Panel newBodyPanel(final String id, final IModel<EventDetails> model) {
                 return new EventPanel(id, breadCrumbModel, model, true) {
                     @Override
                     protected void onRemoveEvent(final AjaxRequestTarget target) {
@@ -131,17 +131,17 @@ public class EventMainPanel extends BreadCrumbPanel {
             }
 
             @Override
-            protected AbstractLink newDefaultBtn(final String id, final IModel<EventView> model) {
+            protected AbstractLink newDefaultBtn(final String id, final IModel<EventDetails> model) {
                 setDefaultBtnIcon(FontAwesomeIconType.check);
                 setDefaultBtnLabelModel(new ResourceModel("show.event.summary", "Show Event Summary"));
                 return new BreadCrumbPanelLink(id, breadCrumbModel, (IBreadCrumbPanelFactory) (componentId, breadCrumbModel1)
                     -> new EventSummaryPanel(componentId, breadCrumbModel1,
-                    new CompoundPropertyModel<>(eventService.getViewEventDetails(model.getObject().getEvent())),
+                    new CompoundPropertyModel<>(eventService.getEventDetails(model.getObject().getEvent())),
                     model.getObject().getEndDate().after(new Date())));
             }
 
             @Override
-            protected RepeatingView newDropDownMenu(final String id, final IModel<EventView> model) {
+            protected RepeatingView newDropDownMenu(final String id, final IModel<EventDetails> model) {
                 final Date endDate = model.getObject().getEndDate();
                 if (null != endDate && endDate.before(new Date())) {
                     return super.newDropDownMenu(id, model);
@@ -238,7 +238,7 @@ public class EventMainPanel extends BreadCrumbPanel {
                                 eventService.getGroup(model.getObject().getEvent())))) {
                             @Override
                             public void onUpdate(final Event savedEvent, final AjaxRequestTarget target) {
-                                model.setObject(eventService.getEventView(savedEvent));
+                                model.setObject(eventService.getEventDetails(savedEvent));
                                 ParticipateSession.get().setEvent(model.getObject().getEvent());
                                 send(getPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
                                 Snackbar.show(target, new ResourceModel("event.edit.success", "The event was successfully edited"));

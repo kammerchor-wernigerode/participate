@@ -10,12 +10,12 @@ import de.vinado.wicket.participate.component.provider.SimpleDataProvider;
 import de.vinado.wicket.participate.component.table.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.component.table.column.BootstrapAjaxLinkColumn;
 import de.vinado.wicket.participate.data.Event;
+import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.MemberToEvent;
 import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
 import de.vinado.wicket.participate.data.email.MailData;
 import de.vinado.wicket.participate.data.filter.MemberToEventFilter;
-import de.vinado.wicket.participate.data.view.EventView;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.EventUpdateEvent;
 import de.vinado.wicket.participate.event.RemoveEventUpdateEvent;
@@ -73,14 +73,14 @@ public class EventPanel extends BreadCrumbPanel {
     @SuppressWarnings("unused")
     private UserService userService;
 
-    private IModel<EventView> model;
+    private IModel<EventDetails> model;
 
     private Form form;
 
     private SimpleDataProvider<MemberToEvent, String> dataProvider;
     private BootstrapAjaxDataTable<MemberToEvent, String> dataTable;
 
-    public EventPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<EventView> model, final boolean editable) {
+    public EventPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<EventDetails> model, final boolean editable) {
         super(id, breadCrumbModel, model);
         this.model = model;
         setOutputMarkupPlaceholderTag(true);
@@ -180,7 +180,7 @@ public class EventPanel extends BreadCrumbPanel {
                         @Override
                         protected void onSaveSubmit(final IModel<MemberToEventDTO> savedModel, final AjaxRequestTarget target) {
                             savedModel.getObject().setReviewed(false);
-                            model.setObject(eventService.getEventView(eventService.saveEventToMember(savedModel.getObject()).getEvent()));
+                            model.setObject(eventService.getEventDetails(eventService.saveEventToMember(savedModel.getObject()).getEvent()));
                             dataProvider.set(eventService.getMemberToEventList(model.getObject().getEvent()));
                             Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
                             target.add(form);
@@ -230,7 +230,7 @@ public class EventPanel extends BreadCrumbPanel {
             final EventUpdateEvent updateEvent = (EventUpdateEvent) payload;
             final AjaxRequestTarget target = updateEvent.getTarget();
             final Event event = updateEvent.getEvent();
-            model.setObject(eventService.getEventView(event));
+            model.setObject(eventService.getEventDetails(event));
             target.add(form);
         }
 

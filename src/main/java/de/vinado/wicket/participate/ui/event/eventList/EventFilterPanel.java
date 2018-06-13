@@ -3,8 +3,8 @@ package de.vinado.wicket.participate.ui.event.eventList;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
 import de.vinado.wicket.participate.component.panel.AbstractTableFilterPanel;
+import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.filter.EventFilter;
-import de.vinado.wicket.participate.data.view.EventView;
 import de.vinado.wicket.participate.service.EventService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class EventFilterPanel extends AbstractTableFilterPanel<EventView, EventFilter> {
+public abstract class EventFilterPanel extends AbstractTableFilterPanel<EventDetails, EventFilter> {
 
     @SpringBean
     @SuppressWarnings("unused")
@@ -30,7 +30,7 @@ public abstract class EventFilterPanel extends AbstractTableFilterPanel<EventVie
 
     private TextField searchTermTf;
 
-    public EventFilterPanel(final String id, final IModel<List<EventView>> model, final IModel<EventFilter> filterIModel) {
+    public EventFilterPanel(final String id, final IModel<List<EventDetails>> model, final IModel<EventFilter> filterIModel) {
         super(id, model, filterIModel);
 
         final DateTextFieldConfig startDateConfig = new DateTextFieldConfig();
@@ -81,12 +81,12 @@ public abstract class EventFilterPanel extends AbstractTableFilterPanel<EventVie
     }
 
     @Override
-    public List<EventView> getFilteredData(final EventFilter filter) {
+    public List<EventDetails> getFilteredData(final EventFilter filter) {
         return eventService.getFilteredEventList(filter);
     }
 
     @Override
-    public List<EventView> getDefaultData() {
-        return eventService.getUpcomingEventViewList();
+    public List<EventDetails> getDefaultData() {
+        return eventService.getUpcomingDetailedEventListList();
     }
 }

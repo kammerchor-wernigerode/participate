@@ -7,8 +7,8 @@ import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.component.panel.AjaxLinkPanel;
 import de.vinado.wicket.participate.component.provider.SimpleDataProvider;
 import de.vinado.wicket.participate.component.table.BootstrapAjaxDataTable;
+import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.filter.EventFilter;
-import de.vinado.wicket.participate.data.view.EventView;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.EventUpdateEvent;
 import de.vinado.wicket.participate.service.EventService;
@@ -42,12 +42,12 @@ public class EventListPanel extends Panel {
     @SuppressWarnings("unused")
     private EventService eventService;
 
-    private IModel<List<EventView>> model;
+    private IModel<List<EventDetails>> model;
 
-    private SimpleDataProvider<EventView, String> dataProvider;
-    private BootstrapAjaxDataTable<EventView, String> dataTable;
+    private SimpleDataProvider<EventDetails, String> dataProvider;
+    private BootstrapAjaxDataTable<EventDetails, String> dataTable;
 
-    public EventListPanel(final String id, final IModel<List<EventView>> model) {
+    public EventListPanel(final String id, final IModel<List<EventDetails>> model) {
         super(id, model);
         this.model = model;
 
@@ -58,30 +58,30 @@ public class EventListPanel extends Panel {
         final EventFilter eventFilter = ParticipateSession.get().getEventFilter();
 
         final EventFilterPanel filterPanel = new EventFilterPanel("filterPanel", model,
-                new CompoundPropertyModel<>(null != eventFilter ? eventFilter : new EventFilter())) {
+            new CompoundPropertyModel<>(null != eventFilter ? eventFilter : new EventFilter())) {
             @Override
-            public SimpleDataProvider<EventView, ?> getDataProvider() {
+            public SimpleDataProvider<EventDetails, ?> getDataProvider() {
                 return dataProvider;
             }
 
             @Override
-            public DataTable<EventView, ?> getDataTable() {
+            public DataTable<EventDetails, ?> getDataTable() {
                 return dataTable;
             }
         };
         add(filterPanel);
 
-        dataProvider = new SimpleDataProvider<EventView, String>(model.getObject()) {
+        dataProvider = new SimpleDataProvider<EventDetails, String>(model.getObject()) {
             @Override
             public String getDefaultSort() {
                 return "startDate";
             }
         };
 
-        final List<IColumn<EventView, String>> columns = new ArrayList<>();
-        columns.add(new PropertyColumn<EventView, String>(new ResourceModel("name", "Name"), "name", "name") {
+        final List<IColumn<EventDetails, String>> columns = new ArrayList<>();
+        columns.add(new PropertyColumn<EventDetails, String>(new ResourceModel("name", "Name"), "name", "name") {
             @Override
-            public void populateItem(Item<ICellPopulator<EventView>> item, String componentId, IModel<EventView> rowModel) {
+            public void populateItem(Item<ICellPopulator<EventDetails>> item, String componentId, IModel<EventDetails> rowModel) {
                 final AjaxLinkPanel selectEventLink = new AjaxLinkPanel(componentId, new PropertyModel<>(rowModel, getPropertyExpression())) {
                     @Override
                     public void onClick(final AjaxRequestTarget target) {
@@ -99,15 +99,15 @@ public class EventListPanel extends Panel {
                 return "td-max-width-300";
             }
         });
-        columns.add(new PropertyColumn<EventView, String>(new ResourceModel("date", "Date"), "startDate", "displayDate") {
+        columns.add(new PropertyColumn<EventDetails, String>(new ResourceModel("date", "Date"), "startDate", "displayDate") {
             @Override
             public String getCssClass() {
                 return "td-max-width-185";
             }
         });
-        columns.add(new PropertyColumn<EventView, String>(new ResourceModel("event", "Event"), "eventType", "eventType") {
+        columns.add(new PropertyColumn<EventDetails, String>(new ResourceModel("event", "Event"), "eventType", "eventType") {
             @Override
-            public void populateItem(Item<ICellPopulator<EventView>> item, String componentId, IModel<EventView> rowModel) {
+            public void populateItem(Item<ICellPopulator<EventDetails>> item, String componentId, IModel<EventDetails> rowModel) {
                 final Label eventTypeLabel = new Label(componentId, getDataModel(rowModel));
                 eventTypeLabel.add(new TooltipBehavior(Model.of(rowModel.getObject().getEventType()), tooltipConfig));
                 item.add(eventTypeLabel);
@@ -119,19 +119,19 @@ public class EventListPanel extends Panel {
             }
         });
         columns.add(new PropertyColumn<>(new ResourceModel("location", "Location"), "location", "location"));
-        columns.add(new PropertyColumn<EventView, String>(new ResourceModel("event.a-d-p.short", "A/D/P"), "countAcceptedDeclinedPending") {
+        columns.add(new PropertyColumn<EventDetails, String>(new ResourceModel("event.a-d-p.short", "A/D/P"), "countAcceptedDeclinedPending") {
             @Override
-            public void populateItem(final Item<ICellPopulator<EventView>> item, final String componentId, final IModel<EventView> rowModel) {
+            public void populateItem(final Item<ICellPopulator<EventDetails>> item, final String componentId, final IModel<EventDetails> rowModel) {
                 final Label eventTypeLabel = new Label(componentId, getDataModel(rowModel));
                 eventTypeLabel.add(new TooltipBehavior(new ResourceModel("event.a-d-p", "Accepted/Declined/Pending"), tooltipConfig));
                 item.add(eventTypeLabel);
             }
         });
 
-        dataTable = new BootstrapAjaxDataTable<EventView, String>("dataTable", columns, dataProvider, 10) {
+        dataTable = new BootstrapAjaxDataTable<EventDetails, String>("dataTable", columns, dataProvider, 10) {
             @Override
-            protected Item<EventView> newRowItem(final String id, final int index, final IModel<EventView> model) {
-                final Item<EventView> item = super.newRowItem(id, index, model);
+            protected Item<EventDetails> newRowItem(final String id, final int index, final IModel<EventDetails> model) {
+                final Item<EventDetails> item = super.newRowItem(id, index, model);
                 final Long sessionEventId = ParticipateSession.get().getEvent().getId();
                 if (null != sessionEventId && model.getObject().getId().equals(sessionEventId))
                     item.add(new CssClassNameAppender("info"));
@@ -150,7 +150,7 @@ public class EventListPanel extends Panel {
         if (payload instanceof AjaxUpdateEvent) {
             final AjaxUpdateEvent updateEvent = (AjaxUpdateEvent) payload;
             final AjaxRequestTarget target = updateEvent.getTarget();
-            model.setObject(eventService.getUpcomingEventViewList());
+            model.setObject(eventService.getUpcomingDetailedEventListList());
             dataProvider.set(model.getObject());
             target.add(dataTable);
         }

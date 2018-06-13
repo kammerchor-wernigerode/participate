@@ -7,6 +7,7 @@ import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.data.Address;
 import de.vinado.wicket.participate.data.AddressToEvent;
 import de.vinado.wicket.participate.data.Event;
+import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.Group;
 import de.vinado.wicket.participate.data.GroupToEvent;
 import de.vinado.wicket.participate.data.InvitationStatus;
@@ -23,8 +24,6 @@ import de.vinado.wicket.participate.data.filter.DetailedMemberToEventFilter;
 import de.vinado.wicket.participate.data.filter.EventFilter;
 import de.vinado.wicket.participate.data.filter.MemberToEventFilter;
 import de.vinado.wicket.participate.data.ical4j.SimpleDateProperty;
-import de.vinado.wicket.participate.data.view.EventDetailsView;
-import de.vinado.wicket.participate.data.view.EventView;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -268,8 +267,9 @@ public class EventService extends DataService {
     public boolean hasUpcomingEvents() {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        final Root<EventView> root = criteriaQuery.from(EventView.class);
+        final Root<Event> root = criteriaQuery.from(Event.class);
         criteriaQuery.select(criteriaBuilder.count(root));
+        criteriaQuery.where(criteriaBuilder.equal(root.get("active"), true));
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
@@ -308,10 +308,10 @@ public class EventService extends DataService {
         criteriaQuery.where(forToken, forEmail, forActive);
         return entityManager.createQuery(criteriaQuery).getSingleResult();
     }*/
-    public EventView getLatestEventView() {
+    public EventDetails getLatestEventView() {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<EventView> criteriaQuery = criteriaBuilder.createQuery(EventView.class);
-        final Root<EventView> root = criteriaQuery.from(EventView.class);
+        final CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
+        final Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
         criteriaQuery.where(criteriaBuilder.greaterThanOrEqualTo(root.get("endDate"), new Date()));
         criteriaQuery.orderBy(criteriaBuilder.asc(root.get("startDate")));
         try {
@@ -336,11 +336,11 @@ public class EventService extends DataService {
         }
     }
 
-    public EventDetailsView getNextEventDetailsView(final Long id) {
-        final Date startDate = load(EventDetailsView.class, id).getStartDate();
+    public EventDetails getNextEventDetailsView(final Long id) {
+        final Date startDate = load(EventDetails.class, id).getStartDate();
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<EventDetailsView> criteriaQuery = criteriaBuilder.createQuery(EventDetailsView.class);
-        final Root<EventDetailsView> root = criteriaQuery.from(EventDetailsView.class);
+        final CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
+        final Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
         final Predicate forStartDate = criteriaBuilder.greaterThan(root.get("startDate"), startDate);
         final Predicate forValidDate = criteriaBuilder.greaterThanOrEqualTo(root.get("startDate"), new Date());
         criteriaQuery.where(forValidDate, forStartDate);
@@ -353,11 +353,11 @@ public class EventService extends DataService {
         }
     }
 
-    public EventDetailsView getPreviousEventDetailsView(final Long id) {
-        final Date startDate = load(EventDetailsView.class, id).getStartDate();
+    public EventDetails getPreviousEventDetailsView(final Long id) {
+        final Date startDate = load(EventDetails.class, id).getStartDate();
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<EventDetailsView> criteriaQuery = criteriaBuilder.createQuery(EventDetailsView.class);
-        final Root<EventDetailsView> root = criteriaQuery.from(EventDetailsView.class);
+        final CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
+        final Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
         final Predicate forStartDate = criteriaBuilder.lessThan(root.get("startDate"), startDate);
         final Predicate forValidDate = criteriaBuilder.greaterThanOrEqualTo(root.get("startDate"), new Date());
         criteriaQuery.where(forValidDate, forStartDate);
@@ -411,11 +411,11 @@ public class EventService extends DataService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    public List<EventView> getUpcomingEventViewList() {
+    public List<EventDetails> getUpcomingDetailedEventListList() {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<EventView> criteriaQuery = criteriaBuilder.createQuery(EventView.class);
-        final Root<EventView> root = criteriaQuery.from(EventView.class);
-        final Join<EventView, Event> eventJoin = root.join("event");
+        final CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
+        final Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
+        final Join<EventDetails, Event> eventJoin = root.join("event");
         final Predicate forActive = criteriaBuilder.equal(eventJoin.get("active"), true);
         final Predicate forEndDate = criteriaBuilder.greaterThanOrEqualTo(eventJoin.get("endDate"), new Date());
         criteriaQuery.select(root);
@@ -468,23 +468,10 @@ public class EventService extends DataService {
         return entityManager.createQuery(criteriaQuery).setFirstResult(offset).getResultList();
     }
 
-    public EventView getEventView(final Event event) {
+    public EventDetails getEventDetails(final Event event) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<EventView> criteriaQuery = criteriaBuilder.createQuery(EventView.class);
-        final Root<EventView> root = criteriaQuery.from(EventView.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("event"), event));
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (final NoResultException e) {
-            LOGGER.warn("A view with event_id={} could not be found.", event.getId());
-            return null;
-        }
-    }
-
-    public EventDetailsView getViewEventDetails(final Event event) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<EventDetailsView> criteriaQuery = criteriaBuilder.createQuery(EventDetailsView.class);
-        final Root<EventDetailsView> root = criteriaQuery.from(EventDetailsView.class);
+        final CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
+        final Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
         criteriaQuery.where(criteriaBuilder.equal(root.get("event"), event));
         try {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
@@ -814,18 +801,18 @@ public class EventService extends DataService {
         }
     }
 
-    public List<EventView> getFilteredEventList(final EventFilter eventFilter) {
+    public List<EventDetails> getFilteredEventList(final EventFilter eventFilter) {
         if (null == eventFilter) {
-            return getUpcomingEventViewList();
+            return getUpcomingDetailedEventListList();
         }
 
         if (eventFilter.isShowAll()) {
-            return getAll(EventView.class);
+            return getAll(EventDetails.class);
         }
 
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<EventView> criteriaQuery = criteriaBuilder.createQuery(EventView.class);
-        final Root<EventView> root = criteriaQuery.from(EventView.class);
+        final CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
+        final Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
 
         final List<Predicate> orPredicates = new ArrayList<>();
         final List<Predicate> andPredicates = new ArrayList<>();

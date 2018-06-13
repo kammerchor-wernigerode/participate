@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.event;
 
-import de.vinado.wicket.participate.data.view.EventDetailsView;
+import de.vinado.wicket.participate.data.EventDetails;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 import java.io.Serializable;
@@ -10,21 +10,21 @@ import java.io.Serializable;
  */
 public class EventSummaryUpdateEvent implements Serializable {
 
-    private EventDetailsView eventDetailsView;
+    private EventDetails eventDetails;
 
     private AjaxRequestTarget target;
 
-    public EventSummaryUpdateEvent(final EventDetailsView eventDetailsView, final AjaxRequestTarget target) {
-        this.eventDetailsView = eventDetailsView;
+    public EventSummaryUpdateEvent(final EventDetails eventDetails, final AjaxRequestTarget target) {
+        this.eventDetails = eventDetails;
         this.target = target;
     }
 
-    public EventDetailsView getEventDetailsView() {
-        return eventDetailsView;
+    public EventDetails getEventDetails() {
+        return eventDetails;
     }
 
-    public void setEventDetailsView(final EventDetailsView eventDetailsView) {
-        this.eventDetailsView = eventDetailsView;
+    public void setEventDetails(final EventDetails eventDetails) {
+        this.eventDetails = eventDetails;
     }
 
     public AjaxRequestTarget getTarget() {

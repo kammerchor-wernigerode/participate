@@ -221,7 +221,7 @@ public class EventSummaryListPanel extends Panel {
                         protected void onSaveSubmit(final IModel<MemberToEventDTO> savedModel, final AjaxRequestTarget target) {
                             savedModel.getObject().setReviewed(false);
                             send(getWebPage(), Broadcast.BREADTH, new EventSummaryUpdateEvent(
-                                eventService.getViewEventDetails(
+                                eventService.getEventDetails(
                                     eventService.saveEventToMember(savedModel.getObject()).getEvent()),
                                 target));
                             dataProvider.set(eventService.getMemberToEventList(event));
