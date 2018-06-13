@@ -5,7 +5,9 @@ import de.vinado.wicket.participate.component.modal.BootstrapModal;
 import de.vinado.wicket.participate.component.provider.SimpleDataProvider;
 import de.vinado.wicket.participate.component.table.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.component.table.column.BootstrapAjaxLinkColumn;
+import de.vinado.wicket.participate.component.table.column.EnumColumn;
 import de.vinado.wicket.participate.data.Member;
+import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.MemberDTO;
 import de.vinado.wicket.participate.data.email.MailData;
 import de.vinado.wicket.participate.data.filter.MemberFilter;
@@ -70,7 +72,7 @@ public class MemberListPanel extends Panel {
         final List<IColumn<Member, String>> columns = new ArrayList<>();
         columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "person.sortName", "person.sortName"));
         columns.add(new PropertyColumn<>(new ResourceModel("email", "Email"), "person.email", "person.email"));
-        columns.add(new PropertyColumn<>(new ResourceModel("voice", "Voice"), "voice.sortOrder", "voice.name"));
+        columns.add(new EnumColumn<Member, String, Voice>(new ResourceModel("voice", "voice"), "voice", "voice"));
         columns.add(new BootstrapAjaxLinkColumn<Member, String>(FontAwesomeIconType.pencil, new ResourceModel("member.edit", "Edit Member")) {
             @Override
             public void onClick(final AjaxRequestTarget target, final IModel<Member> rowModel) {

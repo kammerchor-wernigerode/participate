@@ -9,10 +9,12 @@ import de.vinado.wicket.participate.component.panel.IconPanel;
 import de.vinado.wicket.participate.component.provider.SimpleDataProvider;
 import de.vinado.wicket.participate.component.table.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.component.table.column.BootstrapAjaxLinkColumn;
+import de.vinado.wicket.participate.component.table.column.EnumColumn;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.MemberToEvent;
+import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
 import de.vinado.wicket.participate.data.email.MailData;
 import de.vinado.wicket.participate.data.filter.MemberToEventFilter;
@@ -134,26 +136,26 @@ public class EventPanel extends BreadCrumbPanel {
         dataProvider = new SimpleDataProvider<MemberToEvent, String>() {
             @Override
             public String getDefaultSort() {
-                return "invitationStatus.sortOrder";
+                return "invitationStatus";
             }
         };
 
         final List<IColumn<MemberToEvent, String>> columns = new ArrayList<>();
-        columns.add(new AbstractColumn<MemberToEvent, String>(Model.of(""), "invitationStatus.sortOrder") {
+        columns.add(new AbstractColumn<MemberToEvent, String>(Model.of(""), "invitationStatus") {
             @Override
             public void populateItem(final Item<ICellPopulator<MemberToEvent>> item, final String componentId, final IModel<MemberToEvent> rowModel) {
                 final IconPanel icon = new IconPanel(componentId);
                 final MemberToEvent memberToEvent = rowModel.getObject();
-                final String invitationStatusIdentifier = memberToEvent.getInvitationStatus().getIdentifier();
+                final InvitationStatus invitationStatus = memberToEvent.getInvitationStatus();
 
                 icon.setTextAlign(TextAlign.CENTER);
-                if (InvitationStatus.ACCEPTED.equals(invitationStatusIdentifier)) {
+                if (InvitationStatus.ACCEPTED.equals(invitationStatus)) {
                     icon.setType(FontAwesomeIconType.check);
                     icon.setColor(IconPanel.Color.SUCCESS);
-                } else if (InvitationStatus.DECLINED.equals(invitationStatusIdentifier)) {
+                } else if (InvitationStatus.DECLINED.equals(invitationStatus)) {
                     icon.setType(FontAwesomeIconType.times);
                     icon.setColor(IconPanel.Color.DANGER);
-                } else if (!memberToEvent.isInvited()) {
+                } else if (InvitationStatus.UNINVITED.equals(invitationStatus)) {
                     icon.setType(FontAwesomeIconType.circle_thin);
                     icon.setColor(IconPanel.Color.MUTED);
                 } else {
@@ -170,7 +172,7 @@ public class EventPanel extends BreadCrumbPanel {
             }
         });
         columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "member.person.sortName", "member.person.sortName"));
-        columns.add(new PropertyColumn<>(new ResourceModel("voice", "Voice"), "member.voice.sortOrder", "member.voice.name"));
+        columns.add(new EnumColumn<MemberToEvent, String, Voice>(new ResourceModel("voice", "voice"), "member.voice", "member.voice"));
         if (editable) {
             columns.add(new BootstrapAjaxLinkColumn<MemberToEvent, String>(FontAwesomeIconType.pencil, new ResourceModel("invitation.edit", "Edit Invitation")) {
                 @Override
@@ -206,7 +208,7 @@ public class EventPanel extends BreadCrumbPanel {
             @Override
             protected Item<MemberToEvent> newRowItem(final String id, final int index, final IModel<MemberToEvent> model) {
                 final Item<MemberToEvent> rowItem = super.newRowItem(id, index, model);
-                if (editable && !"PENDING".equals(model.getObject().getInvitationStatus().getIdentifier()) && model.getObject().isReviewed()) {
+                if (editable && !InvitationStatus.PENDING.equals(model.getObject().getInvitationStatus()) && model.getObject().isReviewed()) {
                     rowItem.add(new CssClassNameAppender("success"));
                 }
 

@@ -2,7 +2,6 @@ package de.vinado.wicket.participate.ui.event.event;
 
 import de.vinado.wicket.participate.component.modal.BootstrapModal;
 import de.vinado.wicket.participate.component.modal.BootstrapModalPanel;
-import de.vinado.wicket.participate.component.panel.CheckboxPanel;
 import de.vinado.wicket.participate.component.provider.SimpleDataProvider;
 import de.vinado.wicket.participate.component.table.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.data.Event;
@@ -47,7 +46,7 @@ public abstract class InviteMembersToEventPanel extends BootstrapModalPanel<Even
         final SimpleDataProvider<MemberToEvent, String> dataProvider = new SimpleDataProvider<MemberToEvent, String>(eventService.getMemberToEventList(model.getObject())) {
             @Override
             public String getDefaultSort() {
-                return "invitationStatus.sortOrder";
+                return "invitationStatus";
             }
         };
 
@@ -55,7 +54,7 @@ public abstract class InviteMembersToEventPanel extends BootstrapModalPanel<Even
         columns.add(new AbstractColumn<MemberToEvent, String>(Model.of(""), "id") {
             @Override
             public void populateItem(final Item<ICellPopulator<MemberToEvent>> cell, final String componentId, final IModel<MemberToEvent> rowModel) {
-                cell.add(new CheckboxPanel(componentId, Model.of(rowModel.getObject().getInvitationStatus().isDefault())));
+//                cell.add(new CheckboxPanel(componentId, Model.of(rowModel.getObject().getInvitationStatus().isDefault())));
             }
         });
         columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "member.displayName", "member.displayName"));

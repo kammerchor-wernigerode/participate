@@ -37,9 +37,7 @@ CREATE OR REPLACE VIEW v_event_details AS
                    FROM m_member_event ev_member_int
                        INNER JOIN members member
                            ON ev_member_int.member_id = member.id
-                       INNER JOIN c_list_of_value invitation_status
-                           ON ev_member_int.invitation_status_id = invitation_status.id
-                   WHERE invitation_status.identifier = 'ACCEPTED'
+                   WHERE ev_member_int.invitation_status = 0
                    GROUP BY ev_member_int.event_id) accepted
             ON ev.id = accepted.event_id
         LEFT JOIN (SELECT
@@ -52,11 +50,9 @@ CREATE OR REPLACE VIEW v_event_details AS
                    FROM m_member_event ev_member_int
                        INNER JOIN members member
                            ON ev_member_int.member_id = member.id
-                       INNER JOIN c_list_of_value invitation_status
-                           ON ev_member_int.invitation_status_id = invitation_status.id
                        INNER JOIN persons person
                            ON member.person_id = person.id
-                   WHERE invitation_status.identifier = 'DECLINED'
+                   WHERE ev_member_int.invitation_status = 1
                    GROUP BY
                        ev_member_int.event_id) declined
             ON ev.id = declined.event_id
@@ -66,9 +62,8 @@ CREATE OR REPLACE VIEW v_event_details AS
                    FROM m_member_event ev_member_int
                        INNER JOIN members member
                            ON ev_member_int.member_id = member.id
-                       INNER JOIN c_list_of_value invitation_status
-                           ON ev_member_int.invitation_status_id = invitation_status.id
-                   WHERE invitation_status.identifier = 'PENDING'
+                   WHERE ev_member_int.invitation_status = 2
+                         OR ev_member_int.invitation_status = 3
                    GROUP BY ev_member_int.event_id) pending
             ON ev.id = pending.event_id
         LEFT JOIN (SELECT
@@ -81,15 +76,11 @@ CREATE OR REPLACE VIEW v_event_details AS
                    FROM m_member_event ev_member_int
                        INNER JOIN members member
                            ON ev_member_int.member_id = member.id
-                       INNER JOIN c_list_of_value voice
-                           ON member.voice_id = voice.id
-                       INNER JOIN c_list_of_value invitation_status
-                           ON ev_member_int.invitation_status_id = invitation_status.id
                        INNER JOIN persons person
                            ON member.person_id = person.id
                    WHERE
-                       voice.identifier = 'SOPRANO' AND
-                       invitation_status.identifier = 'ACCEPTED'
+                       member.voice = 0 AND
+                       ev_member_int.invitation_status = 0
                    GROUP BY ev_member_int.event_id) soprano
             ON ev.id = soprano.event_id
         LEFT JOIN (SELECT
@@ -102,15 +93,11 @@ CREATE OR REPLACE VIEW v_event_details AS
                    FROM m_member_event ev_member_int
                        INNER JOIN members member
                            ON ev_member_int.member_id = member.id
-                       INNER JOIN c_list_of_value voice
-                           ON member.voice_id = voice.id
-                       INNER JOIN c_list_of_value invitation_status
-                           ON ev_member_int.invitation_status_id = invitation_status.id
                        INNER JOIN persons person
                            ON member.person_id = person.id
                    WHERE
-                       voice.identifier = 'ALTO' AND
-                       invitation_status.identifier = 'ACCEPTED'
+                       member.voice = 1 AND
+                       ev_member_int.invitation_status = 0
                    GROUP BY ev_member_int.event_id) alto
             ON ev.id = alto.event_id
         LEFT JOIN (SELECT
@@ -123,15 +110,11 @@ CREATE OR REPLACE VIEW v_event_details AS
                    FROM m_member_event ev_member_int
                        INNER JOIN members member
                            ON ev_member_int.member_id = member.id
-                       INNER JOIN c_list_of_value voice
-                           ON member.voice_id = voice.id
-                       INNER JOIN c_list_of_value invitation_status
-                           ON ev_member_int.invitation_status_id = invitation_status.id
                        INNER JOIN persons person
                            ON member.person_id = person.id
                    WHERE
-                       voice.identifier = 'TENOR' AND
-                       invitation_status.identifier = 'ACCEPTED'
+                       member.voice = 2 AND
+                       ev_member_int.invitation_status = 0
                    GROUP BY ev_member_int.event_id) tenor
             ON ev.id = tenor.event_id
         LEFT JOIN (SELECT
@@ -144,15 +127,11 @@ CREATE OR REPLACE VIEW v_event_details AS
                    FROM m_member_event ev_member_int
                        INNER JOIN members member
                            ON ev_member_int.member_id = member.id
-                       INNER JOIN c_list_of_value voice
-                           ON member.voice_id = voice.id
-                       INNER JOIN c_list_of_value invitation_status
-                           ON ev_member_int.invitation_status_id = invitation_status.id
                        INNER JOIN persons person
                            ON member.person_id = person.id
                    WHERE
-                       voice.identifier = 'BASS' AND
-                       invitation_status.identifier = 'ACCEPTED'
+                       member.voice = 3 AND
+                       ev_member_int.invitation_status = 0
                    GROUP BY ev_member_int.event_id) bass
             ON ev.id = bass.event_id
         LEFT JOIN m_address_event ev_address

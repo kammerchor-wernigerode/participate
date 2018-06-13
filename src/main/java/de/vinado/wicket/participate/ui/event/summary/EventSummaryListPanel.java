@@ -13,9 +13,11 @@ import de.vinado.wicket.participate.component.provider.SimpleDataProvider;
 import de.vinado.wicket.participate.component.table.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.component.table.column.BoolIconColumn;
 import de.vinado.wicket.participate.component.table.column.BootstrapAjaxLinkColumn;
+import de.vinado.wicket.participate.component.table.column.EnumColumn;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.MemberToEvent;
+import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
 import de.vinado.wicket.participate.data.email.MailData;
 import de.vinado.wicket.participate.data.filter.DetailedMemberToEventFilter;
@@ -91,26 +93,26 @@ public class EventSummaryListPanel extends Panel {
         dataProvider = new SimpleDataProvider<MemberToEvent, String>(model.getObject()) {
             @Override
             public String getDefaultSort() {
-                return "invitationStatus.sortOrder";
+                return "invitationStatus";
             }
         };
 
         final List<IColumn<MemberToEvent, String>> columns = new ArrayList<>();
-        columns.add(new AbstractColumn<MemberToEvent, String>(Model.of(""), "invitationStatus.sortOrder") {
+        columns.add(new AbstractColumn<MemberToEvent, String>(Model.of(""), "invitationStatus") {
             @Override
             public void populateItem(final Item<ICellPopulator<MemberToEvent>> item, final String componentId, final IModel<MemberToEvent> rowModel) {
                 final IconPanel icon = new IconPanel(componentId);
                 final MemberToEvent memberToEvent = rowModel.getObject();
-                final String invitationStatusIdentifier = memberToEvent.getInvitationStatus().getIdentifier();
+                final InvitationStatus invitationStatus = memberToEvent.getInvitationStatus();
 
                 icon.setTextAlign(TextAlign.CENTER);
-                if (InvitationStatus.ACCEPTED.equals(invitationStatusIdentifier)) {
+                if (InvitationStatus.ACCEPTED.equals(invitationStatus)) {
                     icon.setType(FontAwesomeIconType.check);
                     icon.setColor(IconPanel.Color.SUCCESS);
-                } else if (InvitationStatus.DECLINED.equals(invitationStatusIdentifier)) {
+                } else if (InvitationStatus.DECLINED.equals(invitationStatus)) {
                     icon.setType(FontAwesomeIconType.times);
                     icon.setColor(IconPanel.Color.DANGER);
-                } else if (!memberToEvent.isInvited()) {
+                } else if (InvitationStatus.UNINVITED.equals(invitationStatus)) {
                     icon.setType(FontAwesomeIconType.circle_thin);
                     icon.setColor(IconPanel.Color.MUTED);
                 } else {
@@ -127,7 +129,7 @@ public class EventSummaryListPanel extends Panel {
             }
         });
         columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "member.person.sortName", "member.person.sortName"));
-        columns.add(new PropertyColumn<>(new ResourceModel("voice", "voice"), "member.voice.sortOrder", "member.voice.name"));
+        columns.add(new EnumColumn<MemberToEvent, String, Voice>(new ResourceModel("voice", "voice"), "member.voice", "member.voice"));
         columns.add(new AbstractColumn<MemberToEvent, String>(new ResourceModel("period", "Period")) {
             @Override
             public void populateItem(final Item<ICellPopulator<MemberToEvent>> cellItem, final String componentId, final IModel<MemberToEvent> rowModel) {
@@ -261,7 +263,7 @@ public class EventSummaryListPanel extends Panel {
             @Override
             protected Item<MemberToEvent> newRowItem(String id, int index, IModel<MemberToEvent> model) {
                 final Item<MemberToEvent> rowItem = super.newRowItem(id, index, model);
-                if (!"PENDING".equals(model.getObject().getInvitationStatus().getIdentifier()) && model.getObject().isReviewed()) {
+                if (!InvitationStatus.PENDING.equals(model.getObject().getInvitationStatus()) && model.getObject().isReviewed()) {
                     rowItem.add(new CssClassNameAppender("success"));
                 }
                 return rowItem;
@@ -286,9 +288,8 @@ public class EventSummaryListPanel extends Panel {
                 target.add(dataTable);
             }
         };
-        final boolean pending = "PENDING".equals(memberToEvent.getInvitationStatus().getIdentifier());
 
-        if (pending) {
+        if (InvitationStatus.PENDING.equals(memberToEvent.getInvitationStatus())) {
             reviewBtn.getLink().add(new AttributeAppender("disabled", "disabled"));
         }
 

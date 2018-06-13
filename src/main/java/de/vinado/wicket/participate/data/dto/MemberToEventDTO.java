@@ -39,26 +39,23 @@ public class MemberToEventDTO implements Serializable {
 
     private boolean reviewed;
 
-    private boolean invited;
-
     public MemberToEventDTO() {
     }
 
     public MemberToEventDTO(final MemberToEvent memberToEvent) {
-        this.setMemberToEvent(memberToEvent);
-        this.setEvent(memberToEvent.getEvent());
-        this.setMember(memberToEvent.getMember());
-        this.setToken(memberToEvent.getToken());
-        this.setFromDate(memberToEvent.getFromDate());
-        this.setToDate(memberToEvent.getToDate());
-        this.setInvitationStatus(memberToEvent.getInvitationStatus());
-        this.setNeedsDinner(memberToEvent.isNeedsDinner());
-        this.setNeedsDinnerComment(memberToEvent.getNeedsDinnerComment());
-        this.setNeedsPlaceToSleep(memberToEvent.isNeedsPlaceToSleep());
-        this.setNeedsPlaceToSleepComment(memberToEvent.getNeedsPlaceToSleepComment());
-        this.setComment(memberToEvent.getComment());
-        this.setReviewed(memberToEvent.isReviewed());
-        this.setInvited(memberToEvent.isInvited());
+        this.memberToEvent = memberToEvent;
+        this.event = memberToEvent.getEvent();
+        this.member = memberToEvent.getMember();
+        this.token = memberToEvent.getToken();
+        this.fromDate = memberToEvent.getFromDate();
+        this.toDate = memberToEvent.getToDate();
+        this.invitationStatus = memberToEvent.getInvitationStatus();
+        this.needsDinner = memberToEvent.isNeedsDinner();
+        this.needsDinnerComment = memberToEvent.getNeedsDinnerComment();
+        this.needsPlaceToSleep = memberToEvent.isNeedsPlaceToSleep();
+        this.needsPlaceToSleepComment = memberToEvent.getNeedsPlaceToSleepComment();
+        this.comment = memberToEvent.getComment();
+        this.reviewed = memberToEvent.isReviewed();
     }
 
     public MemberToEvent getMemberToEvent() {
@@ -163,13 +160,5 @@ public class MemberToEventDTO implements Serializable {
 
     public void setReviewed(final boolean reviewed) {
         this.reviewed = reviewed;
-    }
-
-    public boolean isInvited() {
-        return invited;
-    }
-
-    public void setInvited(final boolean invited) {
-        this.invited = invited;
     }
 }

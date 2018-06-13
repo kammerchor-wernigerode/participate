@@ -8,7 +8,6 @@ import de.vinado.wicket.participate.component.modal.BootstrapModal;
 import de.vinado.wicket.participate.component.modal.BootstrapModalPanel;
 import de.vinado.wicket.participate.component.provider.Select2GroupProvider;
 import de.vinado.wicket.participate.component.validator.ConditionalValidator;
-import de.vinado.wicket.participate.data.Configurable;
 import de.vinado.wicket.participate.data.Group;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.MemberDTO;
@@ -17,9 +16,9 @@ import de.vinado.wicket.participate.service.ListOfValueService;
 import de.vinado.wicket.participate.service.PersonService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EmailTextField;
+import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
@@ -28,6 +27,9 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2MultiChoice;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Panel for administration of {@link de.vinado.wicket.participate.data.Member Members}
@@ -82,8 +84,8 @@ public class AddEditMemberPanel extends BootstrapModalPanel<MemberDTO> {
         });
         inner.add(emailTf);
 
-        final DropDownChoice<Configurable> voiceDd = new DropDownChoice<>("voice",
-            listOfValueService.getConfigurableList(Voice.class), new ChoiceRenderer<>("name"));
+        final DropDownChoice<Voice> voiceDd = new DropDownChoice<>("voice",
+            Collections.unmodifiableList(Arrays.asList(Voice.values())), new EnumChoiceRenderer<>());
         voiceDd.setLabel(new ResourceModel("voice", "Voice"));
         inner.add(voiceDd);
 

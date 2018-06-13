@@ -11,7 +11,6 @@ import de.vinado.wicket.participate.component.behavoir.AutosizeBehavior;
 import de.vinado.wicket.participate.component.behavoir.decorator.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.participate.component.modal.BootstrapModal;
 import de.vinado.wicket.participate.component.modal.BootstrapModalPanel;
-import de.vinado.wicket.participate.data.Configurable;
 import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
 import de.vinado.wicket.participate.service.EmailService;
@@ -21,7 +20,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
+import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -31,6 +30,7 @@ import org.apache.wicket.util.string.Strings;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -72,9 +72,8 @@ public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<Memb
         toConfig.withFormat("dd.MM.yyyy HH:mm");
         toConfig.withMinuteStepping(30);
 
-        final BootstrapSelect<Configurable> invitationStatusBs = new BootstrapSelect<>("invitationStatus",
-            listOfValueService.getConfigurableList(InvitationStatus.class),
-            new ChoiceRenderer<>("name"));
+        final BootstrapSelect<InvitationStatus> invitationStatusBs = new BootstrapSelect<>("invitationStatus",
+            Collections.unmodifiableList(Arrays.asList(InvitationStatus.values())), new EnumChoiceRenderer<>());
         invitationStatusBs.add(new AjaxFormComponentUpdatingBehavior("hidden.bs.select") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
@@ -117,7 +116,7 @@ public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<Memb
         final CheckBox needsDinnerCb = new CheckBox("needsDinner") {
             @Override
             protected void onConfigure() {
-                setEnabled("ACCEPTED".equalsIgnoreCase(model.getObject().getInvitationStatus().getIdentifier()));
+                setEnabled(InvitationStatus.ACCEPTED.equals(model.getObject().getInvitationStatus()));
             }
         };
         needsDinnerCb.add(BootstrapHorizontalFormDecorator.decorate());
@@ -132,7 +131,7 @@ public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<Memb
         final TextArea needsDinnerCommentTa = new TextArea("needsDinnerComment") {
             @Override
             protected void onConfigure() {
-                setEnabled("ACCEPTED".equalsIgnoreCase(model.getObject().getInvitationStatus().getIdentifier()));
+                setEnabled(InvitationStatus.ACCEPTED.equals(model.getObject().getInvitationStatus()));
             }
         };
         needsDinnerCommentTa.add(new AutosizeBehavior());
@@ -148,7 +147,7 @@ public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<Memb
         final CheckBox needsPlaceToSleepCb = new CheckBox("needsPlaceToSleep") {
             @Override
             protected void onConfigure() {
-                setEnabled("ACCEPTED".equalsIgnoreCase(model.getObject().getInvitationStatus().getIdentifier()));
+                setEnabled(InvitationStatus.ACCEPTED.equals(model.getObject().getInvitationStatus()));
             }
         };
         needsPlaceToSleepCb.add(BootstrapHorizontalFormDecorator.decorate());
@@ -163,7 +162,7 @@ public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<Memb
         final TextArea needsPlaceToSleepCommentTa = new TextArea("needsPlaceToSleepComment") {
             @Override
             protected void onConfigure() {
-                setEnabled("ACCEPTED".equalsIgnoreCase(model.getObject().getInvitationStatus().getIdentifier()));
+                setEnabled(InvitationStatus.ACCEPTED.equals(model.getObject().getInvitationStatus()));
             }
         };
         needsPlaceToSleepCommentTa.add(new AutosizeBehavior());
@@ -179,7 +178,7 @@ public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<Memb
         final TextArea commentTa = new TextArea("comment") {
             @Override
             protected void onConfigure() {
-                setEnabled("ACCEPTED".equalsIgnoreCase(model.getObject().getInvitationStatus().getIdentifier()));
+                setEnabled(InvitationStatus.ACCEPTED.equals(model.getObject().getInvitationStatus()));
             }
         };
         commentTa.add(new AutosizeBehavior());
@@ -193,15 +192,15 @@ public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<Memb
         inner.add(commentTa);
 
         final BootstrapAjaxLink<MemberToEventDTO> inviteMemberBtn = new BootstrapAjaxLink<MemberToEventDTO>(
-            "inviteMemberBtn", model, Buttons.Type.Default, model.getObject().isInvited()
+            "inviteMemberBtn", model, Buttons.Type.Default, !InvitationStatus.UNINVITED.equals(model.getObject().getInvitationStatus())
             ? new ResourceModel("email.send.reminder", "Send Reminder")
             : new ResourceModel("email.send.invitation", "Send Invitation")) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 eventService.inviteMembersToEvent(model.getObject().getEvent(),
-                    Collections.singletonList(model.getObject().getMemberToEvent()), model.getObject().isInvited());
+                    Collections.singletonList(model.getObject().getMemberToEvent()), !InvitationStatus.UNINVITED.equals(model.getObject().getInvitationStatus()));
                 modal.close(target);
-                if (model.getObject().isInvited()) {
+                if (!InvitationStatus.UNINVITED.equals(model.getObject().getInvitationStatus())) {
                     Snackbar.show(target, new ResourceModel("email.send.reminder.success", "A reminder has been sent"));
                 } else {
                     Snackbar.show(target, new ResourceModel("email.send.invitation.success", "An invitation has been sent"));

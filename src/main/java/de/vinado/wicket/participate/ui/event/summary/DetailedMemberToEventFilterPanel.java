@@ -4,7 +4,6 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.component.panel.AbstractTableFilterPanel;
-import de.vinado.wicket.participate.data.Configurable;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.MemberToEvent;
@@ -16,8 +15,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
@@ -25,6 +24,8 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -70,13 +71,13 @@ public abstract class DetailedMemberToEventFilterPanel extends AbstractTableFilt
         commentTf.setLabel(new ResourceModel("filter.comments", "Filter by comments"));
         inner.add(commentTf);
 
-        final DropDownChoice<Configurable> invitationStatusDdc = new DropDownChoice<>("invitationStatus",
-                listOfValueService.getConfigurableList(InvitationStatus.class), new ChoiceRenderer<>("name"));
+        final DropDownChoice<InvitationStatus> invitationStatusDdc = new DropDownChoice<>("invitationStatus",
+            Collections.unmodifiableList(Arrays.asList(InvitationStatus.values())), new EnumChoiceRenderer<>());
         invitationStatusDdc.setLabel(new ResourceModel("invitationStatus", "Invitation Status"));
         inner.add(invitationStatusDdc);
 
-        final DropDownChoice<Configurable> voiceDdc = new DropDownChoice<>("voice",
-                listOfValueService.getConfigurableList(Voice.class), new ChoiceRenderer<>("name"));
+        final DropDownChoice<Voice> voiceDdc = new DropDownChoice<>("voice",
+            Collections.unmodifiableList(Arrays.asList(Voice.values())), new EnumChoiceRenderer<>());
         voiceDdc.setLabel(new ResourceModel("voice", "Voice"));
         inner.add(voiceDdc);
 

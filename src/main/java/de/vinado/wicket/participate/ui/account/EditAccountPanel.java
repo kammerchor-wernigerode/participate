@@ -4,7 +4,6 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.tabs.AjaxBootstrapTabbed
 import de.vinado.wicket.participate.component.behavoir.decorator.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.participate.component.modal.BootstrapModal;
 import de.vinado.wicket.participate.component.modal.BootstrapModalPanel;
-import de.vinado.wicket.participate.data.Configurable;
 import de.vinado.wicket.participate.data.Member;
 import de.vinado.wicket.participate.data.User;
 import de.vinado.wicket.participate.data.Voice;
@@ -20,9 +19,9 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EmailTextField;
+import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.PasswordTextField;
@@ -37,6 +36,8 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.validation.IValidationError;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -208,8 +209,8 @@ public abstract class EditAccountPanel extends BootstrapModalPanel<EditAccountDT
             });
             add(emailTf);
 
-            final DropDownChoice<Configurable> voiceDd = new DropDownChoice<Configurable>("voice",
-                    listOfValueService.getConfigurableList(Voice.class), new ChoiceRenderer<>("name")) {
+            final DropDownChoice<Voice> voiceDd = new DropDownChoice<Voice>("voice",
+                Collections.unmodifiableList(Arrays.asList(Voice.values())), new EnumChoiceRenderer<>()) {
                 @Override
                 protected void onConfigure() {
                     setVisible(null != model.getObject().getMember());

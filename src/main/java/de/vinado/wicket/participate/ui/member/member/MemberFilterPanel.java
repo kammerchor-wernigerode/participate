@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.ui.member.member;
 
+import com.google.common.collect.Lists;
 import de.vinado.wicket.participate.component.panel.AbstractTableFilterPanel;
-import de.vinado.wicket.participate.data.Configurable;
 import de.vinado.wicket.participate.data.Member;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.filter.MemberFilter;
@@ -9,8 +9,8 @@ import de.vinado.wicket.participate.service.ListOfValueService;
 import de.vinado.wicket.participate.service.PersonService;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
@@ -40,8 +40,8 @@ public abstract class MemberFilterPanel extends AbstractTableFilterPanel<Member,
         searchTermTf.setLabel(new ResourceModel("search", "Search"));
         inner.add(searchTermTf);
 
-        final DropDownChoice<Configurable> voiceDdc = new DropDownChoice<>("voice",
-                listOfValueService.getConfigurableList(Voice.class), new ChoiceRenderer<>("name"));
+        final DropDownChoice<Voice> voiceDdc = new DropDownChoice<>("voice",
+            Lists.newArrayList(Voice.values()), new EnumChoiceRenderer<>());
         voiceDdc.setLabel(new ResourceModel("voice", "Voice"));
         inner.add(voiceDdc);
 

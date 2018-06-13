@@ -204,11 +204,7 @@ public class EventService extends DataService {
      */
     @Transactional
     public MemberToEvent createMemberToEvent(final Event event, final Member member) {
-        final MemberToEvent memberToEvent = new MemberToEvent(
-            event,
-            member,
-            generateEventToken(20),
-            (InvitationStatus) listOfValueService.getDefaultFromConfigurable(InvitationStatus.class));
+        final MemberToEvent memberToEvent = new MemberToEvent(event, member, generateEventToken(20), InvitationStatus.UNINVITED);
         return save(memberToEvent);
     }
 
@@ -239,14 +235,14 @@ public class EventService extends DataService {
 
     @Transactional
     public MemberToEvent acceptEvent(final MemberToEventDTO dto) {
-        dto.setInvitationStatus((InvitationStatus) listOfValueService.getConfigurable(InvitationStatus.class, InvitationStatus.ACCEPTED));
+        dto.setInvitationStatus(InvitationStatus.ACCEPTED);
         dto.setReviewed(false);
         return saveEventToMember(dto);
     }
 
     @Transactional
     public MemberToEvent declineEvent(final MemberToEventDTO dto) {
-        dto.setInvitationStatus((InvitationStatus) listOfValueService.getConfigurable(InvitationStatus.class, InvitationStatus.DECLINED));
+        dto.setInvitationStatus(InvitationStatus.DECLINED);
         dto.setFromDate(null);
         dto.setToDate(null);
         dto.setNeedsDinner(false);
@@ -744,10 +740,11 @@ public class EventService extends DataService {
                 mailData.setAttachment(newEventAttachment(event, address.getLocality()));
             }
             // TODO Template erstellen
-            preparators.add(emailService.getMimeMessagePreparator(mailData, memberToEvent.isInvited() ? "fm-eventReminder.ftl" : "fm-eventInvite.ftl"));
+            preparators.add(emailService.getMimeMessagePreparator(mailData,
+                !InvitationStatus.UNINVITED.equals(memberToEvent.getInvitationStatus()) ? "fm-eventReminder.ftl" : "fm-eventInvite.ftl"));
 
             final MemberToEvent loadedMemberToEvent = load(MemberToEvent.class, memberToEvent.getId());
-            loadedMemberToEvent.setInvited(true);
+            loadedMemberToEvent.setInvitationStatus(InvitationStatus.PENDING);
             save(loadedMemberToEvent);
 
             count++;

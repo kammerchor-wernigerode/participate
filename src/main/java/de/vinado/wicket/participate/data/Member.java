@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,8 +34,8 @@ public class Member implements Identifiable, Serializable {
     @JoinColumn(name = "person_id", nullable = false)
     private Person person;
 
-    @ManyToOne
-    @JoinColumn(name = "voice_id")
+    @Enumerated
+    @Column(name = "voice")
     private Voice voice;
 
     @Column(name = "is_active", nullable = false)
@@ -91,30 +92,30 @@ public class Member implements Identifiable, Serializable {
         final Member member = (Member) o;
 
         return new EqualsBuilder()
-                .append(active, member.active)
-                .append(id, member.id)
-                .append(person, member.person)
-                .append(voice, member.voice)
-                .isEquals();
+            .append(active, member.active)
+            .append(id, member.id)
+            .append(person, member.person)
+            .append(voice, member.voice)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(person)
-                .append(voice)
-                .append(active)
-                .toHashCode();
+            .append(id)
+            .append(person)
+            .append(voice)
+            .append(active)
+            .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("id", id)
-                .append("person", person)
-                .append("voice", voice)
-                .append("active", active)
-                .toString();
+            .append("id", id)
+            .append("person", person)
+            .append("voice", voice)
+            .append("active", active)
+            .toString();
     }
 }

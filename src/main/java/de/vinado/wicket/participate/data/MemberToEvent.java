@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,8 +43,8 @@ public class MemberToEvent implements Identifiable, Serializable {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @ManyToOne
-    @JoinColumn(name = "invitation_status_id")
+    @Enumerated
+    @Column(name = "invitation_status", nullable = false)
     private InvitationStatus invitationStatus;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -71,9 +72,6 @@ public class MemberToEvent implements Identifiable, Serializable {
 
     @Column(name = "is_reviewed")
     private boolean reviewed;
-
-    @Column(name = "is_invited", nullable = false)
-    private boolean invited;
 
     /**
      * Hibernate only
@@ -108,7 +106,6 @@ public class MemberToEvent implements Identifiable, Serializable {
         this.needsPlaceToSleepComment = needsPlaceToSleepComment;
         this.comment = comment;
         this.reviewed = false;
-        this.invited = false;
     }
 
     public MemberToEvent(final Event event, final Member member, final String token,
@@ -221,14 +218,6 @@ public class MemberToEvent implements Identifiable, Serializable {
         this.reviewed = reviewed;
     }
 
-    public boolean isInvited() {
-        return invited;
-    }
-
-    public void setInvited(final boolean invited) {
-        this.invited = invited;
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
@@ -238,60 +227,57 @@ public class MemberToEvent implements Identifiable, Serializable {
         final MemberToEvent that = (MemberToEvent) o;
 
         return new EqualsBuilder()
-                .append(needsDinner, that.needsDinner)
-                .append(needsPlaceToSleep, that.needsPlaceToSleep)
-                .append(reviewed, that.reviewed)
-                .append(invited, that.invited)
-                .append(id, that.id)
-                .append(event, that.event)
-                .append(token, that.token)
-                .append(member, that.member)
-                .append(invitationStatus, that.invitationStatus)
-                .append(fromDate, that.fromDate)
-                .append(toDate, that.toDate)
-                .append(needsDinnerComment, that.needsDinnerComment)
-                .append(needsPlaceToSleepComment, that.needsPlaceToSleepComment)
-                .append(comment, that.comment)
-                .isEquals();
+            .append(needsDinner, that.needsDinner)
+            .append(needsPlaceToSleep, that.needsPlaceToSleep)
+            .append(reviewed, that.reviewed)
+            .append(id, that.id)
+            .append(event, that.event)
+            .append(token, that.token)
+            .append(member, that.member)
+            .append(invitationStatus, that.invitationStatus)
+            .append(fromDate, that.fromDate)
+            .append(toDate, that.toDate)
+            .append(needsDinnerComment, that.needsDinnerComment)
+            .append(needsPlaceToSleepComment, that.needsPlaceToSleepComment)
+            .append(comment, that.comment)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(event)
-                .append(token)
-                .append(member)
-                .append(invitationStatus)
-                .append(fromDate)
-                .append(toDate)
-                .append(needsDinner)
-                .append(needsDinnerComment)
-                .append(needsPlaceToSleep)
-                .append(needsPlaceToSleepComment)
-                .append(comment)
-                .append(reviewed)
-                .append(invited)
-                .toHashCode();
+            .append(id)
+            .append(event)
+            .append(token)
+            .append(member)
+            .append(invitationStatus)
+            .append(fromDate)
+            .append(toDate)
+            .append(needsDinner)
+            .append(needsDinnerComment)
+            .append(needsPlaceToSleep)
+            .append(needsPlaceToSleepComment)
+            .append(comment)
+            .append(reviewed)
+            .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("id", id)
-                .append("event", event)
-                .append("token", token)
-                .append("member", member)
-                .append("invitationStatus", invitationStatus)
-                .append("fromDate", fromDate)
-                .append("toDate", toDate)
-                .append("needsDinner", needsDinner)
-                .append("needsDinnerComment", needsDinnerComment)
-                .append("needsPlaceToSleep", needsPlaceToSleep)
-                .append("needsPlaceToSleepComment", needsPlaceToSleepComment)
-                .append("comment", comment)
-                .append("reviewed", reviewed)
-                .append("invited", invited)
-                .toString();
+            .append("id", id)
+            .append("event", event)
+            .append("token", token)
+            .append("member", member)
+            .append("invitationStatus", invitationStatus)
+            .append("fromDate", fromDate)
+            .append("toDate", toDate)
+            .append("needsDinner", needsDinner)
+            .append("needsDinnerComment", needsDinnerComment)
+            .append("needsPlaceToSleep", needsPlaceToSleep)
+            .append("needsPlaceToSleepComment", needsPlaceToSleepComment)
+            .append("comment", comment)
+            .append("reviewed", reviewed)
+            .toString();
     }
 }

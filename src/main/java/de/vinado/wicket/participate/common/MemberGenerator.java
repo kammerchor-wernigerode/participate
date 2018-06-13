@@ -6,6 +6,10 @@ import de.vinado.wicket.participate.data.dto.MemberDTO;
 import de.vinado.wicket.participate.service.DataService;
 
 import java.text.Normalizer;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -28,13 +32,14 @@ public class MemberGenerator extends AbstractEntityGenerator<MemberDTO> {
 
     @Override
     public MemberDTO generate(final DataService dataService) {
+        final List<Voice> voiceList = Collections.unmodifiableList(Arrays.asList(Voice.values()));
         final MemberDTO dto = new MemberDTO();
         dto.setPerson(new Person());
         dto.getPerson().setFirstName(randomString(firstNames));
         dto.getPerson().setLastName(randomString(lastNames));
         dto.getPerson().setEmail(Normalizer.normalize((dto.getPerson().getFirstName() + "." + dto.getPerson().getLastName())
-                .toLowerCase(), Normalizer.Form.NFD).replaceAll("\\s+", "-").replaceAll("[^-a-zA-Z0-9.]", "").concat("@participate.tld"));
-        dto.setVoice(dataService.load(Voice.class, (long) rint(1, 4)));
+            .toLowerCase(), Normalizer.Form.NFD).replaceAll("\\s+", "-").replaceAll("[^-a-zA-Z0-9.]", "").concat("@participate.tld"));
+        dto.setVoice(voiceList.get(new Random().nextInt(voiceList.size())));
 
         return dto;
     }
