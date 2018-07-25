@@ -16,6 +16,7 @@ import de.vinado.wicket.participate.data.dto.EventDTO;
 import de.vinado.wicket.participate.data.email.MailData;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.EventUpdateEvent;
+import de.vinado.wicket.participate.event.RemoveEventUpdateEvent;
 import de.vinado.wicket.participate.service.EventService;
 import de.vinado.wicket.participate.ui.event.event.EventPanel;
 import de.vinado.wicket.participate.ui.event.eventList.AddEditEventPanel;
@@ -26,6 +27,7 @@ import de.vinado.wicket.participate.ui.page.ParticipatePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanelLink;
@@ -52,6 +54,7 @@ public class EventMainPanel extends BreadCrumbPanel {
     @SuppressWarnings("unused")
     private EventService eventService;
 
+    private BootstrapPanel<List<EventDetails>> eventListPanel;
     private BootstrapPanel<EventDetails> eventPanel;
 
     public EventMainPanel(final String id, final IBreadCrumbModel breadCrumbModel) {
@@ -59,7 +62,7 @@ public class EventMainPanel extends BreadCrumbPanel {
 
         ((Breadcrumb) getBreadCrumbModel()).setVisible(false);
 
-        final BootstrapPanel<List<EventDetails>> eventListPanel = new BootstrapPanel<List<EventDetails>>("events", new CompoundPropertyModel<>(eventService.getUpcomingDetailedEventListList()), new ResourceModel("overview", "Overview")) {
+        eventListPanel = new BootstrapPanel<List<EventDetails>>("events", new CompoundPropertyModel<>(eventService.getUpcomingDetailedEventListList()), new ResourceModel("overview", "Overview")) {
             @Override
             protected Panel newBodyPanel(final String id, final IModel<List<EventDetails>> model) {
                 return new EventListPanel(id, model);
@@ -111,19 +114,7 @@ public class EventMainPanel extends BreadCrumbPanel {
 
             @Override
             protected Panel newBodyPanel(final String id, final IModel<EventDetails> model) {
-                return new EventPanel(id, breadCrumbModel, model, true) {
-                    @Override
-                    protected void onRemoveEvent(final AjaxRequestTarget target) {
-                        if (!eventService.hasUpcomingEvents()) {
-                            ParticipateSession.get().setEvent(null);
-                        } else {
-                            ParticipateSession.get().setEvent(eventService.getLatestEvent());
-                            setDefaultModelObject(eventService.getLatestEventView());
-                        }
-                        target.add(eventListPanel);
-                        target.add(eventPanel);
-                    }
-                };
+                return new EventPanel(id, breadCrumbModel, model, true);
             }
 
             @Override
@@ -249,6 +240,27 @@ public class EventMainPanel extends BreadCrumbPanel {
         };
         eventPanel.setOutputMarkupPlaceholderTag(true);
         add(eventPanel);
+    }
+
+    @Override
+    public void onEvent(final IEvent<?> iEvent) {
+        super.onEvent(iEvent);
+        final Object payload = iEvent.getPayload();
+
+        if (payload instanceof RemoveEventUpdateEvent) {
+            final RemoveEventUpdateEvent event = (RemoveEventUpdateEvent) payload;
+            final AjaxRequestTarget target = event.getTarget();
+
+            if (!eventService.hasUpcomingEvents()) {
+                ParticipateSession.get().setEvent(null);
+            } else {
+                ParticipateSession.get().setEvent(eventService.getLatestEvent());
+                setDefaultModelObject(eventService.getLatestEventView());
+            }
+
+            target.add(eventListPanel);
+            target.add(eventPanel);
+        }
     }
 
     @Override

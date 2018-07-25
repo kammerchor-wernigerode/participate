@@ -260,8 +260,10 @@ public class EventService extends DataService {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
         final Root<Event> root = criteriaQuery.from(Event.class);
+        final Predicate forActive = criteriaBuilder.equal(root.get("active"), true);
+        final Predicate forDate = criteriaBuilder.greaterThanOrEqualTo(root.get("endDate"), new Date());
         criteriaQuery.select(criteriaBuilder.count(root));
-        criteriaQuery.where(criteriaBuilder.equal(root.get("active"), true));
+        criteriaQuery.where(forActive, forDate);
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 

@@ -20,7 +20,6 @@ import de.vinado.wicket.participate.data.email.MailData;
 import de.vinado.wicket.participate.data.filter.MemberToEventFilter;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.EventUpdateEvent;
-import de.vinado.wicket.participate.event.RemoveEventUpdateEvent;
 import de.vinado.wicket.participate.service.EventService;
 import de.vinado.wicket.participate.ui.event.SendEmailPanel;
 import de.vinado.wicket.participate.ui.page.BasePage;
@@ -206,9 +205,6 @@ public class EventPanel extends BreadCrumbPanel {
         wmc.add(dataTable);
     }
 
-    protected void onRemoveEvent(final AjaxRequestTarget target) {
-    }
-
     @Override
     public void onEvent(final IEvent<?> iEvent) {
         super.onEvent(iEvent);
@@ -225,13 +221,6 @@ public class EventPanel extends BreadCrumbPanel {
             final AjaxUpdateEvent event = (AjaxUpdateEvent) payload;
             final AjaxRequestTarget target = event.getTarget();
             target.add(form);
-        }
-
-        if (payload instanceof RemoveEventUpdateEvent) {
-            final RemoveEventUpdateEvent event = (RemoveEventUpdateEvent) payload;
-            final AjaxRequestTarget target = event.getTarget();
-            target.add(form);
-            onRemoveEvent(target);
         }
     }
 
