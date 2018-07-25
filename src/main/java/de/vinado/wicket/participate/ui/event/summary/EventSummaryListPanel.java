@@ -8,10 +8,10 @@ import de.vinado.wicket.participate.component.Snackbar;
 import de.vinado.wicket.participate.component.TextAlign;
 import de.vinado.wicket.participate.component.modal.BootstrapModal;
 import de.vinado.wicket.participate.component.panel.BootstrapAjaxLinkPanel;
+import de.vinado.wicket.participate.component.panel.DinnerSleepIconPanel;
 import de.vinado.wicket.participate.component.panel.IconPanel;
 import de.vinado.wicket.participate.component.provider.SimpleDataProvider;
 import de.vinado.wicket.participate.component.table.BootstrapAjaxDataTable;
-import de.vinado.wicket.participate.component.table.column.BoolIconColumn;
 import de.vinado.wicket.participate.component.table.column.BootstrapAjaxLinkColumn;
 import de.vinado.wicket.participate.component.table.column.EnumColumn;
 import de.vinado.wicket.participate.data.Event;
@@ -38,6 +38,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -46,6 +47,7 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.Strings;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -130,6 +132,12 @@ public class EventSummaryListPanel extends Panel {
         });
         columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "member.person.sortName", "member.person.sortName"));
         columns.add(new EnumColumn<MemberToEvent, String, Voice>(new ResourceModel("voice", "voice"), "member.voice", "member.voice"));
+        columns.add(new AbstractColumn<MemberToEvent, String>(Model.of("")) {
+            @Override
+            public void populateItem(final Item<ICellPopulator<MemberToEvent>> cellItem, final String componentId, final IModel<MemberToEvent> rowModel) {
+                cellItem.add(new DinnerSleepIconPanel(componentId, rowModel));
+            }
+        });
         columns.add(new AbstractColumn<MemberToEvent, String>(new ResourceModel("period", "Period")) {
             @Override
             public void populateItem(final Item<ICellPopulator<MemberToEvent>> cellItem, final String componentId, final IModel<MemberToEvent> rowModel) {
@@ -147,26 +155,16 @@ public class EventSummaryListPanel extends Panel {
                 cellItem.add(new Label(componentId, formattedDate));
             }
         });
-        columns.add(new BoolIconColumn<MemberToEvent, String>(new ResourceModel("needsDinner", "Food"), "needsDinner", "needsDinner") {
+        columns.add(new AbstractColumn<MemberToEvent, String>(new ResourceModel("comments", "Comments")) {
             @Override
-            public void populateItem(final Item<ICellPopulator<MemberToEvent>> item, final String componentId, final IModel<MemberToEvent> rowModel) {
-                final IconPanel iconPanel = new IconPanel(componentId, getCondition(rowModel) ? FontAwesomeIconType.check : FontAwesomeIconType.times, IconPanel.Color.DEFAULT, TextAlign.CENTER);
-
-                if (rowModel.getObject().isNeedsDinner()) {
-                    iconPanel.setColor(IconPanel.Color.SUCCESS);
-                } else {
-                    iconPanel.setColor(IconPanel.Color.DANGER);
-                }
-
-                item.add(iconPanel);
+            public void populateItem(final Item<ICellPopulator<MemberToEvent>> cellItem, final String componentId, final IModel<MemberToEvent> rowModel) {
+                final MemberToEvent modelObject = rowModel.getObject();
+                cellItem.add(new MultiLineLabel(componentId, "" +
+                    (Strings.isEmpty(modelObject.getComment()) ? "" : modelObject.getComment() + "\n") +
+                    (Strings.isEmpty(modelObject.getNeedsDinnerComment()) ? "" : modelObject.getNeedsDinnerComment() + "\n") +
+                    (Strings.isEmpty(modelObject.getNeedsPlaceToSleepComment()) ? "" : modelObject.getNeedsPlaceToSleepComment() + "\n")));
             }
 
-            @Override
-            public boolean getCondition(final IModel<MemberToEvent> rowModel) {
-                return rowModel.getObject().isNeedsDinner();
-            }
-        });
-        columns.add(new PropertyColumn<MemberToEvent, String>(new ResourceModel("needsDinnerComment", "Comment (food)"), "needsDinnerComment") {
             @Override
             public String getCssClass() {
                 if (showAllProperties) {
@@ -174,43 +172,7 @@ public class EventSummaryListPanel extends Panel {
                 }
                 return "sr-only";
             }
-        });
-        columns.add(new BoolIconColumn<MemberToEvent, String>(new ResourceModel("needsPlaceToSleep", "Needs place to sleep"), "needsPlaceToSleep", "needsPlaceToSleep") {
-            @Override
-            public void populateItem(final Item<ICellPopulator<MemberToEvent>> item, final String componentId, final IModel<MemberToEvent> rowModel) {
-                final IconPanel iconPanel = new IconPanel(componentId, getCondition(rowModel) ? FontAwesomeIconType.check : FontAwesomeIconType.times, IconPanel.Color.DEFAULT, TextAlign.CENTER);
 
-                if (rowModel.getObject().isNeedsPlaceToSleep()) {
-                    iconPanel.setColor(IconPanel.Color.SUCCESS);
-                } else {
-                    iconPanel.setColor(IconPanel.Color.DANGER);
-                }
-
-                item.add(iconPanel);
-            }
-
-            @Override
-            public boolean getCondition(final IModel<MemberToEvent> rowModel) {
-                return rowModel.getObject().isNeedsPlaceToSleep();
-            }
-        });
-        columns.add(new PropertyColumn<MemberToEvent, String>(new ResourceModel("needsPlaceToSleepComment", "Comment (place to sleep)"), "needsPlaceToSleepComment") {
-            @Override
-            public String getCssClass() {
-                if (showAllProperties) {
-                    return super.getCssClass();
-                }
-                return "sr-only";
-            }
-        });
-        columns.add(new PropertyColumn<MemberToEvent, String>(new ResourceModel("comments", "Comments"), "comment") {
-            @Override
-            public String getCssClass() {
-                if (showAllProperties) {
-                    return super.getCssClass();
-                }
-                return "sr-only";
-            }
         });
         if (editable) {
             columns.add(new BootstrapAjaxLinkColumn<MemberToEvent, String>(FontAwesomeIconType.pencil, new ResourceModel("invitation.edit", "Edit Invitation")) {
