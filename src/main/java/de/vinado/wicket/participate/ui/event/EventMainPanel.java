@@ -10,6 +10,7 @@ import de.vinado.wicket.participate.component.modal.BootstrapModalConfirmationPa
 import de.vinado.wicket.participate.component.panel.BootstrapPanel;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.EventDetails;
+import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.MemberToEvent;
 import de.vinado.wicket.participate.data.dto.EventDTO;
 import de.vinado.wicket.participate.data.email.MailData;
@@ -185,7 +186,7 @@ public class EventMainPanel extends BreadCrumbPanel {
                                     int count;
                                     if (!ParticipateApplication.get().isInDevelopmentMode()) {
                                         count = eventService.inviteMembersToEvent(event,
-                                            eventService.getMemberToEventList4Invited(model.getObject().getEvent(), true),
+                                            eventService.getMemberToEventList(model.getObject().getEvent(), InvitationStatus.PENDING),
                                             true);
                                     } else {
                                         final List<MemberToEvent> currentMemberToEvent
