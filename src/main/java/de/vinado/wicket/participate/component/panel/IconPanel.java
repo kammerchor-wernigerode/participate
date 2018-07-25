@@ -36,6 +36,11 @@ public class IconPanel extends Panel {
     private TextAlign textAlign;
 
     /**
+     * {@link Display}
+     */
+    private Display display;
+
+    /**
      * Css class
      */
     private IModel<String> cssClassNameModel;
@@ -70,6 +75,7 @@ public class IconPanel extends Panel {
         this.type = type;
         this.color = color;
         this.textAlign = textAlign;
+        this.display = Display.DEFAULT;
 
         cssClassNameModel = Model.of(type.cssClassName());
         final Label label = new Label("label", Model.of(""));
@@ -139,6 +145,26 @@ public class IconPanel extends Panel {
     }
 
     /**
+     * Returns the {@link Display} style of the panel icon
+     *
+     * @return TextAlign
+     */
+    public Display getDisplay() {
+        return display;
+    }
+
+    /**
+     * Sets the {@link Display} style of the icon panel
+     *
+     * @param display {@link Display}
+     * @return {@link IconPanel}
+     */
+    public IconPanel setDisplay(final Display display) {
+        this.display = display;
+        return this;
+    }
+
+    /**
      * Puts the configured attribute, like {@link TextAlign} onto the {@link org.apache.wicket.Component}
      *
      * @param tag {@link ComponentTag}
@@ -149,6 +175,7 @@ public class IconPanel extends Panel {
         final CssClassNames.Builder builder = CssClassNames.newBuilder();
         builder.add(textAlign.cssClassName());
         builder.add(color.cssClassName());
+        builder.add(display.cssClassName());
         Attributes.addClass(tag, builder.asString());
     }
 
@@ -191,6 +218,24 @@ public class IconPanel extends Panel {
          * @return class
          * @see #toString()
          */
+        @Override
+        public String cssClassName() {
+            return cssClassName;
+        }
+    }
+
+    public enum Display implements ICssClassNameProvider {
+        DEFAULT(""),
+        BLOCK("d-block"),
+        INLINE("d-inline"),
+        INLINE_BLOCK("d-inline-block");
+
+        private final String cssClassName;
+
+        Display(final String cssClassName) {
+            this.cssClassName = cssClassName;
+        }
+
         @Override
         public String cssClassName() {
             return cssClassName;
