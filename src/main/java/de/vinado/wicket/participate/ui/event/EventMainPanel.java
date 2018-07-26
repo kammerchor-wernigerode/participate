@@ -40,10 +40,13 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import javax.mail.internet.InternetAddress;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -207,7 +210,15 @@ public class EventMainPanel extends BreadCrumbPanel {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
                         final MailData mailData = new MailData();
-                        mailData.setRecipients(eventService.getPersonList(model.getObject().getEvent()));
+                        mailData.setTo(eventService.getPersonList(model.getObject().getEvent()).stream().map(person -> {
+                            try {
+                                return new InternetAddress(person.getEmail(), person.getDisplayName());
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+
+                            return null;
+                        }).collect(Collectors.toList()));
 
                         final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                         modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));

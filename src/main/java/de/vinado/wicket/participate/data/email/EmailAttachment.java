@@ -4,19 +4,28 @@ import java.io.InputStream;
 import java.io.Serializable;
 
 /**
+ * Mail attachment wrapper object
+ *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
 public class EmailAttachment implements Serializable {
 
     private String name;
 
-    private String mimeType;
+    private String mediaType;
 
     private InputStream inputStream;
 
-    public EmailAttachment(final String name, final String mimeType, final InputStream inputStream) {
+    /**
+     * Construct. All parameters must not be null.
+     *
+     * @param name        Attachment name
+     * @param mediaType   Attachment's MimeType
+     * @param inputStream Attachment content
+     */
+    public EmailAttachment(final String name, final String mediaType, final InputStream inputStream) {
         this.name = name;
-        this.mimeType = mimeType;
+        this.mediaType = mediaType;
         this.inputStream = inputStream;
     }
 
@@ -28,12 +37,12 @@ public class EmailAttachment implements Serializable {
         this.name = name;
     }
 
-    public String getMimeType() {
-        return mimeType;
+    public String getMediaType() {
+        return mediaType;
     }
 
-    public void setMimeType(final String mimeType) {
-        this.mimeType = mimeType;
+    public void setMediaType(final String mediaType) {
+        this.mediaType = mediaType;
     }
 
     public InputStream getInputStream() {

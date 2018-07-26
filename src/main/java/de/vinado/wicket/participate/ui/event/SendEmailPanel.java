@@ -18,6 +18,8 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2MultiChoice;
 
+import javax.mail.internet.AddressException;
+
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -36,8 +38,12 @@ public class SendEmailPanel extends BootstrapModalPanel<MailData> {
         super(modal, new ResourceModel("email.new", "New Email"), model);
         setModalSize(ModalSize.Large);
 
-        model.getObject().setSender(ParticipateApplication.get().getApplicationName()
+        try {
+            model.getObject().setFrom(ParticipateApplication.get().getApplicationName()
                 + " <" + ParticipateApplication.get().getApplicationProperties().getMail().getSender() + ">");
+        } catch (AddressException e) {
+            e.printStackTrace();
+        }
 
         final TextField<String> fromTf = new TextField<>("sender");
         fromTf.setEnabled(false);
@@ -62,7 +68,7 @@ public class SendEmailPanel extends BootstrapModalPanel<MailData> {
 
     @Override
     protected void onSaveSubmit(final IModel<MailData> model, final AjaxRequestTarget target) {
-        emailService.sendMail(model.getObject());
+        emailService.send(model.getObject());
         Snackbar.show(target, new ResourceModel("email.send.success", "Email sent"));
     }
 

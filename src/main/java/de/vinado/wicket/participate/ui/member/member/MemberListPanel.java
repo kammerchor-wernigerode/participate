@@ -7,6 +7,7 @@ import de.vinado.wicket.participate.component.table.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.component.table.column.BootstrapAjaxLinkColumn;
 import de.vinado.wicket.participate.component.table.column.EnumColumn;
 import de.vinado.wicket.participate.data.Member;
+import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.MemberDTO;
 import de.vinado.wicket.participate.data.email.MailData;
@@ -27,7 +28,6 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -86,8 +86,9 @@ public class MemberListPanel extends Panel {
         columns.add(new BootstrapAjaxLinkColumn<Member, String>(FontAwesomeIconType.envelope, new ResourceModel("email.send", "Send Email")) {
             @Override
             public void onClick(final AjaxRequestTarget target, final IModel<Member> rowModel) {
+                final Person person = rowModel.getObject().getPerson();
                 final MailData mailData = new MailData();
-                mailData.setRecipients(Collections.singletonList(rowModel.getObject().getPerson()));
+                mailData.addTo(person.getEmail(), person.getDisplayName());
 
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                 modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));

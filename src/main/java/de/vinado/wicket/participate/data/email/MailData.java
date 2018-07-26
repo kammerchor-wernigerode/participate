@@ -1,78 +1,104 @@
 package de.vinado.wicket.participate.data.email;
 
 import de.vinado.wicket.participate.ParticipateApplication;
-import de.vinado.wicket.participate.data.Person;
-import org.apache.wicket.util.string.Strings;
+import de.vinado.wicket.participate.configuration.ApplicationProperties;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
+ * Mail data wrapper object
+ *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
 public class MailData implements Serializable {
 
-    private String sender;
+    private static final String UTF_8 = StandardCharsets.UTF_8.name();
 
-    private String senderName;
+    @NotNull
+    private InternetAddress from;
 
-    private String recipient;
+    @NotNull
+    private List<InternetAddress> to = new ArrayList<>();
 
-    private List<Person> recipients;
+    private String replyTo;
 
     private String subject;
 
     private String message;
 
-    private EmailAttachment attachment;
+    private List<EmailAttachment> attachments = new ArrayList<>();
 
     public MailData() {
-
     }
 
-    public MailData(final String sender, final String recipient, final String subject) {
-        this(sender, null, recipient, subject);
+    public MailData(final MailData copy) {
+        this.from = copy.getFrom();
+        this.to = copy.getTo();
+        this.replyTo = copy.getReplyTo();
+        this.subject = copy.getSubject();
+        this.message = copy.getMessage();
+        this.attachments = copy.getAttachments();
     }
 
-    public MailData(final String sender, final String senderName, final String recipient, final String subject) {
-        this.sender = sender;
-        this.senderName = senderName;
-        this.recipient = recipient;
-        this.subject = subject;
+    public InternetAddress getFrom() {
+        return from;
     }
 
-    public String getSender() {
-        return sender;
+    public void setFrom(final String address) throws AddressException {
+        this.from = new InternetAddress(address);
     }
 
-    public void setSender(final String sender) {
-        this.sender = sender;
+    public void setFrom(final InternetAddress from) {
+        this.from = from;
     }
 
-    public String getSenderName() {
-        return senderName;
+    public void setFrom(final String address, final String personal) {
+        try {
+            this.from = new InternetAddress(address, personal, UTF_8);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void setSenderName(final String senderName) {
-        this.senderName = senderName;
+    public List<InternetAddress> getTo() {
+        return to;
     }
 
-    public String getRecipient() {
-        return recipient;
+    public void setTo(final List<InternetAddress> to) {
+        this.to = to;
     }
 
-    public void setRecipient(final String recipient) {
-        this.recipient = recipient;
+    public void addTo(final InternetAddress to) {
+        this.to.add(to);
     }
 
-    public List<Person> getRecipients() {
-        return recipients;
+    public void addTo(final String address) throws AddressException {
+        this.to.add(new InternetAddress(address));
     }
 
-    public void setRecipients(final List<Person> recipients) {
-        this.recipients = recipients;
+    public void addTo(final String address, final String personal) {
+        try {
+            this.to.add(new InternetAddress(address, personal, UTF_8));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getReplyTo() {
+        return replyTo;
+    }
+
+    public void setReplyTo(final String replyTo) {
+        this.replyTo = replyTo;
     }
 
     public String getSubject() {
@@ -83,14 +109,6 @@ public class MailData implements Serializable {
         this.subject = subject;
     }
 
-    public EmailAttachment getAttachment() {
-        return attachment;
-    }
-
-    public void setAttachment(final EmailAttachment attachment) {
-        this.attachment = attachment;
-    }
-
     public String getMessage() {
         return message;
     }
@@ -99,21 +117,34 @@ public class MailData implements Serializable {
         this.message = message;
     }
 
+    public List<EmailAttachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(final List<EmailAttachment> attachments) {
+        this.attachments = attachments;
+    }
+
+    public void addAttachment(final EmailAttachment attachment) {
+        this.attachments.add(attachment);
+    }
+
+    /**
+     * Override this method and add some extra data. This method is useful, when you work with FreeMarker template
+     * engine and HTML Mails
+     *
+     * @return Map of tagged objects
+     */
     public Map<String, Object> getData() {
         final Map<String, Object> data = new HashMap<>();
-        data.put("sender", sender);
-        if (!Strings.isEmpty(senderName))
-            data.put("senderName", senderName);
-        if (!Strings.isEmpty(recipient))
-            data.put("recipient", recipient);
-        if (!Strings.isEmpty(subject))
-            data.put("subject", subject);
-        if (null != attachment) {
-            data.put("attachment", attachment);
-        }
+        final ApplicationProperties.Mail mailProperties = ParticipateApplication.get().getApplicationProperties().getMail();
+
+        data.put("from", from);
+        data.put("subject", subject);
         data.put("baseUrl", ParticipateApplication.get().getBaseUrl());
-        if (!Strings.isEmpty(ParticipateApplication.get().getApplicationProperties().getMail().getFooter()))
-            data.put("footer", ParticipateApplication.get().getApplicationProperties().getMail().getFooter());
+        data.put("footer", mailProperties.getFooter());
+
+
         return data;
     }
 }

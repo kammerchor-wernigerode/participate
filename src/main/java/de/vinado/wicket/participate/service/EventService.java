@@ -45,6 +45,7 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.internet.AddressException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -700,23 +701,35 @@ public class EventService extends DataService {
         for (MemberToEvent memberToEvent : memberToEventList) {
             final Member member = memberToEvent.getMember();
 
-            final MailData mailData = new MailData(properties.getMail().getSender(), member.getPerson().getEmail(),
-                event.getName()) {
+            final MailData mailData = new MailData() {
                 @Override
                 public Map<String, Object> getData() {
-                    final Map<String, Object> mailData = super.getData();
-                    mailData.put("event", event);
-                    mailData.put("member", member);
-                    mailData.put("acceptLink", ParticipateUtils.generateInvitationLink(memberToEvent.getToken()));
-                    return mailData;
+                    final Map<String, Object> data = super.getData();
+                    data.put("event", event);
+                    data.put("member", member);
+                    data.put("acceptLink", ParticipateUtils.generateInvitationLink(memberToEvent.getToken()));
+                    return data;
                 }
             };
+
+            try {
+                mailData.setFrom(properties.getMail().getSender());
+                mailData.addTo(member.getPerson().getEmail(), member.getPerson().getDisplayName());
+                mailData.setSubject(event.getName());
+            } catch (AddressException e) {
+                LOGGER.error("Malformed email address", e);
+                continue;
+            }
+
             if (!reminder) {
-                mailData.setAttachment(newEventAttachment(event, event.getLocation()));
+                mailData.addAttachment(newEventAttachment(event, event.getLocation()));
             }
             // TODO Template erstellen
-            preparators.add(emailService.getMimeMessagePreparator(mailData,
-                !InvitationStatus.UNINVITED.equals(memberToEvent.getInvitationStatus()) ? "fm-eventReminder.ftl" : "fm-eventInvite.ftl"));
+            if (InvitationStatus.UNINVITED.equals(memberToEvent.getInvitationStatus())) {
+                preparators.add(emailService.getMimeMessagePreparator(mailData, "fm-eventReminder.ftl", true));
+            } else {
+                preparators.add(emailService.getMimeMessagePreparator(mailData, "fm-eventInvite.ftl", true));
+            }
 
             final MemberToEvent loadedMemberToEvent = load(MemberToEvent.class, memberToEvent.getId());
             loadedMemberToEvent.setInvitationStatus(InvitationStatus.PENDING);
@@ -724,8 +737,8 @@ public class EventService extends DataService {
 
             count++;
         }
-        emailService.sendMail(preparators.toArray(new MimeMessagePreparator[preparators.size()]));
 
+        emailService.send(preparators.toArray(new MimeMessagePreparator[0]));
         return count;
     }
 

@@ -15,6 +15,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import javax.mail.internet.AddressException;
 import java.util.Map;
 
 /**
@@ -43,8 +44,7 @@ public class SendFeedbackPanel extends BootstrapModalPanel<SendFeedbackDTO> {
 
     @Override
     protected void onSaveSubmit(final IModel<SendFeedbackDTO> model, final AjaxRequestTarget target) {
-        final MailData mailData = new MailData("no-reply@vinado.de", model.getObject().getName(),
-                "vincent@vinado.de", model.getObject().getSubject()) {
+        final MailData mailData = new MailData() {
             @Override
             public Map<String, Object> getData() {
                 final Map<String, Object> map = super.getData();
@@ -55,8 +55,16 @@ public class SendFeedbackPanel extends BootstrapModalPanel<SendFeedbackDTO> {
             }
         };
 
-        emailService.sendMail(mailData, "fm-feedback.ftl");
+        try {
+            mailData.setFrom("no-reply@vinado.de", model.getObject().getName());
+            mailData.addTo("vincent@vinado.de");
+            mailData.setSubject(model.getObject().getSubject());
 
-        Snackbar.show(target, new ResourceModel("send.feedback.success", "Thanks for your feedback"));
+            emailService.send(mailData, "fm-feedback.ftl", true);
+
+            Snackbar.show(target, new ResourceModel("send.feedback.success", "Thanks for your feedback"));
+        } catch (AddressException e) {
+            e.printStackTrace();
+        }
     }
 }

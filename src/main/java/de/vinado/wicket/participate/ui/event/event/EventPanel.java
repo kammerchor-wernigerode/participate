@@ -14,6 +14,7 @@ import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.MemberToEvent;
+import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
 import de.vinado.wicket.participate.data.email.MailData;
@@ -47,7 +48,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -98,13 +98,13 @@ public class EventPanel extends BreadCrumbPanel {
         wmc.add(groupLabel);
 
         final MemberToEventFilterPanel filterPanel = new MemberToEventFilterPanel("filterPanel",
-                new LoadableDetachableModel<List<MemberToEvent>>() {
-                    @Override
-                    protected List<MemberToEvent> load() {
-                        return eventService.getMemberToEventList(model.getObject().getEvent());
-                    }
-                },
-                new CompoundPropertyModel<>(new MemberToEventFilter()), new PropertyModel<>(model, "event"), editable) {
+            new LoadableDetachableModel<List<MemberToEvent>>() {
+                @Override
+                protected List<MemberToEvent> load() {
+                    return eventService.getMemberToEventList(model.getObject().getEvent());
+                }
+            },
+            new CompoundPropertyModel<>(new MemberToEventFilter()), new PropertyModel<>(model, "event"), editable) {
             @Override
             public SimpleDataProvider<MemberToEvent, ?> getDataProvider() {
                 return dataProvider;
@@ -178,8 +178,9 @@ public class EventPanel extends BreadCrumbPanel {
             columns.add(new BootstrapAjaxLinkColumn<MemberToEvent, String>(FontAwesomeIconType.envelope, new ResourceModel("email.send", "Send Email")) {
                 @Override
                 public void onClick(final AjaxRequestTarget target, final IModel<MemberToEvent> rowModel) {
+                    final Person person = rowModel.getObject().getMember().getPerson();
                     final MailData mailData = new MailData();
-                    mailData.setRecipients(Collections.singletonList(rowModel.getObject().getMember().getPerson()));
+                    mailData.addTo(person.getEmail(), person.getDisplayName());
 
                     final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                     modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));

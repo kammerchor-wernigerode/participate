@@ -15,7 +15,6 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -154,7 +153,6 @@ public class UserService extends DataService {
             final User user = entityManager.createQuery(criteriaQuery).getSingleResult();
 
             final Person person = user.getPerson();
-            final String email = person.getEmail();
 
             final ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
             final String applicationName = ParticipateApplication.get().getApplicationName();
@@ -172,11 +170,7 @@ public class UserService extends DataService {
             passwordRecoveryLink.concatSegments(urlSegments);
             passwordRecoveryLink.setQueryParameter("token", token.getToken());
 
-            final MailData mailData = new MailData(
-                    properties.getMail().getSender(),
-                    applicationName,
-                    email,
-                    initail ? "Konto aktivieren" : "Passwort zurücksetzen") {
+            final MailData mailData = new MailData() {
                 @Override
                 public Map<String, Object> getData() {
                     final Map<String, Object> data = super.getData();
@@ -186,12 +180,14 @@ public class UserService extends DataService {
                     return data;
                 }
             };
-            emailService.sendMail(mailData, initail ? "fm-userInvite.ftl" : "fm-passwordReset.ftl");
+            mailData.setFrom(properties.getMail().getSender(), applicationName);
+            mailData.addTo(person.getEmail(), person.getDisplayName());
+            mailData.setSubject(initail ? "Konto aktivieren" : "Passwort zurücksetzen");
+
+            emailService.send(mailData, initail ? "fm-userInvite.ftl" : "fm-passwordReset.ftl", true);
             return true;
         } catch (final NoResultException e) {
             LOGGER.warn("Password recovery for unknown login: {}.", usernameOrEmail);
-        } catch (final MailException e) {
-            LOGGER.error("Sending password recovery mail to " + usernameOrEmail + " failed.", e);
         }
         return false;
     }
@@ -220,19 +216,21 @@ public class UserService extends DataService {
             final ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
             final String applicationName = ParticipateApplication.get().getApplicationName();
 
-            final MailData mailData = new MailData(
-                    properties.getMail().getSender(),
-                    applicationName,
-                    user.getPerson().getEmail(),
-                    "Dein Passwort wurde aktualisiert") {
+            final Person person = user.getPerson();
+
+            final MailData mailData = new MailData() {
                 @Override
                 public Map<String, Object> getData() {
                     final Map<String, Object> data = super.getData();
-                    data.put("firstName", user.getPerson().getFirstName());
+                    data.put("firstName", person.getFirstName());
                     return data;
                 }
             };
-            emailService.sendMail(mailData, "fm-passwordResetS.ftl");
+            mailData.setFrom(properties.getMail().getSender(), applicationName);
+            mailData.addTo(person.getEmail(), person.getDisplayName());
+            mailData.setSubject("Dein Passwort wurde aktualisiert");
+
+            emailService.send(mailData, "fm-passwordResetS.ftl", true);
 
             return true;
         } catch (final NoResultException e) {
