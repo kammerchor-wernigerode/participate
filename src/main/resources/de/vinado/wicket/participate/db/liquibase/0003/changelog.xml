@@ -8,4 +8,5 @@
     <include file="de/vinado/wicket/participate/db/liquibase/0003/01-addresses.xml"/>
     <include file="de/vinado/wicket/participate/db/liquibase/0003/views.changelog.xml"/>
     <include file="de/vinado/wicket/participate/db/liquibase/0003/02-attributes.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0003/03-communications.xml"/>
 </databaseChangeLog>

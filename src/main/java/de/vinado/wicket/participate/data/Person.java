@@ -24,7 +24,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "persons")
-public class Person implements Identifiable, Serializable, Communicatable {
+public class Person implements Identifiable, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -127,16 +127,6 @@ public class Person implements Identifiable, Serializable, Communicatable {
 
     public String getSearchName() {
         return searchName;
-    }
-
-    @Override
-    public Class getCommunicationMappingClass() {
-        return CommunicationToPerson.class;
-    }
-
-    @Override
-    public Object addCommunicationForObject(final Communication communication) {
-        return new CommunicationToPerson(communication, this);
     }
 
     @Override
