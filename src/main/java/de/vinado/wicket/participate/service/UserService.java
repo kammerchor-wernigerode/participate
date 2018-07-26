@@ -7,6 +7,7 @@ import de.vinado.wicket.participate.data.User;
 import de.vinado.wicket.participate.data.UserRecoveryToken;
 import de.vinado.wicket.participate.data.dto.AddUserDTO;
 import de.vinado.wicket.participate.data.email.MailData;
+import freemarker.template.TemplateException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.wicket.request.Url;
@@ -28,6 +29,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -184,11 +186,19 @@ public class UserService extends DataService {
             mailData.addTo(person.getEmail(), person.getDisplayName());
             mailData.setSubject(initail ? "Konto aktivieren" : "Passwort zurücksetzen");
 
-            emailService.send(mailData, initail ? "fm-userInvite.ftl" : "fm-passwordReset.ftl", true);
+            if (initail) {
+                emailService.send(mailData, "newUser-txt.ftl", "newUser-html.ftl");
+            } else {
+                emailService.send(mailData, "passwordReset-txt.ftl", "passwordReset-html.ftl");
+            }
+
             return true;
         } catch (final NoResultException e) {
             LOGGER.warn("Password recovery for unknown login: {}.", usernameOrEmail);
+        } catch (TemplateException | IOException e) {
+            LOGGER.error("Unable to parse Freemarker template");
         }
+
         return false;
     }
 
@@ -230,13 +240,16 @@ public class UserService extends DataService {
             mailData.addTo(person.getEmail(), person.getDisplayName());
             mailData.setSubject("Dein Passwort wurde aktualisiert");
 
-            emailService.send(mailData, "fm-passwordResetS.ftl", true);
+            emailService.send(mailData, "passwordResetSuccess-txt.ftl", "passwordResetSuccess-html.ftl");
 
             return true;
         } catch (final NoResultException e) {
             LOGGER.error("Invalid password recovery token for: {}.", recoveryToken);
-            return false;
+        } catch (TemplateException | IOException e) {
+            LOGGER.error("Unable to parse Freemarker template");
         }
+
+        return false;
     }
 
     /**
@@ -312,8 +325,8 @@ public class UserService extends DataService {
         final CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
         final Root<User> root = criteriaQuery.from(User.class);
         final Predicate forTerm = criteriaBuilder.like(
-                criteriaBuilder.lower(root.get("searchName")),
-                "%" + term.toLowerCase().trim() + "%");
+            criteriaBuilder.lower(root.get("searchName")),
+            "%" + term.toLowerCase().trim() + "%");
         criteriaQuery.where(forTerm);
         return entityManager.createQuery(criteriaQuery).setMaxResults(5).getResultList();
     }
