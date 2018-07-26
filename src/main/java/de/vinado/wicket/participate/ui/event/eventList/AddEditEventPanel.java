@@ -158,7 +158,6 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         locationS2c.getSettings().setLanguage(getLocale().getLanguage());
         locationS2c.getSettings().setCloseOnSelect(true);
         locationS2c.getSettings().setTheme(new Select2BootstrapTheme(true));
-        locationS2c.setRequired(true);
         locationS2c.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
