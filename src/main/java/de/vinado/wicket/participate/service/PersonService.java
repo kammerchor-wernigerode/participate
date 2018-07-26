@@ -1,8 +1,6 @@
 package de.vinado.wicket.participate.service;
 
 import de.vinado.wicket.participate.component.provider.SimpleDataProvider;
-import de.vinado.wicket.participate.data.Attribute;
-import de.vinado.wicket.participate.data.AttributeToPerson;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.Group;
 import de.vinado.wicket.participate.data.Member;
@@ -162,26 +160,6 @@ public class PersonService extends DataService {
     }
 
     @Transactional
-    public Attribute createAttribute(final Attribute attribute) {
-        return (new Attribute(attribute.getValue(), attribute.getAttributeType()));
-    }
-
-    @Transactional
-    public Attribute saveAttribute(final Attribute attribute) {
-        final Attribute loadedAttribute = load(Attribute.class, attribute.getId());
-        loadedAttribute.setValue(attribute.getValue());
-        loadedAttribute.setAttributeType(attribute.getAttributeType());
-        return save(loadedAttribute);
-    }
-
-    @Transactional
-    public void removeAttributeFromPerson(final Person person, final Attribute attribute) {
-        final AttributeToPerson attributeToPerson = getAttributeToPerson(person, attribute);
-        remove(attributeToPerson);
-        remove(attribute);
-    }
-
-    @Transactional
     public Group createGroup(final GroupDTO dto) {
         return save(new Group(dto.getName(), dto.getDescription(), dto.getValidUntil()));
     }
@@ -271,21 +249,6 @@ public class PersonService extends DataService {
         criteriaQuery.select(criteriaBuilder.count(root));
         criteriaQuery.where(criteriaBuilder.equal(root.get("person"), person));
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
-    }
-
-    private AttributeToPerson getAttributeToPerson(final Person person, final Attribute attribute) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<AttributeToPerson> criteriaQuery = criteriaBuilder.createQuery(AttributeToPerson.class);
-        final Root<AttributeToPerson> root = criteriaQuery.from(AttributeToPerson.class);
-        final Predicate forPerson = criteriaBuilder.equal(root.get("person"), person);
-        final Predicate forAttribute = criteriaBuilder.equal(root.get("attribute"), attribute);
-        criteriaQuery.where(forAttribute, forPerson);
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (final NoResultException e) {
-            LOGGER.warn("Mapping between person={} and attribute={} could not be found.", person.getDisplayName(), attribute.getValue());
-            return null;
-        }
     }
 
     public Person getPerson(final Long id) {
