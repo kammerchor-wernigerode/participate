@@ -5,7 +5,7 @@ import de.vinado.wicket.participate.data.email.EmailAttachment;
 import de.vinado.wicket.participate.data.email.MailData;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
-import org.apache.logging.log4j.util.Strings;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,13 +137,13 @@ public class EmailService {
     public MimeMessagePreparator getMimeMessagePreparator(final MailData mailData, final String templateFileName,
                                                           final boolean html) {
         return mimeMessage -> {
-            final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, Strings.isNotEmpty(templateFileName),
+            final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, !Strings.isEmpty(templateFileName),
                 UTF_8);
             helper.setFrom(mailData.getFrom());
             helper.setTo(mailData.getTo().toArray(new InternetAddress[mailData.getTo().size()]));
             helper.setSubject(mailData.getSubject());
 
-            if (Strings.isNotEmpty(templateFileName) && Strings.isNotEmpty(mailData.getMessage())) {
+            if (!Strings.isEmpty(templateFileName) && !Strings.isEmpty(mailData.getMessage())) {
                 helper.setText(
                     mailData.getMessage(),
                     FreeMarkerTemplateUtils.processTemplateIntoString(
@@ -151,9 +151,9 @@ public class EmailService {
                         mailData.getData()
                     )
                 );
-            } else if (Strings.isNotEmpty(mailData.getMessage())) {
+            } else if (!Strings.isEmpty(mailData.getMessage())) {
                 helper.setText(mailData.getMessage());
-            } else if (Strings.isNotEmpty(templateFileName)) {
+            } else if (!Strings.isEmpty(templateFileName)) {
                 if (html) log.warn("You may provide a plaintext version of your email too");
                 helper.setText(FreeMarkerTemplateUtils.processTemplateIntoString(
                     freeMarker.getTemplate(templateFileName, Locale.getDefault()), mailData.getData()), html);
@@ -162,7 +162,7 @@ public class EmailService {
                     new NullPointerException("Neither 'templateFileName' nor 'MailData#message' cannot be null"));
             }
 
-            if (Strings.isNotEmpty(mailData.getReplyTo())) {
+            if (!Strings.isEmpty(mailData.getReplyTo())) {
                 helper.setReplyTo(mailData.getReplyTo());
             }
 
