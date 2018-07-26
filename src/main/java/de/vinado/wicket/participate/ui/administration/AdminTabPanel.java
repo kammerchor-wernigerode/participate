@@ -1,7 +1,6 @@
 package de.vinado.wicket.participate.ui.administration;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.tabs.AjaxBootstrapTabbedPanel;
-import de.vinado.wicket.participate.ui.administration.role.RolesPanel;
 import de.vinado.wicket.participate.ui.administration.tool.ToolPanel;
 import de.vinado.wicket.participate.ui.administration.user.UserPanel;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
@@ -36,12 +35,6 @@ public class AdminTabPanel extends BreadCrumbPanel {
             @Override
             public WebMarkupContainer getPanel(final String panelId) {
                 return new UserPanel(panelId);
-            }
-        });
-        tabs.add(new AbstractTab(new ResourceModel("tools.roles-permissions", "Roles and Permissions")) {
-            @Override
-            public WebMarkupContainer getPanel(final String panelId) {
-                return new RolesPanel(panelId);
             }
         });
 
