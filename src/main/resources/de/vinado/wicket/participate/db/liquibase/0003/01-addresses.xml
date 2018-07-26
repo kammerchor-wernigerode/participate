@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="0003-addresses-remove" author="Vincent Nadoll">
+        <addColumn tableName="events">
+            <column name="location" type="VARCHAR(255)"/>
+        </addColumn>
+
+        <sql>
+            UPDATE events e
+            SET e.location = (SELECT a.locality
+            FROM m_address_event mae
+            LEFT JOIN addresses a ON a.id = mae.address_id
+            WHERE e.id = mae.event_id);
+        </sql>
+
+        <dropTable tableName="m_address_person"/>
+        <dropTable tableName="m_address_event"/>
+        <dropTable tableName="addresses"/>
+    </changeSet>
+</databaseChangeLog>

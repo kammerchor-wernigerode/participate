@@ -221,7 +221,6 @@ public class EventMainPanel extends BreadCrumbPanel {
                         final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                         modal.setContent(new AddEditEventPanel(modal, new ResourceModel("event.edit", "Edit Event"),
                             new CompoundPropertyModel<>(new EventDTO(model.getObject().getEvent(),
-                                eventService.getAddressToEvent(model.getObject().getEvent()).getAddress(),
                                 eventService.getGroup(model.getObject().getEvent())))) {
                             @Override
                             public void onUpdate(final Event savedEvent, final AjaxRequestTarget target) {

@@ -120,7 +120,7 @@ CREATE OR REPLACE VIEW v_event_details AS
         ev.description                             AS description,
         ev.start_date                              AS start_date,
         ev.end_date                                AS end_date,
-        ad.locality                                AS location,
+        ev.location                                AS location,
         gr.name                                    AS cast,
         CONCAT(COALESCE(accepted.count_accepted, 0), '/',
                COALESCE(declined.count_declined, 0), '/',
@@ -159,10 +159,6 @@ CREATE OR REPLACE VIEW v_event_details AS
             ON ev.id = tenor.event_id
         LEFT JOIN v_event_member_bass bass
             ON ev.id = bass.event_id
-        LEFT JOIN m_address_event ev_address
-            ON ev.id = ev_address.event_id
-        LEFT JOIN addresses ad
-            ON ev_address.address_id = ad.id
         LEFT JOIN m_group_event ev_group
             ON ev.id = ev_group.event_id
         LEFT JOIN groups gr
@@ -174,6 +170,6 @@ CREATE OR REPLACE VIEW v_event_details AS
         ev.start_date,
         ev.end_date,
         ev.description,
-        ad.locality,
+        ev.location,
         gr.name
     ORDER BY ev.start_date ASC;

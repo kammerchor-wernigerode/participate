@@ -1,7 +1,6 @@
 package de.vinado.wicket.participate.service;
 
 import de.vinado.wicket.participate.component.provider.SimpleDataProvider;
-import de.vinado.wicket.participate.data.AddressToPerson;
 import de.vinado.wicket.participate.data.Attribute;
 import de.vinado.wicket.participate.data.AttributeToPerson;
 import de.vinado.wicket.participate.data.Event;
@@ -35,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -273,19 +271,6 @@ public class PersonService extends DataService {
         criteriaQuery.select(criteriaBuilder.count(root));
         criteriaQuery.where(criteriaBuilder.equal(root.get("person"), person));
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
-    }
-
-    public AddressToPerson getAddressToEvent(final Person person) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<AddressToPerson> criteriaQuery = criteriaBuilder.createQuery(AddressToPerson.class);
-        final Root<AddressToPerson> root = criteriaQuery.from(AddressToPerson.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("person"), person));
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (final NoResultException | NonUniqueResultException e) {
-            LOGGER.warn("Zero or more than one addresses where found for person={}", person);
-            return null;
-        }
     }
 
     private AttributeToPerson getAttributeToPerson(final Person person, final Attribute attribute) {

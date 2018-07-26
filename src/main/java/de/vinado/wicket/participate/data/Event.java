@@ -25,7 +25,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "events")
-public class Event implements Identifiable, Serializable, Addressable {
+public class Event implements Identifiable, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +40,8 @@ public class Event implements Identifiable, Serializable, Addressable {
 
     @Column(name = "event_type", nullable = false)
     private String eventType;
+
+    private String location;
 
     @Column(name = "description")
     private String description;
@@ -78,11 +80,12 @@ public class Event implements Identifiable, Serializable, Addressable {
      * @param startDate   Start date of Event
      * @param endDate     End date of Event
      */
-    public Event(final String identifier, final String name, final String eventType, final String description,
+    public Event(final String identifier, final String name, final String eventType, final String location, final String description,
                  final Date startDate, final Date endDate) {
         this.identifier = identifier;
         this.name = name;
         this.eventType = eventType;
+        this.location = location;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -130,6 +133,14 @@ public class Event implements Identifiable, Serializable, Addressable {
 
     public void setEventType(final String eventType) {
         this.eventType = eventType;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(final String location) {
+        this.location = location;
     }
 
     public String getDescription() {
@@ -182,16 +193,6 @@ public class Event implements Identifiable, Serializable, Addressable {
     }
 
     @Override
-    public Class getAddressMappingClass() {
-        return AddressToEvent.class;
-    }
-
-    @Override
-    public AddressToEvent addAddressForObject(final Address address) {
-        return new AddressToEvent(address, this);
-    }
-
-    @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
 
@@ -205,6 +206,7 @@ public class Event implements Identifiable, Serializable, Addressable {
                 .append(identifier, event.identifier)
                 .append(name, event.name)
                 .append(eventType, event.eventType)
+                .append(location, event.location)
                 .append(description, event.description)
                 .append(startDate, event.startDate)
                 .append(endDate, event.endDate)
@@ -220,6 +222,7 @@ public class Event implements Identifiable, Serializable, Addressable {
                 .append(identifier)
                 .append(name)
                 .append(eventType)
+                .append(location)
                 .append(description)
                 .append(startDate)
                 .append(endDate)
@@ -236,6 +239,7 @@ public class Event implements Identifiable, Serializable, Addressable {
                 .append("identifier", identifier)
                 .append("name", name)
                 .append("eventType", eventType)
+                .append("location", location)
                 .append("description", description)
                 .append("startDate", startDate)
                 .append("endDate", endDate)

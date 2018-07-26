@@ -151,7 +151,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         });
         inner.add(endDateTf);
 
-        final Select2Choice<String> locationS2c = new Select2Choice<>("locality",
+        final Select2Choice<String> locationS2c = new Select2Choice<>("location",
                 new Select2StringProvider(eventService.getLocationList()));
         locationS2c.setLabel(new ResourceModel("location", "Location"));
         locationS2c.add(BootstrapHorizontalFormDecorator.decorate());

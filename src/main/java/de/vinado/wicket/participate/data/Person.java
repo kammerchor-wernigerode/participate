@@ -24,7 +24,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "persons")
-public class Person implements Identifiable, Serializable, Addressable, Communicatable, Attributable {
+public class Person implements Identifiable, Serializable, Communicatable, Attributable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -137,16 +137,6 @@ public class Person implements Identifiable, Serializable, Addressable, Communic
     @Override
     public Object addCommunicationForObject(final Communication communication) {
         return new CommunicationToPerson(communication, this);
-    }
-
-    @Override
-    public Class getAddressMappingClass() {
-        return AddressToPerson.class;
-    }
-
-    @Override
-    public AddressToPerson addAddressForObject(final Address address) {
-        return new AddressToPerson(address, this);
     }
 
     @Override

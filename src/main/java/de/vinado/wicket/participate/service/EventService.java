@@ -4,8 +4,6 @@ import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.common.ParticipateUtils;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
-import de.vinado.wicket.participate.data.Address;
-import de.vinado.wicket.participate.data.AddressToEvent;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.Group;
@@ -49,7 +47,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -82,9 +79,6 @@ public class EventService extends DataService {
     private PersonService personService;
 
     @Autowired
-    private AddressService addressService;
-
-    @Autowired
     private EmailService emailService;
 
     /**
@@ -107,20 +101,23 @@ public class EventService extends DataService {
     public Event createEvent(final EventDTO dto) {
         dto.setIdentifier((new SimpleDateFormat("yyyyMM").format(dto.getStartDate())
             + dto.getEventType()
-            + dto.getLocality()).replaceAll("[^A-Za-z0-9]", "").toUpperCase());
+            + dto.getLocation()).replaceAll("[^A-Za-z0-9]", "").toUpperCase());
 
         if (Strings.isEmpty(dto.getName())) {
             dto.setName(ParticipateUtils.getGenericEventName(dto));
         }
 
         // Event
-        Event event = new Event(dto.getIdentifier(), dto.getName(), dto.getEventType(), dto.getDescription(),
-            dto.getStartDate(), dto.getEndDate());
+        Event event = new Event(
+            dto.getIdentifier(),
+            dto.getName(),
+            dto.getEventType(),
+            dto.getLocation(),
+            dto.getDescription(),
+            dto.getStartDate(),
+            dto.getEndDate()
+        );
         event = save(event);
-
-        // Address to Event
-        final Address address = save(new Address(dto.getLocality()));
-        save(event.addAddressForObject(address));
 
         // Event to member
         for (Member member : personService.getGroupMemberList(save(new GroupToEvent(event, dto.getGroup())).getGroup())) {
@@ -140,17 +137,14 @@ public class EventService extends DataService {
     public Event saveEvent(final EventDTO dto) {
         final Event loadedEvent = load(Event.class, dto.getEvent().getId());
         final Event clonedEvent = loadedEvent;
-        final Address loadedAddress = getAddressToEvent(loadedEvent).getAddress();
 
         if (Strings.isEmpty(dto.getName())) {
             dto.setName(ParticipateUtils.getGenericEventName(dto));
         }
 
-        loadedAddress.setLocality(dto.getLocality());
-        addressService.saveAddress(loadedAddress);
-
         loadedEvent.setName(dto.getName());
         loadedEvent.setEventType(dto.getEventType());
+        loadedEvent.setLocation(dto.getLocation());
         loadedEvent.setDescription(dto.getDescription());
         loadedEvent.setStartDate(dto.getStartDate());
         loadedEvent.setEndDate(dto.getEndDate());
@@ -177,16 +171,6 @@ public class EventService extends DataService {
     @Transactional
     public void removeEvent(final Event event) {
         final Event loadedEvent = load(Event.class, event.getId());
-
-        /*remove(load(AddressToEvent.class, getAddressToEvent(loadedEvent).getId()));
-
-        remove(getGroupToEvent(event));
-
-        for (MemberToEvent memberToEvent : getMemberToEventList(loadedEvent)) {
-            remove(load(MemberToEvent.class, memberToEvent.getId()));
-        }
-        remove(loadedEvent);*/
-
         loadedEvent.setActive(false);
         save(loadedEvent);
     }
@@ -364,19 +348,6 @@ public class EventService extends DataService {
         }
     }
 
-    public AddressToEvent getAddressToEvent(final Event event) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<AddressToEvent> criteriaQuery = criteriaBuilder.createQuery(AddressToEvent.class);
-        final Root<AddressToEvent> root = criteriaQuery.from(AddressToEvent.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("event"), event));
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (final NoResultException | NonUniqueResultException e) {
-            LOGGER.warn("Zero or more than one addresses where found for event={}", event);
-            return null;
-        }
-    }
-
     /**
      * Returns all upcoming Events from the database.
      *
@@ -439,10 +410,9 @@ public class EventService extends DataService {
     public List<String> getLocationList() {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<String> criteriaQuery = criteriaBuilder.createQuery(String.class);
-        final Root<AddressToEvent> root = criteriaQuery.from(AddressToEvent.class);
-        final Join<AddressToEvent, Address> addressJoin = root.join("address");
-        criteriaQuery.select(addressJoin.get("locality"));
-        criteriaQuery.groupBy(addressJoin.<String>get("locality"));
+        final Root<Event> root = criteriaQuery.from(Event.class);
+        criteriaQuery.select(root.get("location"));
+        criteriaQuery.groupBy(root.<String>get("location"));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
@@ -726,7 +696,6 @@ public class EventService extends DataService {
         int count = 0;
         final ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
         final List<MimeMessagePreparator> preparators = new ArrayList<>();
-        final Address address = getAddressToEvent(event).getAddress();
 
         for (MemberToEvent memberToEvent : memberToEventList) {
             final Member member = memberToEvent.getMember();
@@ -737,14 +706,13 @@ public class EventService extends DataService {
                 public Map<String, Object> getData() {
                     final Map<String, Object> mailData = super.getData();
                     mailData.put("event", event);
-                    mailData.put("location", address);
                     mailData.put("member", member);
                     mailData.put("acceptLink", ParticipateUtils.generateInvitationLink(memberToEvent.getToken()));
                     return mailData;
                 }
             };
             if (!reminder) {
-                mailData.setAttachment(newEventAttachment(event, address.getLocality()));
+                mailData.setAttachment(newEventAttachment(event, event.getLocation()));
             }
             // TODO Template erstellen
             preparators.add(emailService.getMimeMessagePreparator(mailData,

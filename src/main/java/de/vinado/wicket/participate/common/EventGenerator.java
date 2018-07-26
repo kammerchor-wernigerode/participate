@@ -29,7 +29,7 @@ public class EventGenerator extends AbstractEntityGenerator<EventDTO> {
         dto.setEventType(randomString(eventTypes));
         dto.setStartDate(generateDate());
         dto.setEndDate(addDays(dto.getStartDate(), rint(0, 7)));
-        dto.setLocality(randomString(localities));
+        dto.setLocation(randomString(localities));
         dto.setGroup(dataService.load(Group.class, 1L));
 
         return dto;

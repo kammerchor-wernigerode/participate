@@ -34,11 +34,11 @@ public class ParticipateUtils {
                     + new SimpleDateFormat("dd").format(dto.getEndDate()) + ". "
                     + new SimpleDateFormat("MMMM").format(dto.getStartDate()) + " "
                     + dto.getEventType() + " in "
-                    + dto.getLocality();
+                    + dto.getLocation();
         } else {
             genericName = new SimpleDateFormat("yyyy-MM.dd. MMMM").format(dto.getStartDate()) + " "
                     + dto.getEventType() + " in "
-                    + dto.getLocality();
+                    + dto.getLocation();
         }
         return genericName;
     }
