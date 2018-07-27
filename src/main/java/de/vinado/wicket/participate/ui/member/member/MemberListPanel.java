@@ -79,7 +79,7 @@ public class MemberListPanel extends Panel {
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                 final Member member = rowModel.getObject();
                 modal.setContent(new AddEditMemberPanel(modal, new ResourceModel("member.edit", "Edit Member"), new CompoundPropertyModel<>(new
-                    MemberDTO(member, personService.getGroupList(member)))));
+                    MemberDTO())));
                 modal.show(target);
             }
         });

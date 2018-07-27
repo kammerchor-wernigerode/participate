@@ -6,8 +6,6 @@ import de.vinado.wicket.participate.common.ParticipateUtils;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.EventDetails;
-import de.vinado.wicket.participate.data.Group;
-import de.vinado.wicket.participate.data.GroupToEvent;
 import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.Member;
 import de.vinado.wicket.participate.data.MemberToEvent;
@@ -121,7 +119,7 @@ public class EventService extends DataService {
         event = save(event);
 
         // Event to member
-        for (Member member : personService.getGroupMemberList(save(new GroupToEvent(event, dto.getGroup())).getGroup())) {
+        for (Member member : personService.getMemberList()) {
             createMemberToEvent(event, member);
         }
 
@@ -361,19 +359,6 @@ public class EventService extends DataService {
         final Predicate forEvents = criteriaBuilder.greaterThanOrEqualTo(root.get("endDate"), new Date());
         criteriaQuery.orderBy(criteriaBuilder.asc(root.<Event>get("startDate")));
         criteriaQuery.where(forEvents);
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    public List<Event> getUpcomingEventList(final Group group) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Event> criteriaQuery = criteriaBuilder.createQuery(Event.class);
-        final Root<GroupToEvent> root = criteriaQuery.from(GroupToEvent.class);
-        final Join<GroupToEvent, Event> eventJoin = root.join("event");
-        final Predicate forGroup = criteriaBuilder.equal(root.get("group"), group);
-        final Predicate forEvent = criteriaBuilder.greaterThanOrEqualTo(eventJoin.get("endDate"), new Date());
-        criteriaQuery.select(root.get("event"));
-        criteriaQuery.where(forGroup, forEvent);
-        criteriaQuery.orderBy(criteriaBuilder.asc(eventJoin.get("startDate")));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
@@ -634,42 +619,6 @@ public class EventService extends DataService {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
         } catch (final NoResultException e) {
             LOGGER.info("Token could not be found for member={} and event={}", member, event);
-            return null;
-        }
-    }
-
-    public List<Event> getEventList(final Group group) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Event> criteriaQuery = criteriaBuilder.createQuery(Event.class);
-        final Root<GroupToEvent> root = criteriaQuery.from(GroupToEvent.class);
-        criteriaQuery.select(root.get("event"));
-        criteriaQuery.where(criteriaBuilder.equal(root.get("group"), group));
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    public Group getGroup(final Event event) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Group> criteriaQuery = criteriaBuilder.createQuery(Group.class);
-        final Root<GroupToEvent> root = criteriaQuery.from(GroupToEvent.class);
-        criteriaQuery.select(root.get("group"));
-        criteriaQuery.where(criteriaBuilder.equal(root.get("event"), event));
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (final NoResultException e) {
-            LOGGER.info("Group for {} could not be found.", event.getName());
-            return null;
-        }
-    }
-
-    public GroupToEvent getGroupToEvent(final Event event) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<GroupToEvent> criteriaQuery = criteriaBuilder.createQuery(GroupToEvent.class);
-        final Root<GroupToEvent> root = criteriaQuery.from(GroupToEvent.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("event"), event));
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (final NoResultException e) {
-            LOGGER.info("Mapping could not be found for: {}", event);
             return null;
         }
     }

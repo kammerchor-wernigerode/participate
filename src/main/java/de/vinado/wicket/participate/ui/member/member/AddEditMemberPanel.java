@@ -6,9 +6,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import de.vinado.wicket.participate.component.Snackbar;
 import de.vinado.wicket.participate.component.modal.BootstrapModal;
 import de.vinado.wicket.participate.component.modal.BootstrapModalPanel;
-import de.vinado.wicket.participate.component.provider.Select2GroupProvider;
 import de.vinado.wicket.participate.component.validator.ConditionalValidator;
-import de.vinado.wicket.participate.data.Group;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.MemberDTO;
 import de.vinado.wicket.participate.event.MemberUpdateEvent;
@@ -20,12 +18,9 @@ import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
-import org.wicketstuff.select2.Select2BootstrapTheme;
-import org.wicketstuff.select2.Select2MultiChoice;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -83,15 +78,6 @@ public class AddEditMemberPanel extends BootstrapModalPanel<MemberDTO> {
             Collections.unmodifiableList(Arrays.asList(Voice.values())), new EnumChoiceRenderer<>());
         voiceDd.setLabel(new ResourceModel("voice", "Voice"));
         inner.add(voiceDd);
-
-        final Select2MultiChoice<Group> groupS2mc = new Select2MultiChoice<Group>("groups",
-            new PropertyModel<>(model, "groups"), new Select2GroupProvider(personService));
-        groupS2mc.getSettings().setLanguage(getLocale().getLanguage());
-        groupS2mc.getSettings().setCloseOnSelect(true);
-        groupS2mc.getSettings().setTheme(new Select2BootstrapTheme(true));
-        groupS2mc.getSettings().setPlaceholder(new ResourceModel("select.placeholder", "Please Choose").getObject());
-        groupS2mc.setLabel(new ResourceModel("group.select", "Select Group"));
-        inner.add(groupS2mc);
 
         final BootstrapAjaxLink removeBtn = new BootstrapAjaxLink("removeBtn", Buttons.Type.Link) {
             @Override

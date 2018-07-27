@@ -47,9 +47,6 @@ public class EventDetails implements Identifiable, Serializable {
     @Column(name = "location")
     private String location;
 
-    @Column(name = "cast")
-    private String cast;
-
     @Column(name = "count_accepted_declined_pending")
     private String countAcceptedDeclinedPending;
 
@@ -129,10 +126,6 @@ public class EventDetails implements Identifiable, Serializable {
 
     public String getLocation() {
         return location;
-    }
-
-    public String getCast() {
-        return cast;
     }
 
     public String getCountAcceptedDeclinedPending() {
@@ -223,7 +216,6 @@ public class EventDetails implements Identifiable, Serializable {
             .append(startDate, that.startDate)
             .append(endDate, that.endDate)
             .append(location, that.location)
-            .append(cast, that.cast)
             .append(countAcceptedDeclinedPending, that.countAcceptedDeclinedPending)
             .append(dinnerCount, that.dinnerCount)
             .append(placeToSleepCount, that.placeToSleepCount)
@@ -253,7 +245,6 @@ public class EventDetails implements Identifiable, Serializable {
             .append(startDate)
             .append(endDate)
             .append(location)
-            .append(cast)
             .append(countAcceptedDeclinedPending)
             .append(dinnerCount)
             .append(placeToSleepCount)
@@ -283,7 +274,6 @@ public class EventDetails implements Identifiable, Serializable {
             .append("startDate", startDate)
             .append("endDate", endDate)
             .append("location", location)
-            .append("cast", cast)
             .append("countAcceptedDeclinedPending", countAcceptedDeclinedPending)
             .append("dinnerCount", dinnerCount)
             .append("placeToSleepCount", placeToSleepCount)

@@ -7,7 +7,6 @@ import de.vinado.wicket.participate.component.panel.BootstrapPanel;
 import de.vinado.wicket.participate.data.Member;
 import de.vinado.wicket.participate.data.dto.MemberDTO;
 import de.vinado.wicket.participate.service.PersonService;
-import de.vinado.wicket.participate.ui.member.groups.GroupsPanel;
 import de.vinado.wicket.participate.ui.member.member.AddEditMemberPanel;
 import de.vinado.wicket.participate.ui.member.member.MemberListPanel;
 import de.vinado.wicket.participate.ui.page.BasePage;
@@ -17,7 +16,6 @@ import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -46,7 +44,7 @@ public class MemberTabPanel extends BreadCrumbPanel {
             @Override
             public Panel getPanel(final String panelId) {
                 return new BootstrapPanel<List<Member>>(panelId, new CompoundPropertyModel<>(personService.getMemberList()),
-                        Model.of("Mitglieder")) {
+                    Model.of("Mitglieder")) {
                     @Override
                     protected Panel newBodyPanel(final String id, final IModel<List<Member>> model) {
                         return new MemberListPanel(id, model);
@@ -67,12 +65,6 @@ public class MemberTabPanel extends BreadCrumbPanel {
                         };
                     }
                 };
-            }
-        });
-        tabs.add(new AbstractTab(new ResourceModel("groups", "Groups")) {
-            @Override
-            public WebMarkupContainer getPanel(final String panelId) {
-                return new GroupsPanel(panelId);
             }
         });
 

@@ -1,7 +1,6 @@
 package de.vinado.wicket.participate.data.filter;
 
 import de.vinado.wicket.participate.data.EventDetails;
-import de.vinado.wicket.participate.data.Group;
 import org.apache.wicket.util.string.Strings;
 
 import java.io.Serializable;
@@ -24,8 +23,6 @@ public class EventDetailsFilter implements Serializable, IFilter<EventDetails> {
 
     private String location;
 
-    private Group group;
-
     @Override
     public List<EventDetails> filter(final List<EventDetails> list) {
         final List<EventDetails> result = new ArrayList<>();
@@ -43,9 +40,6 @@ public class EventDetailsFilter implements Serializable, IFilter<EventDetails> {
                 continue;
 
             if (validate(event.getLocation(), location))
-                continue;
-
-            if (null != group && !event.getCast().equalsIgnoreCase(group.getName()))
                 continue;
 
             result.add(event);
@@ -97,13 +91,5 @@ public class EventDetailsFilter implements Serializable, IFilter<EventDetails> {
 
     public void setLocation(final String location) {
         this.location = location;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public void setGroup(final Group group) {
-        this.group = group;
     }
 }

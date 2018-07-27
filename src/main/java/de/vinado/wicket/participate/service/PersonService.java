@@ -1,19 +1,13 @@
 package de.vinado.wicket.participate.service;
 
 import de.vinado.wicket.participate.component.provider.SimpleDataProvider;
-import de.vinado.wicket.participate.data.Event;
-import de.vinado.wicket.participate.data.Group;
 import de.vinado.wicket.participate.data.Member;
 import de.vinado.wicket.participate.data.MemberToEvent;
-import de.vinado.wicket.participate.data.MemberToGroup;
 import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.dto.GroupDTO;
 import de.vinado.wicket.participate.data.dto.MemberDTO;
-import de.vinado.wicket.participate.data.dto.MemberToGroupDTO;
 import de.vinado.wicket.participate.data.dto.PersonDTO;
 import de.vinado.wicket.participate.data.filter.MemberFilter;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.export.CSVDataExporter;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.export.IExportableColumn;
@@ -44,9 +38,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import static org.apache.commons.codec.CharEncoding.UTF_8;
@@ -114,11 +105,6 @@ public class PersonService extends DataService {
         Member member = new Member(person, dto.getVoice());
         member = save(member);
 
-        dto.getGroups().add(load(Group.class, 1L));
-        for (Group group : dto.getGroups()) {
-            assignMemberToGroup(new MemberToGroupDTO(group, Collections.singletonList(member)));
-        }
-
         return member;
     }
 
@@ -138,99 +124,14 @@ public class PersonService extends DataService {
         loadedPerson.setLastName(dto.getLastName());
         loadedPerson.setEmail(dto.getEmail());
 
-        if (!dto.getGroups().isEmpty()) {
-            for (Group group : dto.getGroups()) {
-                assignMemberToGroup(new MemberToGroupDTO(group, Collections.singletonList(loadedMember)));
-            }
-        }
-
         return save(loadedMember);
     }
 
     @Transactional
     public void removeMember(final Member member) {
         final Member loadedMember = load(Member.class, member.getId());
-
-        for (MemberToGroup memberToGroup : getMemberToGroupList(loadedMember)) {
-            remove(load(MemberToGroup.class, memberToGroup.getId()));
-        }
-
         loadedMember.setActive(false);
         save(loadedMember);
-    }
-
-    @Transactional
-    public Group createGroup(final GroupDTO dto) {
-        return save(new Group(dto.getName(), dto.getDescription(), dto.getValidUntil()));
-    }
-
-    @Transactional
-    public Group saveGroup(final GroupDTO dto) {
-        final Group loadedGroup = load(Group.class, dto.getGroup().getId());
-        loadedGroup.setName(dto.getName());
-        loadedGroup.setDescription(dto.getDescription());
-        loadedGroup.setValidUntil(dto.getValidUntil());
-        return save(loadedGroup);
-    }
-
-    @Transactional
-    public boolean removeGroup(final Group group) {
-        final Date date = new Date();
-        final Group loadedGroup = load(Group.class, group.getId());
-
-        if (!loadedGroup.isEditable()) {
-            return false;
-        }
-
-        for (Event event : eventService.getEventList(loadedGroup)) {
-            if (date.before(event.getEndDate())) {
-                return false;
-            }
-        }
-
-        loadedGroup.setActive(false);
-        save(loadedGroup);
-        return true;
-    }
-
-    @Transactional
-    public List<MemberToGroup> assignMemberToGroup(final MemberToGroupDTO dto) {
-        final Group loadedGroup = load(Group.class, dto.getGroup().getId());
-        final List<Member> filteredMemberList = new ArrayList<>();
-        final List<MemberToGroup> memberToGroupList = new ArrayList<>();
-
-        for (Member member : dto.getMembers()) {
-            if (!hasMemberToGroup(member, loadedGroup)) {
-                filteredMemberList.add(member);
-            }
-        }
-
-        for (Member member : filteredMemberList) {
-            memberToGroupList.add(save(new MemberToGroup(member, loadedGroup)));
-
-            for (Event event : eventService.getUpcomingEventList(loadedGroup)) {
-                if (!eventService.hasMemberToEvent(member, event)) {
-                    eventService.createMemberToEvent(event, member);
-                }
-            }
-        }
-
-        return memberToGroupList;
-    }
-
-    @Transactional
-    public void dissociateMemberToGroup(final Member member, final Group group) {
-        for (Event event : eventService.getUpcomingEventList(group)) {
-            if (eventService.hasMemberToEvent(member, event)) {
-                remove(eventService.getMemberToEvent(member, event));
-            }
-        }
-        remove(getMemberToGroup(member, group));
-    }
-
-    @Transactional
-    public void dissociateMemberToGroup(final MemberToGroup memberToGroup) {
-        dissociateMemberToGroup(memberToGroup.getMember(), memberToGroup.getGroup());
     }
 
     public boolean hasPerson(final String email) {
@@ -357,102 +258,6 @@ public class PersonService extends DataService {
             "%" + term.toLowerCase() + "%"
         ));
         return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    public List<Group> findGroups(final String term) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Group> criteriaQuery = criteriaBuilder.createQuery(Group.class);
-        final Root<Group> root = criteriaQuery.from(Group.class);
-        final Predicate forActive = criteriaBuilder.equal(root.get("active"), true);
-        final Predicate forEditable = criteriaBuilder.equal(root.get("editable"), true);
-        final Predicate forValidDate = criteriaBuilder.greaterThanOrEqualTo(root.get("validUntil"), DateUtils.truncate(new Date(), Calendar.DATE));
-        final Predicate forValidNull = criteriaBuilder.isNull(root.get("validUntil"));
-        final Predicate forSearchTerm = criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + term.toLowerCase() + "%");
-        criteriaQuery.where(forActive, forEditable, forSearchTerm, criteriaBuilder.or(forValidDate, forValidNull));
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    public List<Group> getGroupList() {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Group> criteriaQuery = criteriaBuilder.createQuery(Group.class);
-        final Root<Group> root = criteriaQuery.from(Group.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("active"), true));
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    public List<Group> getVisibleGroupList() {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Group> criteriaQuery = criteriaBuilder.createQuery(Group.class);
-        final Root<Group> root = criteriaQuery.from(Group.class);
-        final Predicate forActive = criteriaBuilder.equal(root.get("active"), true);
-        final Predicate forEditable = criteriaBuilder.equal(root.get("editable"), true);
-        final Predicate forValidDate = criteriaBuilder.greaterThanOrEqualTo(root.get("validUntil"), DateUtils.truncate(new Date(), Calendar.DATE));
-        final Predicate forValidNull = criteriaBuilder.isNull(root.get("validUntil"));
-        criteriaQuery.where(criteriaBuilder.and(forActive, forEditable, criteriaBuilder.or(forValidDate, forValidNull)));
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    public List<Group> getGroupList(final Member member) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Group> criteriaQuery = criteriaBuilder.createQuery(Group.class);
-        final Root<MemberToGroup> root = criteriaQuery.from(MemberToGroup.class);
-        criteriaQuery.select(root.get("group"));
-        criteriaQuery.where(criteriaBuilder.equal(root.get("member"), member));
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    public List<MemberToGroup> getMemberToGroupList(final Group group) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<MemberToGroup> criteriaQuery = criteriaBuilder.createQuery(MemberToGroup.class);
-        final Root<MemberToGroup> root = criteriaQuery.from(MemberToGroup.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("group"), group));
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    public List<MemberToGroup> getMemberToGroupList(final Member member) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<MemberToGroup> criteriaQuery = criteriaBuilder.createQuery(MemberToGroup.class);
-        final Root<MemberToGroup> root = criteriaQuery.from(MemberToGroup.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("member"), member));
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    public List<Member> getGroupMemberList(final Group group) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Member> criteriaQuery = criteriaBuilder.createQuery(Member.class);
-        final Root<MemberToGroup> root = criteriaQuery.from(MemberToGroup.class);
-        final Join<MemberToGroup, Member> memberJoin = root.join("member");
-        final Predicate forGroup = criteriaBuilder.equal(root.get("group"), group);
-        final Predicate forActive = criteriaBuilder.equal(memberJoin.get("active"), true);
-        criteriaQuery.select(memberJoin);
-        criteriaQuery.where(forGroup, forActive);
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    public MemberToGroup getMemberToGroup(final Member member, final Group group) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<MemberToGroup> criteriaQuery = criteriaBuilder.createQuery(MemberToGroup.class);
-        final Root<MemberToGroup> root = criteriaQuery.from(MemberToGroup.class);
-        final Predicate forMember = criteriaBuilder.equal(root.get("member"), member);
-        final Predicate forGroup = criteriaBuilder.equal(root.get("group"), group);
-        criteriaQuery.where(forGroup, forMember);
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (final NoResultException e) {
-            LOGGER.warn("MemberToGroup could not be found for member={} and group={}", member.getPerson().getDisplayName(), group.getName());
-            return null;
-        }
-    }
-
-    public boolean hasMemberToGroup(final Member member, final Group group) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        final Root<MemberToGroup> root = criteriaQuery.from(MemberToGroup.class);
-        final Predicate forMember = criteriaBuilder.equal(root.get("member"), member);
-        final Predicate forGroup = criteriaBuilder.equal(root.get("group"), group);
-        criteriaQuery.select(criteriaBuilder.count(root));
-        criteriaQuery.where(forMember, forGroup);
-        return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
     @Transactional

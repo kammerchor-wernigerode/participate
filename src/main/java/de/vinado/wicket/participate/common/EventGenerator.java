@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.common;
 
-import de.vinado.wicket.participate.data.Group;
 import de.vinado.wicket.participate.data.dto.EventDTO;
 import de.vinado.wicket.participate.service.DataService;
 
@@ -30,7 +29,6 @@ public class EventGenerator extends AbstractEntityGenerator<EventDTO> {
         dto.setStartDate(generateDate());
         dto.setEndDate(addDays(dto.getStartDate(), rint(0, 7)));
         dto.setLocation(randomString(localities));
-        dto.setGroup(dataService.load(Group.class, 1L));
 
         return dto;
     }

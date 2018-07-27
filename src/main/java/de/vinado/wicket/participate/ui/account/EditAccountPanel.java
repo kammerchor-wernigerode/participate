@@ -93,7 +93,7 @@ public abstract class EditAccountPanel extends BootstrapModalPanel<EditAccountDT
             personService.savePerson(personDTO);
             if (null != modelObject.getMember()) {
                 final Member member = modelObject.getMember();
-                final MemberDTO memberDTO = new MemberDTO(member, personService.getGroupList(member));
+                final MemberDTO memberDTO = new MemberDTO();
                 memberDTO.setVoice(modelObject.getVoice());
                 personService.saveMember(memberDTO);
             }

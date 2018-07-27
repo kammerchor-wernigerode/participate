@@ -1,7 +1,6 @@
 package de.vinado.wicket.participate.data.dto;
 
 import de.vinado.wicket.participate.data.Event;
-import de.vinado.wicket.participate.data.Group;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -29,19 +28,16 @@ public class EventDTO implements Serializable {
 
     private String location;
 
-    private Group group;
-
     public EventDTO() {
     }
 
-    public EventDTO(final Event event, final Group group) {
+    public EventDTO(final Event event) {
         this.event = event;
         this.description = event.getDescription();
         this.eventType = event.getEventType();
         this.startDate = event.getStartDate();
         this.endDate = event.getEndDate();
         this.location = event.getLocation();
-        this.group = group;
     }
 
     public Event getEvent() {
@@ -110,13 +106,5 @@ public class EventDTO implements Serializable {
 
     public boolean isSeveralDays() {
         return !getStartDate().equals(getEndDate());
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public void setGroup(final Group group) {
-        this.group = group;
     }
 }

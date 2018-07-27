@@ -94,9 +94,6 @@ public class EventPanel extends BreadCrumbPanel {
             }
         });
 
-        final Label groupLabel = new Label("cast");
-        wmc.add(groupLabel);
-
         final MemberToEventFilterPanel filterPanel = new MemberToEventFilterPanel("filterPanel",
             new LoadableDetachableModel<List<MemberToEvent>>() {
                 @Override

@@ -1,13 +1,11 @@
 package de.vinado.wicket.participate.data.dto;
 
 
-import de.vinado.wicket.participate.data.Group;
 import de.vinado.wicket.participate.data.Member;
 import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.Voice;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * DTO for a {@link de.vinado.wicket.participate.data.Member}
@@ -29,12 +27,10 @@ public class MemberDTO implements Serializable {
 
     private String email;
 
-    private List<Group> groups;
-
     public MemberDTO() {
     }
 
-    public MemberDTO(final Member member, final List<Group> groups) {
+    public MemberDTO(final Member member) {
         this.member = member;
         this.voice = member.getVoice();
         this.person = member.getPerson();
@@ -42,7 +38,6 @@ public class MemberDTO implements Serializable {
         this.firstName = member.getPerson().getFirstName();
         this.lastName = member.getPerson().getLastName();
         this.email = member.getPerson().getEmail();
-        this.groups = groups;
     }
 
     public Member getMember() {
@@ -91,13 +86,5 @@ public class MemberDTO implements Serializable {
 
     public void setEmail(final String email) {
         this.email = email;
-    }
-
-    public List<Group> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(final List<Group> groups) {
-        this.groups = groups;
     }
 }

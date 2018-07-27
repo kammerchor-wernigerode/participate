@@ -6,9 +6,10 @@
 
     <include file="de/vinado/wicket/participate/db/liquibase/0003/00-c_list_of_value.xml"/>
     <include file="de/vinado/wicket/participate/db/liquibase/0003/01-addresses.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0003/views.changelog.xml"/>
     <include file="de/vinado/wicket/participate/db/liquibase/0003/02-attributes.xml"/>
     <include file="de/vinado/wicket/participate/db/liquibase/0003/03-communications.xml"/>
     <include file="de/vinado/wicket/participate/db/liquibase/0003/04-roles.xml"/>
     <include file="de/vinado/wicket/participate/db/liquibase/0003/05-lov.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0003/06-groups.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0003/views.changelog.xml"/>
 </databaseChangeLog>

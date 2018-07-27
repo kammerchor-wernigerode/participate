@@ -13,7 +13,6 @@ import de.vinado.wicket.participate.component.modal.BootstrapModal;
 import de.vinado.wicket.participate.component.modal.BootstrapModalPanel;
 import de.vinado.wicket.participate.component.provider.Select2StringProvider;
 import de.vinado.wicket.participate.data.Event;
-import de.vinado.wicket.participate.data.Group;
 import de.vinado.wicket.participate.data.dto.EventDTO;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.RemoveEventUpdateEvent;
@@ -23,8 +22,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -100,7 +97,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         inner.add(isSeveralDaysCb);
 
         final Select2Choice<String> eventTypeS2c = new Select2Choice<>("eventType",
-                new Select2StringProvider(eventService.getEventTypeList()));
+            new Select2StringProvider(eventService.getEventTypeList()));
         eventTypeS2c.add(new AjaxFocusBehavior());
         eventTypeS2c.setLabel(new ResourceModel("event", "Event"));
         eventTypeS2c.add(BootstrapHorizontalFormDecorator.decorate());
@@ -126,8 +123,8 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
             @Override
             protected void onConfigure() {
                 setLabel(severalDays.getObject()
-                        ? new ResourceModel("from", "From")
-                        : new ResourceModel("on", "On"));
+                    ? new ResourceModel("from", "From")
+                    : new ResourceModel("on", "On"));
             }
         };
         startDateTf.add(new AjaxFormComponentUpdatingBehavior("change") {
@@ -152,7 +149,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         inner.add(endDateTf);
 
         final Select2Choice<String> locationS2c = new Select2Choice<>("location",
-                new Select2StringProvider(eventService.getLocationList()));
+            new Select2StringProvider(eventService.getLocationList()));
         locationS2c.setLabel(new ResourceModel("location", "Location"));
         locationS2c.add(BootstrapHorizontalFormDecorator.decorate());
         locationS2c.getSettings().setLanguage(getLocale().getLanguage());
@@ -174,15 +171,6 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
             }
         });
         inner.add(descriptionTa);
-
-        final DropDownChoice<Group> groupDdc = new DropDownChoice<>("group",
-                personService.getGroupList(), new ChoiceRenderer<>("title"));
-        groupDdc.setLabel(new ResourceModel("cast", "Cast"));
-        groupDdc.setVisible(!edit);
-        groupDdc.setRequired(!edit);
-        groupDdc.add(BootstrapHorizontalFormDecorator.decorateWithHelperBlock(new ResourceModel("cast.add.hint",
-                "The cast can not be edited later.")));
-        inner.add(groupDdc);
 
         final BootstrapAjaxLink removeBtn = new BootstrapAjaxLink("removeBtn", Buttons.Type.Link) {
             @Override
