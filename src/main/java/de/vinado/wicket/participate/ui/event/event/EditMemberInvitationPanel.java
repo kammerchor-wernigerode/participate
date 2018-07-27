@@ -185,7 +185,7 @@ public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<Memb
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 eventService.inviteMembersToEvent(model.getObject().getEvent(),
-                    Collections.singletonList(model.getObject().getMemberToEvent()), !InvitationStatus.UNINVITED.equals(model.getObject().getInvitationStatus()));
+                    Collections.singletonList(model.getObject().getParticipant()), !InvitationStatus.UNINVITED.equals(model.getObject().getInvitationStatus()));
                 modal.close(target);
                 if (!InvitationStatus.UNINVITED.equals(model.getObject().getInvitationStatus())) {
                     Snackbar.show(target, new ResourceModel("email.send.reminder.success", "A reminder has been sent"));

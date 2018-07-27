@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.ui.form;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarForm;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.select.BootstrapSelect;
-import de.vinado.wicket.participate.data.MemberToEvent;
+import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.service.EventService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -18,25 +18,25 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class EventDropDownForm extends NavbarForm<MemberToEvent> {
+public abstract class EventDropDownForm extends NavbarForm<Participant> {
 
     @SuppressWarnings("unused")
     @SpringBean
     private EventService eventService;
 
-    private MemberToEvent defaultValue;
+    private Participant defaultValue;
 
-    private BootstrapSelect<MemberToEvent> memberToEventBs;
+    private BootstrapSelect<Participant> memberToEventBs;
 
-    public EventDropDownForm(final String componentId, final IModel<MemberToEvent> model) {
+    public EventDropDownForm(final String componentId, final IModel<Participant> model) {
         super(componentId, model);
 
         setDefaultValue(model.getObject());
 
         memberToEventBs = new BootstrapSelect<>("event", new PropertyModel<>(this, "defaultValue"),
-                new LoadableDetachableModel<List<? extends MemberToEvent>>() {
+            new LoadableDetachableModel<List<? extends Participant>>() {
                     @Override
-                    protected List<? extends MemberToEvent> load() {
+                    protected List<? extends Participant> load() {
                         return eventService.getMemberToEventList(model.getObject().getMember());
                     }
                 },
@@ -53,13 +53,13 @@ public abstract class EventDropDownForm extends NavbarForm<MemberToEvent> {
         add(memberToEventBs);
     }
 
-    public MemberToEvent getDefaultValue() {
+    public Participant getDefaultValue() {
         return defaultValue;
     }
 
-    public void setDefaultValue(final MemberToEvent defaultValue) {
+    public void setDefaultValue(final Participant defaultValue) {
         this.defaultValue = defaultValue;
     }
 
-    protected abstract void onEventChange(final MemberToEvent memberToEvent);
+    protected abstract void onEventChange(final Participant participant);
 }

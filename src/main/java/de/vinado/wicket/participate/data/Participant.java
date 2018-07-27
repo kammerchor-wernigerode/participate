@@ -25,7 +25,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "m_member_event")
-public class MemberToEvent implements Identifiable, Serializable {
+public class Participant implements Identifiable, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,7 +76,7 @@ public class MemberToEvent implements Identifiable, Serializable {
     /**
      * Hibernate only
      */
-    protected MemberToEvent() {
+    protected Participant() {
     }
 
     /**
@@ -90,10 +90,10 @@ public class MemberToEvent implements Identifiable, Serializable {
      * @param needsPlaceToSleepComment Place to sleep comment
      * @param comment                  Comment overall
      */
-    public MemberToEvent(final Event event, final Member member, final String token,
-                         final InvitationStatus invitationStatus, final Date fromDate, final Date toDate,
-                         final boolean needsDinner, final String needsDinnerComment, final boolean needsPlaceToSleep,
-                         final String needsPlaceToSleepComment, final String comment) {
+    public Participant(final Event event, final Member member, final String token,
+                       final InvitationStatus invitationStatus, final Date fromDate, final Date toDate,
+                       final boolean needsDinner, final String needsDinnerComment, final boolean needsPlaceToSleep,
+                       final String needsPlaceToSleepComment, final String comment) {
         this.event = event;
         this.member = member;
         this.token = token;
@@ -108,8 +108,8 @@ public class MemberToEvent implements Identifiable, Serializable {
         this.reviewed = false;
     }
 
-    public MemberToEvent(final Event event, final Member member, final String token,
-                         final InvitationStatus invitationStatus) {
+    public Participant(final Event event, final Member member, final String token,
+                       final InvitationStatus invitationStatus) {
         this(event, member, token, invitationStatus, null, null, false, null, false, null, null);
     }
 
@@ -222,9 +222,9 @@ public class MemberToEvent implements Identifiable, Serializable {
     public boolean equals(final Object o) {
         if (this == o) return true;
 
-        if (!(o instanceof MemberToEvent)) return false;
+        if (!(o instanceof Participant)) return false;
 
-        final MemberToEvent that = (MemberToEvent) o;
+        final Participant that = (Participant) o;
 
         return new EqualsBuilder()
             .append(needsDinner, that.needsDinner)

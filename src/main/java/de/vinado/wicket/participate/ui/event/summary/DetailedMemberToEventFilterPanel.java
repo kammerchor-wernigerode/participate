@@ -6,7 +6,7 @@ import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.component.panel.AbstractTableFilterPanel;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.InvitationStatus;
-import de.vinado.wicket.participate.data.MemberToEvent;
+import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.filter.DetailedMemberToEventFilter;
 import de.vinado.wicket.participate.service.EventService;
@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class DetailedMemberToEventFilterPanel extends AbstractTableFilterPanel<MemberToEvent, DetailedMemberToEventFilter> {
+public abstract class DetailedMemberToEventFilterPanel extends AbstractTableFilterPanel<Participant, DetailedMemberToEventFilter> {
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -40,7 +40,7 @@ public abstract class DetailedMemberToEventFilterPanel extends AbstractTableFilt
 
     private TextField searchTermTf;
 
-    public DetailedMemberToEventFilterPanel(final String id, final IModel<List<MemberToEvent>> model,
+    public DetailedMemberToEventFilterPanel(final String id, final IModel<List<Participant>> model,
                                             final IModel<DetailedMemberToEventFilter> filterModel, final boolean editable) {
         super(id, model, filterModel);
 
@@ -112,12 +112,12 @@ public abstract class DetailedMemberToEventFilterPanel extends AbstractTableFilt
     }
 
     @Override
-    public List<MemberToEvent> getFilteredData(final DetailedMemberToEventFilter filter) {
+    public List<Participant> getFilteredData(final DetailedMemberToEventFilter filter) {
         return eventService.getDetailedFilteredMemberToEventList(event, filter);
     }
 
     @Override
-    public List<MemberToEvent> getDefaultData() {
+    public List<Participant> getDefaultData() {
         return eventService.getMemberToEventList(ParticipateSession.get().getEvent());
     }
 

@@ -16,7 +16,7 @@ import de.vinado.wicket.participate.component.table.column.BootstrapAjaxLinkColu
 import de.vinado.wicket.participate.component.table.column.EnumColumn;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.InvitationStatus;
-import de.vinado.wicket.participate.data.MemberToEvent;
+import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
@@ -65,47 +65,47 @@ public class EventSummaryListPanel extends Panel {
 
     private boolean showAllProperties = false;
 
-    private SimpleDataProvider<MemberToEvent, String> dataProvider;
-    private BootstrapAjaxDataTable<MemberToEvent, String> dataTable;
+    private SimpleDataProvider<Participant, String> dataProvider;
+    private BootstrapAjaxDataTable<Participant, String> dataTable;
 
     private final Event event = ParticipateSession.get().getEvent();
 
-    public EventSummaryListPanel(final String id, final IModel<List<MemberToEvent>> model, final boolean editable) {
+    public EventSummaryListPanel(final String id, final IModel<List<Participant>> model, final boolean editable) {
         super(id, model);
 
         final DetailedMemberToEventFilterPanel filterPanel = new DetailedMemberToEventFilterPanel("filterPanel",
-            new LoadableDetachableModel<List<MemberToEvent>>() {
+            new LoadableDetachableModel<List<Participant>>() {
                 @Override
-                protected List<MemberToEvent> load() {
+                protected List<Participant> load() {
                     return eventService.getMemberToEventList(ParticipateSession.get().getEvent());
                 }
             }, new CompoundPropertyModel<>(new DetailedMemberToEventFilter()), editable) {
             @Override
-            public SimpleDataProvider<MemberToEvent, ?> getDataProvider() {
+            public SimpleDataProvider<Participant, ?> getDataProvider() {
                 return dataProvider;
             }
 
             @Override
-            public DataTable<MemberToEvent, ?> getDataTable() {
+            public DataTable<Participant, ?> getDataTable() {
                 return dataTable;
             }
         };
         add(filterPanel);
 
-        dataProvider = new SimpleDataProvider<MemberToEvent, String>(model.getObject()) {
+        dataProvider = new SimpleDataProvider<Participant, String>(model.getObject()) {
             @Override
             public String getDefaultSort() {
                 return "invitationStatus";
             }
         };
 
-        final List<IColumn<MemberToEvent, String>> columns = new ArrayList<>();
-        columns.add(new AbstractColumn<MemberToEvent, String>(Model.of(""), "invitationStatus") {
+        final List<IColumn<Participant, String>> columns = new ArrayList<>();
+        columns.add(new AbstractColumn<Participant, String>(Model.of(""), "invitationStatus") {
             @Override
-            public void populateItem(final Item<ICellPopulator<MemberToEvent>> item, final String componentId, final IModel<MemberToEvent> rowModel) {
+            public void populateItem(final Item<ICellPopulator<Participant>> item, final String componentId, final IModel<Participant> rowModel) {
                 final IconPanel icon = new IconPanel(componentId);
-                final MemberToEvent memberToEvent = rowModel.getObject();
-                final InvitationStatus invitationStatus = memberToEvent.getInvitationStatus();
+                final Participant participant = rowModel.getObject();
+                final InvitationStatus invitationStatus = participant.getInvitationStatus();
 
                 icon.setTextAlign(TextAlign.CENTER);
                 if (InvitationStatus.ACCEPTED.equals(invitationStatus)) {
@@ -131,16 +131,16 @@ public class EventSummaryListPanel extends Panel {
             }
         });
         columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "member.person.sortName", "member.person.sortName"));
-        columns.add(new EnumColumn<MemberToEvent, String, Voice>(new ResourceModel("voice", "voice"), "member.voice", "member.voice"));
-        columns.add(new AbstractColumn<MemberToEvent, String>(Model.of("")) {
+        columns.add(new EnumColumn<Participant, String, Voice>(new ResourceModel("voice", "voice"), "member.voice", "member.voice"));
+        columns.add(new AbstractColumn<Participant, String>(Model.of("")) {
             @Override
-            public void populateItem(final Item<ICellPopulator<MemberToEvent>> cellItem, final String componentId, final IModel<MemberToEvent> rowModel) {
+            public void populateItem(final Item<ICellPopulator<Participant>> cellItem, final String componentId, final IModel<Participant> rowModel) {
                 cellItem.add(new DinnerSleepIconPanel(componentId, rowModel));
             }
         });
-        columns.add(new AbstractColumn<MemberToEvent, String>(new ResourceModel("period", "Period")) {
+        columns.add(new AbstractColumn<Participant, String>(new ResourceModel("period", "Period")) {
             @Override
-            public void populateItem(final Item<ICellPopulator<MemberToEvent>> cellItem, final String componentId, final IModel<MemberToEvent> rowModel) {
+            public void populateItem(final Item<ICellPopulator<Participant>> cellItem, final String componentId, final IModel<Participant> rowModel) {
                 String formattedDate = "";
 
                 if (null != rowModel.getObject().getFromDate() && null == rowModel.getObject().getToDate()) {
@@ -155,10 +155,10 @@ public class EventSummaryListPanel extends Panel {
                 cellItem.add(new Label(componentId, formattedDate));
             }
         });
-        columns.add(new AbstractColumn<MemberToEvent, String>(new ResourceModel("comments", "Comments")) {
+        columns.add(new AbstractColumn<Participant, String>(new ResourceModel("comments", "Comments")) {
             @Override
-            public void populateItem(final Item<ICellPopulator<MemberToEvent>> cellItem, final String componentId, final IModel<MemberToEvent> rowModel) {
-                final MemberToEvent modelObject = rowModel.getObject();
+            public void populateItem(final Item<ICellPopulator<Participant>> cellItem, final String componentId, final IModel<Participant> rowModel) {
+                final Participant modelObject = rowModel.getObject();
                 cellItem.add(new MultiLineLabel(componentId, "" +
                     (Strings.isEmpty(modelObject.getComment()) ? "" : modelObject.getComment() + "\n") +
                     (Strings.isEmpty(modelObject.getNeedsDinnerComment()) ? "" : modelObject.getNeedsDinnerComment() + "\n") +
@@ -175,9 +175,9 @@ public class EventSummaryListPanel extends Panel {
 
         });
         if (editable) {
-            columns.add(new BootstrapAjaxLinkColumn<MemberToEvent, String>(FontAwesomeIconType.pencil, new ResourceModel("invitation.edit", "Edit Invitation")) {
+            columns.add(new BootstrapAjaxLinkColumn<Participant, String>(FontAwesomeIconType.pencil, new ResourceModel("invitation.edit", "Edit Invitation")) {
                 @Override
-                public void onClick(final AjaxRequestTarget target, final IModel<MemberToEvent> rowModel) {
+                public void onClick(final AjaxRequestTarget target, final IModel<Participant> rowModel) {
                     final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                     modal.setContent(new EditMemberInvitationPanel(modal,
                         new CompoundPropertyModel<>(new MemberToEventDTO(rowModel.getObject()))) {
@@ -197,9 +197,9 @@ public class EventSummaryListPanel extends Panel {
 
                 }
             });
-            columns.add(new BootstrapAjaxLinkColumn<MemberToEvent, String>(FontAwesomeIconType.envelope, new ResourceModel("email.send", "Send Email")) {
+            columns.add(new BootstrapAjaxLinkColumn<Participant, String>(FontAwesomeIconType.envelope, new ResourceModel("email.send", "Send Email")) {
                 @Override
-                public void onClick(final AjaxRequestTarget target, final IModel<MemberToEvent> rowModel) {
+                public void onClick(final AjaxRequestTarget target, final IModel<Participant> rowModel) {
                     final Person person = rowModel.getObject().getMember().getPerson();
                     final MailData mailData = new MailData();
                     mailData.addTo(person.getEmail(), person.getDisplayName());
@@ -209,9 +209,9 @@ public class EventSummaryListPanel extends Panel {
                     modal.show(target);
                 }
             });
-            columns.add(new AbstractColumn<MemberToEvent, String>(Model.of()) {
+            columns.add(new AbstractColumn<Participant, String>(Model.of()) {
                 @Override
-                public void populateItem(final Item<ICellPopulator<MemberToEvent>> item, final String componentId, final IModel<MemberToEvent> rowModel) {
+                public void populateItem(final Item<ICellPopulator<Participant>> item, final String componentId, final IModel<Participant> rowModel) {
                     item.add(getReviewBtn(componentId, rowModel.getObject()));
                 }
 
@@ -222,10 +222,10 @@ public class EventSummaryListPanel extends Panel {
             });
         }
 
-        dataTable = new BootstrapAjaxDataTable<MemberToEvent, String>("dataTable", columns, dataProvider, 30) {
+        dataTable = new BootstrapAjaxDataTable<Participant, String>("dataTable", columns, dataProvider, 30) {
             @Override
-            protected Item<MemberToEvent> newRowItem(String id, int index, IModel<MemberToEvent> model) {
-                final Item<MemberToEvent> rowItem = super.newRowItem(id, index, model);
+            protected Item<Participant> newRowItem(String id, int index, IModel<Participant> model) {
+                final Item<Participant> rowItem = super.newRowItem(id, index, model);
                 if (!InvitationStatus.PENDING.equals(model.getObject().getInvitationStatus()) && model.getObject().isReviewed()) {
                     rowItem.add(new CssClassNameAppender("success"));
                 }
@@ -237,22 +237,22 @@ public class EventSummaryListPanel extends Panel {
         add(dataTable);
     }
 
-    private BootstrapAjaxLinkPanel getReviewBtn(final String id, final MemberToEvent memberToEvent) {
-        final boolean reviewed = memberToEvent.isReviewed();
+    private BootstrapAjaxLinkPanel getReviewBtn(final String id, final Participant participant) {
+        final boolean reviewed = participant.isReviewed();
         final BootstrapAjaxLinkPanel reviewBtn = new BootstrapAjaxLinkPanel(id,
             Buttons.Type.Link,
             reviewed ? FontAwesomeIconType.times : FontAwesomeIconType.check, Model.of("")) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                final MemberToEventDTO dto = new MemberToEventDTO(memberToEvent);
+                final MemberToEventDTO dto = new MemberToEventDTO(participant);
                 dto.setReviewed(!reviewed);
                 eventService.saveEventToMember(dto);
-                dataProvider.set(eventService.getMemberToEventList(memberToEvent.getEvent()));
+                dataProvider.set(eventService.getMemberToEventList(participant.getEvent()));
                 target.add(dataTable);
             }
         };
 
-        if (InvitationStatus.PENDING.equals(memberToEvent.getInvitationStatus())) {
+        if (InvitationStatus.PENDING.equals(participant.getInvitationStatus())) {
             reviewBtn.getLink().add(new AttributeAppender("disabled", "disabled"));
         }
 

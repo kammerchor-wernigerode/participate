@@ -6,7 +6,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.component.panel.BootstrapPanel;
 import de.vinado.wicket.participate.data.EventDetails;
-import de.vinado.wicket.participate.data.MemberToEvent;
+import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.EventSummaryUpdateEvent;
 import de.vinado.wicket.participate.event.ShowHidePropertiesEvent;
@@ -124,20 +124,20 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         wmc.add(new Label("dinnerMemberCount", new PropertyModel<>(model.getObject(), "acceptedCount")));
 
         // Unterer Bereich
-        final BootstrapPanel<List<MemberToEvent>> listPanel = new BootstrapPanel<List<MemberToEvent>>("listPanel",
-            new LoadableDetachableModel<List<MemberToEvent>>() {
+        final BootstrapPanel<List<Participant>> listPanel = new BootstrapPanel<List<Participant>>("listPanel",
+            new LoadableDetachableModel<List<Participant>>() {
                 @Override
-                protected List<MemberToEvent> load() {
+                protected List<Participant> load() {
                     return eventService.getMemberToEventList(model.getObject().getEvent());
                 }
             }, new PropertyModel<>(model, "name")) {
             @Override
-            protected Panel newBodyPanel(final String id, final IModel<List<MemberToEvent>> model) {
+            protected Panel newBodyPanel(final String id, final IModel<List<Participant>> model) {
                 return new EventSummaryListPanel(id, model, editable);
             }
 
             @Override
-            protected AbstractLink newDefaultBtn(final String id, final IModel<List<MemberToEvent>> model) {
+            protected AbstractLink newDefaultBtn(final String id, final IModel<List<Participant>> model) {
                 setDefaultBtnLabelModel(new ResourceModel("show.all.properties", "Show all Properties"));
                 setDefaultBtnIcon(FontAwesomeIconType.refresh);
                 return new AjaxLink(id) {

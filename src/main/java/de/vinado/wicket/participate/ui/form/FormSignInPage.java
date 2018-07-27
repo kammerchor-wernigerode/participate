@@ -8,7 +8,7 @@ import de.vinado.wicket.participate.component.Collapsible;
 import de.vinado.wicket.participate.component.behavoir.FocusBehavior;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.Member;
-import de.vinado.wicket.participate.data.MemberToEvent;
+import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.User;
 import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
 import de.vinado.wicket.participate.service.EventService;
@@ -62,7 +62,7 @@ public class FormSignInPage extends BasePage {
 
     private String token;
 
-    private MemberToEvent memberToEvent;
+    private Participant participant;
 
     private boolean rememberMe = false;
 
@@ -89,7 +89,7 @@ public class FormSignInPage extends BasePage {
         if (null != model.getObject().getEvent()) {
             setUsername(model.getObject().getMember().getPerson().getEmail());
             setToken(model.getObject().getToken());
-            setMemberToEvent(model.getObject().getMemberToEvent());
+            setParticipant(model.getObject().getParticipant());
 
             // TODO Password authentication for persons, who are already a user
             final User user = userService.getUser4PersonId(model.getObject().getMember().getPerson().getId());
@@ -160,10 +160,10 @@ public class FormSignInPage extends BasePage {
             eventWmc.setVisible(null != model.getObject());
             add(eventWmc);
 
-            final DropDownChoice<MemberToEvent> eventDdc = new DropDownChoice<>("memberToEvent",
-                new LoadableDetachableModel<List<? extends MemberToEvent>>() {
+            final DropDownChoice<Participant> eventDdc = new DropDownChoice<>("memberToEvent",
+                new LoadableDetachableModel<List<? extends Participant>>() {
                     @Override
-                    protected List<? extends MemberToEvent> load() {
+                    protected List<? extends Participant> load() {
                         if (null == model.getObject()) {
                             return new ArrayList<>();
                         } else {
@@ -179,11 +179,11 @@ public class FormSignInPage extends BasePage {
         protected void onSubmit() {
             if (signIn(getPassword())) {
                 if (getRememberMe()) {
-                    strategy.save(memberToEvent.getToken(), password);
+                    strategy.save(participant.getToken(), password);
                 } else {
                     strategy.remove();
                 }
-                onAccept(getModel().getObject().getMemberToEvent());
+                onAccept(getModel().getObject().getParticipant());
             } else {
                 onSignInFailed();
                 strategy.remove();
@@ -194,7 +194,7 @@ public class FormSignInPage extends BasePage {
     private boolean signIn(final String password) {
         if (!Strings.isEmpty(password)) {
             if (Strings.isEmpty(getUsername())) {
-                setMemberToEvent(eventService.getMemberToEvent(getToken()));
+                setParticipant(eventService.getMemberToEvent(getToken()));
             }
             return password.equals(participatePassword) || password.equals(userPassword);
         }
@@ -205,9 +205,9 @@ public class FormSignInPage extends BasePage {
         error(getLocalizer().getString("signInFailed", this, "Anmeldung fehlgeschlagen"));
     }
 
-    private void onAccept(final MemberToEvent memberToEvent) {
+    private void onAccept(final Participant participant) {
         setResponsePage(new FormPage(new PageParameters().clearNamed().clearIndexed()
-            .add("token", memberToEvent.getToken()), new CompoundPropertyModel<>(memberToEvent), true));
+            .add("token", participant.getToken()), new CompoundPropertyModel<>(participant), true));
     }
 
     @Override
@@ -223,9 +223,9 @@ public class FormSignInPage extends BasePage {
                 if (member.equals(cookieMember)) {
                     final Event event = model.getObject().getEvent();
                     if (event.isActive() && event.getEndDate().after(new Date())) {
-                        onAccept(model.getObject().getMemberToEvent());
+                        onAccept(model.getObject().getParticipant());
                     } else {
-                        final MemberToEvent latest = eventService.getLatestMemberToEvent(model.getObject().getMember());
+                        final Participant latest = eventService.getLatestMemberToEvent(model.getObject().getMember());
                         if (null != latest) {
                             strategy.save(latest.getToken(), password);
                             onAccept(latest);
@@ -264,12 +264,12 @@ public class FormSignInPage extends BasePage {
         this.token = token;
     }
 
-    public MemberToEvent getMemberToEvent() {
-        return memberToEvent;
+    public Participant getParticipant() {
+        return participant;
     }
 
-    public void setMemberToEvent(final MemberToEvent memberToEvent) {
-        this.memberToEvent = memberToEvent;
+    public void setParticipant(final Participant participant) {
+        this.participant = participant;
     }
 
     public boolean getRememberMe() {

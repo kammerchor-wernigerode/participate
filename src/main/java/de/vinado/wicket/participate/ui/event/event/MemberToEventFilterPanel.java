@@ -3,7 +3,7 @@ package de.vinado.wicket.participate.ui.event.event;
 import de.vinado.wicket.participate.component.panel.AbstractTableFilterPanel;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.InvitationStatus;
-import de.vinado.wicket.participate.data.MemberToEvent;
+import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.filter.MemberToEventFilter;
 import de.vinado.wicket.participate.service.EventService;
@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class MemberToEventFilterPanel extends AbstractTableFilterPanel<MemberToEvent, MemberToEventFilter> {
+public abstract class MemberToEventFilterPanel extends AbstractTableFilterPanel<Participant, MemberToEventFilter> {
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -33,7 +33,7 @@ public abstract class MemberToEventFilterPanel extends AbstractTableFilterPanel<
 
     private TextField searchTermTf;
 
-    public MemberToEventFilterPanel(final String id, final IModel<List<MemberToEvent>> model,
+    public MemberToEventFilterPanel(final String id, final IModel<List<Participant>> model,
                                     final IModel<MemberToEventFilter> filterModel, final IModel<Event> event,
                                     final boolean editable) {
         super(id, model, filterModel);
@@ -67,12 +67,12 @@ public abstract class MemberToEventFilterPanel extends AbstractTableFilterPanel<
     }
 
     @Override
-    public List<MemberToEvent> getFilteredData(final MemberToEventFilter filter) {
+    public List<Participant> getFilteredData(final MemberToEventFilter filter) {
         return eventService.getFilteredEventToMemberList(event.getObject(), filter);
     }
 
     @Override
-    public List<MemberToEvent> getDefaultData() {
+    public List<Participant> getDefaultData() {
         return eventService.getMemberToEventList(event.getObject());
     }
 }

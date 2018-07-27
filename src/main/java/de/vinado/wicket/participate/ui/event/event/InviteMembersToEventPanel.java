@@ -5,7 +5,7 @@ import de.vinado.wicket.participate.component.modal.BootstrapModalPanel;
 import de.vinado.wicket.participate.component.provider.SimpleDataProvider;
 import de.vinado.wicket.participate.component.table.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.data.Event;
-import de.vinado.wicket.participate.data.MemberToEvent;
+import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.service.EventService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
@@ -38,24 +38,24 @@ public abstract class InviteMembersToEventPanel extends BootstrapModalPanel<Even
         super(modal, new ResourceModel("members.invite", "Invite Members"), model);
         setModalSize(ModalSize.Large);
 
-        final SimpleDataProvider<MemberToEvent, String> dataProvider = new SimpleDataProvider<MemberToEvent, String>(eventService.getMemberToEventList(model.getObject())) {
+        final SimpleDataProvider<Participant, String> dataProvider = new SimpleDataProvider<Participant, String>(eventService.getMemberToEventList(model.getObject())) {
             @Override
             public String getDefaultSort() {
                 return "invitationStatus";
             }
         };
 
-        final List<IColumn<MemberToEvent, String>> columns = new ArrayList<>();
-        columns.add(new AbstractColumn<MemberToEvent, String>(Model.of(""), "id") {
+        final List<IColumn<Participant, String>> columns = new ArrayList<>();
+        columns.add(new AbstractColumn<Participant, String>(Model.of(""), "id") {
             @Override
-            public void populateItem(final Item<ICellPopulator<MemberToEvent>> cell, final String componentId, final IModel<MemberToEvent> rowModel) {
+            public void populateItem(final Item<ICellPopulator<Participant>> cell, final String componentId, final IModel<Participant> rowModel) {
 //                cell.add(new CheckboxPanel(componentId, Model.of(rowModel.getObject().getInvitationStatus().isDefault())));
             }
         });
         columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "member.displayName", "member.displayName"));
         columns.add(new PropertyColumn<>(new ResourceModel("voice", "Voice"), "member.voice.sortOrder", "member.voice.name"));
 
-        final BootstrapAjaxDataTable<MemberToEvent, String> dataTable = new BootstrapAjaxDataTable<>("dataTable", columns, dataProvider, 30);
+        final BootstrapAjaxDataTable<Participant, String> dataTable = new BootstrapAjaxDataTable<>("dataTable", columns, dataProvider, 30);
         dataTable.hover();
         dataTable.condensed();
         inner.add(dataTable);

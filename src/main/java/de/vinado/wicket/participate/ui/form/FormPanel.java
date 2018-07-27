@@ -7,7 +7,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.Date
 import de.vinado.wicket.participate.component.Snackbar;
 import de.vinado.wicket.participate.component.behavoir.AutosizeBehavior;
 import de.vinado.wicket.participate.component.behavoir.decorator.BootstrapHorizontalFormDecorator;
-import de.vinado.wicket.participate.data.MemberToEvent;
+import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
 import de.vinado.wicket.participate.event.EventUpdateEvent;
 import de.vinado.wicket.participate.service.EventService;
@@ -138,8 +138,8 @@ public class FormPanel extends BreadCrumbPanel {
         final BootstrapAjaxButton declineBtn = new BootstrapAjaxButton("decline", Buttons.Type.Default) {
             @Override
             protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-                final MemberToEvent savedMemberToEvent = eventService.declineEvent(model.getObject());
-                send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(savedMemberToEvent.getEvent(), target));
+                final Participant savedParticipant = eventService.declineEvent(model.getObject());
+                send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(savedParticipant.getEvent(), target));
                 Snackbar.show(target, new ResourceModel("invitation.decline.success", "Your cancellation has been saved. You can leave this page now."));
                 target.add(form);
             }

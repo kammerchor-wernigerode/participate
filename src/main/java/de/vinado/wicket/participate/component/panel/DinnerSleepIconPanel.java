@@ -2,13 +2,13 @@ package de.vinado.wicket.participate.component.panel;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.vinado.wicket.participate.component.TextAlign;
-import de.vinado.wicket.participate.data.MemberToEvent;
+import de.vinado.wicket.participate.data.Participant;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
 public class DinnerSleepIconPanel extends Panel {
 
-    public DinnerSleepIconPanel(final String id, final IModel<MemberToEvent> model) {
+    public DinnerSleepIconPanel(final String id, final IModel<Participant> model) {
         super(id, model);
 
         add(new IconPanel(

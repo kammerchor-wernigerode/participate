@@ -3,7 +3,7 @@ package de.vinado.wicket.participate.data.dto;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.Member;
-import de.vinado.wicket.participate.data.MemberToEvent;
+import de.vinado.wicket.participate.data.Participant;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class MemberToEventDTO implements Serializable {
 
-    private MemberToEvent memberToEvent;
+    private Participant participant;
 
     private Event event;
 
@@ -42,28 +42,28 @@ public class MemberToEventDTO implements Serializable {
     public MemberToEventDTO() {
     }
 
-    public MemberToEventDTO(final MemberToEvent memberToEvent) {
-        this.memberToEvent = memberToEvent;
-        this.event = memberToEvent.getEvent();
-        this.member = memberToEvent.getMember();
-        this.token = memberToEvent.getToken();
-        this.fromDate = memberToEvent.getFromDate();
-        this.toDate = memberToEvent.getToDate();
-        this.invitationStatus = memberToEvent.getInvitationStatus();
-        this.needsDinner = memberToEvent.isNeedsDinner();
-        this.needsDinnerComment = memberToEvent.getNeedsDinnerComment();
-        this.needsPlaceToSleep = memberToEvent.isNeedsPlaceToSleep();
-        this.needsPlaceToSleepComment = memberToEvent.getNeedsPlaceToSleepComment();
-        this.comment = memberToEvent.getComment();
-        this.reviewed = memberToEvent.isReviewed();
+    public MemberToEventDTO(final Participant participant) {
+        this.participant = participant;
+        this.event = participant.getEvent();
+        this.member = participant.getMember();
+        this.token = participant.getToken();
+        this.fromDate = participant.getFromDate();
+        this.toDate = participant.getToDate();
+        this.invitationStatus = participant.getInvitationStatus();
+        this.needsDinner = participant.isNeedsDinner();
+        this.needsDinnerComment = participant.getNeedsDinnerComment();
+        this.needsPlaceToSleep = participant.isNeedsPlaceToSleep();
+        this.needsPlaceToSleepComment = participant.getNeedsPlaceToSleepComment();
+        this.comment = participant.getComment();
+        this.reviewed = participant.isReviewed();
     }
 
-    public MemberToEvent getMemberToEvent() {
-        return memberToEvent;
+    public Participant getParticipant() {
+        return participant;
     }
 
-    public void setMemberToEvent(final MemberToEvent memberToEvent) {
-        this.memberToEvent = memberToEvent;
+    public void setParticipant(final Participant participant) {
+        this.participant = participant;
     }
 
     public Event getEvent() {

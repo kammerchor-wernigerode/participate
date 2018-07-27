@@ -5,7 +5,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
 import de.vinado.wicket.participate.component.panel.Footer;
 import de.vinado.wicket.participate.data.EventDetails;
-import de.vinado.wicket.participate.data.MemberToEvent;
+import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
 import de.vinado.wicket.participate.service.EventService;
 import de.vinado.wicket.participate.ui.event.event.EventPanel;
@@ -27,7 +27,7 @@ public class FormPage extends BasePage {
     @SpringBean
     private EventService eventService;
 
-    private IModel<MemberToEvent> model;
+    private IModel<Participant> model;
 
     private boolean signedIn;
 
@@ -35,7 +35,7 @@ public class FormPage extends BasePage {
         this(new PageParameters());
     }
 
-    public FormPage(final IModel<MemberToEvent> model, final boolean signedIn) {
+    public FormPage(final IModel<Participant> model, final boolean signedIn) {
         this(new PageParameters(), model, signedIn);
     }
 
@@ -43,7 +43,7 @@ public class FormPage extends BasePage {
         this(parameters, Model.of(), false);
     }
 
-    public FormPage(final PageParameters parameters, final IModel<MemberToEvent> model, final boolean signedIn) {
+    public FormPage(final PageParameters parameters, final IModel<Participant> model, final boolean signedIn) {
         super(parameters);
         this.signedIn = signedIn;
         this.model = model;
@@ -69,8 +69,8 @@ public class FormPage extends BasePage {
             public Component create(final String markupId) {
                 return new EventDropDownForm(markupId, FormPage.this.model) {
                     @Override
-                    protected void onEventChange(final MemberToEvent memberToEvent) {
-                        setResponsePage(new FormPage(new CompoundPropertyModel<>(memberToEvent), signedIn));
+                    protected void onEventChange(final Participant participant) {
+                        setResponsePage(new FormPage(new CompoundPropertyModel<>(participant), signedIn));
                     }
                 };
             }

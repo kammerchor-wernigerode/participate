@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.service;
 
 import de.vinado.wicket.participate.component.provider.SimpleDataProvider;
 import de.vinado.wicket.participate.data.Member;
-import de.vinado.wicket.participate.data.MemberToEvent;
+import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.MemberDTO;
@@ -205,16 +205,16 @@ public class PersonService extends DataService {
     }
 
     /**
-     * Returns a List of all {@link MemberToEvent} mappings for the given {@link Member}.
+     * Returns a List of all {@link Participant} mappings for the given {@link Member}.
      *
      * @param member Member
      * @return List of EventToMember
      */
-    public List<MemberToEvent> getMemberToEventList(final Member member) {
+    public List<Participant> getMemberToEventList(final Member member) {
         try {
             final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-            final CriteriaQuery<MemberToEvent> criteriaQuery = criteriaBuilder.createQuery(MemberToEvent.class);
-            final Root<MemberToEvent> root = criteriaQuery.from(MemberToEvent.class);
+            final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
+            final Root<Participant> root = criteriaQuery.from(Participant.class);
             criteriaQuery.where(criteriaBuilder.equal(root.<Member>get("member"), member));
             return entityManager.createQuery(criteriaQuery).getResultList();
         } catch (final Exception e) {

@@ -11,7 +11,7 @@ import de.vinado.wicket.participate.component.panel.BootstrapPanel;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.InvitationStatus;
-import de.vinado.wicket.participate.data.MemberToEvent;
+import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.dto.EventDTO;
 import de.vinado.wicket.participate.data.email.MailData;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
@@ -149,12 +149,12 @@ public class EventMainPanel extends BreadCrumbPanel {
                             count = eventService.inviteMembersToEvent(event,
                                 eventService.getMemberToEventList4Invited(model.getObject().getEvent(), false), false);
                         } else {
-                            final List<MemberToEvent> currentMemberToEvent
+                            final List<Participant> currentParticipant
                                 = new ArrayList<>(Collections.singletonList(eventService.getMemberToEvent(
                                 ParticipateSession.get().getUser().getPerson().getEmail(),
                                 event.getId()
                             )));
-                            count = eventService.inviteMembersToEvent(event, currentMemberToEvent, false);
+                            count = eventService.inviteMembersToEvent(event, currentParticipant, false);
                         }
 
                         send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
@@ -183,12 +183,12 @@ public class EventMainPanel extends BreadCrumbPanel {
                                             eventService.getMemberToEventList(model.getObject().getEvent(), InvitationStatus.PENDING),
                                             true);
                                     } else {
-                                        final List<MemberToEvent> currentMemberToEvent
+                                        final List<Participant> currentParticipant
                                             = new ArrayList<>(Collections.singletonList(eventService.getMemberToEvent(
                                             ParticipateSession.get().getUser().getPerson().getEmail(),
                                             event.getId()
                                         )));
-                                        count = eventService.inviteMembersToEvent(event, currentMemberToEvent, true);
+                                        count = eventService.inviteMembersToEvent(event, currentParticipant, true);
                                     }
 
                                     send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
