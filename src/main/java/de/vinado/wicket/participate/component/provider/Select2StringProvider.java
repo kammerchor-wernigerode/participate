@@ -27,7 +27,7 @@ public class Select2StringProvider extends StringTextChoiceProvider {
 
         final List<String> strings = new ArrayList<>();
         for (String string : this.strings) {
-            if (string.toLowerCase().startsWith(term.toLowerCase()) && !string.equalsIgnoreCase(term)) {
+            if (!Strings.isEmpty(string) && string.toLowerCase().startsWith(term.toLowerCase()) && !string.equalsIgnoreCase(term)) {
                 strings.add(string);
             }
         }
