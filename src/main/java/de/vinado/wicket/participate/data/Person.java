@@ -3,7 +3,9 @@ package de.vinado.wicket.participate.data;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,8 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -40,12 +40,10 @@ public class Person implements Identifiable, Serializable {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "creation_date", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     private Date creationDate;
 
-    @Column(name = "last_modified", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp
     private Date lastModified;
 
     @Formula("CONCAT(first_name, ' ', last_name)")

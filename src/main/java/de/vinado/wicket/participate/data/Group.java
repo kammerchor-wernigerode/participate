@@ -4,7 +4,9 @@ import de.vinado.wicket.participate.common.ParticipateUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,12 +41,10 @@ public class Group implements Identifiable, Serializable {
     @Column(name = "description")
     private String description;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "creation_date", nullable = false)
+    @CreationTimestamp
     private Date creationDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "last_modified", nullable = false)
+    @UpdateTimestamp
     private Date lastModified;
 
     @Temporal(TemporalType.TIMESTAMP)

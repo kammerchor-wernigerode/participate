@@ -3,6 +3,8 @@ package de.vinado.wicket.participate.data;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,11 +56,10 @@ public class Event implements Identifiable, Serializable {
     @Column(name = "end_date", nullable = false)
     private Date endDate;
 
-    @Column(name = "creation_date", nullable = false)
+    @CreationTimestamp
     private Date creationDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "last_modified")
+    @UpdateTimestamp
     private Date lastModified;
 
     @Column(name = "is_active", nullable = false)

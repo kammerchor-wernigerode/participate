@@ -3,6 +3,7 @@ package de.vinado.wicket.participate.data;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,8 +37,7 @@ public class UserRecoveryToken implements Identifiable, Serializable {
     @Column(name = "token", nullable = false)
     private String token;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "creation_date", nullable = false)
+    @CreationTimestamp
     private Date creationDate;
 
     @Temporal(TemporalType.TIMESTAMP)
