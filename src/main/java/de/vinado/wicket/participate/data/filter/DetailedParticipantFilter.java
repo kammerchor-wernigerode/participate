@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class DetailedMemberToEventFilter implements Serializable {
+public class DetailedParticipantFilter implements Serializable {
 
     private String name;
 

@@ -18,7 +18,7 @@ import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.ParticipantDTO;
 import de.vinado.wicket.participate.data.email.MailData;
-import de.vinado.wicket.participate.data.filter.MemberToEventFilter;
+import de.vinado.wicket.participate.data.filter.ParticipantFilter;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.EventUpdateEvent;
 import de.vinado.wicket.participate.service.EventService;
@@ -94,14 +94,14 @@ public class EventPanel extends BreadCrumbPanel {
             }
         });
 
-        final MemberToEventFilterPanel filterPanel = new MemberToEventFilterPanel("filterPanel",
+        final ParticipantFilterPanel filterPanel = new ParticipantFilterPanel("filterPanel",
             new LoadableDetachableModel<List<Participant>>() {
                 @Override
                 protected List<Participant> load() {
                     return eventService.getParticipants(model.getObject().getEvent());
                 }
             },
-            new CompoundPropertyModel<>(new MemberToEventFilter()), new PropertyModel<>(model, "event"), editable) {
+            new CompoundPropertyModel<>(new ParticipantFilter()), new PropertyModel<>(model, "event"), editable) {
             @Override
             public SimpleDataProvider<Participant, ?> getDataProvider() {
                 return dataProvider;

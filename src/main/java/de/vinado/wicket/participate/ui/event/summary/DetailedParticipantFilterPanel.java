@@ -8,7 +8,7 @@ import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.filter.DetailedMemberToEventFilter;
+import de.vinado.wicket.participate.data.filter.DetailedParticipantFilter;
 import de.vinado.wicket.participate.service.EventService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class DetailedMemberToEventFilterPanel extends AbstractTableFilterPanel<Participant, DetailedMemberToEventFilter> {
+public abstract class DetailedParticipantFilterPanel extends AbstractTableFilterPanel<Participant, DetailedParticipantFilter> {
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -40,8 +40,8 @@ public abstract class DetailedMemberToEventFilterPanel extends AbstractTableFilt
 
     private TextField searchTermTf;
 
-    public DetailedMemberToEventFilterPanel(final String id, final IModel<List<Participant>> model,
-                                            final IModel<DetailedMemberToEventFilter> filterModel, final boolean editable) {
+    public DetailedParticipantFilterPanel(final String id, final IModel<List<Participant>> model,
+                                          final IModel<DetailedParticipantFilter> filterModel, final boolean editable) {
         super(id, model, filterModel);
 
         final DateTextFieldConfig fromDateConfig = new DateTextFieldConfig();
@@ -112,7 +112,7 @@ public abstract class DetailedMemberToEventFilterPanel extends AbstractTableFilt
     }
 
     @Override
-    public List<Participant> getFilteredData(final DetailedMemberToEventFilter filter) {
+    public List<Participant> getFilteredData(final DetailedParticipantFilter filter) {
         return eventService.getDetailedFilteredParticipants(event, filter);
     }
 

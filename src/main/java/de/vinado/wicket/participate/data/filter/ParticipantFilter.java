@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class MemberToEventFilter implements Serializable {
+public class ParticipantFilter implements Serializable {
 
     private String searchTerm;
 

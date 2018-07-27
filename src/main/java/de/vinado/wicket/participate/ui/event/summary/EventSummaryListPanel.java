@@ -21,7 +21,7 @@ import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.ParticipantDTO;
 import de.vinado.wicket.participate.data.email.MailData;
-import de.vinado.wicket.participate.data.filter.DetailedMemberToEventFilter;
+import de.vinado.wicket.participate.data.filter.DetailedParticipantFilter;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.EventSummaryUpdateEvent;
 import de.vinado.wicket.participate.event.ShowHidePropertiesEvent;
@@ -73,13 +73,13 @@ public class EventSummaryListPanel extends Panel {
     public EventSummaryListPanel(final String id, final IModel<List<Participant>> model, final boolean editable) {
         super(id, model);
 
-        final DetailedMemberToEventFilterPanel filterPanel = new DetailedMemberToEventFilterPanel("filterPanel",
+        final DetailedParticipantFilterPanel filterPanel = new DetailedParticipantFilterPanel("filterPanel",
             new LoadableDetachableModel<List<Participant>>() {
                 @Override
                 protected List<Participant> load() {
                     return eventService.getParticipants(ParticipateSession.get().getEvent());
                 }
-            }, new CompoundPropertyModel<>(new DetailedMemberToEventFilter()), editable) {
+            }, new CompoundPropertyModel<>(new DetailedParticipantFilter()), editable) {
             @Override
             public SimpleDataProvider<Participant, ?> getDataProvider() {
                 return dataProvider;

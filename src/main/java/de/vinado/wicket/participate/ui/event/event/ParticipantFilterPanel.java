@@ -5,7 +5,7 @@ import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.filter.MemberToEventFilter;
+import de.vinado.wicket.participate.data.filter.ParticipantFilter;
 import de.vinado.wicket.participate.service.EventService;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class MemberToEventFilterPanel extends AbstractTableFilterPanel<Participant, MemberToEventFilter> {
+public abstract class ParticipantFilterPanel extends AbstractTableFilterPanel<Participant, ParticipantFilter> {
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -33,9 +33,9 @@ public abstract class MemberToEventFilterPanel extends AbstractTableFilterPanel<
 
     private TextField searchTermTf;
 
-    public MemberToEventFilterPanel(final String id, final IModel<List<Participant>> model,
-                                    final IModel<MemberToEventFilter> filterModel, final IModel<Event> event,
-                                    final boolean editable) {
+    public ParticipantFilterPanel(final String id, final IModel<List<Participant>> model,
+                                  final IModel<ParticipantFilter> filterModel, final IModel<Event> event,
+                                  final boolean editable) {
         super(id, model, filterModel);
 
         this.event = event;
@@ -67,7 +67,7 @@ public abstract class MemberToEventFilterPanel extends AbstractTableFilterPanel<
     }
 
     @Override
-    public List<Participant> getFilteredData(final MemberToEventFilter filter) {
+    public List<Participant> getFilteredData(final ParticipantFilter filter) {
         return eventService.getFilteredEventToMemberList(event.getObject(), filter);
     }
 

@@ -15,9 +15,9 @@ import de.vinado.wicket.participate.data.dto.EventDTO;
 import de.vinado.wicket.participate.data.dto.ParticipantDTO;
 import de.vinado.wicket.participate.data.email.EmailAttachment;
 import de.vinado.wicket.participate.data.email.MailData;
-import de.vinado.wicket.participate.data.filter.DetailedMemberToEventFilter;
+import de.vinado.wicket.participate.data.filter.DetailedParticipantFilter;
 import de.vinado.wicket.participate.data.filter.EventFilter;
-import de.vinado.wicket.participate.data.filter.MemberToEventFilter;
+import de.vinado.wicket.participate.data.filter.ParticipantFilter;
 import de.vinado.wicket.participate.data.ical4j.SimpleDateProperty;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Property;
@@ -796,13 +796,13 @@ public class EventService extends DataService {
 
     /**
      * Fetches all {@link Participant} where the {@link Event} is present. The result is filtered by
-     * {@link MemberToEventFilter} and ordered by {@link Person#lastName}.
+     * {@link ParticipantFilter} and ordered by {@link Person#lastName}.
      *
      * @param event  The {@link Event} to filter for.
      * @param filter The filter criteria.
      * @return An filtered and ordered list of {@link Participant}.
      */
-    public List<Participant> getFilteredEventToMemberList(final Event event, final MemberToEventFilter filter) {
+    public List<Participant> getFilteredEventToMemberList(final Event event, final ParticipantFilter filter) {
         if (null == filter) {
             return getParticipants(event);
         }
@@ -839,13 +839,13 @@ public class EventService extends DataService {
 
     /**
      * A more in detail filter that fetches all {@link Participant} where the {@link Event} is present. The result
-     * is filtered by {@link DetailedMemberToEventFilter} and ordered by {@link Person#lastName}.
+     * is filtered by {@link DetailedParticipantFilter} and ordered by {@link Person#lastName}.
      *
      * @param event  The {@link Event} to filter for.
      * @param filter The filter criteria.
      * @return An filtered and ordered list of {@link Participant}.
      */
-    public List<Participant> getDetailedFilteredParticipants(final Event event, final DetailedMemberToEventFilter filter) {
+    public List<Participant> getDetailedFilteredParticipants(final Event event, final DetailedParticipantFilter filter) {
         if (null == filter) {
             return getParticipants(event);
         }
