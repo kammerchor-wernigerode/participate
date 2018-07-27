@@ -16,7 +16,7 @@ import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
+import de.vinado.wicket.participate.data.dto.ParticipantDTO;
 import de.vinado.wicket.participate.data.email.MailData;
 import de.vinado.wicket.participate.data.filter.MemberToEventFilter;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
@@ -159,9 +159,9 @@ public class EventPanel extends BreadCrumbPanel {
                 @Override
                 public void onClick(final AjaxRequestTarget target, final IModel<Participant> rowModel) {
                     final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                    modal.setContent(new EditMemberInvitationPanel(modal, new CompoundPropertyModel<>(new MemberToEventDTO(rowModel.getObject()))) {
+                    modal.setContent(new EditMemberInvitationPanel(modal, new CompoundPropertyModel<>(new ParticipantDTO(rowModel.getObject()))) {
                         @Override
-                        protected void onSaveSubmit(final IModel<MemberToEventDTO> savedModel, final AjaxRequestTarget target) {
+                        protected void onSaveSubmit(final IModel<ParticipantDTO> savedModel, final AjaxRequestTarget target) {
                             savedModel.getObject().setReviewed(false);
                             model.setObject(eventService.getEventDetails(eventService.saveEventToMember(savedModel.getObject()).getEvent()));
                             dataProvider.set(eventService.getMemberToEventList(model.getObject().getEvent()));

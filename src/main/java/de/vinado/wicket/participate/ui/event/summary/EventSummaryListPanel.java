@@ -19,7 +19,7 @@ import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
+import de.vinado.wicket.participate.data.dto.ParticipantDTO;
 import de.vinado.wicket.participate.data.email.MailData;
 import de.vinado.wicket.participate.data.filter.DetailedMemberToEventFilter;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
@@ -180,9 +180,9 @@ public class EventSummaryListPanel extends Panel {
                 public void onClick(final AjaxRequestTarget target, final IModel<Participant> rowModel) {
                     final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                     modal.setContent(new EditMemberInvitationPanel(modal,
-                        new CompoundPropertyModel<>(new MemberToEventDTO(rowModel.getObject()))) {
+                        new CompoundPropertyModel<>(new ParticipantDTO(rowModel.getObject()))) {
                         @Override
-                        protected void onSaveSubmit(final IModel<MemberToEventDTO> savedModel, final AjaxRequestTarget target) {
+                        protected void onSaveSubmit(final IModel<ParticipantDTO> savedModel, final AjaxRequestTarget target) {
                             savedModel.getObject().setReviewed(false);
                             send(getWebPage(), Broadcast.BREADTH, new EventSummaryUpdateEvent(
                                 eventService.getEventDetails(
@@ -244,7 +244,7 @@ public class EventSummaryListPanel extends Panel {
             reviewed ? FontAwesomeIconType.times : FontAwesomeIconType.check, Model.of("")) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                final MemberToEventDTO dto = new MemberToEventDTO(participant);
+                final ParticipantDTO dto = new ParticipantDTO(participant);
                 dto.setReviewed(!reviewed);
                 eventService.saveEventToMember(dto);
                 dataProvider.set(eventService.getMemberToEventList(participant.getEvent()));

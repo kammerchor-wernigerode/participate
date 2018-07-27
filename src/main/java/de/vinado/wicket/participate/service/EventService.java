@@ -12,7 +12,7 @@ import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.EventDTO;
-import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
+import de.vinado.wicket.participate.data.dto.ParticipantDTO;
 import de.vinado.wicket.participate.data.email.EmailAttachment;
 import de.vinado.wicket.participate.data.email.MailData;
 import de.vinado.wicket.participate.data.filter.DetailedMemberToEventFilter;
@@ -198,7 +198,7 @@ public class EventService extends DataService {
     }
 
     @Transactional
-    public Participant saveEventToMember(final MemberToEventDTO dto) {
+    public Participant saveEventToMember(final ParticipantDTO dto) {
         final Participant loadedParticipant = load(Participant.class, dto.getParticipant().getId());
         loadedParticipant.setInvitationStatus(dto.getInvitationStatus());
         loadedParticipant.setFromDate(dto.getFromDate());
@@ -213,14 +213,14 @@ public class EventService extends DataService {
     }
 
     @Transactional
-    public Participant acceptEvent(final MemberToEventDTO dto) {
+    public Participant acceptEvent(final ParticipantDTO dto) {
         dto.setInvitationStatus(InvitationStatus.ACCEPTED);
         dto.setReviewed(false);
         return saveEventToMember(dto);
     }
 
     @Transactional
-    public Participant declineEvent(final MemberToEventDTO dto) {
+    public Participant declineEvent(final ParticipantDTO dto) {
         dto.setInvitationStatus(InvitationStatus.DECLINED);
         dto.setFromDate(null);
         dto.setToDate(null);

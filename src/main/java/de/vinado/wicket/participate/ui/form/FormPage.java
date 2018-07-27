@@ -6,7 +6,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
 import de.vinado.wicket.participate.component.panel.Footer;
 import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.Participant;
-import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
+import de.vinado.wicket.participate.data.dto.ParticipantDTO;
 import de.vinado.wicket.participate.service.EventService;
 import de.vinado.wicket.participate.ui.event.event.EventPanel;
 import de.vinado.wicket.participate.ui.page.BasePage;
@@ -97,7 +97,7 @@ public class FormPage extends BasePage {
 
         final FormPanel formPanel = new FormPanel("formPanel", breadcrumb,
             new CompoundPropertyModel<>(null == FormPage.this.model.getObject() ?
-                new MemberToEventDTO() : new MemberToEventDTO(FormPage.this.model.getObject())));
+                new ParticipantDTO() : new ParticipantDTO(FormPage.this.model.getObject())));
         add(formPanel);
 
         add(new Footer("footer"));
@@ -107,7 +107,7 @@ public class FormPage extends BasePage {
     protected void onConfigure() {
         if (!signedIn) {
             setResponsePage(new FormSignInPage(new CompoundPropertyModel<>(null == FormPage.this.model.getObject() ?
-                new MemberToEventDTO() : new MemberToEventDTO(FormPage.this.model.getObject()))));
+                new ParticipantDTO() : new ParticipantDTO(FormPage.this.model.getObject()))));
         }
     }
 }

@@ -8,7 +8,7 @@ import de.vinado.wicket.participate.component.Snackbar;
 import de.vinado.wicket.participate.component.behavoir.AutosizeBehavior;
 import de.vinado.wicket.participate.component.behavoir.decorator.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.participate.data.Participant;
-import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
+import de.vinado.wicket.participate.data.dto.ParticipantDTO;
 import de.vinado.wicket.participate.event.EventUpdateEvent;
 import de.vinado.wicket.participate.service.EventService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -38,7 +38,7 @@ public class FormPanel extends BreadCrumbPanel {
     @SpringBean
     private EventService eventService;
 
-    public FormPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<MemberToEventDTO> model) {
+    public FormPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<ParticipantDTO> model) {
         super(id, breadCrumbModel, model);
 
         final DatetimePickerConfig fromConfig = new DatetimePickerConfig();

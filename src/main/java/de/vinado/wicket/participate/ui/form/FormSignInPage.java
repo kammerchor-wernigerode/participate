@@ -10,7 +10,7 @@ import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.Member;
 import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.User;
-import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
+import de.vinado.wicket.participate.data.dto.ParticipantDTO;
 import de.vinado.wicket.participate.service.EventService;
 import de.vinado.wicket.participate.service.UserService;
 import de.vinado.wicket.participate.ui.page.BasePage;
@@ -54,7 +54,7 @@ public class FormSignInPage extends BasePage {
     @SpringBean
     private UserService userService;
 
-    private IModel<MemberToEventDTO> model;
+    private IModel<ParticipantDTO> model;
 
     private String username;
 
@@ -76,11 +76,11 @@ public class FormSignInPage extends BasePage {
         this(new PageParameters(), Model.of());
     }
 
-    public FormSignInPage(final IModel<MemberToEventDTO> model) {
+    public FormSignInPage(final IModel<ParticipantDTO> model) {
         this(new PageParameters(), model);
     }
 
-    public FormSignInPage(final PageParameters parameters, final IModel<MemberToEventDTO> model) {
+    public FormSignInPage(final PageParameters parameters, final IModel<ParticipantDTO> model) {
         super(parameters);
         this.model = model;
         this.participatePassword = ParticipateApplication.get().getApplicationProperties().getParticipatePassword();

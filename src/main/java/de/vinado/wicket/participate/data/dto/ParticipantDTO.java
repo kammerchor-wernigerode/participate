@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class MemberToEventDTO implements Serializable {
+public class ParticipantDTO implements Serializable {
 
     private Participant participant;
 
@@ -39,10 +39,10 @@ public class MemberToEventDTO implements Serializable {
 
     private boolean reviewed;
 
-    public MemberToEventDTO() {
+    public ParticipantDTO() {
     }
 
-    public MemberToEventDTO(final Participant participant) {
+    public ParticipantDTO(final Participant participant) {
         this.participant = participant;
         this.event = participant.getEvent();
         this.member = participant.getMember();

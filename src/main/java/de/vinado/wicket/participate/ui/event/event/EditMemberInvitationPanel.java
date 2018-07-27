@@ -12,7 +12,7 @@ import de.vinado.wicket.participate.component.behavoir.decorator.BootstrapHorizo
 import de.vinado.wicket.participate.component.modal.BootstrapModal;
 import de.vinado.wicket.participate.component.modal.BootstrapModalPanel;
 import de.vinado.wicket.participate.data.InvitationStatus;
-import de.vinado.wicket.participate.data.dto.MemberToEventDTO;
+import de.vinado.wicket.participate.data.dto.ParticipantDTO;
 import de.vinado.wicket.participate.service.EventService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -34,13 +34,13 @@ import java.util.Collections;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<MemberToEventDTO> {
+public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<ParticipantDTO> {
 
     @SuppressWarnings("unused")
     @SpringBean
     private EventService eventService;
 
-    public EditMemberInvitationPanel(final BootstrapModal modal, final IModel<MemberToEventDTO> model) {
+    public EditMemberInvitationPanel(final BootstrapModal modal, final IModel<ParticipantDTO> model) {
         super(modal, new ResourceModel("invitation.edit", "Edit Invitation"), model);
 
         final DatetimePickerConfig fromConfig = new DatetimePickerConfig();
@@ -178,7 +178,7 @@ public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<Memb
         });
         inner.add(commentTa);
 
-        final BootstrapAjaxLink<MemberToEventDTO> inviteMemberBtn = new BootstrapAjaxLink<MemberToEventDTO>(
+        final BootstrapAjaxLink<ParticipantDTO> inviteMemberBtn = new BootstrapAjaxLink<ParticipantDTO>(
             "inviteMemberBtn", model, Buttons.Type.Default, !InvitationStatus.UNINVITED.equals(model.getObject().getInvitationStatus())
             ? new ResourceModel("email.send.reminder", "Send Reminder")
             : new ResourceModel("email.send.invitation", "Send Invitation")) {
