@@ -73,6 +73,6 @@ public abstract class MemberToEventFilterPanel extends AbstractTableFilterPanel<
 
     @Override
     public List<Participant> getDefaultData() {
-        return eventService.getMemberToEventList(event.getObject());
+        return eventService.getParticipants(event.getObject());
     }
 }

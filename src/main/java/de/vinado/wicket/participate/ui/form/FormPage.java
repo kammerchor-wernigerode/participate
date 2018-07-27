@@ -52,7 +52,7 @@ public class FormPage extends BasePage {
 
         final String token = parameters.get("token").to(String.class);
         if (null == model.getObject() && eventService.hasEventToken(token)) {
-            model.setObject(eventService.getMemberToEvent(token));
+            model.setObject(eventService.getParticipant(token));
             this.model = model;
             setDefaultModel(this.model);
         } else {

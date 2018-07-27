@@ -113,12 +113,12 @@ public abstract class DetailedMemberToEventFilterPanel extends AbstractTableFilt
 
     @Override
     public List<Participant> getFilteredData(final DetailedMemberToEventFilter filter) {
-        return eventService.getDetailedFilteredMemberToEventList(event, filter);
+        return eventService.getDetailedFilteredParticipants(event, filter);
     }
 
     @Override
     public List<Participant> getDefaultData() {
-        return eventService.getMemberToEventList(ParticipateSession.get().getEvent());
+        return eventService.getParticipants(ParticipateSession.get().getEvent());
     }
 
     @Override

@@ -128,7 +128,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
             new LoadableDetachableModel<List<Participant>>() {
                 @Override
                 protected List<Participant> load() {
-                    return eventService.getMemberToEventList(model.getObject().getEvent());
+                    return eventService.getParticipants(model.getObject().getEvent());
                 }
             }, new PropertyModel<>(model, "name")) {
             @Override

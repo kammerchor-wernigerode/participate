@@ -77,7 +77,7 @@ public class EventSummaryListPanel extends Panel {
             new LoadableDetachableModel<List<Participant>>() {
                 @Override
                 protected List<Participant> load() {
-                    return eventService.getMemberToEventList(ParticipateSession.get().getEvent());
+                    return eventService.getParticipants(ParticipateSession.get().getEvent());
                 }
             }, new CompoundPropertyModel<>(new DetailedMemberToEventFilter()), editable) {
             @Override
@@ -188,7 +188,7 @@ public class EventSummaryListPanel extends Panel {
                                 eventService.getEventDetails(
                                     eventService.saveEventToMember(savedModel.getObject()).getEvent()),
                                 target));
-                            dataProvider.set(eventService.getMemberToEventList(event));
+                            dataProvider.set(eventService.getParticipants(event));
                             target.add(dataTable);
                             Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
                         }
@@ -247,7 +247,7 @@ public class EventSummaryListPanel extends Panel {
                 final ParticipantDTO dto = new ParticipantDTO(participant);
                 dto.setReviewed(!reviewed);
                 eventService.saveEventToMember(dto);
-                dataProvider.set(eventService.getMemberToEventList(participant.getEvent()));
+                dataProvider.set(eventService.getParticipants(participant.getEvent()));
                 target.add(dataTable);
             }
         };
@@ -269,7 +269,7 @@ public class EventSummaryListPanel extends Panel {
         }
 
         if (payload instanceof AjaxUpdateEvent) {
-            dataProvider.set(eventService.getMemberToEventList(ParticipateSession.get().getEvent()));
+            dataProvider.set(eventService.getParticipants(ParticipateSession.get().getEvent()));
             ((AjaxUpdateEvent) payload).getTarget().add(dataTable);
         }
     }

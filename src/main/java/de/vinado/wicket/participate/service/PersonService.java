@@ -210,7 +210,7 @@ public class PersonService extends DataService {
      * @param member Member
      * @return List of EventToMember
      */
-    public List<Participant> getMemberToEventList(final Member member) {
+    public List<Participant> getParticipants(final Member member) {
         try {
             final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
             final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);

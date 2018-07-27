@@ -26,31 +26,31 @@ public abstract class EventDropDownForm extends NavbarForm<Participant> {
 
     private Participant defaultValue;
 
-    private BootstrapSelect<Participant> memberToEventBs;
+    private BootstrapSelect<Participant> participantBs;
 
     public EventDropDownForm(final String componentId, final IModel<Participant> model) {
         super(componentId, model);
 
         setDefaultValue(model.getObject());
 
-        memberToEventBs = new BootstrapSelect<>("event", new PropertyModel<>(this, "defaultValue"),
+        participantBs = new BootstrapSelect<>("event", new PropertyModel<>(this, "defaultValue"),
             new LoadableDetachableModel<List<? extends Participant>>() {
                     @Override
                     protected List<? extends Participant> load() {
-                        return eventService.getMemberToEventList(model.getObject().getMember());
+                        return eventService.getParticipants(model.getObject().getMember());
                     }
                 },
                 new ChoiceRenderer<>("event.name"));
-        memberToEventBs.add(new AjaxFormComponentUpdatingBehavior("hidden.bs.select") {
+        participantBs.add(new AjaxFormComponentUpdatingBehavior("hidden.bs.select") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
-                if (!model.getObject().equals(memberToEventBs.getConvertedInput())) {
-                    onEventChange(memberToEventBs.getConvertedInput());
+                if (!model.getObject().equals(participantBs.getConvertedInput())) {
+                    onEventChange(participantBs.getConvertedInput());
                 }
             }
         });
-        memberToEventBs.setLabel(Model.of(""));
-        add(memberToEventBs);
+        participantBs.setLabel(Model.of(""));
+        add(participantBs);
     }
 
     public Participant getDefaultValue() {

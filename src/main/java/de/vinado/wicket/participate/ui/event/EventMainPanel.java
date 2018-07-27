@@ -147,10 +147,10 @@ public class EventMainPanel extends BreadCrumbPanel {
 
                         if (!ParticipateApplication.get().isInDevelopmentMode()) {
                             count = eventService.inviteMembersToEvent(event,
-                                eventService.getMemberToEventList4Invited(model.getObject().getEvent(), false), false);
+                                eventService.getParticipants(model.getObject().getEvent(), false), false);
                         } else {
                             final List<Participant> currentParticipant
-                                = new ArrayList<>(Collections.singletonList(eventService.getMemberToEvent(
+                                = new ArrayList<>(Collections.singletonList(eventService.getParticipant(
                                 ParticipateSession.get().getUser().getPerson().getEmail(),
                                 event.getId()
                             )));
@@ -170,7 +170,7 @@ public class EventMainPanel extends BreadCrumbPanel {
                     @Override
                     protected void onClick(AjaxRequestTarget target) {
                         final Event event = model.getObject().getEvent();
-                        if (eventService.hasInvitedMemberToEvent(event)) {
+                        if (eventService.hasParticipant(event)) {
                             final BootstrapModal modal = ((ParticipatePage) getWebPage()).getModal();
                             modal.setContent(new BootstrapModalConfirmationPanel(modal,
                                 new ResourceModel("email.send.reminder", "Send Reminder"),
@@ -180,11 +180,11 @@ public class EventMainPanel extends BreadCrumbPanel {
                                     int count;
                                     if (!ParticipateApplication.get().isInDevelopmentMode()) {
                                         count = eventService.inviteMembersToEvent(event,
-                                            eventService.getMemberToEventList(model.getObject().getEvent(), InvitationStatus.PENDING),
+                                            eventService.getParticipants(model.getObject().getEvent(), InvitationStatus.PENDING),
                                             true);
                                     } else {
                                         final List<Participant> currentParticipant
-                                            = new ArrayList<>(Collections.singletonList(eventService.getMemberToEvent(
+                                            = new ArrayList<>(Collections.singletonList(eventService.getParticipant(
                                             ParticipateSession.get().getUser().getPerson().getEmail(),
                                             event.getId()
                                         )));

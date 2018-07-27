@@ -38,7 +38,7 @@ public abstract class InviteMembersToEventPanel extends BootstrapModalPanel<Even
         super(modal, new ResourceModel("members.invite", "Invite Members"), model);
         setModalSize(ModalSize.Large);
 
-        final SimpleDataProvider<Participant, String> dataProvider = new SimpleDataProvider<Participant, String>(eventService.getMemberToEventList(model.getObject())) {
+        final SimpleDataProvider<Participant, String> dataProvider = new SimpleDataProvider<Participant, String>(eventService.getParticipants(model.getObject())) {
             @Override
             public String getDefaultSort() {
                 return "invitationStatus";

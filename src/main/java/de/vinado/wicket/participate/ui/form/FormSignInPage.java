@@ -160,14 +160,14 @@ public class FormSignInPage extends BasePage {
             eventWmc.setVisible(null != model.getObject());
             add(eventWmc);
 
-            final DropDownChoice<Participant> eventDdc = new DropDownChoice<>("memberToEvent",
+            final DropDownChoice<Participant> eventDdc = new DropDownChoice<>("participant",
                 new LoadableDetachableModel<List<? extends Participant>>() {
                     @Override
                     protected List<? extends Participant> load() {
                         if (null == model.getObject()) {
                             return new ArrayList<>();
                         } else {
-                            return eventService.getMemberToEventList(model.getObject().getMember());
+                            return eventService.getParticipants(model.getObject().getMember());
                         }
                     }
                 }, new ChoiceRenderer<>("event.name"));
@@ -194,7 +194,7 @@ public class FormSignInPage extends BasePage {
     private boolean signIn(final String password) {
         if (!Strings.isEmpty(password)) {
             if (Strings.isEmpty(getUsername())) {
-                setParticipant(eventService.getMemberToEvent(getToken()));
+                setParticipant(eventService.getParticipant(getToken()));
             }
             return password.equals(participatePassword) || password.equals(userPassword);
         }
@@ -218,14 +218,14 @@ public class FormSignInPage extends BasePage {
                 final String token = data[0];
                 password = data[1];
 
-                final Member cookieMember = eventService.getMemberToEvent(token).getMember();
+                final Member cookieMember = eventService.getParticipant(token).getMember();
                 final Member member = model.getObject().getMember();
                 if (member.equals(cookieMember)) {
                     final Event event = model.getObject().getEvent();
                     if (event.isActive() && event.getEndDate().after(new Date())) {
                         onAccept(model.getObject().getParticipant());
                     } else {
-                        final Participant latest = eventService.getLatestMemberToEvent(model.getObject().getMember());
+                        final Participant latest = eventService.getLatestParticipant(model.getObject().getMember());
                         if (null != latest) {
                             strategy.save(latest.getToken(), password);
                             onAccept(latest);
