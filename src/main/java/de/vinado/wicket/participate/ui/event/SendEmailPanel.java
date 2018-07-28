@@ -18,8 +18,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2MultiChoice;
 
-import javax.mail.internet.AddressException;
-
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -37,19 +35,13 @@ public class SendEmailPanel extends BootstrapModalPanel<MailData> {
     public SendEmailPanel(final BootstrapModal modal, final IModel<MailData> model) {
         super(modal, new ResourceModel("email.new", "New Email"), model);
         setModalSize(ModalSize.Large);
+        model.getObject().setFrom(ParticipateApplication.get().getApplicationProperties().getMail().getSender(), ParticipateApplication.get().getApplicationName());
 
-        try {
-            model.getObject().setFrom(ParticipateApplication.get().getApplicationName()
-                + " <" + ParticipateApplication.get().getApplicationProperties().getMail().getSender() + ">");
-        } catch (AddressException e) {
-            e.printStackTrace();
-        }
-
-        final TextField<String> fromTf = new TextField<>("sender");
+        final TextField<String> fromTf = new TextField<>("from");
         fromTf.setEnabled(false);
         inner.add(fromTf);
 
-        final Select2MultiChoice<Person> toTf = new Select2MultiChoice<>("recipients", new Select2PersonProvider(personService));
+        final Select2MultiChoice<Person> toTf = new Select2MultiChoice<>("to", new Select2PersonProvider(personService));
         toTf.getSettings().setLanguage(getLocale().getLanguage());
         toTf.getSettings().setCloseOnSelect(true);
         toTf.getSettings().setTheme(new Select2BootstrapTheme(true));
