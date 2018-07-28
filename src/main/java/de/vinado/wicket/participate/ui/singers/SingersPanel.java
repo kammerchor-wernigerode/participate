@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.singer.singer;
+package de.vinado.wicket.participate.ui.singers;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.vinado.wicket.participate.component.modal.BootstrapModal;
@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class SingerListPanel extends Panel {
+public class SingersPanel extends Panel {
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -44,7 +44,7 @@ public class SingerListPanel extends Panel {
     private SimpleDataProvider<Singer, String> dataProvider;
     private BootstrapAjaxDataTable<Singer, String> dataTable;
 
-    public SingerListPanel(final String id, final IModel<List<Singer>> model) {
+    public SingersPanel(final String id, final IModel<List<Singer>> model) {
         super(id, model);
 
         this.model = model;

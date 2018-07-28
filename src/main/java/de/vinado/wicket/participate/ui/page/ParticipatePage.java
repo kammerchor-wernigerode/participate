@@ -20,7 +20,7 @@ import de.vinado.wicket.participate.service.UserService;
 import de.vinado.wicket.participate.ui.account.EditAccountPanel;
 import de.vinado.wicket.participate.ui.administration.AdminPage;
 import de.vinado.wicket.participate.ui.event.EventPage;
-import de.vinado.wicket.participate.ui.singer.SingerPage;
+import de.vinado.wicket.participate.ui.singers.SingersPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
@@ -77,7 +77,7 @@ public class ParticipatePage extends BasePage {
                 new NavbarButton(EventPage.class, new ResourceModel("events", "Events")).setIconType(FontAwesomeIconType.calendar)));
         navbar.addComponents(NavbarComponents.transform(
                 Navbar.ComponentPosition.LEFT,
-            new NavbarButton(SingerPage.class, new ResourceModel("singers", "Singers")).setIconType(FontAwesomeIconType.group)));
+            new NavbarButton(SingersPage.class, new ResourceModel("singers", "Singers")).setIconType(FontAwesomeIconType.group)));
         navbar.addComponents(NavbarComponents.transform(
                 Navbar.ComponentPosition.RIGHT,
                 new NavbarDropDownButton(new PropertyModel<>(this, "userLabel"), Model.of(FontAwesomeIconType.user)) {

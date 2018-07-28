@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.singer;
+package de.vinado.wicket.participate.ui.singers;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
 import de.vinado.wicket.participate.data.Singer;
@@ -11,16 +11,16 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  *
  * @author Julius Felchow (julius.felchow@gmail.com)
  */
-public class SingerPage extends ParticipatePage {
+public class SingersPage extends ParticipatePage {
 
-    public SingerPage() {
+    public SingersPage() {
         this(new PageParameters());
     }
 
     /**
      * @param parameters {@link PageParameters}
      */
-    public SingerPage(final PageParameters parameters) {
+    public SingersPage(final PageParameters parameters) {
         super(parameters);
 
         final Breadcrumb breadcrumb = new Breadcrumb("breadcrumb");
@@ -28,7 +28,7 @@ public class SingerPage extends ParticipatePage {
         breadcrumb.setVisible(false);
         add(breadcrumb);
 
-        final BreadCrumbPanel breadCrumbPanel = new SingerTabPanel("singerPanel", breadcrumb);
+        final BreadCrumbPanel breadCrumbPanel = new SingersMasterPanel("singerPanel", breadcrumb);
         breadCrumbPanel.setOutputMarkupId(true);
         breadcrumb.setActive(breadCrumbPanel);
         add(breadCrumbPanel);

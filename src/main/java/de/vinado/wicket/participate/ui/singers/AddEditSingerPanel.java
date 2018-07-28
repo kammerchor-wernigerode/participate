@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.singer.singer;
+package de.vinado.wicket.participate.ui.singers;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;

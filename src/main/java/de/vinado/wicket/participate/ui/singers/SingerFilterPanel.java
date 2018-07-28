@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.singer.singer;
+package de.vinado.wicket.participate.ui.singers;
 
 import com.google.common.collect.Lists;
 import de.vinado.wicket.participate.component.panel.AbstractTableFilterPanel;

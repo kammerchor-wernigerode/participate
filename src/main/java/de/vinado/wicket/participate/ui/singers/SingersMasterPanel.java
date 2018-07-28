@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.singer;
+package de.vinado.wicket.participate.ui.singers;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.vinado.wicket.participate.component.modal.BootstrapModal;
@@ -7,8 +7,6 @@ import de.vinado.wicket.participate.data.Singer;
 import de.vinado.wicket.participate.data.dto.SingerDTO;
 import de.vinado.wicket.participate.service.PersonService;
 import de.vinado.wicket.participate.ui.page.BasePage;
-import de.vinado.wicket.participate.ui.singer.singer.AddEditSingerPanel;
-import de.vinado.wicket.participate.ui.singer.singer.SingerListPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
@@ -25,20 +23,20 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class SingerTabPanel extends BreadCrumbPanel {
+public class SingersMasterPanel extends BreadCrumbPanel {
 
     @SpringBean
     @SuppressWarnings("unused")
     private PersonService personService;
 
-    public SingerTabPanel(final String id, final IBreadCrumbModel breadCrumbModel) {
+    public SingersMasterPanel(final String id, final IBreadCrumbModel breadCrumbModel) {
         super(id, breadCrumbModel);
 
         final BootstrapPanel<List<Singer>> singersPanel = new BootstrapPanel<List<Singer>>("singersPanel",
             new CompoundPropertyModel<>(personService.getSingers()), new ResourceModel("singers", "Singers")) {
             @Override
             protected Panel newBodyPanel(final String id, final IModel<List<Singer>> model) {
-                return new SingerListPanel(id, model);
+                return new SingersPanel(id, model);
             }
 
             @Override

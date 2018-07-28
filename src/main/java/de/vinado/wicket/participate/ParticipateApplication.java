@@ -20,7 +20,7 @@ import de.vinado.wicket.participate.ui.page.ErrorPage;
 import de.vinado.wicket.participate.ui.page.ExpiredPage;
 import de.vinado.wicket.participate.ui.page.PageNotFoundPage;
 import de.vinado.wicket.participate.ui.resetPassword.ResetPasswordPage;
-import de.vinado.wicket.participate.ui.singer.SingerPage;
+import de.vinado.wicket.participate.ui.singers.SingersPage;
 import org.apache.wicket.Application;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.authentication.strategy.DefaultAuthenticationStrategy;
@@ -139,7 +139,7 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
         mountPage("/error/500", ErrorPage.class);
         mountPage("/error/418", ExpiredPage.class);
         mountPage("/error/404", PageNotFoundPage.class);
-        mountPage("/singers", SingerPage.class);
+        mountPage("/singers", SingersPage.class);
         mountPage("/administration", AdminPage.class);
         mountPage("/participate", FormPage.class);
         mountPage("/participate/login", FormSignInPage.class);
