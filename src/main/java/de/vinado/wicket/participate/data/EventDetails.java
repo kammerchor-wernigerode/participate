@@ -50,11 +50,11 @@ public class EventDetails implements Identifiable, Serializable {
     @Column(name = "count_accepted_declined_pending")
     private String countAcceptedDeclinedPending;
 
-    @Column(name = "count_dinner")
-    private Long dinnerCount;
+    @Column(name = "count_catering")
+    private Long cateringCount;
 
-    @Column(name = "count_place_to_sleep")
-    private Long placeToSleepCount;
+    @Column(name = "count_accommodation")
+    private Long accommodationCount;
 
     @Column(name = "count_accepted")
     private Long acceptedCount;
@@ -77,22 +77,22 @@ public class EventDetails implements Identifiable, Serializable {
     @Column(name = "count_bass")
     private Long bassCount;
 
-    @Column(name = "member_soprano")
-    private String sopranosAccepted;
+    @Column(name = "soprano")
+    private String sopranos;
 
-    @Column(name = "member_alto")
-    private String altosAccepted;
+    @Column(name = "alto")
+    private String altos;
 
-    @Column(name = "member_tenor")
-    private String tenorsAccepted;
+    @Column(name = "tenor")
+    private String tenors;
 
-    @Column(name = "member_bass")
-    private String bassesAccepted;
+    @Column(name = "bass")
+    private String basses;
 
-    @Column(name = "member_declined")
-    private String declinedMembers;
+    @Column(name = "declined")
+    private String declined;
 
-    @Column(name = "count_member")
+    @Column(name = "count_invitations")
     private Long totalInvitationCount;
 
     @Override
@@ -132,12 +132,12 @@ public class EventDetails implements Identifiable, Serializable {
         return countAcceptedDeclinedPending;
     }
 
-    public Long getDinnerCount() {
-        return dinnerCount;
+    public Long getCateringCount() {
+        return cateringCount;
     }
 
-    public Long getPlaceToSleepCount() {
-        return placeToSleepCount;
+    public Long getAccommodationCount() {
+        return accommodationCount;
     }
 
     public Long getAcceptedCount() {
@@ -168,24 +168,24 @@ public class EventDetails implements Identifiable, Serializable {
         return bassCount;
     }
 
-    public String getSopranosAccepted() {
-        return sopranosAccepted;
+    public String getSopranos() {
+        return sopranos;
     }
 
-    public String getAltosAccepted() {
-        return altosAccepted;
+    public String getAltos() {
+        return altos;
     }
 
-    public String getTenorsAccepted() {
-        return tenorsAccepted;
+    public String getTenors() {
+        return tenors;
     }
 
-    public String getBassesAccepted() {
-        return bassesAccepted;
+    public String getBasses() {
+        return basses;
     }
 
-    public String getDeclinedMembers() {
-        return declinedMembers;
+    public String getDeclined() {
+        return declined;
     }
 
     public Long getTotalInvitationCount() {
@@ -217,8 +217,8 @@ public class EventDetails implements Identifiable, Serializable {
             .append(endDate, that.endDate)
             .append(location, that.location)
             .append(countAcceptedDeclinedPending, that.countAcceptedDeclinedPending)
-            .append(dinnerCount, that.dinnerCount)
-            .append(placeToSleepCount, that.placeToSleepCount)
+            .append(cateringCount, that.cateringCount)
+            .append(accommodationCount, that.accommodationCount)
             .append(acceptedCount, that.acceptedCount)
             .append(declinedCount, that.declinedCount)
             .append(pendingCount, that.pendingCount)
@@ -226,11 +226,11 @@ public class EventDetails implements Identifiable, Serializable {
             .append(altoCount, that.altoCount)
             .append(tenorCount, that.tenorCount)
             .append(bassCount, that.bassCount)
-            .append(sopranosAccepted, that.sopranosAccepted)
-            .append(altosAccepted, that.altosAccepted)
-            .append(tenorsAccepted, that.tenorsAccepted)
-            .append(bassesAccepted, that.bassesAccepted)
-            .append(declinedMembers, that.declinedMembers)
+            .append(sopranos, that.sopranos)
+            .append(altos, that.altos)
+            .append(tenors, that.tenors)
+            .append(basses, that.basses)
+            .append(declined, that.declined)
             .append(totalInvitationCount, that.totalInvitationCount)
             .isEquals();
     }
@@ -246,8 +246,8 @@ public class EventDetails implements Identifiable, Serializable {
             .append(endDate)
             .append(location)
             .append(countAcceptedDeclinedPending)
-            .append(dinnerCount)
-            .append(placeToSleepCount)
+            .append(cateringCount)
+            .append(accommodationCount)
             .append(acceptedCount)
             .append(declinedCount)
             .append(pendingCount)
@@ -255,11 +255,11 @@ public class EventDetails implements Identifiable, Serializable {
             .append(altoCount)
             .append(tenorCount)
             .append(bassCount)
-            .append(sopranosAccepted)
-            .append(altosAccepted)
-            .append(tenorsAccepted)
-            .append(bassesAccepted)
-            .append(declinedMembers)
+            .append(sopranos)
+            .append(altos)
+            .append(tenors)
+            .append(basses)
+            .append(declined)
             .append(totalInvitationCount)
             .toHashCode();
     }
@@ -275,8 +275,8 @@ public class EventDetails implements Identifiable, Serializable {
             .append("endDate", endDate)
             .append("location", location)
             .append("countAcceptedDeclinedPending", countAcceptedDeclinedPending)
-            .append("dinnerCount", dinnerCount)
-            .append("placeToSleepCount", placeToSleepCount)
+            .append("cateringCount", cateringCount)
+            .append("accommodationCount", accommodationCount)
             .append("acceptedCount", acceptedCount)
             .append("declinedCount", declinedCount)
             .append("pendingCount", pendingCount)
@@ -284,11 +284,11 @@ public class EventDetails implements Identifiable, Serializable {
             .append("altoCount", altoCount)
             .append("tenorCount", tenorCount)
             .append("bassCount", bassCount)
-            .append("sopranosAccepted", sopranosAccepted)
-            .append("altosAccepted", altosAccepted)
-            .append("tenorsAccepted", tenorsAccepted)
-            .append("bassesAccepted", bassesAccepted)
-            .append("declinedMembers", declinedMembers)
+            .append("sopranos", sopranos)
+            .append("altos", altos)
+            .append("tenors", tenors)
+            .append("basses", basses)
+            .append("declinedSingers", declined)
             .append("totalInvitationCount", totalInvitationCount)
             .toString();
     }

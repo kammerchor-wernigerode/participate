@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.member.member;
+package de.vinado.wicket.participate.ui.singer.singer;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
@@ -7,9 +7,10 @@ import de.vinado.wicket.participate.component.Snackbar;
 import de.vinado.wicket.participate.component.modal.BootstrapModal;
 import de.vinado.wicket.participate.component.modal.BootstrapModalPanel;
 import de.vinado.wicket.participate.component.validator.ConditionalValidator;
+import de.vinado.wicket.participate.data.Singer;
 import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.dto.MemberDTO;
-import de.vinado.wicket.participate.event.MemberUpdateEvent;
+import de.vinado.wicket.participate.data.dto.SingerDTO;
+import de.vinado.wicket.participate.event.SingerUpdateEvent;
 import de.vinado.wicket.participate.service.PersonService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
@@ -26,11 +27,11 @@ import java.util.Arrays;
 import java.util.Collections;
 
 /**
- * Panel for administration of {@link de.vinado.wicket.participate.data.Member Members}
+ * Panel for administration of {@link Singer}s
  *
  * @author Julius Felchow (julius.felchow@gmail.com)
  */
-public class AddEditMemberPanel extends BootstrapModalPanel<MemberDTO> {
+public class AddEditSingerPanel extends BootstrapModalPanel<SingerDTO> {
 
     @SpringBean
     @SuppressWarnings("unused")
@@ -41,11 +42,11 @@ public class AddEditMemberPanel extends BootstrapModalPanel<MemberDTO> {
 
     /**
      * @param modal {@link de.vinado.wicket.participate.component.modal.BootstrapModal}
-     * @param model IModel of {@link de.vinado.wicket.participate.data.dto.MemberDTO}
+     * @param model IModel of {@link SingerDTO}
      */
-    public AddEditMemberPanel(final BootstrapModal modal, final IModel<String> title, IModel<MemberDTO> model) {
+    public AddEditSingerPanel(final BootstrapModal modal, final IModel<String> title, IModel<SingerDTO> model) {
         super(modal, title, model);
-        edit = null != model.getObject().getMember();
+        edit = null != model.getObject().getSinger();
 
         final TextField<String> firstNameTf = new TextField<>("firstName");
         firstNameTf.setLabel(new ResourceModel("firstName", "Given name"));
@@ -69,7 +70,7 @@ public class AddEditMemberPanel extends BootstrapModalPanel<MemberDTO> {
                     return false;
                 }
 
-                return personService.hasMember(value);
+                return personService.hasSinger(value);
             }
         });
         inner.add(emailTf);
@@ -90,16 +91,16 @@ public class AddEditMemberPanel extends BootstrapModalPanel<MemberDTO> {
             public void onClick(final AjaxRequestTarget target) {
                 remove = !remove;
                 if (remove) {
-                    setLabel(new ResourceModel("member.remove.hint", "Member will be removed"));
+                    setLabel(new ResourceModel("singer.remove.hint", "Singer will be removed"));
                     setIconType(FontAwesomeIconType.exclamation_circle);
                 } else {
-                    setLabel(new ResourceModel("member.remove", "Remove Member"));
+                    setLabel(new ResourceModel("singer.remove", "Remove Singer"));
                     setIconType(FontAwesomeIconType.trash);
                 }
                 target.add(this);
             }
         };
-        removeBtn.setLabel(new ResourceModel("member.remove", "Remove Member"));
+        removeBtn.setLabel(new ResourceModel("singer.remove", "Remove Singer"));
         removeBtn.setIconType(FontAwesomeIconType.trash);
         removeBtn.setSize(Buttons.Size.Mini);
         removeBtn.setOutputMarkupId(true);
@@ -109,19 +110,19 @@ public class AddEditMemberPanel extends BootstrapModalPanel<MemberDTO> {
     }
 
     @Override
-    protected void onSaveSubmit(final IModel<MemberDTO> model, final AjaxRequestTarget target) {
+    protected void onSaveSubmit(final IModel<SingerDTO> model, final AjaxRequestTarget target) {
         if (edit) {
             if (remove) {
-                personService.removeMember(model.getObject().getMember());
-                send(getWebPage(), Broadcast.BREADTH, new MemberUpdateEvent(target));
-                Snackbar.show(target, new ResourceModel("member.remove.success", "The member has been removed"));
+                personService.removeSinger(model.getObject().getSinger());
+                send(getWebPage(), Broadcast.BREADTH, new SingerUpdateEvent(target));
+                Snackbar.show(target, new ResourceModel("singer.remove.success", "The singer has been removed"));
                 return;
             }
-            personService.saveMember(model.getObject());
-            send(getWebPage(), Broadcast.BREADTH, new MemberUpdateEvent(target));
+            personService.saveSinger(model.getObject());
+            send(getWebPage(), Broadcast.BREADTH, new SingerUpdateEvent(target));
         } else {
-            personService.createMember(model.getObject());
+            personService.createSinger(model.getObject());
         }
-        send(getWebPage(), Broadcast.BREADTH, new MemberUpdateEvent(target));
+        send(getWebPage(), Broadcast.BREADTH, new SingerUpdateEvent(target));
     }
 }

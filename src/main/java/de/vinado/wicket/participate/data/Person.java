@@ -12,7 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PreUpdate;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
@@ -23,6 +24,7 @@ import java.util.Date;
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "persons")
 public class Person implements Identifiable, Serializable {
 
@@ -37,7 +39,7 @@ public class Person implements Identifiable, Serializable {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @CreationTimestamp
@@ -55,23 +57,25 @@ public class Person implements Identifiable, Serializable {
     @Formula("CONCAT(first_name, ' ', last_name, ' (', COALESCE(email, 'Email ist nicht hinterlegt'), ')')")
     private String searchName;
 
-    /**
-     * Hibernate only
-     */
-    public Person() {
+    protected Person() {
+    } // JPA only
+
+    public Person(final Person person) {
+        this.id = person.getId();
+        this.lastName = person.getLastName();
+        this.firstName = person.getFirstName();
+        this.email = person.getEmail();
+        this.creationDate = person.getCreationDate();
+        this.lastModified = person.getLastModified();
+        this.displayName = person.getDisplayName();
+        this.sortName = person.getSortName();
+        this.searchName = person.getSearchName();
     }
 
-    public Person(final String firstName, final String lastName, final String email) {
-        this.firstName = firstName;
+    public Person(final String lastName, final String firstName, final String email) {
         this.lastName = lastName;
+        this.firstName = firstName;
         this.email = email;
-        this.creationDate = new Date();
-        this.lastModified = new Date();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.lastModified = new Date();
     }
 
     @Override
@@ -136,45 +140,45 @@ public class Person implements Identifiable, Serializable {
         final Person person = (Person) o;
 
         return new EqualsBuilder()
-                .append(id, person.id)
-                .append(firstName, person.firstName)
-                .append(lastName, person.lastName)
-                .append(email, person.email)
-                .append(creationDate, person.creationDate)
-                .append(lastModified, person.lastModified)
-                .append(displayName, person.displayName)
-                .append(sortName, person.sortName)
-                .append(searchName, person.searchName)
-                .isEquals();
+            .append(id, person.id)
+            .append(firstName, person.firstName)
+            .append(lastName, person.lastName)
+            .append(email, person.email)
+            .append(creationDate, person.creationDate)
+            .append(lastModified, person.lastModified)
+            .append(displayName, person.displayName)
+            .append(sortName, person.sortName)
+            .append(searchName, person.searchName)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(firstName)
-                .append(lastName)
-                .append(email)
-                .append(creationDate)
-                .append(lastModified)
-                .append(displayName)
-                .append(sortName)
-                .append(searchName)
-                .toHashCode();
+            .append(id)
+            .append(firstName)
+            .append(lastName)
+            .append(email)
+            .append(creationDate)
+            .append(lastModified)
+            .append(displayName)
+            .append(sortName)
+            .append(searchName)
+            .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("id", id)
-                .append("firstName", firstName)
-                .append("lastName", lastName)
-                .append("email", email)
-                .append("creationDate", creationDate)
-                .append("lastModified", lastModified)
-                .append("displayName", displayName)
-                .append("sortName", sortName)
-                .append("searchName", searchName)
-                .toString();
+            .append("id", id)
+            .append("firstName", firstName)
+            .append("lastName", lastName)
+            .append("email", email)
+            .append("creationDate", creationDate)
+            .append("lastModified", lastModified)
+            .append("displayName", displayName)
+            .append("sortName", sortName)
+            .append("searchName", searchName)
+            .toString();
     }
 }

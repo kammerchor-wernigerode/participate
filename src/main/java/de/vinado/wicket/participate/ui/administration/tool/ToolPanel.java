@@ -6,7 +6,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.common.EventGenerator;
-import de.vinado.wicket.participate.common.MemberGenerator;
+import de.vinado.wicket.participate.common.SingerGenerator;
 import de.vinado.wicket.participate.component.BootstrapForm;
 import de.vinado.wicket.participate.component.Collapsible;
 import de.vinado.wicket.participate.component.Snackbar;
@@ -15,7 +15,7 @@ import de.vinado.wicket.participate.component.behavoir.decorator.BootstrapFormDe
 import de.vinado.wicket.participate.component.link.BootstrapAjaxButton;
 import de.vinado.wicket.participate.data.database.DatabasePopulator;
 import de.vinado.wicket.participate.data.dto.EventDTO;
-import de.vinado.wicket.participate.data.dto.MemberDTO;
+import de.vinado.wicket.participate.data.dto.SingerDTO;
 import de.vinado.wicket.participate.service.EventService;
 import de.vinado.wicket.participate.service.PersonService;
 import de.vinado.wicket.participate.service.UserService;
@@ -157,7 +157,7 @@ public class ToolPanel extends Panel {
             final BootstrapAjaxButton exportBtn = new BootstrapAjaxButton("exportBtn", new ResourceModel("export", "Export"), Buttons.Type.Primary) {
                 @Override
                 protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-                    export.go(target, personService.exportMembers(), "member-export.csv");
+                    export.go(target, personService.exportSingers(), "singer-export.csv");
                     target.add(exportForm);
                 }
 
@@ -183,7 +183,7 @@ public class ToolPanel extends Panel {
 
     private class GenerateSampleData extends Panel {
 
-        private Long memberCount = 0L;
+        private Long singerCount = 0L;
 
         private Long eventCount = 0L;
 
@@ -201,18 +201,18 @@ public class ToolPanel extends Panel {
             wmc.setOutputMarkupId(true);
             form.add(wmc);
 
-            final NumberTextField<Long> memberCountTf = new NumberTextField<Long>("memberCount");
-            memberCountTf.add(BootstrapFormDecorator.decorate());
-            wmc.add(memberCountTf);
+            final NumberTextField<Long> singerCountTf = new NumberTextField<>("singerCount");
+            singerCountTf.add(BootstrapFormDecorator.decorate());
+            wmc.add(singerCountTf);
 
-            final BootstrapAjaxButton generateMembersBtn = new BootstrapAjaxButton("generateMembers", Buttons.Type.Primary) {
+            final BootstrapAjaxButton generateSingersBtn = new BootstrapAjaxButton("generateSingers", Buttons.Type.Primary) {
                 @Override
                 public void onSubmit(final AjaxRequestTarget target, final Form<?> inner) {
-                    final Set<MemberDTO> memberDTOSet = new HashSet<>();
+                    final Set<SingerDTO> singerDTOSet = new HashSet<>();
 
-                    MemberGenerator.getInstance().generate(eventService, memberDTOSet, memberCount);
-                    for (MemberDTO memberDTO : memberDTOSet) {
-                        personService.createMember(memberDTO);
+                    SingerGenerator.getInstance().generate(eventService, singerDTOSet, singerCount);
+                    for (SingerDTO singerDTO : singerDTOSet) {
+                        personService.createSinger(singerDTO);
                     }
 
                     onSuccess(target, form);
@@ -223,10 +223,10 @@ public class ToolPanel extends Panel {
                     return feedback;
                 }
             };
-            generateMembersBtn.setSize(Buttons.Size.Small);
-            generateMembersBtn.setLabel(new ResourceModel("tools.generate.members", "Generate Members"));
-            generateMembersBtn.setIconType(FontAwesomeIconType.cog);
-            wmc.add(generateMembersBtn);
+            generateSingersBtn.setSize(Buttons.Size.Small);
+            generateSingersBtn.setLabel(new ResourceModel("tools.generate.singers", "Generate Singers"));
+            generateSingersBtn.setIconType(FontAwesomeIconType.cog);
+            wmc.add(generateSingersBtn);
 
             final NumberTextField<Long> eventCountTf = new NumberTextField<Long>("eventCount");
             eventCountTf.add(BootstrapFormDecorator.decorate());
@@ -261,12 +261,12 @@ public class ToolPanel extends Panel {
             Snackbar.show(target, new ResourceModel("tools.generate.success", "The generation was successful"));
         }
 
-        public Long getMemberCount() {
-            return memberCount;
+        public Long getSingerCount() {
+            return singerCount;
         }
 
-        public void setMemberCount(final Long memberCount) {
-            this.memberCount = memberCount;
+        public void setSingerCount(final Long singerCount) {
+            this.singerCount = singerCount;
         }
 
         public Long getEventCount() {

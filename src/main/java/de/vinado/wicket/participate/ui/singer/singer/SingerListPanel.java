@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.member.member;
+package de.vinado.wicket.participate.ui.singer.singer;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.vinado.wicket.participate.component.modal.BootstrapModal;
@@ -6,13 +6,13 @@ import de.vinado.wicket.participate.component.provider.SimpleDataProvider;
 import de.vinado.wicket.participate.component.table.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.component.table.column.BootstrapAjaxLinkColumn;
 import de.vinado.wicket.participate.component.table.column.EnumColumn;
-import de.vinado.wicket.participate.data.Member;
 import de.vinado.wicket.participate.data.Person;
+import de.vinado.wicket.participate.data.Singer;
 import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.dto.MemberDTO;
+import de.vinado.wicket.participate.data.dto.SingerDTO;
 import de.vinado.wicket.participate.data.email.MailData;
-import de.vinado.wicket.participate.data.filter.MemberFilter;
-import de.vinado.wicket.participate.event.MemberUpdateEvent;
+import de.vinado.wicket.participate.data.filter.SingerFilter;
+import de.vinado.wicket.participate.event.SingerUpdateEvent;
 import de.vinado.wicket.participate.service.PersonService;
 import de.vinado.wicket.participate.ui.event.SendEmailPanel;
 import de.vinado.wicket.participate.ui.page.BasePage;
@@ -33,60 +33,60 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class MemberListPanel extends Panel {
+public class SingerListPanel extends Panel {
 
     @SuppressWarnings("unused")
     @SpringBean
     private PersonService personService;
 
-    private IModel<List<Member>> model;
+    private IModel<List<Singer>> model;
 
-    private SimpleDataProvider<Member, String> dataProvider;
-    private BootstrapAjaxDataTable<Member, String> dataTable;
+    private SimpleDataProvider<Singer, String> dataProvider;
+    private BootstrapAjaxDataTable<Singer, String> dataTable;
 
-    public MemberListPanel(final String id, final IModel<List<Member>> model) {
+    public SingerListPanel(final String id, final IModel<List<Singer>> model) {
         super(id, model);
 
         this.model = model;
 
-        final MemberFilterPanel filterPanel = new MemberFilterPanel("filterPanel", model, new CompoundPropertyModel<>(new MemberFilter())) {
+        final SingerFilterPanel filterPanel = new SingerFilterPanel("filterPanel", model, new CompoundPropertyModel<>(new SingerFilter())) {
             @Override
-            public SimpleDataProvider<Member, ?> getDataProvider() {
+            public SimpleDataProvider<Singer, ?> getDataProvider() {
                 return dataProvider;
             }
 
             @Override
-            public DataTable<Member, ?> getDataTable() {
+            public DataTable<Singer, ?> getDataTable() {
                 return dataTable;
             }
         };
         add(filterPanel);
 
-        dataProvider = new SimpleDataProvider<Member, String>(model.getObject()) {
+        dataProvider = new SimpleDataProvider<Singer, String>(model.getObject()) {
             @Override
             public String getDefaultSort() {
-                return "person.sortName";
+                return "sortName";
             }
         };
 
-        final List<IColumn<Member, String>> columns = new ArrayList<>();
-        columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "person.sortName", "person.sortName"));
-        columns.add(new PropertyColumn<>(new ResourceModel("email", "Email"), "person.email", "person.email"));
-        columns.add(new EnumColumn<Member, String, Voice>(new ResourceModel("voice", "voice"), "voice", "voice"));
-        columns.add(new BootstrapAjaxLinkColumn<Member, String>(FontAwesomeIconType.pencil, new ResourceModel("member.edit", "Edit Member")) {
+        final List<IColumn<Singer, String>> columns = new ArrayList<>();
+        columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "sortName", "sortName"));
+        columns.add(new PropertyColumn<>(new ResourceModel("email", "Email"), "email", "email"));
+        columns.add(new EnumColumn<Singer, String, Voice>(new ResourceModel("voice", "voice"), "voice", "voice"));
+        columns.add(new BootstrapAjaxLinkColumn<Singer, String>(FontAwesomeIconType.pencil, new ResourceModel("singer.edit", "Edit Singer")) {
             @Override
-            public void onClick(final AjaxRequestTarget target, final IModel<Member> rowModel) {
+            public void onClick(final AjaxRequestTarget target, final IModel<Singer> rowModel) {
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                final Member member = rowModel.getObject();
-                modal.setContent(new AddEditMemberPanel(modal, new ResourceModel("member.edit", "Edit Member"), new CompoundPropertyModel<>(new
-                    MemberDTO())));
+                final Singer singer = rowModel.getObject();
+                modal.setContent(new AddEditSingerPanel(modal, new ResourceModel("singer.edit", "Edit Singer"), new CompoundPropertyModel<>(new
+                    SingerDTO())));
                 modal.show(target);
             }
         });
-        columns.add(new BootstrapAjaxLinkColumn<Member, String>(FontAwesomeIconType.envelope, new ResourceModel("email.send", "Send Email")) {
+        columns.add(new BootstrapAjaxLinkColumn<Singer, String>(FontAwesomeIconType.envelope, new ResourceModel("email.send", "Send Email")) {
             @Override
-            public void onClick(final AjaxRequestTarget target, final IModel<Member> rowModel) {
-                final Person person = rowModel.getObject().getPerson();
+            public void onClick(final AjaxRequestTarget target, final IModel<Singer> rowModel) {
+                final Person person = rowModel.getObject();
                 final MailData mailData = new MailData();
                 mailData.addTo(person.getEmail(), person.getDisplayName());
 
@@ -107,10 +107,10 @@ public class MemberListPanel extends Panel {
     public void onEvent(final IEvent<?> event) {
         super.onEvent(event);
         final Object payload = event.getPayload();
-        if (payload instanceof MemberUpdateEvent) {
-            final MemberUpdateEvent updateEvent = (MemberUpdateEvent) payload;
+        if (payload instanceof SingerUpdateEvent) {
+            final SingerUpdateEvent updateEvent = (SingerUpdateEvent) payload;
             final AjaxRequestTarget target = updateEvent.getTarget();
-            model.setObject(personService.getMemberList());
+            model.setObject(personService.getSingers());
             dataProvider.set(model.getObject());
             target.add(dataTable);
         }

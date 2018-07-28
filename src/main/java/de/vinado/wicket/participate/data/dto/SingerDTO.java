@@ -1,25 +1,22 @@
 package de.vinado.wicket.participate.data.dto;
 
 
-import de.vinado.wicket.participate.data.Member;
-import de.vinado.wicket.participate.data.Person;
+import de.vinado.wicket.participate.data.Singer;
 import de.vinado.wicket.participate.data.Voice;
 
 import java.io.Serializable;
 
 /**
- * DTO for a {@link de.vinado.wicket.participate.data.Member}
+ * DTO for a {@link Singer}
  *
  * @author Julius Felchow (julius.felchow@gmail.com)
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class MemberDTO implements Serializable {
+public class SingerDTO implements Serializable {
 
-    private Member member;
+    private Singer singer;
 
     private Voice voice;
-
-    private Person person;
 
     private String firstName;
 
@@ -27,25 +24,24 @@ public class MemberDTO implements Serializable {
 
     private String email;
 
-    public MemberDTO() {
+    public SingerDTO() {
     }
 
-    public MemberDTO(final Member member) {
-        this.member = member;
-        this.voice = member.getVoice();
-        this.person = member.getPerson();
-        this.firstName = member.getPerson().getEmail();
-        this.firstName = member.getPerson().getFirstName();
-        this.lastName = member.getPerson().getLastName();
-        this.email = member.getPerson().getEmail();
+    public SingerDTO(final Singer singer) {
+        this.singer = singer;
+        this.voice = singer.getVoice();
+        this.email = singer.getFirstName();
+        this.firstName = singer.getFirstName();
+        this.lastName = singer.getLastName();
+        this.email = singer.getEmail();
     }
 
-    public Member getMember() {
-        return member;
+    public Singer getSinger() {
+        return singer;
     }
 
-    public void setMember(final Member member) {
-        this.member = member;
+    public void setSinger(final Singer singer) {
+        this.singer = singer;
     }
 
     public Voice getVoice() {
@@ -54,14 +50,6 @@ public class MemberDTO implements Serializable {
 
     public void setVoice(final Voice voice) {
         this.voice = voice;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(final Person person) {
-        this.person = person;
     }
 
     public String getFirstName() {

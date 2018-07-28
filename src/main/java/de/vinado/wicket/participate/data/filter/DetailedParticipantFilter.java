@@ -23,11 +23,9 @@ public class DetailedParticipantFilter implements Serializable {
 
     private Date toDate;
 
-    private boolean needsPlaceToSleep;
+    private boolean accommodation;
 
-    private boolean needsDinner;
-
-    private boolean notInvited;
+    private boolean catering;
 
     public String getName() {
         return name;
@@ -77,27 +75,19 @@ public class DetailedParticipantFilter implements Serializable {
         this.toDate = toDate;
     }
 
-    public boolean isNeedsPlaceToSleep() {
-        return needsPlaceToSleep;
+    public boolean isAccommodation() {
+        return accommodation;
     }
 
-    public void setNeedsPlaceToSleep(final boolean needsPlaceToSleep) {
-        this.needsPlaceToSleep = needsPlaceToSleep;
+    public void setAccommodation(final boolean accommodation) {
+        this.accommodation = accommodation;
     }
 
-    public boolean isNeedsDinner() {
-        return needsDinner;
+    public boolean isCatering() {
+        return catering;
     }
 
-    public void setNeedsDinner(final boolean needsDinner) {
-        this.needsDinner = needsDinner;
-    }
-
-    public boolean isNotInvited() {
-        return notInvited;
-    }
-
-    public void setNotInvited(final boolean notInvited) {
-        this.notInvited = notInvited;
+    public void setCatering(final boolean catering) {
+        this.catering = catering;
     }
 }

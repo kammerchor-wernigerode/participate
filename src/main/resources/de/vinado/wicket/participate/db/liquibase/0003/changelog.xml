@@ -11,5 +11,6 @@
     <include file="de/vinado/wicket/participate/db/liquibase/0003/04-roles.xml"/>
     <include file="de/vinado/wicket/participate/db/liquibase/0003/05-lov.xml"/>
     <include file="de/vinado/wicket/participate/db/liquibase/0003/06-groups.xml"/>
+    <include file="de/vinado/wicket/participate/db/liquibase/0003/07-participants_singers_persons.xml"/>
     <include file="de/vinado/wicket/participate/db/liquibase/0003/views.changelog.xml"/>
 </databaseChangeLog>

@@ -8,7 +8,6 @@ import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.filter.ParticipantFilter;
 import de.vinado.wicket.participate.service.EventService;
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
@@ -54,10 +53,6 @@ public abstract class ParticipantFilterPanel extends AbstractTableFilterPanel<Pa
         voiceDdc.setLabel(new ResourceModel("voice", "Voice"));
         inner.add(voiceDdc);
 
-        final CheckBox showAllCb = new CheckBox("notInvited");
-        showAllCb.setVisible(editable);
-        inner.add(showAllCb);
-
         addBootstrapFormDecorator(form);
     }
 
@@ -68,7 +63,7 @@ public abstract class ParticipantFilterPanel extends AbstractTableFilterPanel<Pa
 
     @Override
     public List<Participant> getFilteredData(final ParticipantFilter filter) {
-        return eventService.getFilteredEventToMemberList(event.getObject(), filter);
+        return eventService.getFilteredParticipants(event.getObject(), filter);
     }
 
     @Override

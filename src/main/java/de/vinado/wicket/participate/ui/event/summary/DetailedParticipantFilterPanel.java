@@ -98,15 +98,11 @@ public abstract class DetailedParticipantFilterPanel extends AbstractTableFilter
         });
         inner.add(endDateTf);
 
-        final CheckBox needsPlaceToSleepCb = new CheckBox("needsPlaceToSleep");
-        inner.add(needsPlaceToSleepCb);
+        final CheckBox accommodationCb = new CheckBox("accommodation");
+        inner.add(accommodationCb);
 
-        final CheckBox needsDinnerCb = new CheckBox("needsDinner");
-        inner.add(needsDinnerCb);
-
-        final CheckBox notInvitedCb = new CheckBox("notInvited");
-        notInvitedCb.setVisible(editable);
-        inner.add(notInvitedCb);
+        final CheckBox cateringCb = new CheckBox("catering");
+        inner.add(cateringCb);
 
         addBootstrapFormDecorator(form);
     }

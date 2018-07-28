@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class InviteMembersToEventPanel extends BootstrapModalPanel<Event> {
+public abstract class InviteParticipantsPanel extends BootstrapModalPanel<Event> {
 
     @SpringBean
     @SuppressWarnings("unused")
@@ -34,8 +34,8 @@ public abstract class InviteMembersToEventPanel extends BootstrapModalPanel<Even
      * @param modal {@link BootstrapModal}
      * @param model Model
      */
-    public InviteMembersToEventPanel(final BootstrapModal modal, final IModel<Event> model) {
-        super(modal, new ResourceModel("members.invite", "Invite Members"), model);
+    public InviteParticipantsPanel(final BootstrapModal modal, final IModel<Event> model) {
+        super(modal, new ResourceModel("singers.invite", "Invite Singers"), model);
         setModalSize(ModalSize.Large);
 
         final SimpleDataProvider<Participant, String> dataProvider = new SimpleDataProvider<Participant, String>(eventService.getParticipants(model.getObject())) {
@@ -52,8 +52,8 @@ public abstract class InviteMembersToEventPanel extends BootstrapModalPanel<Even
 //                cell.add(new CheckboxPanel(componentId, Model.of(rowModel.getObject().getInvitationStatus().isDefault())));
             }
         });
-        columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "member.displayName", "member.displayName"));
-        columns.add(new PropertyColumn<>(new ResourceModel("voice", "Voice"), "member.voice.sortOrder", "member.voice.name"));
+        columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "singer.displayName", "singer.displayName"));
+        columns.add(new PropertyColumn<>(new ResourceModel("voice", "Voice"), "singer.voice.sortOrder", "singer.voice.name"));
 
         final BootstrapAjaxDataTable<Participant, String> dataTable = new BootstrapAjaxDataTable<>("dataTable", columns, dataProvider, 30);
         dataTable.hover();

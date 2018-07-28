@@ -9,14 +9,14 @@ import java.io.Serializable;
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class MemberUpdateEvent implements Serializable {
+public class SingerUpdateEvent implements Serializable {
 
     private AjaxRequestTarget target;
 
     /**
      * @param target Requested target
      */
-    public MemberUpdateEvent(final AjaxRequestTarget target) {
+    public SingerUpdateEvent(final AjaxRequestTarget target) {
         this.target = target;
     }
 

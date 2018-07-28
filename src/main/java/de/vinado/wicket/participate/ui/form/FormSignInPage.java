@@ -7,8 +7,8 @@ import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.component.Collapsible;
 import de.vinado.wicket.participate.component.behavoir.FocusBehavior;
 import de.vinado.wicket.participate.data.Event;
-import de.vinado.wicket.participate.data.Member;
 import de.vinado.wicket.participate.data.Participant;
+import de.vinado.wicket.participate.data.Singer;
 import de.vinado.wicket.participate.data.User;
 import de.vinado.wicket.participate.data.dto.ParticipantDTO;
 import de.vinado.wicket.participate.service.EventService;
@@ -87,12 +87,12 @@ public class FormSignInPage extends BasePage {
 
 
         if (null != model.getObject().getEvent()) {
-            setUsername(model.getObject().getMember().getPerson().getEmail());
+            setUsername(model.getObject().getSinger().getEmail());
             setToken(model.getObject().getToken());
             setParticipant(model.getObject().getParticipant());
 
             // TODO Password authentication for persons, who are already a user
-            final User user = userService.getUser4PersonId(model.getObject().getMember().getPerson().getId());
+            final User user = userService.getUser4PersonId(model.getObject().getSinger().getId());
             if (null != user) {
                 this.userPassword = user.getPasswordSha256();
             }
@@ -167,7 +167,7 @@ public class FormSignInPage extends BasePage {
                         if (null == model.getObject()) {
                             return new ArrayList<>();
                         } else {
-                            return eventService.getParticipants(model.getObject().getMember());
+                            return eventService.getParticipants(model.getObject().getSinger());
                         }
                     }
                 }, new ChoiceRenderer<>("event.name"));
@@ -218,14 +218,14 @@ public class FormSignInPage extends BasePage {
                 final String token = data[0];
                 password = data[1];
 
-                final Member cookieMember = eventService.getParticipant(token).getMember();
-                final Member member = model.getObject().getMember();
-                if (member.equals(cookieMember)) {
+                final Singer cookieSinger = eventService.getParticipant(token).getSinger();
+                final Singer singer = model.getObject().getSinger();
+                if (singer.equals(cookieSinger)) {
                     final Event event = model.getObject().getEvent();
                     if (event.isActive() && event.getEndDate().after(new Date())) {
                         onAccept(model.getObject().getParticipant());
                     } else {
-                        final Participant latest = eventService.getLatestParticipant(model.getObject().getMember());
+                        final Participant latest = eventService.getLatestParticipant(model.getObject().getSinger());
                         if (null != latest) {
                             strategy.save(latest.getToken(), password);
                             onAccept(latest);

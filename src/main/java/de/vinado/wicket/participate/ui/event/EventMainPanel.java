@@ -146,7 +146,7 @@ public class EventMainPanel extends BreadCrumbPanel {
                         int count;
 
                         if (!ParticipateApplication.get().isInDevelopmentMode()) {
-                            count = eventService.inviteMembersToEvent(event,
+                            count = eventService.inviteParticipants(event,
                                 eventService.getParticipants(model.getObject().getEvent(), false), false);
                         } else {
                             final List<Participant> currentParticipant
@@ -154,7 +154,7 @@ public class EventMainPanel extends BreadCrumbPanel {
                                 ParticipateSession.get().getUser().getPerson().getEmail(),
                                 event.getId()
                             )));
-                            count = eventService.inviteMembersToEvent(event, currentParticipant, false);
+                            count = eventService.inviteParticipants(event, currentParticipant, false);
                         }
 
                         send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
@@ -174,12 +174,12 @@ public class EventMainPanel extends BreadCrumbPanel {
                             final BootstrapModal modal = ((ParticipatePage) getWebPage()).getModal();
                             modal.setContent(new BootstrapModalConfirmationPanel(modal,
                                 new ResourceModel("email.send.reminder", "Send Reminder"),
-                                new ResourceModel("email.send.reminder.question", "Some members have already received an invitation. Should they be remembered?")) {
+                                new ResourceModel("email.send.reminder.question", "Some singers have already received an invitation. Should they be remembered?")) {
                                 @Override
                                 protected void onConfirm(AjaxRequestTarget target) {
                                     int count;
                                     if (!ParticipateApplication.get().isInDevelopmentMode()) {
-                                        count = eventService.inviteMembersToEvent(event,
+                                        count = eventService.inviteParticipants(event,
                                             eventService.getParticipants(model.getObject().getEvent(), InvitationStatus.PENDING),
                                             true);
                                     } else {
@@ -188,7 +188,7 @@ public class EventMainPanel extends BreadCrumbPanel {
                                             ParticipateSession.get().getUser().getPerson().getEmail(),
                                             event.getId()
                                         )));
-                                        count = eventService.inviteMembersToEvent(event, currentParticipant, true);
+                                        count = eventService.inviteParticipants(event, currentParticipant, true);
                                     }
 
                                     send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));

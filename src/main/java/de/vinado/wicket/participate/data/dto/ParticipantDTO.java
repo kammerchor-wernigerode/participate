@@ -2,8 +2,8 @@ package de.vinado.wicket.participate.data.dto;
 
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.InvitationStatus;
-import de.vinado.wicket.participate.data.Member;
 import de.vinado.wicket.participate.data.Participant;
+import de.vinado.wicket.participate.data.Singer;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -17,7 +17,7 @@ public class ParticipantDTO implements Serializable {
 
     private Event event;
 
-    private Member member;
+    private Singer singer;
 
     private String token;
 
@@ -27,17 +27,11 @@ public class ParticipantDTO implements Serializable {
 
     private InvitationStatus invitationStatus;
 
-    private boolean needsDinner;
+    private boolean catering;
 
-    private String needsDinnerComment;
-
-    private boolean needsPlaceToSleep;
-
-    private String needsPlaceToSleepComment;
+    private boolean accommodation;
 
     private String comment;
-
-    private boolean reviewed;
 
     public ParticipantDTO() {
     }
@@ -45,17 +39,14 @@ public class ParticipantDTO implements Serializable {
     public ParticipantDTO(final Participant participant) {
         this.participant = participant;
         this.event = participant.getEvent();
-        this.member = participant.getMember();
+        this.singer = participant.getSinger();
         this.token = participant.getToken();
         this.fromDate = participant.getFromDate();
         this.toDate = participant.getToDate();
         this.invitationStatus = participant.getInvitationStatus();
-        this.needsDinner = participant.isNeedsDinner();
-        this.needsDinnerComment = participant.getNeedsDinnerComment();
-        this.needsPlaceToSleep = participant.isNeedsPlaceToSleep();
-        this.needsPlaceToSleepComment = participant.getNeedsPlaceToSleepComment();
+        this.catering = participant.isCatering();
+        this.accommodation = participant.isAccommodation();
         this.comment = participant.getComment();
-        this.reviewed = participant.isReviewed();
     }
 
     public Participant getParticipant() {
@@ -74,12 +65,12 @@ public class ParticipantDTO implements Serializable {
         this.event = event;
     }
 
-    public Member getMember() {
-        return member;
+    public Singer getSinger() {
+        return singer;
     }
 
-    public void setMember(final Member member) {
-        this.member = member;
+    public void setSinger(final Singer singer) {
+        this.singer = singer;
     }
 
     public String getToken() {
@@ -114,36 +105,20 @@ public class ParticipantDTO implements Serializable {
         this.invitationStatus = invitationStatus;
     }
 
-    public boolean isNeedsDinner() {
-        return needsDinner;
+    public boolean isCatering() {
+        return catering;
     }
 
-    public void setNeedsDinner(final boolean needsDinner) {
-        this.needsDinner = needsDinner;
+    public void setCatering(final boolean catering) {
+        this.catering = catering;
     }
 
-    public String getNeedsDinnerComment() {
-        return needsDinnerComment;
+    public boolean isAccommodation() {
+        return accommodation;
     }
 
-    public void setNeedsDinnerComment(final String needsDinnerComment) {
-        this.needsDinnerComment = needsDinnerComment;
-    }
-
-    public boolean isNeedsPlaceToSleep() {
-        return needsPlaceToSleep;
-    }
-
-    public void setNeedsPlaceToSleep(final boolean needsPlaceToSleep) {
-        this.needsPlaceToSleep = needsPlaceToSleep;
-    }
-
-    public String getNeedsPlaceToSleepComment() {
-        return needsPlaceToSleepComment;
-    }
-
-    public void setNeedsPlaceToSleepComment(final String needsPlaceToSleepComment) {
-        this.needsPlaceToSleepComment = needsPlaceToSleepComment;
+    public void setAccommodation(final boolean accommodation) {
+        this.accommodation = accommodation;
     }
 
     public String getComment() {
@@ -152,13 +127,5 @@ public class ParticipantDTO implements Serializable {
 
     public void setComment(final String comment) {
         this.comment = comment;
-    }
-
-    public boolean isReviewed() {
-        return reviewed;
-    }
-
-    public void setReviewed(final boolean reviewed) {
-        this.reviewed = reviewed;
     }
 }

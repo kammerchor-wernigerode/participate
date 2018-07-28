@@ -34,13 +34,13 @@ import java.util.Collections;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<ParticipantDTO> {
+public abstract class EditSingerInvitationPanel extends BootstrapModalPanel<ParticipantDTO> {
 
     @SuppressWarnings("unused")
     @SpringBean
     private EventService eventService;
 
-    public EditMemberInvitationPanel(final BootstrapModal modal, final IModel<ParticipantDTO> model) {
+    public EditSingerInvitationPanel(final BootstrapModal modal, final IModel<ParticipantDTO> model) {
         super(modal, new ResourceModel("invitation.edit", "Edit Invitation"), model);
 
         final DatetimePickerConfig fromConfig = new DatetimePickerConfig();
@@ -100,67 +100,35 @@ public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<Part
         });
         inner.add(toDtP);
 
-        final CheckBox needsDinnerCb = new CheckBox("needsDinner") {
+        final CheckBox cateringCb = new CheckBox("catering") {
             @Override
             protected void onConfigure() {
                 setEnabled(InvitationStatus.ACCEPTED.equals(model.getObject().getInvitationStatus()));
             }
         };
-        needsDinnerCb.add(BootstrapHorizontalFormDecorator.decorate());
-        needsDinnerCb.add(new AjaxFormComponentUpdatingBehavior("change") {
+        cateringCb.add(BootstrapHorizontalFormDecorator.decorate());
+        cateringCb.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
 
             }
         });
-        inner.add(needsDinnerCb);
+        inner.add(cateringCb);
 
-        final TextArea needsDinnerCommentTa = new TextArea("needsDinnerComment") {
+        final CheckBox accommodationCb = new CheckBox("accommodation") {
             @Override
             protected void onConfigure() {
                 setEnabled(InvitationStatus.ACCEPTED.equals(model.getObject().getInvitationStatus()));
             }
         };
-        needsDinnerCommentTa.add(new AutosizeBehavior());
-        needsDinnerCommentTa.add(BootstrapHorizontalFormDecorator.decorate());
-        needsDinnerCb.add(new AjaxFormComponentUpdatingBehavior("change") {
+        accommodationCb.add(BootstrapHorizontalFormDecorator.decorate());
+        accommodationCb.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
 
             }
         });
-        inner.add(needsDinnerCommentTa);
-
-        final CheckBox needsPlaceToSleepCb = new CheckBox("needsPlaceToSleep") {
-            @Override
-            protected void onConfigure() {
-                setEnabled(InvitationStatus.ACCEPTED.equals(model.getObject().getInvitationStatus()));
-            }
-        };
-        needsPlaceToSleepCb.add(BootstrapHorizontalFormDecorator.decorate());
-        needsPlaceToSleepCb.add(new AjaxFormComponentUpdatingBehavior("change") {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-
-            }
-        });
-        inner.add(needsPlaceToSleepCb);
-
-        final TextArea needsPlaceToSleepCommentTa = new TextArea("needsPlaceToSleepComment") {
-            @Override
-            protected void onConfigure() {
-                setEnabled(InvitationStatus.ACCEPTED.equals(model.getObject().getInvitationStatus()));
-            }
-        };
-        needsPlaceToSleepCommentTa.add(new AutosizeBehavior());
-        needsPlaceToSleepCommentTa.add(BootstrapHorizontalFormDecorator.decorate());
-        needsPlaceToSleepCommentTa.add(new AjaxFormComponentUpdatingBehavior("change") {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-
-            }
-        });
-        inner.add(needsPlaceToSleepCommentTa);
+        inner.add(accommodationCb);
 
         final TextArea commentTa = new TextArea("comment") {
             @Override
@@ -178,13 +146,13 @@ public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<Part
         });
         inner.add(commentTa);
 
-        final BootstrapAjaxLink<ParticipantDTO> inviteMemberBtn = new BootstrapAjaxLink<ParticipantDTO>(
-            "inviteMemberBtn", model, Buttons.Type.Default, !InvitationStatus.UNINVITED.equals(model.getObject().getInvitationStatus())
+        final BootstrapAjaxLink<ParticipantDTO> inviteSingerBtn = new BootstrapAjaxLink<ParticipantDTO>(
+            "inviteSingerBtn", model, Buttons.Type.Default, !InvitationStatus.UNINVITED.equals(model.getObject().getInvitationStatus())
             ? new ResourceModel("email.send.reminder", "Send Reminder")
             : new ResourceModel("email.send.invitation", "Send Invitation")) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                eventService.inviteMembersToEvent(model.getObject().getEvent(),
+                eventService.inviteParticipants(model.getObject().getEvent(),
                     Collections.singletonList(model.getObject().getParticipant()), !InvitationStatus.UNINVITED.equals(model.getObject().getInvitationStatus()));
                 modal.close(target);
                 if (!InvitationStatus.UNINVITED.equals(model.getObject().getInvitationStatus())) {
@@ -193,14 +161,9 @@ public abstract class EditMemberInvitationPanel extends BootstrapModalPanel<Part
                     Snackbar.show(target, new ResourceModel("email.send.invitation.success", "An invitation has been sent"));
                 }
             }
-
-            @Override
-            protected void onConfigure() {
-                setVisible(!model.getObject().isReviewed());
-            }
         };
-        inviteMemberBtn.setSize(Buttons.Size.Mini);
-        inner.add(inviteMemberBtn);
+        inviteSingerBtn.setSize(Buttons.Size.Mini);
+        inner.add(inviteSingerBtn);
 
         inner.add(new Label("token", ParticipateUtils.generateInvitationLink(model.getObject().getToken())));
     }

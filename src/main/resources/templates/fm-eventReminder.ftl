@@ -104,7 +104,8 @@
                                 <tr>
                                     <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">
                                         <p style="color: #555; font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">${event.name}</p>
-                                        <p style="font-family: sans-serif; font-size: 16px; font-weight: bold; margin: 0; Margin-bottom: 15px;">Hallo <span style="color: #3498db;">${member.person.firstName}</span>,</p>
+                                        <p style="font-family: sans-serif; font-size: 16px; font-weight: bold; margin: 0; Margin-bottom: 15px;">
+                                            Hallo <span style="color: #3498db;">${singer.firstName}</span>,</p>
                                     <#if event.location??>
                                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
                                         <#if event.startDate == event.endDate>

@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.ui.event.event;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.vinado.wicket.participate.component.Snackbar;
 import de.vinado.wicket.participate.component.TextAlign;
@@ -152,18 +151,17 @@ public class EventPanel extends BreadCrumbPanel {
                 return "td-with-btn-xs";
             }
         });
-        columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "member.person.sortName", "member.person.sortName"));
-        columns.add(new EnumColumn<Participant, String, Voice>(new ResourceModel("voice", "voice"), "member.voice", "member.voice"));
+        columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "singer.sortName", "singer.sortName"));
+        columns.add(new EnumColumn<Participant, String, Voice>(new ResourceModel("voice", "voice"), "singer.voice", "singer.voice"));
         if (editable) {
             columns.add(new BootstrapAjaxLinkColumn<Participant, String>(FontAwesomeIconType.pencil, new ResourceModel("invitation.edit", "Edit Invitation")) {
                 @Override
                 public void onClick(final AjaxRequestTarget target, final IModel<Participant> rowModel) {
                     final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                    modal.setContent(new EditMemberInvitationPanel(modal, new CompoundPropertyModel<>(new ParticipantDTO(rowModel.getObject()))) {
+                    modal.setContent(new EditSingerInvitationPanel(modal, new CompoundPropertyModel<>(new ParticipantDTO(rowModel.getObject()))) {
                         @Override
                         protected void onSaveSubmit(final IModel<ParticipantDTO> savedModel, final AjaxRequestTarget target) {
-                            savedModel.getObject().setReviewed(false);
-                            model.setObject(eventService.getEventDetails(eventService.saveEventToMember(savedModel.getObject()).getEvent()));
+                            model.setObject(eventService.getEventDetails(eventService.saveParticipant(savedModel.getObject()).getEvent()));
                             dataProvider.set(eventService.getParticipants(model.getObject().getEvent()));
                             Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
                             target.add(form);
@@ -175,7 +173,7 @@ public class EventPanel extends BreadCrumbPanel {
             columns.add(new BootstrapAjaxLinkColumn<Participant, String>(FontAwesomeIconType.envelope, new ResourceModel("email.send", "Send Email")) {
                 @Override
                 public void onClick(final AjaxRequestTarget target, final IModel<Participant> rowModel) {
-                    final Person person = rowModel.getObject().getMember().getPerson();
+                    final Person person = rowModel.getObject().getSinger();
                     final MailData mailData = new MailData();
                     mailData.addTo(person.getEmail(), person.getDisplayName());
 
@@ -186,18 +184,7 @@ public class EventPanel extends BreadCrumbPanel {
             });
         }
 
-        dataTable = new BootstrapAjaxDataTable<Participant, String>("dataTable", columns, dataProvider, 15) {
-            @Override
-            protected Item<Participant> newRowItem(final String id, final int index, final IModel<Participant> model) {
-                final Item<Participant> rowItem = super.newRowItem(id, index, model);
-                if (editable && !InvitationStatus.PENDING.equals(model.getObject().getInvitationStatus()) && model.getObject().isReviewed()) {
-                    rowItem.add(new CssClassNameAppender("success"));
-                }
-
-                return rowItem;
-
-            }
-        };
+        dataTable = new BootstrapAjaxDataTable<>("dataTable", columns, dataProvider, 15);
         dataTable.setOutputMarkupId(true);
         dataTable.hover().condensed();
         wmc.add(dataTable);

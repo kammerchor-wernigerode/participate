@@ -11,8 +11,8 @@ import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.component.Snackbar;
 import de.vinado.wicket.participate.component.modal.BootstrapModal;
 import de.vinado.wicket.participate.component.panel.Footer;
-import de.vinado.wicket.participate.data.Member;
 import de.vinado.wicket.participate.data.Person;
+import de.vinado.wicket.participate.data.Singer;
 import de.vinado.wicket.participate.data.User;
 import de.vinado.wicket.participate.data.dto.EditAccountDTO;
 import de.vinado.wicket.participate.service.PersonService;
@@ -20,7 +20,7 @@ import de.vinado.wicket.participate.service.UserService;
 import de.vinado.wicket.participate.ui.account.EditAccountPanel;
 import de.vinado.wicket.participate.ui.administration.AdminPage;
 import de.vinado.wicket.participate.ui.event.EventPage;
-import de.vinado.wicket.participate.ui.member.MemberPage;
+import de.vinado.wicket.participate.ui.singer.SingerPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
@@ -77,7 +77,7 @@ public class ParticipatePage extends BasePage {
                 new NavbarButton(EventPage.class, new ResourceModel("events", "Events")).setIconType(FontAwesomeIconType.calendar)));
         navbar.addComponents(NavbarComponents.transform(
                 Navbar.ComponentPosition.LEFT,
-                new NavbarButton(MemberPage.class, new ResourceModel("members", "Members")).setIconType(FontAwesomeIconType.group)));
+            new NavbarButton(SingerPage.class, new ResourceModel("singers", "Singers")).setIconType(FontAwesomeIconType.group)));
         navbar.addComponents(NavbarComponents.transform(
                 Navbar.ComponentPosition.RIGHT,
                 new NavbarDropDownButton(new PropertyModel<>(this, "userLabel"), Model.of(FontAwesomeIconType.user)) {
@@ -89,14 +89,14 @@ public class ParticipatePage extends BasePage {
                             public void onClick(final AjaxRequestTarget target) {
                                 final User user = ParticipateSession.get().getUser();
                                 final Person person = user.getPerson();
-                                Member member = null;
+                                Singer singer = null;
                                 if (null != person) {
-                                    member = personService.hasMember(person) ? personService.getMember(person) : null;
+                                    singer = personService.hasSinger(person) ? personService.getSinger(person) : null;
                                 }
 
                                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                                 modal.setContent(new EditAccountPanel(modal, new CompoundPropertyModel<>(
-                                        new EditAccountDTO(user, user.getPerson(), member))) {
+                                    new EditAccountDTO(user, user.getPerson(), singer))) {
                                     @Override
                                     protected void onConfirm(final User user, final AjaxRequestTarget target) {
                                         ParticipateSession.get().setUser(user);

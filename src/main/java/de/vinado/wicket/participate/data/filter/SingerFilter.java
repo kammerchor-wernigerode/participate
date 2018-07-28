@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class MemberFilter implements Serializable {
+public class SingerFilter implements Serializable {
 
     private String searchTerm;
 

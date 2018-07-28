@@ -67,7 +67,7 @@ public class FormPanel extends BreadCrumbPanel {
         wmc.setOutputMarkupId(true);
         form.add(wmc);
 
-        wmc.add(new Label("member.person.displayName"));
+        wmc.add(new Label("singer.displayName"));
 
         final DatetimePicker toDtP = new DatetimePicker("toDate", fromConfig);
 
@@ -97,23 +97,13 @@ public class FormPanel extends BreadCrumbPanel {
         });
         wmc.add(toDtP);
 
-        final CheckBox needsDinnerCb = new CheckBox("needsDinner");
-        needsDinnerCb.add(BootstrapHorizontalFormDecorator.decorate());
-        wmc.add(needsDinnerCb);
+        final CheckBox cateringCb = new CheckBox("catering");
+        cateringCb.add(BootstrapHorizontalFormDecorator.decorate());
+        wmc.add(cateringCb);
 
-        final TextArea dinnerAnnotationTa = new TextArea("needsDinnerComment");
-        dinnerAnnotationTa.add(BootstrapHorizontalFormDecorator.decorate());
-        dinnerAnnotationTa.add(new AutosizeBehavior());
-        wmc.add(dinnerAnnotationTa);
-
-        final CheckBox needsSleepingPlaceCb = new CheckBox("needsPlaceToSleep");
-        needsSleepingPlaceCb.add(BootstrapHorizontalFormDecorator.decorate());
-        wmc.add(needsSleepingPlaceCb);
-
-        final TextArea sleepingPlaceCommentTa = new TextArea("needsPlaceToSleepComment");
-        sleepingPlaceCommentTa.add(BootstrapHorizontalFormDecorator.decorate());
-        sleepingPlaceCommentTa.add(new AutosizeBehavior());
-        wmc.add(sleepingPlaceCommentTa);
+        final CheckBox accommodationCb = new CheckBox("accommodation");
+        accommodationCb.add(BootstrapHorizontalFormDecorator.decorate());
+        wmc.add(accommodationCb);
 
         final TextArea commentTa = new TextArea("comment");
         commentTa.setLabel(new ResourceModel("comments", "More comments"));

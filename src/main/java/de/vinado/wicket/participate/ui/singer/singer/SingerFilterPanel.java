@@ -1,10 +1,10 @@
-package de.vinado.wicket.participate.ui.member.member;
+package de.vinado.wicket.participate.ui.singer.singer;
 
 import com.google.common.collect.Lists;
 import de.vinado.wicket.participate.component.panel.AbstractTableFilterPanel;
-import de.vinado.wicket.participate.data.Member;
+import de.vinado.wicket.participate.data.Singer;
 import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.filter.MemberFilter;
+import de.vinado.wicket.participate.data.filter.SingerFilter;
 import de.vinado.wicket.participate.service.PersonService;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class MemberFilterPanel extends AbstractTableFilterPanel<Member, MemberFilter> {
+public abstract class SingerFilterPanel extends AbstractTableFilterPanel<Singer, SingerFilter> {
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -28,7 +28,7 @@ public abstract class MemberFilterPanel extends AbstractTableFilterPanel<Member,
 
     private TextField searchTermTf;
 
-    public MemberFilterPanel(final String id, final IModel<List<Member>> model, final IModel<MemberFilter> filterModel) {
+    public SingerFilterPanel(final String id, final IModel<List<Singer>> model, final IModel<SingerFilter> filterModel) {
         super(id, model, filterModel);
 
         searchTermTf = new TextField("searchTerm");
@@ -52,12 +52,12 @@ public abstract class MemberFilterPanel extends AbstractTableFilterPanel<Member,
     }
 
     @Override
-    public List<Member> getFilteredData(final MemberFilter filter) {
-        return personService.getFilteredMemberList(filter);
+    public List<Singer> getFilteredData(final SingerFilter filter) {
+        return personService.getFilteredSingerList(filter);
     }
 
     @Override
-    public List<Member> getDefaultData() {
-        return personService.getMemberList();
+    public List<Singer> getDefaultData() {
+        return personService.getSingers();
     }
 }

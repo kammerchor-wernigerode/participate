@@ -1,8 +1,7 @@
 package de.vinado.wicket.participate.common;
 
-import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.dto.MemberDTO;
+import de.vinado.wicket.participate.data.dto.SingerDTO;
 import de.vinado.wicket.participate.service.DataService;
 
 import java.text.Normalizer;
@@ -14,30 +13,29 @@ import java.util.Random;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class MemberGenerator extends AbstractEntityGenerator<MemberDTO> {
+public class SingerGenerator extends AbstractEntityGenerator<SingerDTO> {
 
-    private static MemberGenerator instance = new MemberGenerator();
+    private static SingerGenerator instance = new SingerGenerator();
 
     private String[] firstNames = {""};
 
     private String[] lastNames = {""};
 
 
-    private MemberGenerator() {
+    private SingerGenerator() {
     }
 
-    public static MemberGenerator getInstance() {
+    public static SingerGenerator getInstance() {
         return instance;
     }
 
     @Override
-    public MemberDTO generate(final DataService dataService) {
+    public SingerDTO generate(final DataService dataService) {
         final List<Voice> voiceList = Collections.unmodifiableList(Arrays.asList(Voice.values()));
-        final MemberDTO dto = new MemberDTO();
-        dto.setPerson(new Person());
-        dto.getPerson().setFirstName(randomString(firstNames));
-        dto.getPerson().setLastName(randomString(lastNames));
-        dto.getPerson().setEmail(Normalizer.normalize((dto.getPerson().getFirstName() + "." + dto.getPerson().getLastName())
+        final SingerDTO dto = new SingerDTO();
+        dto.setFirstName(randomString(firstNames));
+        dto.setLastName(randomString(lastNames));
+        dto.setEmail(Normalizer.normalize((dto.getFirstName() + "." + dto.getLastName())
             .toLowerCase(), Normalizer.Form.NFD).replaceAll("\\s+", "-").replaceAll("[^-a-zA-Z0-9.]", "").concat("@participate.tld"));
         dto.setVoice(voiceList.get(new Random().nextInt(voiceList.size())));
 

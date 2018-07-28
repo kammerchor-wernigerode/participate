@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.data.dto;
 
-import de.vinado.wicket.participate.data.Member;
 import de.vinado.wicket.participate.data.Person;
+import de.vinado.wicket.participate.data.Singer;
 import de.vinado.wicket.participate.data.User;
 import de.vinado.wicket.participate.data.Voice;
 
@@ -17,7 +17,7 @@ public class EditAccountDTO implements Serializable {
 
     private Person person;
 
-    private Member member;
+    private Singer singer;
 
     private String username;
 
@@ -51,17 +51,17 @@ public class EditAccountDTO implements Serializable {
         }
     }
 
-    public EditAccountDTO(final User user, @Nullable final Person person, @Nullable final Member member) {
+    public EditAccountDTO(final User user, @Nullable final Person person, @Nullable final Singer singer) {
         this.user = user;
         this.person = person;
-        this.member = member;
+        this.singer = singer;
         this.username = user.getUsername();
         if (null != person) {
             this.firstName = person.getFirstName();
             this.lastName = person.getLastName();
             this.email = person.getEmail();
-            if (null != member) {
-                this.voice = member.getVoice();
+            if (null != singer) {
+                this.voice = singer.getVoice();
             }
         }
     }
@@ -82,12 +82,12 @@ public class EditAccountDTO implements Serializable {
         this.person = person;
     }
 
-    public Member getMember() {
-        return member;
+    public Singer getSinger() {
+        return singer;
     }
 
-    public void setMember(final Member member) {
-        this.member = member;
+    public void setSinger(final Singer singer) {
+        this.singer = singer;
     }
 
     public String getUsername() {

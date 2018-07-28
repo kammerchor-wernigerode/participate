@@ -4,13 +4,13 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.tabs.AjaxBootstrapTabbed
 import de.vinado.wicket.participate.component.behavoir.decorator.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.participate.component.modal.BootstrapModal;
 import de.vinado.wicket.participate.component.modal.BootstrapModalPanel;
-import de.vinado.wicket.participate.data.Member;
+import de.vinado.wicket.participate.data.Singer;
 import de.vinado.wicket.participate.data.User;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.AddUserDTO;
 import de.vinado.wicket.participate.data.dto.EditAccountDTO;
-import de.vinado.wicket.participate.data.dto.MemberDTO;
 import de.vinado.wicket.participate.data.dto.PersonDTO;
+import de.vinado.wicket.participate.data.dto.SingerDTO;
 import de.vinado.wicket.participate.service.PersonService;
 import de.vinado.wicket.participate.service.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -85,17 +85,17 @@ public abstract class EditAccountPanel extends BootstrapModalPanel<EditAccountDT
     protected void onSaveSubmit(final IModel<EditAccountDTO> model, final AjaxRequestTarget target) {
         final EditAccountDTO modelObject = model.getObject();
 
-        if (null != modelObject.getMember()) {
+        if (null != modelObject.getSinger()) {
             final PersonDTO personDTO = new PersonDTO(modelObject.getPerson());
             personDTO.setFirstName(modelObject.getFirstName());
             personDTO.setLastName(modelObject.getLastName());
             personDTO.setEmail(modelObject.getEmail());
             personService.savePerson(personDTO);
-            if (null != modelObject.getMember()) {
-                final Member member = modelObject.getMember();
-                final MemberDTO memberDTO = new MemberDTO();
-                memberDTO.setVoice(modelObject.getVoice());
-                personService.saveMember(memberDTO);
+            if (null != modelObject.getSinger()) {
+                final Singer singer = modelObject.getSinger();
+                final SingerDTO singerDTO = new SingerDTO();
+                singerDTO.setVoice(modelObject.getVoice());
+                personService.saveSinger(singerDTO);
             }
         }
 
@@ -208,7 +208,7 @@ public abstract class EditAccountPanel extends BootstrapModalPanel<EditAccountDT
                 Collections.unmodifiableList(Arrays.asList(Voice.values())), new EnumChoiceRenderer<>()) {
                 @Override
                 protected void onConfigure() {
-                    setVisible(null != model.getObject().getMember());
+                    setVisible(null != model.getObject().getSinger());
                 }
             };
             voiceDd.add(BootstrapHorizontalFormDecorator.decorate());

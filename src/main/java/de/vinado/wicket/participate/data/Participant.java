@@ -19,12 +19,12 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Entity of mapping between {@link Event} and {@link Member}
+ * Entity of mapping between {@link Event} and {@link Singer}
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
 @Entity
-@Table(name = "m_member_event")
+@Table(name = "participants")
 public class Participant implements Identifiable, Serializable {
 
     @Id
@@ -40,8 +40,8 @@ public class Participant implements Identifiable, Serializable {
     private String token;
 
     @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    @JoinColumn(name = "singer_id", nullable = false)
+    private Singer singer;
 
     @Enumerated
     @Column(name = "invitation_status", nullable = false)
@@ -55,23 +55,14 @@ public class Participant implements Identifiable, Serializable {
     @Column(name = "to_date")
     private Date toDate;
 
-    @Column(name = "needs_dinner")
-    private boolean needsDinner;
+    @Column(name = "need_catering")
+    private boolean catering;
 
-    @Column(name = "dinner_comment")
-    private String needsDinnerComment;
-
-    @Column(name = "needs_place_to_sleep")
-    private boolean needsPlaceToSleep;
-
-    @Column(name = "needs_place_to_sleep_comment")
-    private String needsPlaceToSleepComment;
+    @Column(name = "need_accommodation")
+    private boolean accommodation;
 
     @Column(name = "comment")
     private String comment;
-
-    @Column(name = "is_reviewed")
-    private boolean reviewed;
 
     /**
      * Hibernate only
@@ -80,37 +71,31 @@ public class Participant implements Identifiable, Serializable {
     }
 
     /**
-     * @param event                    {@link Event}
-     * @param member                   {@link Member}
-     * @param token                    Identifier token
-     * @param invitationStatus         {@link de.vinado.wicket.participate.data.InvitationStatus}
-     * @param needsDinner              Flag, if the member want dinner
-     * @param needsDinnerComment       Dinner comment
-     * @param needsPlaceToSleep        Flag, if the member needs a place to sleep
-     * @param needsPlaceToSleepComment Place to sleep comment
-     * @param comment                  Comment overall
+     * @param event            {@link Event}
+     * @param singer           {@link Singer}
+     * @param token            Identifier token
+     * @param invitationStatus {@link de.vinado.wicket.participate.data.InvitationStatus}
+     * @param catering         Flag, if the singer want dinner
+     * @param accommodation    Flag, if the singer needs a place to sleep
+     * @param comment          Comment overall
      */
-    public Participant(final Event event, final Member member, final String token,
+    public Participant(final Event event, final Singer singer, final String token,
                        final InvitationStatus invitationStatus, final Date fromDate, final Date toDate,
-                       final boolean needsDinner, final String needsDinnerComment, final boolean needsPlaceToSleep,
-                       final String needsPlaceToSleepComment, final String comment) {
+                       final boolean catering, final boolean accommodation, final String comment) {
         this.event = event;
-        this.member = member;
+        this.singer = singer;
         this.token = token;
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.invitationStatus = invitationStatus;
-        this.needsDinner = needsDinner;
-        this.needsDinnerComment = needsDinnerComment;
-        this.needsPlaceToSleep = needsPlaceToSleep;
-        this.needsPlaceToSleepComment = needsPlaceToSleepComment;
+        this.catering = catering;
+        this.accommodation = accommodation;
         this.comment = comment;
-        this.reviewed = false;
     }
 
-    public Participant(final Event event, final Member member, final String token,
+    public Participant(final Event event, final Singer singer, final String token,
                        final InvitationStatus invitationStatus) {
-        this(event, member, token, invitationStatus, null, null, false, null, false, null, null);
+        this(event, singer, token, invitationStatus, null, null, false, false, null);
     }
 
     @Override
@@ -154,12 +139,12 @@ public class Participant implements Identifiable, Serializable {
         this.toDate = toDate;
     }
 
-    public Member getMember() {
-        return member;
+    public Singer getSinger() {
+        return singer;
     }
 
-    public void setMember(final Member member) {
-        this.member = member;
+    public void setSinger(final Singer singer) {
+        this.singer = singer;
     }
 
     public InvitationStatus getInvitationStatus() {
@@ -170,36 +155,20 @@ public class Participant implements Identifiable, Serializable {
         this.invitationStatus = invitationStatus;
     }
 
-    public boolean isNeedsDinner() {
-        return needsDinner;
+    public boolean isCatering() {
+        return catering;
     }
 
-    public void setNeedsDinner(final boolean needsDinner) {
-        this.needsDinner = needsDinner;
+    public void setCatering(final boolean catering) {
+        this.catering = catering;
     }
 
-    public String getNeedsDinnerComment() {
-        return needsDinnerComment;
+    public boolean isAccommodation() {
+        return accommodation;
     }
 
-    public void setNeedsDinnerComment(final String needsDinnerComment) {
-        this.needsDinnerComment = needsDinnerComment;
-    }
-
-    public boolean isNeedsPlaceToSleep() {
-        return needsPlaceToSleep;
-    }
-
-    public void setNeedsPlaceToSleep(final boolean needsPlaceToSleep) {
-        this.needsPlaceToSleep = needsPlaceToSleep;
-    }
-
-    public String getNeedsPlaceToSleepComment() {
-        return needsPlaceToSleepComment;
-    }
-
-    public void setNeedsPlaceToSleepComment(final String needsPlaceToSleepComment) {
-        this.needsPlaceToSleepComment = needsPlaceToSleepComment;
+    public void setAccommodation(final boolean accommodation) {
+        this.accommodation = accommodation;
     }
 
     public String getComment() {
@@ -208,14 +177,6 @@ public class Participant implements Identifiable, Serializable {
 
     public void setComment(final String comment) {
         this.comment = comment;
-    }
-
-    public boolean isReviewed() {
-        return reviewed;
-    }
-
-    public void setReviewed(final boolean reviewed) {
-        this.reviewed = reviewed;
     }
 
     @Override
@@ -227,18 +188,15 @@ public class Participant implements Identifiable, Serializable {
         final Participant that = (Participant) o;
 
         return new EqualsBuilder()
-            .append(needsDinner, that.needsDinner)
-            .append(needsPlaceToSleep, that.needsPlaceToSleep)
-            .append(reviewed, that.reviewed)
+            .append(catering, that.catering)
+            .append(accommodation, that.accommodation)
             .append(id, that.id)
             .append(event, that.event)
             .append(token, that.token)
-            .append(member, that.member)
+            .append(singer, that.singer)
             .append(invitationStatus, that.invitationStatus)
             .append(fromDate, that.fromDate)
             .append(toDate, that.toDate)
-            .append(needsDinnerComment, that.needsDinnerComment)
-            .append(needsPlaceToSleepComment, that.needsPlaceToSleepComment)
             .append(comment, that.comment)
             .isEquals();
     }
@@ -249,16 +207,13 @@ public class Participant implements Identifiable, Serializable {
             .append(id)
             .append(event)
             .append(token)
-            .append(member)
+            .append(singer)
             .append(invitationStatus)
             .append(fromDate)
             .append(toDate)
-            .append(needsDinner)
-            .append(needsDinnerComment)
-            .append(needsPlaceToSleep)
-            .append(needsPlaceToSleepComment)
+            .append(catering)
+            .append(accommodation)
             .append(comment)
-            .append(reviewed)
             .toHashCode();
     }
 
@@ -268,16 +223,13 @@ public class Participant implements Identifiable, Serializable {
             .append("id", id)
             .append("event", event)
             .append("token", token)
-            .append("member", member)
+            .append("singer", singer)
             .append("invitationStatus", invitationStatus)
             .append("fromDate", fromDate)
             .append("toDate", toDate)
-            .append("needsDinner", needsDinner)
-            .append("needsDinnerComment", needsDinnerComment)
-            .append("needsPlaceToSleep", needsPlaceToSleep)
-            .append("needsPlaceToSleepComment", needsPlaceToSleepComment)
+            .append("catering", catering)
+            .append("accommodation", accommodation)
             .append("comment", comment)
-            .append("reviewed", reviewed)
             .toString();
     }
 }

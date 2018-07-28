@@ -113,15 +113,15 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         wmc.add(new Label("altoCount"));
         wmc.add(new Label("tenorCount"));
         wmc.add(new Label("bassCount"));
-        wmc.add(new Label("placeToSleepCount"));
-        wmc.add(new Label("dinnerCount"));
-        wmc.add(new Label("sopranosAccepted"));
-        wmc.add(new Label("altosAccepted"));
-        wmc.add(new Label("tenorsAccepted"));
-        wmc.add(new Label("bassesAccepted"));
-        wmc.add(new Label("declinedMembers"));
-        wmc.add(new Label("sleepMemberCount", new PropertyModel<>(model.getObject(), "acceptedCount")));
-        wmc.add(new Label("dinnerMemberCount", new PropertyModel<>(model.getObject(), "acceptedCount")));
+        wmc.add(new Label("accommodationCount"));
+        wmc.add(new Label("cateringCount"));
+        wmc.add(new Label("sopranos"));
+        wmc.add(new Label("altos"));
+        wmc.add(new Label("tenors"));
+        wmc.add(new Label("basses"));
+        wmc.add(new Label("declined"));
+        wmc.add(new Label("accommodationSingerCount", new PropertyModel<>(model.getObject(), "acceptedCount")));
+        wmc.add(new Label("cateringSingerCount", new PropertyModel<>(model.getObject(), "acceptedCount")));
 
         // Unterer Bereich
         final BootstrapPanel<List<Participant>> listPanel = new BootstrapPanel<List<Participant>>("listPanel",

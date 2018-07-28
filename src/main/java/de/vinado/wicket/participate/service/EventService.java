@@ -7,9 +7,9 @@ import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.InvitationStatus;
-import de.vinado.wicket.participate.data.Member;
 import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.Person;
+import de.vinado.wicket.participate.data.Singer;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.EventDTO;
 import de.vinado.wicket.participate.data.dto.ParticipantDTO;
@@ -118,9 +118,9 @@ public class EventService extends DataService {
         );
         event = save(event);
 
-        // Event to member
-        for (Member member : personService.getMemberList()) {
-            createParticipant(event, member);
+        // Event to singer
+        for (Singer singer : personService.getSingers()) {
+            createParticipant(event, singer);
         }
 
         return event;
@@ -151,9 +151,9 @@ public class EventService extends DataService {
         if (!clonedEvent.equals(loadedEvent)) {
             if (!ParticipateApplication.get().isInDevelopmentMode()) {
                 // TODO Write notification template
-                //inviteMembersToEvent(loadedEvent, getParticipants(loadedEvent));
+                //inviteParticipants(loadedEvent, getParticipants(loadedEvent));
             } else {
-                inviteMembersToEvent(loadedEvent, Collections.singletonList(getParticipant(
+                inviteParticipants(loadedEvent, Collections.singletonList(getParticipant(
                     ParticipateSession.get().getUser().getPerson().getEmail(), loadedEvent.getId())), false);
             }
         }
@@ -175,15 +175,15 @@ public class EventService extends DataService {
     }
 
     /**
-     * Creates the mapping between {@link Event} and {@link Member}
+     * Creates the mapping between {@link Event} and {@link Singer}
      *
      * @param event  Event
-     * @param member Member
+     * @param singer Singer
      * @return Created mapping
      */
     @Transactional
-    public Participant createParticipant(final Event event, final Member member) {
-        final Participant participant = new Participant(event, member, generateEventToken(20), InvitationStatus.UNINVITED);
+    public Participant createParticipant(final Event event, final Singer singer) {
+        final Participant participant = new Participant(event, singer, generateEventToken(20), InvitationStatus.UNINVITED);
         return save(participant);
     }
 
@@ -198,25 +198,21 @@ public class EventService extends DataService {
     }
 
     @Transactional
-    public Participant saveEventToMember(final ParticipantDTO dto) {
+    public Participant saveParticipant(final ParticipantDTO dto) {
         final Participant loadedParticipant = load(Participant.class, dto.getParticipant().getId());
         loadedParticipant.setInvitationStatus(dto.getInvitationStatus());
         loadedParticipant.setFromDate(dto.getFromDate());
         loadedParticipant.setToDate(dto.getToDate());
-        loadedParticipant.setNeedsDinner(dto.isNeedsDinner());
-        loadedParticipant.setNeedsDinnerComment(dto.getNeedsDinnerComment());
-        loadedParticipant.setNeedsPlaceToSleep(dto.isNeedsPlaceToSleep());
-        loadedParticipant.setNeedsPlaceToSleepComment(dto.getNeedsPlaceToSleepComment());
+        loadedParticipant.setCatering(dto.isCatering());
+        loadedParticipant.setAccommodation(dto.isAccommodation());
         loadedParticipant.setComment(dto.getComment());
-        loadedParticipant.setReviewed(dto.isReviewed());
         return save(loadedParticipant);
     }
 
     @Transactional
     public Participant acceptEvent(final ParticipantDTO dto) {
         dto.setInvitationStatus(InvitationStatus.ACCEPTED);
-        dto.setReviewed(false);
-        return saveEventToMember(dto);
+        return saveParticipant(dto);
     }
 
     @Transactional
@@ -224,10 +220,9 @@ public class EventService extends DataService {
         dto.setInvitationStatus(InvitationStatus.DECLINED);
         dto.setFromDate(null);
         dto.setToDate(null);
-        dto.setNeedsDinner(false);
-        dto.setNeedsPlaceToSleep(false);
-        dto.setReviewed(false);
-        return saveEventToMember(dto);
+        dto.setCatering(false);
+        dto.setAccommodation(false);
+        return saveParticipant(dto);
     }
 
     public boolean hasEventToken(final String accessToken) {
@@ -250,41 +245,23 @@ public class EventService extends DataService {
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
-    public Participant getLatestParticipant(final Member member) {
+    public Participant getLatestParticipant(final Singer singer) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
         final Root<Participant> root = criteriaQuery.from(Participant.class);
         final Join<Participant, Event> eventJoin = root.join("event");
-        final Predicate forMember = criteriaBuilder.equal(root.get("member"), member);
+        final Predicate forSinger = criteriaBuilder.equal(root.get("singer"), singer);
         final Predicate forDate = criteriaBuilder.greaterThanOrEqualTo(eventJoin.get("endDate"), new Date());
-        criteriaQuery.where(forMember, forDate);
+        criteriaQuery.where(forSinger, forDate);
         criteriaQuery.orderBy(criteriaBuilder.asc(eventJoin.get("startDate")));
         try {
             return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
         } catch (final NoResultException e) {
-            LOGGER.info("Next Participant could not be found for member={}", member);
+            LOGGER.info("Next Participant could not be found for singer={}", singer);
             return null;
         }
     }
 
-    /**
-     * Fetches the {@link Participant} where {@link Person#email} or {@link Participant#token} exists.
-     *
-     * @param emailOrToken
-     * @return
-     */
-    /*public Participant getParticipant(final String emailOrToken) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Join<Participant, Member> memberJoin = root.join("member");
-        final Join<Member, Person> personJoin = memberJoin.join("person");
-        final Predicate forToken = criteriaBuilder.equal(root.get("token"), emailOrToken);
-        final Predicate forEmail = criteriaBuilder.equal(personJoin.get("email"), emailOrToken.toLowerCase());
-        final Predicate forActive = criteriaBuilder.equal(memberJoin.get("active"), true);
-        criteriaQuery.where(forToken, forEmail, forActive);
-        return entityManager.createQuery(criteriaQuery).getSingleResult();
-    }*/
     public EventDetails getLatestEventView() {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
@@ -443,11 +420,11 @@ public class EventService extends DataService {
         final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
         final Root<Participant> root = criteriaQuery.from(Participant.class);
         criteriaQuery.where(criteriaBuilder.equal(root.<Event>get("event"), event));
-        criteriaQuery.orderBy(criteriaBuilder.asc(root.join("member").join("person").get("lastName")));
+        criteriaQuery.orderBy(criteriaBuilder.asc(root.join("singer").get("lastName")));
         try {
             return entityManager.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
-            LOGGER.warn("Mapping between {} and member could not be found.", event.getName());
+            LOGGER.warn("Mapping between {} and singer could not be found.", event.getName());
             return new ArrayList<>();
         }
     }
@@ -456,8 +433,8 @@ public class EventService extends DataService {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Person> criteriaQuery = criteriaBuilder.createQuery(Person.class);
         final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Join<Participant, Member> memberJoin = root.join("member");
-        criteriaQuery.select(memberJoin.get("person"));
+        final Join<Participant, Singer> singerJoin = root.join("singer");
+        criteriaQuery.select(singerJoin.get("person"));
         criteriaQuery.where(criteriaBuilder.equal(root.get("event"), event));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
@@ -485,7 +462,7 @@ public class EventService extends DataService {
         final Predicate forEvent = criteriaBuilder.equal(root.<Event>get("event"), event);
         final Predicate forInvitationStatus = criteriaBuilder.notEqual(root.get("invitationStatus"), InvitationStatus.UNINVITED);
         criteriaQuery.where(forEvent, forInvitationStatus);
-        criteriaQuery.orderBy(criteriaBuilder.asc(root.join("member").join("person").get("lastName")));
+        criteriaQuery.orderBy(criteriaBuilder.asc(root.join("singer").get("lastName")));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
@@ -500,7 +477,7 @@ public class EventService extends DataService {
         final Predicate forEvent = criteriaBuilder.equal(root.<Event>get("event"), event);
         final Predicate forInvitationStatus = criteriaBuilder.equal(root.get("invitationStatus"), invitationStatus);
         criteriaQuery.where(forEvent, forInvitationStatus);
-        criteriaQuery.orderBy(criteriaBuilder.asc(root.join("member").join("person").get("lastName")));
+        criteriaQuery.orderBy(criteriaBuilder.asc(root.join("singer").get("lastName")));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
@@ -515,17 +492,17 @@ public class EventService extends DataService {
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
-    public Participant getParticipant(final Member member, final Event event) {
+    public Participant getParticipant(final Singer singer, final Event event) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
         final Root<Participant> root = criteriaQuery.from(Participant.class);
         final Predicate forEvent = criteriaBuilder.equal(root.<Event>get("event"), event);
-        final Predicate forMember = criteriaBuilder.equal(root.<Member>get("member"), member);
-        criteriaQuery.where(forEvent, forMember);
+        final Predicate forSinger = criteriaBuilder.equal(root.<Singer>get("singer"), singer);
+        criteriaQuery.where(forEvent, forSinger);
         try {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
         } catch (final NoResultException e) {
-            LOGGER.warn("Mapping between {} and {} does not exist.", event.getName(), member.getPerson().getDisplayName());
+            LOGGER.warn("Mapping between {} and {} does not exist.", event.getName(), singer.getDisplayName());
             return null;
         }
     }
@@ -535,10 +512,9 @@ public class EventService extends DataService {
         final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
         final Root<Participant> root = criteriaQuery.from(Participant.class);
         final Join<Participant, Event> eventJoin = root.join("event");
-        final Join<Participant, Member> memberJoin = root.join("member");
-        final Join<Member, Person> personJoin = memberJoin.join("person");
+        final Join<Participant, Singer> singerJoin = root.join("singer");
         final Predicate forEvent = criteriaBuilder.equal(eventJoin.get("id"), eventId);
-        final Predicate forEmail = criteriaBuilder.equal(personJoin.get("email"), email);
+        final Predicate forEmail = criteriaBuilder.equal(singerJoin.get("email"), email);
         criteriaQuery.where(forEvent, forEmail);
         try {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
@@ -562,25 +538,25 @@ public class EventService extends DataService {
     }
 
     /**
-     * Fetches all {@link Participant} where the {@link Member} is present, is {@link Member#active} and the
+     * Fetches all {@link Participant} where the {@link Singer} is present, is {@link Singer#active} and the
      * {@link Event#endDate} is greater than today. The result is ordered by {@link Event#startDate} and
      * {@link Person#lastName}.
      *
-     * @param member {@link Member} to filter for.
+     * @param singer {@link Singer} to filter for.
      * @return The list of ordered {@link Participant}.
      */
-    public List<Participant> getParticipants(final Member member) {
+    public List<Participant> getParticipants(final Singer singer) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
         final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Predicate forMember = criteriaBuilder.equal(root.get("member"), member);
+        final Predicate forSinger = criteriaBuilder.equal(root.get("singer"), singer);
         final Join<Participant, Event> eventJoin = root.join("event");
         final Predicate forEndDate = criteriaBuilder.greaterThanOrEqualTo(eventJoin.get("endDate"), new Date());
         final Predicate forActive = criteriaBuilder.equal(eventJoin.get("active"), true);
-        criteriaQuery.where(forMember, forActive, forEndDate);
+        criteriaQuery.where(forSinger, forActive, forEndDate);
         criteriaQuery.orderBy(
             criteriaBuilder.asc(eventJoin.get("startDate")),
-            criteriaBuilder.asc(root.join("member").join("person").get("lastName")));
+            criteriaBuilder.asc(root.join("singer").get("lastName")));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
@@ -591,71 +567,59 @@ public class EventService extends DataService {
      * @param event {@link Event} to filter for.
      * @return The list of ordered {@link Participant}.
      */
-    public List<Participant> getEventToMember4PendingStatus(final Event event) {
+    public List<Participant> getPendingParticipants(final Event event) {
         return getParticipants(event, InvitationStatus.PENDING);
     }
 
-    public List<Member> getMemberWithPendingStatus4Event(final Event event) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Member> criteriaQuery = criteriaBuilder.createQuery(Member.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Predicate forEvent = criteriaBuilder.equal(root.<Event>get("event"), event);
-        final Join<Participant, Member> memberJoin = root.join("member");
-        final Predicate forPending = criteriaBuilder.equal(root.get("invitationStatus"), InvitationStatus.PENDING);
-        criteriaQuery.select(memberJoin);
-        criteriaQuery.where(forEvent, forPending);
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    public String getToken(final Member member, final Event event) {
+    public String getToken(final Singer singer, final Event event) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<String> criteriaQuery = criteriaBuilder.createQuery(String.class);
         final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Predicate forMember = criteriaBuilder.equal(root.get("member"), member);
+        final Predicate forSinger = criteriaBuilder.equal(root.get("singer"), singer);
         final Predicate forEvent = criteriaBuilder.equal(root.get("event"), event);
         criteriaQuery.select(root.get("token"));
-        criteriaQuery.where(forMember, forEvent);
+        criteriaQuery.where(forSinger, forEvent);
         try {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
         } catch (final NoResultException e) {
-            LOGGER.info("Token could not be found for member={} and event={}", member, event);
+            LOGGER.info("Token could not be found for singer={} and event={}", singer, event);
             return null;
         }
     }
 
-    public boolean hasParticipant(final Member member, final Event event) {
+    public boolean hasParticipant(final Singer singer, final Event event) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
         final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Predicate forMember = criteriaBuilder.equal(root.get("member"), member);
+        final Predicate forSinger = criteriaBuilder.equal(root.get("singer"), singer);
         final Predicate forEvent = criteriaBuilder.equal(root.get("event"), event);
         criteriaQuery.select(criteriaBuilder.count(root));
-        criteriaQuery.where(forMember, forEvent);
+        criteriaQuery.where(forSinger, forEvent);
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
     /**
-     * Invites all Members from participantList to {@link de.vinado.wicket.participate.data.Event}
+     * Invites all Singers from participantList to {@link de.vinado.wicket.participate.data.Event}
      *
-     * @param event             {@link de.vinado.wicket.participate.data.Event}
+     * @param event           {@link de.vinado.wicket.participate.data.Event}
      * @param participantList List of {@link Participant} to invite
      * @return Amount of sent emails
      */
     @Transactional
-    public int inviteMembersToEvent(final Event event, final List<Participant> participantList, final boolean reminder) {
+    public int inviteParticipants(final Event event, final List<Participant> participantList, final boolean reminder) {
         int count = 0;
         final ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
         final List<MimeMessagePreparator> preparators = new ArrayList<>();
 
         for (Participant participant : participantList) {
-            final Member member = participant.getMember();
+            final Singer singer = participant.getSinger();
 
             final MailData mailData = new MailData() {
                 @Override
                 public Map<String, Object> getData() {
                     final Map<String, Object> data = super.getData();
                     data.put("event", event);
-                    data.put("member", member);
+                    data.put("singer", singer);
                     data.put("acceptLink", ParticipateUtils.generateInvitationLink(participant.getToken()));
                     return data;
                 }
@@ -663,7 +627,7 @@ public class EventService extends DataService {
 
             try {
                 mailData.setFrom(properties.getMail().getSender());
-                mailData.addTo(member.getPerson().getEmail(), member.getPerson().getDisplayName());
+                mailData.addTo(singer.getEmail(), singer.getDisplayName());
                 mailData.setSubject(event.getName());
             } catch (AddressException e) {
                 LOGGER.error("Malformed email address", e);
@@ -757,8 +721,6 @@ public class EventService extends DataService {
                 "%" + searchTerm.toLowerCase() + "%"));
             orPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("eventType")),
                 "%" + searchTerm.toLowerCase() + "%"));
-            orPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("cast")),
-                "%" + searchTerm.toLowerCase() + "%"));
             orPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("location")),
                 "%" + searchTerm.toLowerCase() + "%"));
         }
@@ -802,7 +764,7 @@ public class EventService extends DataService {
      * @param filter The filter criteria.
      * @return An filtered and ordered list of {@link Participant}.
      */
-    public List<Participant> getFilteredEventToMemberList(final Event event, final ParticipantFilter filter) {
+    public List<Participant> getFilteredParticipants(final Event event, final ParticipantFilter filter) {
         if (null == filter) {
             return getParticipants(event);
         }
@@ -810,19 +772,18 @@ public class EventService extends DataService {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
         final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Join<Participant, Member> memberJoin = root.join("member");
-        final Join<Member, Person> personJoin = memberJoin.join("person");
+        final Join<Participant, Singer> singerJoin = root.join("singer");
 
         final List<Predicate> predicates = new ArrayList<>();
         predicates.add(criteriaBuilder.equal(root.<Event>get("event"), event));
 
         final String searchTerm = filter.getSearchTerm();
         if (!Strings.isEmpty(searchTerm))
-            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(personJoin.get("displayName")), "%" + searchTerm + "%"));
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(singerJoin.get("displayName")), "%" + searchTerm + "%"));
 
         final Voice voice = filter.getVoice();
         if (null != voice)
-            predicates.add(criteriaBuilder.equal(memberJoin.get("voice"), voice));
+            predicates.add(criteriaBuilder.equal(singerJoin.get("voice"), voice));
 
         final InvitationStatus invitationStatus = filter.getInvitationStatus();
         if (null != invitationStatus)
@@ -833,7 +794,7 @@ public class EventService extends DataService {
         }
 
         criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]));
-        criteriaQuery.orderBy(criteriaBuilder.asc(personJoin.get("lastName")));
+        criteriaQuery.orderBy(criteriaBuilder.asc(singerJoin.get("lastName")));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
@@ -853,8 +814,7 @@ public class EventService extends DataService {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
         final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Join<Participant, Member> memberJoin = root.join("member");
-        final Join<Member, Person> personJoin = memberJoin.join("person");
+        final Join<Participant, Singer> singerJoin = root.join("singer");
 
         final List<Predicate> orPredicates = new ArrayList<>();
         final List<Predicate> andPredicates = new ArrayList<>();
@@ -862,18 +822,16 @@ public class EventService extends DataService {
 
         final String name = filter.getName();
         if (!Strings.isEmpty(name))
-            andPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(personJoin.get("searchName")), "%" + name + "%"));
+            andPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(singerJoin.get("searchName")), "%" + name + "%"));
 
         final String comment = filter.getComment();
         if (!Strings.isEmpty(comment)) {
-            orPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("needsDinnerComment")), "%" + comment + "%"));
-            orPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("needsPlaceToSleepComment")), "%" + comment + "%"));
             orPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("comment")), "%" + comment + "%"));
         }
 
         final Voice voice = filter.getVoice();
         if (null != voice)
-            andPredicates.add(criteriaBuilder.equal(memberJoin.get("voice"), voice));
+            andPredicates.add(criteriaBuilder.equal(singerJoin.get("voice"), voice));
 
         final InvitationStatus invitationStatus = filter.getInvitationStatus();
         if (null != invitationStatus)
@@ -887,14 +845,11 @@ public class EventService extends DataService {
         if (null != toDate)
             andPredicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("toDate"), toDate));
 
-        if (filter.isNeedsPlaceToSleep())
-            andPredicates.add(criteriaBuilder.equal(root.get("needsPlaceToSleep"), true));
+        if (filter.isAccommodation())
+            andPredicates.add(criteriaBuilder.equal(root.get("accommodation"), true));
 
-        if (filter.isNeedsDinner())
-            andPredicates.add(criteriaBuilder.equal(root.get("needsDinner"), true));
-
-        if (filter.isNotInvited())
-            andPredicates.add(criteriaBuilder.notEqual(root.get("invitationStatus"), InvitationStatus.UNINVITED));
+        if (filter.isCatering())
+            andPredicates.add(criteriaBuilder.equal(root.get("catering"), true));
 
         if (!andPredicates.isEmpty() && orPredicates.isEmpty()) {
             criteriaQuery.where(andPredicates.toArray(new Predicate[andPredicates.size()]));
@@ -906,7 +861,7 @@ public class EventService extends DataService {
             criteriaQuery.where(and, or);
         }
 
-        criteriaQuery.orderBy(criteriaBuilder.asc(personJoin.get("lastName")));
+        criteriaQuery.orderBy(criteriaBuilder.asc(singerJoin.get("lastName")));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 }
