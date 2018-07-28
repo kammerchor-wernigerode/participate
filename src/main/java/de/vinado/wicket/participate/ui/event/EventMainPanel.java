@@ -2,7 +2,6 @@ package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.component.Snackbar;
 import de.vinado.wicket.participate.component.modal.BootstrapModal;
@@ -42,8 +41,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import javax.mail.internet.InternetAddress;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -143,19 +140,10 @@ public class EventMainPanel extends BreadCrumbPanel {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
                         final Event event = model.getObject().getEvent();
+                        final List<Participant> participants = eventService.getParticipants(model.getObject().getEvent(), false);
                         int count;
 
-                        if (!ParticipateApplication.get().isInDevelopmentMode()) {
-                            count = eventService.inviteParticipants(event,
-                                eventService.getParticipants(model.getObject().getEvent(), false), false);
-                        } else {
-                            final List<Participant> currentParticipant
-                                = new ArrayList<>(Collections.singletonList(eventService.getParticipant(
-                                ParticipateSession.get().getUser().getPerson().getEmail(),
-                                event.getId()
-                            )));
-                            count = eventService.inviteParticipants(event, currentParticipant, false);
-                        }
+                        count = eventService.inviteParticipants(event, participants, false);
 
                         send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
 
@@ -177,20 +165,10 @@ public class EventMainPanel extends BreadCrumbPanel {
                                 new ResourceModel("email.send.reminder.question", "Some singers have already received an invitation. Should they be remembered?")) {
                                 @Override
                                 protected void onConfirm(AjaxRequestTarget target) {
+                                    final List<Participant> participants = eventService.getParticipants(model.getObject().getEvent(), InvitationStatus.PENDING);
                                     int count;
-                                    if (!ParticipateApplication.get().isInDevelopmentMode()) {
-                                        count = eventService.inviteParticipants(event,
-                                            eventService.getParticipants(model.getObject().getEvent(), InvitationStatus.PENDING),
-                                            true);
-                                    } else {
-                                        final List<Participant> currentParticipant
-                                            = new ArrayList<>(Collections.singletonList(eventService.getParticipant(
-                                            ParticipateSession.get().getUser().getPerson().getEmail(),
-                                            event.getId()
-                                        )));
-                                        count = eventService.inviteParticipants(event, currentParticipant, true);
-                                    }
 
+                                    count = eventService.inviteParticipants(event, participants, true);
                                     send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
 
                                     Snackbar.show(target, "Erinnerung wurde an "
