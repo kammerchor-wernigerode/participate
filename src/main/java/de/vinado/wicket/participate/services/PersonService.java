@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.services;
 
+import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
@@ -234,6 +235,15 @@ public class PersonService extends DataService {
             criteriaBuilder.lower(root.get("searchName")),
             "%" + term.toLowerCase().trim() + "%");
         criteriaQuery.where(forSearchParam);
+        return entityManager.createQuery(criteriaQuery).getResultList();
+    }
+
+    public List<Person> getPersons(final Event event) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Person> criteriaQuery = criteriaBuilder.createQuery(Person.class);
+        final Root<Participant> root = criteriaQuery.from(Participant.class);
+        criteriaQuery.select(root.join("singer").get("person"));
+        criteriaQuery.where(criteriaBuilder.equal(root.get("event"), event));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 

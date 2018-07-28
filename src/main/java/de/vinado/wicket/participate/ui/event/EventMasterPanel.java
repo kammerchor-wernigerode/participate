@@ -18,6 +18,7 @@ import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.email.MailData;
 import de.vinado.wicket.participate.services.EventService;
+import de.vinado.wicket.participate.services.PersonService;
 import de.vinado.wicket.participate.ui.event.details.EventSummaryPanel;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import de.vinado.wicket.participate.ui.pages.ParticipatePage;
@@ -52,6 +53,10 @@ public class EventMasterPanel extends BreadCrumbPanel {
     @SuppressWarnings("unused")
     private EventService eventService;
 
+    @SpringBean
+    @SuppressWarnings("unused")
+    private PersonService personService;
+
     private BootstrapPanel<List<EventDetails>> eventListPanel;
     private BootstrapPanel<EventDetails> eventPanel;
 
@@ -60,7 +65,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
 
         ((Breadcrumb) getBreadCrumbModel()).setVisible(false);
 
-        eventListPanel = new BootstrapPanel<List<EventDetails>>("events", new CompoundPropertyModel<>(eventService.getUpcomingDetailedEventListList()), new ResourceModel("overview", "Overview")) {
+        eventListPanel = new BootstrapPanel<List<EventDetails>>("events", new CompoundPropertyModel<>(eventService.getUpcomingEventDetails()), new ResourceModel("overview", "Overview")) {
             @Override
             protected Panel newBodyPanel(final String id, final IModel<List<EventDetails>> model) {
                 return new EventsPanel(id, model);
@@ -95,7 +100,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
         final EventDetails eventView;
         if (null == ParticipateSession.get().getEvent()) {
             if (eventService.hasUpcomingEvents()) {
-                eventView = eventService.getLatestEventView();
+                eventView = eventService.getLatestEventDetails();
             } else {
                 eventView = new EventDetails();
             }
@@ -137,14 +142,11 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     FontAwesomeIconType.envelope_square) {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
-                        final Event event = model.getObject().getEvent();
                         final List<Participant> participants = eventService.getParticipants(model.getObject().getEvent(), false);
-                        int count;
 
-                        count = eventService.inviteParticipants(event, participants, false);
+                        final int count = eventService.inviteParticipants(participants);
 
                         send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
-
                         Snackbar.show(target, "Einladung wurde an "
                             + count
                             + (count != 1 ? " Mitglieder " : " Mitglied ")
@@ -164,11 +166,10 @@ public class EventMasterPanel extends BreadCrumbPanel {
                                 @Override
                                 protected void onConfirm(AjaxRequestTarget target) {
                                     final List<Participant> participants = eventService.getParticipants(model.getObject().getEvent(), InvitationStatus.PENDING);
-                                    int count;
 
-                                    count = eventService.inviteParticipants(event, participants, true);
+                                    final int count = eventService.inviteParticipants(participants);
+
                                     send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
-
                                     Snackbar.show(target, "Erinnerung wurde an "
                                         + count
                                         + (count != 1 ? " Mitglieder " : " Mitglied ")
@@ -186,7 +187,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
                         final MailData mailData = new MailData();
-                        mailData.setTo(eventService.getPersonList(model.getObject().getEvent()).stream().map(person -> {
+                        mailData.setTo(personService.getPersons(model.getObject().getEvent()).stream().map(person -> {
                             try {
                                 return new InternetAddress(person.getEmail(), person.getDisplayName());
                             } catch (UnsupportedEncodingException e) {
@@ -240,7 +241,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
                 ParticipateSession.get().setEvent(null);
             } else {
                 ParticipateSession.get().setEvent(eventService.getLatestEvent());
-                setDefaultModelObject(eventService.getLatestEventView());
+                setDefaultModelObject(eventService.getLatestEventDetails());
             }
 
             target.add(eventListPanel);

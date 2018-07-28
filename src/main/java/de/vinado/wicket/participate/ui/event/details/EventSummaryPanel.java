@@ -64,7 +64,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 final EventDetails previousEvent =
-                    eventService.getPreviousEventDetailsView(model.getObject().getId());
+                    eventService.getPredecessor(model.getObject());
                 if (null != previousEvent) {
                     ParticipateSession.get().setEvent(previousEvent.getEvent());
                     send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
@@ -92,7 +92,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         final BootstrapAjaxLink nextEventBtn = new BootstrapAjaxLink("nextEventBtn", Buttons.Type.Link) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                final EventDetails nextEvent = eventService.getNextEventDetailsView(model.getObject().getId());
+                final EventDetails nextEvent = eventService.getSuccessor(model.getObject());
                 if (null != nextEvent) {
                     ParticipateSession.get().setEvent(nextEvent.getEvent());
                     send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));

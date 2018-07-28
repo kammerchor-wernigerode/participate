@@ -97,7 +97,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         inner.add(isSeveralDaysCb);
 
         final Select2Choice<String> eventTypeS2c = new Select2Choice<>("eventType",
-            new Select2StringProvider(eventService.getEventTypeList()));
+            new Select2StringProvider(eventService.getEventTypes()));
         eventTypeS2c.add(new AjaxFocusBehavior());
         eventTypeS2c.setLabel(new ResourceModel("event", "Event"));
         eventTypeS2c.add(BootstrapHorizontalFormDecorator.decorate());

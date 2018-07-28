@@ -51,7 +51,7 @@ public class FormPage extends BasePage {
         setOutputMarkupId(true);
 
         final String token = parameters.get("token").to(String.class);
-        if (null == model.getObject() && eventService.hasEventToken(token)) {
+        if (null == model.getObject() && eventService.hasToken(token)) {
             model.setObject(eventService.getParticipant(token));
             this.model = model;
             setDefaultModel(this.model);
@@ -87,7 +87,7 @@ public class FormPage extends BasePage {
                 @Override
                 protected EventDetails load() {
                     if (null == model.getObject()) {
-                        return eventService.getLatestEventView();
+                        return eventService.getLatestEventDetails();
                     } else {
                         return eventService.getEventDetails(FormPage.this.model.getObject().getEvent());
                     }

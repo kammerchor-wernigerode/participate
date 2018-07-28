@@ -150,7 +150,7 @@ public class EventsPanel extends Panel {
         if (payload instanceof AjaxUpdateEvent) {
             final AjaxUpdateEvent updateEvent = (AjaxUpdateEvent) payload;
             final AjaxRequestTarget target = updateEvent.getTarget();
-            model.setObject(eventService.getUpcomingDetailedEventListList());
+            model.setObject(eventService.getUpcomingEventDetails());
             dataProvider.set(model.getObject());
             target.add(dataTable);
         }
