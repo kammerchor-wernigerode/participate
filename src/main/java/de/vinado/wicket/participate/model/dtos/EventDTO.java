@@ -14,8 +14,6 @@ public class EventDTO implements Serializable {
 
     private Event event;
 
-    private String identifier;
-
     private String name;
 
     private String description;
@@ -46,14 +44,6 @@ public class EventDTO implements Serializable {
 
     public void setEvent(final Event event) {
         this.event = event;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(final String identifier) {
-        this.identifier = identifier;
     }
 
     public String getName() {

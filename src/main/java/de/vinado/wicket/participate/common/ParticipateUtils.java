@@ -10,7 +10,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 
 /**
@@ -19,13 +18,6 @@ import java.text.SimpleDateFormat;
 public class ParticipateUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipateUtils.class);
-
-    public static String getGenericIdentifier(final String string) {
-        final String normalized = Normalizer.normalize(string, Normalizer.Form.NFD);
-        String result = normalized.replaceAll("[^A-Za-z0-9]", "");
-        result = result.replace(" ", "_");
-        return result.toUpperCase();
-    }
 
     public static String getGenericEventName(final EventDTO dto) {
         String genericName;

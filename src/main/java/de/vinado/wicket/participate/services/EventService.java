@@ -56,7 +56,6 @@ import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -98,17 +97,12 @@ public class EventService extends DataService {
      */
     @Transactional
     public Event createEvent(final EventDTO dto) {
-        dto.setIdentifier((new SimpleDateFormat("yyyyMM").format(dto.getStartDate())
-            + dto.getEventType()
-            + dto.getLocation()).replaceAll("[^A-Za-z0-9]", "").toUpperCase());
-
         if (Strings.isEmpty(dto.getName())) {
             dto.setName(ParticipateUtils.getGenericEventName(dto));
         }
 
         // Event
         Event event = new Event(
-            dto.getIdentifier(),
             dto.getName(),
             dto.getEventType(),
             dto.getLocation(),

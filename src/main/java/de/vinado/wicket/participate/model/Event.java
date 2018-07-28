@@ -34,9 +34,6 @@ public class Event implements Identifiable, Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "identifier", nullable = false)
-    private String identifier;
-
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -74,16 +71,14 @@ public class Event implements Identifiable, Serializable {
     /**
      * Construct.
      *
-     * @param identifier  Identifier
      * @param name        Event name
      * @param eventType   Event type
      * @param description More information
      * @param startDate   Start date of Event
      * @param endDate     End date of Event
      */
-    public Event(final String identifier, final String name, final String eventType, final String location, final String description,
+    public Event(final String name, final String eventType, final String location, final String description,
                  final Date startDate, final Date endDate) {
-        this.identifier = identifier;
         this.name = name;
         this.eventType = eventType;
         this.location = location;
@@ -106,14 +101,6 @@ public class Event implements Identifiable, Serializable {
 
     public void setId(final Long id) {
         this.id = id;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(final String identifier) {
-        this.identifier = identifier;
     }
 
     public String getName() {
@@ -204,7 +191,6 @@ public class Event implements Identifiable, Serializable {
         return new EqualsBuilder()
                 .append(active, event.active)
                 .append(id, event.id)
-                .append(identifier, event.identifier)
                 .append(name, event.name)
                 .append(eventType, event.eventType)
                 .append(location, event.location)
@@ -220,7 +206,6 @@ public class Event implements Identifiable, Serializable {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
-                .append(identifier)
                 .append(name)
                 .append(eventType)
                 .append(location)
@@ -237,7 +222,6 @@ public class Event implements Identifiable, Serializable {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("id", id)
-                .append("identifier", identifier)
                 .append("name", name)
                 .append("eventType", eventType)
                 .append("location", location)
