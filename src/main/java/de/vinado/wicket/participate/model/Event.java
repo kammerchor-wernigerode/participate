@@ -25,7 +25,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "events")
-public class Event implements Identifiable<Long> {
+public class Event implements Identifiable<Long>, Hideable, Terminable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

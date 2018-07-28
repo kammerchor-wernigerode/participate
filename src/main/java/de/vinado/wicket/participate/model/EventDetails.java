@@ -19,7 +19,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "v_event_details")
-public class EventDetails implements Identifiable<Long> {
+public class EventDetails implements Identifiable<Long>, Terminable {
 
     @Id
     @ManyToOne

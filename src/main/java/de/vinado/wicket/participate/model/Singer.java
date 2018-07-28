@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "singers")
 @Polymorphism(type = PolymorphismType.EXPLICIT)
-public class Singer extends Person {
+public class Singer extends Person implements Hideable {
 
     @Enumerated
     @Column
