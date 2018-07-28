@@ -4,7 +4,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.vinado.wicket.participate.ParticipateSession;
-import de.vinado.wicket.participate.component.panel.BootstrapPanel;
+import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;

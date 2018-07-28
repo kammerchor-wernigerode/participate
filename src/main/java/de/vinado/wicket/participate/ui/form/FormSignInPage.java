@@ -4,8 +4,8 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.agilecoders.wicket.core.markup.html.bootstrap.tabs.TextPanel;
 import de.vinado.wicket.participate.ParticipateApplication;
-import de.vinado.wicket.participate.component.Collapsible;
-import de.vinado.wicket.participate.component.behavoir.FocusBehavior;
+import de.vinado.wicket.participate.components.panels.Collapsible;
+import de.vinado.wicket.participate.behavoirs.FocusBehavior;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.Singer;

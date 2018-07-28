@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.ui.event;
 
-import de.vinado.wicket.participate.component.panel.AbstractTableFilterPanel;
+import de.vinado.wicket.participate.components.panels.AbstractTableFilterPanel;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.Participant;

@@ -6,7 +6,7 @@ import de.agilecoders.wicket.core.markup.html.references.BootlintHeaderItem;
 import de.agilecoders.wicket.core.markup.html.references.RespondJavaScriptReference;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.vinado.wicket.participate.component.panel.Footer;
+import de.vinado.wicket.participate.components.panels.Footer;
 import de.vinado.wicket.participate.resources.css.ParticipateCssResourceReference;
 import de.vinado.wicket.participate.resources.js.BusyIndicatorJsResourceReference;
 import de.vinado.wicket.participate.resources.js.ParticipateJsResourceReference;

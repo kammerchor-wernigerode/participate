@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.service;
 
-import de.vinado.wicket.participate.component.provider.SimpleDataProvider;
+import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.Singer;

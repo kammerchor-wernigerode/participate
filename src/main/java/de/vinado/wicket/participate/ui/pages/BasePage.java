@@ -7,7 +7,7 @@ import de.agilecoders.wicket.core.markup.html.references.BootlintHeaderItem;
 import de.agilecoders.wicket.core.markup.html.references.RespondJavaScriptReference;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
 import de.vinado.wicket.participate.ParticipateApplication;
-import de.vinado.wicket.participate.component.modal.BootstrapModal;
+import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.resources.css.ParticipateCssResourceReference;
 import de.vinado.wicket.participate.resources.css.SnackbarCssResourceReference;
 import de.vinado.wicket.participate.resources.js.BusyIndicatorJsResourceReference;
@@ -65,7 +65,7 @@ public abstract class BasePage extends WebPage {
     /**
      * Usage: final BootstrapModal modal = ((BasePage) getWebPage()).getModal;
      *
-     * @return {@link de.vinado.wicket.participate.component.modal.BootstrapModal}
+     * @return {@link de.vinado.wicket.participate.components.modals.BootstrapModal}
      */
     @SuppressWarnings("unused")
     public BootstrapModal getModal() {

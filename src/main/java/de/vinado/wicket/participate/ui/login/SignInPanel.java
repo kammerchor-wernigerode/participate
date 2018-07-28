@@ -17,7 +17,7 @@
 package de.vinado.wicket.participate.ui.login;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
-import de.vinado.wicket.participate.component.behavoir.FocusBehavior;
+import de.vinado.wicket.participate.behavoirs.FocusBehavior;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.authentication.IAuthenticationStrategy;

@@ -3,10 +3,10 @@ package de.vinado.wicket.participate.ui.singers;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.vinado.wicket.participate.component.Snackbar;
-import de.vinado.wicket.participate.component.modal.BootstrapModal;
-import de.vinado.wicket.participate.component.modal.BootstrapModalPanel;
-import de.vinado.wicket.participate.component.validator.ConditionalValidator;
+import de.vinado.wicket.participate.components.forms.validator.ConditionalValidator;
+import de.vinado.wicket.participate.components.modals.BootstrapModal;
+import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
+import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.data.Singer;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.SingerDTO;
@@ -41,7 +41,7 @@ public class AddEditSingerPanel extends BootstrapModalPanel<SingerDTO> {
     private boolean remove = false;
 
     /**
-     * @param modal {@link de.vinado.wicket.participate.component.modal.BootstrapModal}
+     * @param modal {@link de.vinado.wicket.participate.components.modals.BootstrapModal}
      * @param model IModel of {@link SingerDTO}
      */
     public AddEditSingerPanel(final BootstrapModal modal, final IModel<String> title, IModel<SingerDTO> model) {

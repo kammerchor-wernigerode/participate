@@ -4,13 +4,13 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig;
 import de.vinado.wicket.participate.ParticipateSession;
-import de.vinado.wicket.participate.component.panel.AjaxLinkPanel;
-import de.vinado.wicket.participate.component.provider.SimpleDataProvider;
-import de.vinado.wicket.participate.component.table.BootstrapAjaxDataTable;
+import de.vinado.wicket.participate.components.panels.AjaxLinkPanel;
+import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.filter.EventFilter;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.EventUpdateEvent;
+import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import de.vinado.wicket.participate.service.EventService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;

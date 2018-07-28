@@ -5,17 +5,17 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.vinado.wicket.participate.component.Snackbar;
-import de.vinado.wicket.participate.component.behavoir.AjaxFocusBehavior;
-import de.vinado.wicket.participate.component.behavoir.AutosizeBehavior;
-import de.vinado.wicket.participate.component.behavoir.decorator.BootstrapHorizontalFormDecorator;
-import de.vinado.wicket.participate.component.modal.BootstrapModal;
-import de.vinado.wicket.participate.component.modal.BootstrapModalPanel;
-import de.vinado.wicket.participate.component.provider.Select2StringProvider;
+import de.vinado.wicket.participate.behavoirs.AjaxFocusBehavior;
+import de.vinado.wicket.participate.behavoirs.AutosizeBehavior;
+import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalFormDecorator;
+import de.vinado.wicket.participate.components.modals.BootstrapModal;
+import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
+import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.dto.EventDTO;
 import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.RemoveEventUpdateEvent;
+import de.vinado.wicket.participate.providers.Select2StringProvider;
 import de.vinado.wicket.participate.service.EventService;
 import de.vinado.wicket.participate.service.PersonService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -54,7 +54,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
     private IModel<Boolean> severalDays;
 
     /**
-     * @param modal {@link de.vinado.wicket.participate.component.modal.BootstrapModal}
+     * @param modal {@link de.vinado.wicket.participate.components.modals.BootstrapModal}
      * @param model {@link EventDTO EventDTO model}
      */
     public AddEditEventPanel(final BootstrapModal modal, final IModel<String> titleModel, final IModel<EventDTO> model) {

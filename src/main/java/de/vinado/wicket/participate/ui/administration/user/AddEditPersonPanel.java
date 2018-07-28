@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate.ui.administration.user;
 
-import de.vinado.wicket.participate.component.modal.BootstrapModal;
-import de.vinado.wicket.participate.component.modal.BootstrapModalPanel;
-import de.vinado.wicket.participate.component.validator.ConditionalValidator;
+import de.vinado.wicket.participate.components.forms.validator.ConditionalValidator;
+import de.vinado.wicket.participate.components.modals.BootstrapModal;
+import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.data.dto.PersonDTO;
 import de.vinado.wicket.participate.service.PersonService;
 import org.apache.wicket.ajax.AjaxRequestTarget;

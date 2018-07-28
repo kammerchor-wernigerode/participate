@@ -3,7 +3,7 @@ package de.vinado.wicket.participate.ui.form;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.AbstractNavbarComponent;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
-import de.vinado.wicket.participate.component.panel.Footer;
+import de.vinado.wicket.participate.components.panels.Footer;
 import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.dto.ParticipantDTO;

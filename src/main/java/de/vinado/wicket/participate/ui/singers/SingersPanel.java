@@ -1,11 +1,11 @@
 package de.vinado.wicket.participate.ui.singers;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.vinado.wicket.participate.component.modal.BootstrapModal;
-import de.vinado.wicket.participate.component.provider.SimpleDataProvider;
-import de.vinado.wicket.participate.component.table.BootstrapAjaxDataTable;
-import de.vinado.wicket.participate.component.table.column.BootstrapAjaxLinkColumn;
-import de.vinado.wicket.participate.component.table.column.EnumColumn;
+import de.vinado.wicket.participate.components.modals.BootstrapModal;
+import de.vinado.wicket.participate.components.panels.SendEmailPanel;
+import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
+import de.vinado.wicket.participate.components.tables.columns.BootstrapAjaxLinkColumn;
+import de.vinado.wicket.participate.components.tables.columns.EnumColumn;
 import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.Singer;
 import de.vinado.wicket.participate.data.Voice;
@@ -13,8 +13,8 @@ import de.vinado.wicket.participate.data.dto.SingerDTO;
 import de.vinado.wicket.participate.data.email.MailData;
 import de.vinado.wicket.participate.data.filter.SingerFilter;
 import de.vinado.wicket.participate.event.SingerUpdateEvent;
+import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import de.vinado.wicket.participate.service.PersonService;
-import de.vinado.wicket.participate.ui.event.SendEmailPanel;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;

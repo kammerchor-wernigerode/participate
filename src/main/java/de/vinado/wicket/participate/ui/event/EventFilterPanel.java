@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
-import de.vinado.wicket.participate.component.panel.AbstractTableFilterPanel;
+import de.vinado.wicket.participate.components.panels.AbstractTableFilterPanel;
 import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.filter.EventFilter;
 import de.vinado.wicket.participate.service.EventService;

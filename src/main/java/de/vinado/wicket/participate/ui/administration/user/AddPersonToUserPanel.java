@@ -1,12 +1,12 @@
 package de.vinado.wicket.participate.ui.administration.user;
 
-import de.vinado.wicket.participate.component.behavoir.decorator.BootstrapHorizontalFormDecorator;
-import de.vinado.wicket.participate.component.modal.BootstrapModal;
-import de.vinado.wicket.participate.component.modal.BootstrapModalPanel;
-import de.vinado.wicket.participate.component.provider.Select2PersonProvider;
-import de.vinado.wicket.participate.component.validator.ConditionalValidator;
+import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalFormDecorator;
+import de.vinado.wicket.participate.components.forms.validator.ConditionalValidator;
+import de.vinado.wicket.participate.components.modals.BootstrapModal;
+import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.dto.AddUserDTO;
+import de.vinado.wicket.participate.providers.Select2PersonProvider;
 import de.vinado.wicket.participate.service.PersonService;
 import de.vinado.wicket.participate.service.UserService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -46,7 +46,7 @@ public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDT
     private Select2Choice<Person> personS2c;
 
     /**
-     * @param modal {@link de.vinado.wicket.participate.component.modal.BootstrapModal}
+     * @param modal {@link de.vinado.wicket.participate.components.modals.BootstrapModal}
      * @param model Model
      */
     public AddPersonToUserPanel(final BootstrapModal modal, final IModel<AddUserDTO> model) {

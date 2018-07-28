@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate.ui.login;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.vinado.wicket.participate.component.Collapsible;
-import de.vinado.wicket.participate.component.Snackbar;
+import de.vinado.wicket.participate.components.panels.Collapsible;
+import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.service.UserService;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;

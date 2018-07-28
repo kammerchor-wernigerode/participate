@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate.ui.singers;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.vinado.wicket.participate.component.modal.BootstrapModal;
-import de.vinado.wicket.participate.component.panel.BootstrapPanel;
+import de.vinado.wicket.participate.components.modals.BootstrapModal;
+import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.data.Singer;
 import de.vinado.wicket.participate.data.dto.SingerDTO;
 import de.vinado.wicket.participate.service.PersonService;
