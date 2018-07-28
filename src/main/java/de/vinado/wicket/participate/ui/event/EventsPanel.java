@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.event.eventList;
+package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class EventListPanel extends Panel {
+public class EventsPanel extends Panel {
 
     @SpringBean
     @SuppressWarnings("unused")
@@ -47,7 +47,7 @@ public class EventListPanel extends Panel {
     private SimpleDataProvider<EventDetails, String> dataProvider;
     private BootstrapAjaxDataTable<EventDetails, String> dataTable;
 
-    public EventListPanel(final String id, final IModel<List<EventDetails>> model) {
+    public EventsPanel(final String id, final IModel<List<EventDetails>> model) {
         super(id, model);
         this.model = model;
 

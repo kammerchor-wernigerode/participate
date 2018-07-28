@@ -12,7 +12,7 @@ import de.agilecoders.wicket.less.BootstrapLess;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.data.database.DatabasePopulator;
 import de.vinado.wicket.participate.ui.administration.AdminPage;
-import de.vinado.wicket.participate.ui.event.EventPage;
+import de.vinado.wicket.participate.ui.event.EventsPage;
 import de.vinado.wicket.participate.ui.form.FormPage;
 import de.vinado.wicket.participate.ui.form.FormSignInPage;
 import de.vinado.wicket.participate.ui.login.SignInPage;
@@ -135,7 +135,7 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
         getMarkupSettings().setStripWicketTags(true);
 
         mountPage("/login", SignInPage.class);
-        mountPage("/events", EventPage.class);
+        mountPage("/events", EventsPage.class);
         mountPage("/error/500", ErrorPage.class);
         mountPage("/error/418", ExpiredPage.class);
         mountPage("/error/404", PageNotFoundPage.class);
@@ -212,7 +212,7 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
 
     @Override
     public Class<? extends WebPage> getHomePage() {
-        return EventPage.class;
+        return EventsPage.class;
     }
 
     @Override

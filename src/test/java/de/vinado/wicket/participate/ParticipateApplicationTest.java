@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate;
 
-import de.vinado.wicket.participate.ui.event.EventPage;
+import de.vinado.wicket.participate.ui.event.EventsPage;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -21,7 +21,7 @@ public class ParticipateApplicationTest {
 
     @Test
     public void testHomePageRendering() {
-        tester.startPage(EventPage.class);
-        tester.assertRenderedPage(EventPage.class);
+        tester.startPage(EventsPage.class);
+        tester.assertRenderedPage(EventsPage.class);
     }
 }

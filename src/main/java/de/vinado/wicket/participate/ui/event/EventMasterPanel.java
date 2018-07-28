@@ -17,10 +17,7 @@ import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.EventUpdateEvent;
 import de.vinado.wicket.participate.event.RemoveEventUpdateEvent;
 import de.vinado.wicket.participate.service.EventService;
-import de.vinado.wicket.participate.ui.event.event.EventPanel;
-import de.vinado.wicket.participate.ui.event.eventList.AddEditEventPanel;
-import de.vinado.wicket.participate.ui.event.eventList.EventListPanel;
-import de.vinado.wicket.participate.ui.event.summary.EventSummaryPanel;
+import de.vinado.wicket.participate.ui.event.details.EventSummaryPanel;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import de.vinado.wicket.participate.ui.pages.ParticipatePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -48,7 +45,7 @@ import java.util.stream.Collectors;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class EventMainPanel extends BreadCrumbPanel {
+public class EventMasterPanel extends BreadCrumbPanel {
 
     @SpringBean
     @SuppressWarnings("unused")
@@ -57,7 +54,7 @@ public class EventMainPanel extends BreadCrumbPanel {
     private BootstrapPanel<List<EventDetails>> eventListPanel;
     private BootstrapPanel<EventDetails> eventPanel;
 
-    public EventMainPanel(final String id, final IBreadCrumbModel breadCrumbModel) {
+    public EventMasterPanel(final String id, final IBreadCrumbModel breadCrumbModel) {
         super(id, breadCrumbModel);
 
         ((Breadcrumb) getBreadCrumbModel()).setVisible(false);
@@ -65,7 +62,7 @@ public class EventMainPanel extends BreadCrumbPanel {
         eventListPanel = new BootstrapPanel<List<EventDetails>>("events", new CompoundPropertyModel<>(eventService.getUpcomingDetailedEventListList()), new ResourceModel("overview", "Overview")) {
             @Override
             protected Panel newBodyPanel(final String id, final IModel<List<EventDetails>> model) {
-                return new EventListPanel(id, model);
+                return new EventsPanel(id, model);
             }
 
             @Override

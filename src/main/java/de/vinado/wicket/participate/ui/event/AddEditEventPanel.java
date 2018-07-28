@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.event.eventList;
+package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;

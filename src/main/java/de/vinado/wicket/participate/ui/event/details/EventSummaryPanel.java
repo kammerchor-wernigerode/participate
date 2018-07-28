@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.event.summary;
+package de.vinado.wicket.participate.ui.event.details;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
@@ -11,7 +11,7 @@ import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.EventSummaryUpdateEvent;
 import de.vinado.wicket.participate.event.ShowHidePropertiesEvent;
 import de.vinado.wicket.participate.service.EventService;
-import de.vinado.wicket.participate.ui.event.EventPage;
+import de.vinado.wicket.participate.ui.event.EventsPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -81,7 +81,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         final BootstrapAjaxLink backBtn = new BootstrapAjaxLink("backBtn", Buttons.Type.Default) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                setResponsePage(EventPage.class);
+                setResponsePage(EventsPage.class);
             }
         };
         backBtn.setLabel(new ResourceModel("show.event.overview", "Show Event Overview"));

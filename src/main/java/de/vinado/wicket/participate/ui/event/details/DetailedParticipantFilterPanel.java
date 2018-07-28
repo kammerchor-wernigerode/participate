@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.event.summary;
+package de.vinado.wicket.participate.ui.event.details;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;

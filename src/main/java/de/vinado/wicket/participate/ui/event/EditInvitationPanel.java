@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.event.event;
+package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
@@ -34,13 +34,13 @@ import java.util.Collections;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class EditSingerInvitationPanel extends BootstrapModalPanel<ParticipantDTO> {
+public abstract class EditInvitationPanel extends BootstrapModalPanel<ParticipantDTO> {
 
     @SuppressWarnings("unused")
     @SpringBean
     private EventService eventService;
 
-    public EditSingerInvitationPanel(final BootstrapModal modal, final IModel<ParticipantDTO> model) {
+    public EditInvitationPanel(final BootstrapModal modal, final IModel<ParticipantDTO> model) {
         super(modal, new ResourceModel("invitation.edit", "Edit Invitation"), model);
 
         final DatetimePickerConfig fromConfig = new DatetimePickerConfig();

@@ -8,16 +8,16 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 /**
  * Base page for the application.
  */
-public class EventPage extends ParticipatePage {
+public class EventsPage extends ParticipatePage {
 
-    public EventPage() {
+    public EventsPage() {
         this(new PageParameters());
     }
 
     /**
      * @param parameters {@link org.apache.wicket.request.mapper.parameter.PageParameters}
      */
-    public EventPage(final PageParameters parameters) {
+    public EventsPage(final PageParameters parameters) {
         super(parameters);
 
         final Breadcrumb breadcrumb = new Breadcrumb("breadcrumb");
@@ -25,7 +25,7 @@ public class EventPage extends ParticipatePage {
         breadcrumb.setVisible(false);
         add(breadcrumb);
 
-        final BreadCrumbPanel breadCrumbPanel = new EventMainPanel("eventPanel", breadcrumb);
+        final BreadCrumbPanel breadCrumbPanel = new EventMasterPanel("eventPanel", breadcrumb);
         breadCrumbPanel.setOutputMarkupId(true);
         breadcrumb.setActive(breadCrumbPanel);
         add(breadCrumbPanel);
