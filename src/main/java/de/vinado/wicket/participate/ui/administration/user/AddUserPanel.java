@@ -6,7 +6,7 @@ import de.vinado.wicket.participate.components.forms.validator.ConditionalValida
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.data.User;
-import de.vinado.wicket.participate.data.dto.AddUserDTO;
+import de.vinado.wicket.participate.data.dtos.AddUserDTO;
 import de.vinado.wicket.participate.services.UserService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.TextField;

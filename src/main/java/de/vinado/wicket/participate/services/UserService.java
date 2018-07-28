@@ -5,7 +5,7 @@ import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.User;
 import de.vinado.wicket.participate.data.UserRecoveryToken;
-import de.vinado.wicket.participate.data.dto.AddUserDTO;
+import de.vinado.wicket.participate.data.dtos.AddUserDTO;
 import de.vinado.wicket.participate.data.email.MailData;
 import freemarker.template.TemplateException;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -57,7 +57,7 @@ public class UserService extends DataService {
     /**
      * Creates a new {@link de.vinado.wicket.participate.data.User}
      *
-     * @param dto {@link de.vinado.wicket.participate.data.dto.AddUserDTO}
+     * @param dto {@link de.vinado.wicket.participate.data.dtos.AddUserDTO}
      * @return Created user
      */
     @Transactional

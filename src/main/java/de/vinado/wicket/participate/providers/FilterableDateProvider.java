@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.providers;
 
-import de.vinado.wicket.participate.data.filter.IFilter;
+import de.vinado.wicket.participate.data.filters.IFilter;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilterStateLocator;
 
 import java.util.Collection;

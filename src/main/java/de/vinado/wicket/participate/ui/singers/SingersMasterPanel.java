@@ -4,7 +4,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.data.Singer;
-import de.vinado.wicket.participate.data.dto.SingerDTO;
+import de.vinado.wicket.participate.data.dtos.SingerDTO;
 import de.vinado.wicket.participate.services.PersonService;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;

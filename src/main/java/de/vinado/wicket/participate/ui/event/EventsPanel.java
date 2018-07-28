@@ -7,7 +7,7 @@ import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.components.panels.AjaxLinkPanel;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.data.EventDetails;
-import de.vinado.wicket.participate.data.filter.EventFilter;
+import de.vinado.wicket.participate.data.filters.EventFilter;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventUpdateEvent;
 import de.vinado.wicket.participate.providers.SimpleDataProvider;

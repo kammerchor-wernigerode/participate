@@ -9,7 +9,7 @@ import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.data.Singer;
 import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.dto.SingerDTO;
+import de.vinado.wicket.participate.data.dtos.SingerDTO;
 import de.vinado.wicket.participate.events.SingerUpdateEvent;
 import de.vinado.wicket.participate.services.PersonService;
 import org.apache.wicket.ajax.AjaxRequestTarget;

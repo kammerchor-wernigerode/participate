@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.data.filter;
+package de.vinado.wicket.participate.data.filters;
 
 import java.util.List;
 

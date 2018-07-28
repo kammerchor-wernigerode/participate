@@ -4,7 +4,7 @@ import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.behavoirs.FooterBehavior;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
-import de.vinado.wicket.participate.data.dto.SendFeedbackDTO;
+import de.vinado.wicket.participate.data.dtos.SendFeedbackDTO;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;

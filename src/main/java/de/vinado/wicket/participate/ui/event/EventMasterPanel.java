@@ -12,7 +12,7 @@ import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.Participant;
-import de.vinado.wicket.participate.data.dto.EventDTO;
+import de.vinado.wicket.participate.data.dtos.EventDTO;
 import de.vinado.wicket.participate.data.email.MailData;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventUpdateEvent;

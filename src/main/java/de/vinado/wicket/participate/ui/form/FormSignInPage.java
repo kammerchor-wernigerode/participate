@@ -10,7 +10,7 @@ import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.Singer;
 import de.vinado.wicket.participate.data.User;
-import de.vinado.wicket.participate.data.dto.ParticipantDTO;
+import de.vinado.wicket.participate.data.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.UserService;
 import de.vinado.wicket.participate.ui.pages.BasePage;

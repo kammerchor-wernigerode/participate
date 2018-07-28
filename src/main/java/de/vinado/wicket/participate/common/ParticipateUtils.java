@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.common;
 
 import de.vinado.wicket.participate.ParticipateApplication;
-import de.vinado.wicket.participate.data.dto.EventDTO;
+import de.vinado.wicket.participate.data.dtos.EventDTO;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

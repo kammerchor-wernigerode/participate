@@ -6,7 +6,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
 import de.vinado.wicket.participate.components.panels.Footer;
 import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.Participant;
-import de.vinado.wicket.participate.data.dto.ParticipantDTO;
+import de.vinado.wicket.participate.data.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.EventPanel;
 import de.vinado.wicket.participate.ui.pages.BasePage;

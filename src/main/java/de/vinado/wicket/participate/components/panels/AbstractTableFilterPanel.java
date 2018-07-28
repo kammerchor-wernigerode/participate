@@ -9,7 +9,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import de.agilecoders.wicket.jquery.util.Strings2;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapInlineFormDecorator;
 import de.vinado.wicket.participate.providers.SimpleDataProvider;
-import de.vinado.wicket.participate.data.filter.IFilterPanel;
+import de.vinado.wicket.participate.data.filters.IFilterPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;

@@ -1,18 +1,17 @@
-package de.vinado.wicket.participate.data.filter;
+package de.vinado.wicket.participate.data.filters;
+
+import de.vinado.wicket.participate.data.Voice;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class EventFilter implements Serializable {
+public class SingerFilter implements Serializable {
 
     private String searchTerm;
 
-    private Date startDate;
-
-    private Date endDate;
+    private Voice voice;
 
     private boolean showAll;
 
@@ -24,20 +23,12 @@ public class EventFilter implements Serializable {
         this.searchTerm = searchTerm;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public Voice getVoice() {
+        return voice;
     }
 
-    public void setStartDate(final Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final Date endDate) {
-        this.endDate = endDate;
+    public void setVoice(final Voice voice) {
+        this.voice = voice;
     }
 
     public boolean isShowAll() {

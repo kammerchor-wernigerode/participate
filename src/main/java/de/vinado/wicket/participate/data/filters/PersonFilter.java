@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.data.filter;
+package de.vinado.wicket.participate.data.filters;
 
 import de.vinado.wicket.participate.data.Person;
 import org.apache.wicket.util.string.Strings;

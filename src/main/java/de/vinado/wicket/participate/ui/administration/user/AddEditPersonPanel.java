@@ -3,7 +3,7 @@ package de.vinado.wicket.participate.ui.administration.user;
 import de.vinado.wicket.participate.components.forms.validator.ConditionalValidator;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
-import de.vinado.wicket.participate.data.dto.PersonDTO;
+import de.vinado.wicket.participate.data.dtos.PersonDTO;
 import de.vinado.wicket.participate.services.PersonService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.EmailTextField;

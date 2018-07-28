@@ -8,7 +8,7 @@ import de.vinado.wicket.participate.data.Event;
 import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.filter.DetailedParticipantFilter;
+import de.vinado.wicket.participate.data.filters.DetailedParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;

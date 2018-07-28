@@ -12,7 +12,7 @@ import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.data.Event;
-import de.vinado.wicket.participate.data.dto.EventDTO;
+import de.vinado.wicket.participate.data.dtos.EventDTO;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.RemoveEventUpdateEvent;
 import de.vinado.wicket.participate.providers.Select2StringProvider;

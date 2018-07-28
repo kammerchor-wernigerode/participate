@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.data.dto;
+package de.vinado.wicket.participate.data.dtos;
 
 
 import de.vinado.wicket.participate.data.Singer;

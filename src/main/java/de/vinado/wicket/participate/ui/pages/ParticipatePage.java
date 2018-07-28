@@ -15,7 +15,7 @@ import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.data.Person;
 import de.vinado.wicket.participate.data.Singer;
 import de.vinado.wicket.participate.data.User;
-import de.vinado.wicket.participate.data.dto.EditAccountDTO;
+import de.vinado.wicket.participate.data.dtos.EditAccountDTO;
 import de.vinado.wicket.participate.services.PersonService;
 import de.vinado.wicket.participate.services.UserService;
 import de.vinado.wicket.participate.ui.administration.AdminPage;

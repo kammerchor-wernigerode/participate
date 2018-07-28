@@ -3,7 +3,7 @@ package de.vinado.wicket.participate.components.panels;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
-import de.vinado.wicket.participate.data.dto.SendFeedbackDTO;
+import de.vinado.wicket.participate.data.dtos.SendFeedbackDTO;
 import de.vinado.wicket.participate.data.email.MailData;
 import de.vinado.wicket.participate.services.EmailService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
