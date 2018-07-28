@@ -13,7 +13,7 @@ import de.vinado.wicket.participate.data.User;
 import de.vinado.wicket.participate.data.dto.ParticipantDTO;
 import de.vinado.wicket.participate.service.EventService;
 import de.vinado.wicket.participate.service.UserService;
-import de.vinado.wicket.participate.ui.page.BasePage;
+import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.authentication.strategy.DefaultAuthenticationStrategy;

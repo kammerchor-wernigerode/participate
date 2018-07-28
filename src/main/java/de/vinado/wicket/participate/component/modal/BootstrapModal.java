@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.component.modal;
 
-import de.vinado.wicket.participate.ui.page.ParticipatePage;
+import de.vinado.wicket.participate.ui.pages.ParticipatePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;

@@ -15,7 +15,7 @@ import de.vinado.wicket.participate.data.filter.SingerFilter;
 import de.vinado.wicket.participate.event.SingerUpdateEvent;
 import de.vinado.wicket.participate.service.PersonService;
 import de.vinado.wicket.participate.ui.event.SendEmailPanel;
-import de.vinado.wicket.participate.ui.page.BasePage;
+import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;

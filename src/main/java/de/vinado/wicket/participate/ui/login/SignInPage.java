@@ -4,7 +4,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
 import de.vinado.wicket.participate.component.Collapsible;
 import de.vinado.wicket.participate.component.Snackbar;
 import de.vinado.wicket.participate.service.UserService;
-import de.vinado.wicket.participate.ui.page.BasePage;
+import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;

@@ -22,7 +22,7 @@ import de.vinado.wicket.participate.event.AjaxUpdateEvent;
 import de.vinado.wicket.participate.event.EventUpdateEvent;
 import de.vinado.wicket.participate.service.EventService;
 import de.vinado.wicket.participate.ui.event.SendEmailPanel;
-import de.vinado.wicket.participate.ui.page.BasePage;
+import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;

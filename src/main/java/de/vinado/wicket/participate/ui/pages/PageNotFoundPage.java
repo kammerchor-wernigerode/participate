@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.page;
+package de.vinado.wicket.participate.ui.pages;
 
 import org.apache.wicket.markup.html.link.AbstractLink;
 

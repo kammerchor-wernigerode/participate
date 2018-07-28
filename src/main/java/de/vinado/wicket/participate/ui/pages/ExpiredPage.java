@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.page;
+package de.vinado.wicket.participate.ui.pages;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.heading.Heading;
 import de.vinado.wicket.participate.ParticipateApplication;

@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.ui.resetPassword;
 
-import de.vinado.wicket.participate.ui.page.BasePage;
+import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 

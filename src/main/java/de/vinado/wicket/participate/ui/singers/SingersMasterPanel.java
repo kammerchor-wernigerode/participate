@@ -6,7 +6,7 @@ import de.vinado.wicket.participate.component.panel.BootstrapPanel;
 import de.vinado.wicket.participate.data.Singer;
 import de.vinado.wicket.participate.data.dto.SingerDTO;
 import de.vinado.wicket.participate.service.PersonService;
-import de.vinado.wicket.participate.ui.page.BasePage;
+import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;

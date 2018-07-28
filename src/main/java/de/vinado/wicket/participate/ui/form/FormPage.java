@@ -9,7 +9,7 @@ import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.dto.ParticipantDTO;
 import de.vinado.wicket.participate.service.EventService;
 import de.vinado.wicket.participate.ui.event.event.EventPanel;
-import de.vinado.wicket.participate.ui.page.BasePage;
+import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;

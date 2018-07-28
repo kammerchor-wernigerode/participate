@@ -18,7 +18,7 @@ import de.vinado.wicket.participate.data.User;
 import de.vinado.wicket.participate.data.dto.AddUserDTO;
 import de.vinado.wicket.participate.data.dto.PersonDTO;
 import de.vinado.wicket.participate.service.UserService;
-import de.vinado.wicket.participate.ui.page.BasePage;
+import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
