@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.providers;
 
-import de.vinado.wicket.participate.data.Singer;
+import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.services.PersonService;
 import org.wicketstuff.select2.ChoiceProvider;
 import org.wicketstuff.select2.Response;

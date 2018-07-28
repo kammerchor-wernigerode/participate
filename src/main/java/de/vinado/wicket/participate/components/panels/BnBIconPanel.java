@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.components.panels;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.vinado.wicket.participate.components.TextAlign;
-import de.vinado.wicket.participate.data.Participant;
+import de.vinado.wicket.participate.model.Participant;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 

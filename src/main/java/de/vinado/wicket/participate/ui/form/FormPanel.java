@@ -7,9 +7,9 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.Date
 import de.vinado.wicket.participate.behavoirs.AutosizeBehavior;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
-import de.vinado.wicket.participate.data.Participant;
-import de.vinado.wicket.participate.data.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.events.EventUpdateEvent;
+import de.vinado.wicket.participate.model.Participant;
+import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;

@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate;
 
-import de.vinado.wicket.participate.data.Event;
-import de.vinado.wicket.participate.data.User;
-import de.vinado.wicket.participate.data.filters.EventFilter;
+import de.vinado.wicket.participate.model.Event;
+import de.vinado.wicket.participate.model.User;
+import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.UserService;
 import org.apache.wicket.Session;

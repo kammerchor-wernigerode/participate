@@ -4,21 +4,21 @@ import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.common.ParticipateUtils;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
-import de.vinado.wicket.participate.data.Event;
-import de.vinado.wicket.participate.data.EventDetails;
-import de.vinado.wicket.participate.data.InvitationStatus;
-import de.vinado.wicket.participate.data.Participant;
-import de.vinado.wicket.participate.data.Person;
-import de.vinado.wicket.participate.data.Singer;
-import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.dtos.EventDTO;
-import de.vinado.wicket.participate.data.dtos.ParticipantDTO;
-import de.vinado.wicket.participate.data.email.EmailAttachment;
-import de.vinado.wicket.participate.data.email.MailData;
-import de.vinado.wicket.participate.data.filters.DetailedParticipantFilter;
-import de.vinado.wicket.participate.data.filters.EventFilter;
-import de.vinado.wicket.participate.data.filters.ParticipantFilter;
-import de.vinado.wicket.participate.data.ical4j.SimpleDateProperty;
+import de.vinado.wicket.participate.model.Event;
+import de.vinado.wicket.participate.model.EventDetails;
+import de.vinado.wicket.participate.model.InvitationStatus;
+import de.vinado.wicket.participate.model.Participant;
+import de.vinado.wicket.participate.model.Person;
+import de.vinado.wicket.participate.model.Singer;
+import de.vinado.wicket.participate.model.Voice;
+import de.vinado.wicket.participate.model.dtos.EventDTO;
+import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
+import de.vinado.wicket.participate.model.email.EmailAttachment;
+import de.vinado.wicket.participate.model.email.MailData;
+import de.vinado.wicket.participate.model.filters.DetailedParticipantFilter;
+import de.vinado.wicket.participate.model.filters.EventFilter;
+import de.vinado.wicket.participate.model.filters.ParticipantFilter;
+import de.vinado.wicket.participate.model.ical4j.SimpleDateProperty;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -91,10 +91,10 @@ public class EventService extends DataService {
     }
 
     /**
-     * Creates an {@link de.vinado.wicket.participate.data.Event}
+     * Creates an {@link de.vinado.wicket.participate.model.Event}
      *
      * @param dto {@link EventDTO}
-     * @return {@link de.vinado.wicket.participate.data.Event}
+     * @return {@link de.vinado.wicket.participate.model.Event}
      */
     @Transactional
     public Event createEvent(final EventDTO dto) {
@@ -127,10 +127,10 @@ public class EventService extends DataService {
     }
 
     /**
-     * Saves an existing {@link de.vinado.wicket.participate.data.Event}
+     * Saves an existing {@link de.vinado.wicket.participate.model.Event}
      *
      * @param dto {@link EventDTO}
-     * @return {@link de.vinado.wicket.participate.data.Event}
+     * @return {@link de.vinado.wicket.participate.model.Event}
      */
     @Transactional
     public Event saveEvent(final EventDTO dto) {
@@ -599,9 +599,9 @@ public class EventService extends DataService {
     }
 
     /**
-     * Invites all Singers from participantList to {@link de.vinado.wicket.participate.data.Event}
+     * Invites all Singers from participantList to {@link de.vinado.wicket.participate.model.Event}
      *
-     * @param event           {@link de.vinado.wicket.participate.data.Event}
+     * @param event           {@link de.vinado.wicket.participate.model.Event}
      * @param participantList List of {@link Participant} to invite
      * @return Amount of sent emails
      */

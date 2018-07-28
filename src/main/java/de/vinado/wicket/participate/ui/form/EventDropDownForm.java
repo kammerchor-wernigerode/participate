@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.ui.form;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarForm;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.select.BootstrapSelect;
-import de.vinado.wicket.participate.data.Participant;
+import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.services.EventService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;

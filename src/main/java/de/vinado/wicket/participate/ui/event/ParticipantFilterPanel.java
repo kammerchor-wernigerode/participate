@@ -1,11 +1,11 @@
 package de.vinado.wicket.participate.ui.event;
 
 import de.vinado.wicket.participate.components.panels.AbstractTableFilterPanel;
-import de.vinado.wicket.participate.data.Event;
-import de.vinado.wicket.participate.data.InvitationStatus;
-import de.vinado.wicket.participate.data.Participant;
-import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.filters.ParticipantFilter;
+import de.vinado.wicket.participate.model.Event;
+import de.vinado.wicket.participate.model.InvitationStatus;
+import de.vinado.wicket.participate.model.Participant;
+import de.vinado.wicket.participate.model.Voice;
+import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.DropDownChoice;

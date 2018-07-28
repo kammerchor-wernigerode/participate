@@ -7,10 +7,10 @@ import de.vinado.wicket.participate.components.forms.validator.ConditionalValida
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
-import de.vinado.wicket.participate.data.Singer;
-import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.dtos.SingerDTO;
 import de.vinado.wicket.participate.events.SingerUpdateEvent;
+import de.vinado.wicket.participate.model.Singer;
+import de.vinado.wicket.participate.model.Voice;
+import de.vinado.wicket.participate.model.dtos.SingerDTO;
 import de.vinado.wicket.participate.services.PersonService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;

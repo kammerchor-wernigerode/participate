@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.common.generator;
 
-import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.dtos.SingerDTO;
+import de.vinado.wicket.participate.model.Voice;
+import de.vinado.wicket.participate.model.dtos.SingerDTO;
 import de.vinado.wicket.participate.services.DataService;
 
 import java.text.Normalizer;

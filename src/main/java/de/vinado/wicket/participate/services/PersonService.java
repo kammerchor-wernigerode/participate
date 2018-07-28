@@ -1,13 +1,13 @@
 package de.vinado.wicket.participate.services;
 
+import de.vinado.wicket.participate.model.Participant;
+import de.vinado.wicket.participate.model.Person;
+import de.vinado.wicket.participate.model.Singer;
+import de.vinado.wicket.participate.model.Voice;
+import de.vinado.wicket.participate.model.dtos.PersonDTO;
+import de.vinado.wicket.participate.model.dtos.SingerDTO;
+import de.vinado.wicket.participate.model.filters.SingerFilter;
 import de.vinado.wicket.participate.providers.SimpleDataProvider;
-import de.vinado.wicket.participate.data.Participant;
-import de.vinado.wicket.participate.data.Person;
-import de.vinado.wicket.participate.data.Singer;
-import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.dtos.PersonDTO;
-import de.vinado.wicket.participate.data.dtos.SingerDTO;
-import de.vinado.wicket.participate.data.filters.SingerFilter;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.export.CSVDataExporter;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.export.IExportableColumn;

@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.ui.singers;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
-import de.vinado.wicket.participate.data.Singer;
+import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.ui.pages.ParticipatePage;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;

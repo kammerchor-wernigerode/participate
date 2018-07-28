@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.events;
 
-import de.vinado.wicket.participate.data.EventDetails;
+import de.vinado.wicket.participate.model.EventDetails;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 import java.io.Serializable;

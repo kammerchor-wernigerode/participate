@@ -8,8 +8,8 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavi
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.agilecoders.wicket.jquery.util.Strings2;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapInlineFormDecorator;
+import de.vinado.wicket.participate.model.filters.IFilterPanel;
 import de.vinado.wicket.participate.providers.SimpleDataProvider;
-import de.vinado.wicket.participate.data.filters.IFilterPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;

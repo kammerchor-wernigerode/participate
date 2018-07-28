@@ -4,8 +4,8 @@ import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalForm
 import de.vinado.wicket.participate.components.forms.validator.ConditionalValidator;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
-import de.vinado.wicket.participate.data.Person;
-import de.vinado.wicket.participate.data.dtos.AddUserDTO;
+import de.vinado.wicket.participate.model.Person;
+import de.vinado.wicket.participate.model.dtos.AddUserDTO;
 import de.vinado.wicket.participate.providers.Select2PersonProvider;
 import de.vinado.wicket.participate.services.PersonService;
 import de.vinado.wicket.participate.services.UserService;

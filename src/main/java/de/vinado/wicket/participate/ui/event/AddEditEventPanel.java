@@ -11,10 +11,10 @@ import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalForm
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
-import de.vinado.wicket.participate.data.Event;
-import de.vinado.wicket.participate.data.dtos.EventDTO;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.RemoveEventUpdateEvent;
+import de.vinado.wicket.participate.model.Event;
+import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.providers.Select2StringProvider;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
@@ -34,7 +34,7 @@ import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2Choice;
 
 /**
- * Panel for creation of a new {@link de.vinado.wicket.participate.data.Event}
+ * Panel for creation of a new {@link de.vinado.wicket.participate.model.Event}
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */

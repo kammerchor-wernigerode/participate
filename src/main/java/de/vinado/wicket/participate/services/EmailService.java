@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate.services;
 
 
-import de.vinado.wicket.participate.data.email.EmailAttachment;
-import de.vinado.wicket.participate.data.email.MailData;
+import de.vinado.wicket.participate.model.email.EmailAttachment;
+import de.vinado.wicket.participate.model.email.MailData;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import org.apache.wicket.util.string.Strings;

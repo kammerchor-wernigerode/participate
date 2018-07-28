@@ -2,9 +2,9 @@ package de.vinado.wicket.participate.ui.singers;
 
 import com.google.common.collect.Lists;
 import de.vinado.wicket.participate.components.panels.AbstractTableFilterPanel;
-import de.vinado.wicket.participate.data.Singer;
-import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.filters.SingerFilter;
+import de.vinado.wicket.participate.model.Singer;
+import de.vinado.wicket.participate.model.Voice;
+import de.vinado.wicket.participate.model.filters.SingerFilter;
 import de.vinado.wicket.participate.services.PersonService;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.CheckBox;

@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.common.generator;
 
-import de.vinado.wicket.participate.data.dtos.EventDTO;
+import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.services.DataService;
 
 /**

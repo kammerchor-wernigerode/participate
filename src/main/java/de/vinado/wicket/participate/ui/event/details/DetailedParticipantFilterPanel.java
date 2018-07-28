@@ -4,11 +4,11 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.components.panels.AbstractTableFilterPanel;
-import de.vinado.wicket.participate.data.Event;
-import de.vinado.wicket.participate.data.InvitationStatus;
-import de.vinado.wicket.participate.data.Participant;
-import de.vinado.wicket.participate.data.Voice;
-import de.vinado.wicket.participate.data.filters.DetailedParticipantFilter;
+import de.vinado.wicket.participate.model.Event;
+import de.vinado.wicket.participate.model.InvitationStatus;
+import de.vinado.wicket.participate.model.Participant;
+import de.vinado.wicket.participate.model.Voice;
+import de.vinado.wicket.participate.model.filters.DetailedParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;

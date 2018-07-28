@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.services;
 
-import de.vinado.wicket.participate.data.Identifiable;
+import de.vinado.wicket.participate.model.Identifiable;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -31,7 +31,7 @@ public abstract class DataService {
      * Loads all items of the provided type.
      *
      * @param type Type of entity to load.
-     * @param <T>  Object, which is implementing {@link de.vinado.wicket.participate.data.Identifiable}.
+     * @param <T>  Object, which is implementing {@link de.vinado.wicket.participate.model.Identifiable}.
      * @return List of entities.
      */
     public <T extends Identifiable> List<T> getAll(final Class<T> type) {
@@ -42,7 +42,7 @@ public abstract class DataService {
      * Saves an item.
      *
      * @param item Item to save.
-     * @param <T>  Object, which is implementing {@link de.vinado.wicket.participate.data.Identifiable}.
+     * @param <T>  Object, which is implementing {@link de.vinado.wicket.participate.model.Identifiable}.
      * @return Saved object.
      */
     @Transactional
@@ -57,7 +57,7 @@ public abstract class DataService {
      *
      * @param type Type of the object.
      * @param id   ID of the object.
-     * @param <T>  Object, which is implementing {@link de.vinado.wicket.participate.data.Identifiable}.
+     * @param <T>  Object, which is implementing {@link de.vinado.wicket.participate.model.Identifiable}.
      * @return Loaded object.
      */
     public <T extends Identifiable> T load(final Class<T> type, final Serializable id) {

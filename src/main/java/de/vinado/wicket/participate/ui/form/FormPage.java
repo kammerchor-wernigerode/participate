@@ -4,9 +4,9 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.AbstractNavbarCom
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
 import de.vinado.wicket.participate.components.panels.Footer;
-import de.vinado.wicket.participate.data.EventDetails;
-import de.vinado.wicket.participate.data.Participant;
-import de.vinado.wicket.participate.data.dtos.ParticipantDTO;
+import de.vinado.wicket.participate.model.EventDetails;
+import de.vinado.wicket.participate.model.Participant;
+import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.EventPanel;
 import de.vinado.wicket.participate.ui.pages.BasePage;
