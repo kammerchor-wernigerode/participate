@@ -23,7 +23,7 @@ import javax.persistence.Table;
 public class Singer extends Person {
 
     @Enumerated
-    @Column(name = "voice")
+    @Column
     private Voice voice;
 
     @Column(name = "is_active", nullable = false)
@@ -32,13 +32,12 @@ public class Singer extends Person {
     protected Singer() {
     } // JPA only
 
-
-    public Singer(final Person person, final Voice voice) {
-        super(person);
-        this.voice = voice;
-        this.active = true;
-    }
-
+    /**
+     * @param lastName  The singers surname
+     * @param firstName The singers given name
+     * @param email     The singers email address
+     * @param voice     The singers voice group
+     */
     public Singer(final String lastName, final String firstName, final String email, final Voice voice) {
         super(lastName, firstName, email);
         this.voice = voice;

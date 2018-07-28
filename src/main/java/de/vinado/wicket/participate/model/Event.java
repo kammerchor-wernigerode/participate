@@ -11,11 +11,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -27,30 +25,30 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "events")
-public class Event implements Identifiable, Serializable {
+public class Event implements Identifiable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "event_type", nullable = false)
+    @Column(nullable = false)
     private String eventType;
 
+    @Column
     private String location;
 
-    @Column(name = "description")
+    @Column
     private String description;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "start_date", nullable = false)
+    @Column(nullable = false)
     private Date startDate;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "end_date", nullable = false)
+    @Column(nullable = false)
     private Date endDate;
 
     @CreationTimestamp
@@ -62,17 +60,13 @@ public class Event implements Identifiable, Serializable {
     @Column(name = "is_active", nullable = false)
     private boolean active;
 
-    /**
-     * Hibernate only
-     */
-    public Event() {
-    }
+    protected Event() {
+    } // JPA only
 
     /**
-     * Construct.
-     *
      * @param name        Event name
      * @param eventType   Event type
+     * @param location    Event location
      * @param description More information
      * @param startDate   Start date of Event
      * @param endDate     End date of Event
@@ -85,22 +79,12 @@ public class Event implements Identifiable, Serializable {
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.creationDate = this.lastModified = new Date();
         this.active = true;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.lastModified = new Date();
     }
 
     @Override
     public Long getId() {
         return id;
-    }
-
-    public void setId(final Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -189,48 +173,48 @@ public class Event implements Identifiable, Serializable {
         final Event event = (Event) o;
 
         return new EqualsBuilder()
-                .append(active, event.active)
-                .append(id, event.id)
-                .append(name, event.name)
-                .append(eventType, event.eventType)
-                .append(location, event.location)
-                .append(description, event.description)
-                .append(startDate, event.startDate)
-                .append(endDate, event.endDate)
-                .append(creationDate, event.creationDate)
-                .append(lastModified, event.lastModified)
-                .isEquals();
+            .append(active, event.active)
+            .append(id, event.id)
+            .append(name, event.name)
+            .append(eventType, event.eventType)
+            .append(location, event.location)
+            .append(description, event.description)
+            .append(startDate, event.startDate)
+            .append(endDate, event.endDate)
+            .append(creationDate, event.creationDate)
+            .append(lastModified, event.lastModified)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(name)
-                .append(eventType)
-                .append(location)
-                .append(description)
-                .append(startDate)
-                .append(endDate)
-                .append(creationDate)
-                .append(lastModified)
-                .append(active)
-                .toHashCode();
+            .append(id)
+            .append(name)
+            .append(eventType)
+            .append(location)
+            .append(description)
+            .append(startDate)
+            .append(endDate)
+            .append(creationDate)
+            .append(lastModified)
+            .append(active)
+            .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("id", id)
-                .append("name", name)
-                .append("eventType", eventType)
-                .append("location", location)
-                .append("description", description)
-                .append("startDate", startDate)
-                .append("endDate", endDate)
-                .append("creationDate", creationDate)
-                .append("lastModified", lastModified)
-                .append("active", active)
-                .toString();
+            .append("id", id)
+            .append("name", name)
+            .append("eventType", eventType)
+            .append("location", location)
+            .append("description", description)
+            .append("startDate", startDate)
+            .append("endDate", endDate)
+            .append("creationDate", creationDate)
+            .append("lastModified", lastModified)
+            .append("active", active)
+            .toString();
     }
 }

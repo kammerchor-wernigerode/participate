@@ -15,7 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -23,53 +22,43 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "user_rec_tokens")
-public class UserRecoveryToken implements Identifiable, Serializable {
+public class UserRecoveryToken implements Identifiable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "token", nullable = false)
+    @Column(nullable = false)
     private String token;
 
     @CreationTimestamp
     private Date creationDate;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "valid_date", nullable = false)
+    @Column(nullable = false)
     private Date validDate;
 
-
-    /**
-     * Hibernate only
-     */
     protected UserRecoveryToken() {
-    }
+    } // JPA only
 
     /**
-     * @param user      {@link User}
+     * @param user      The associated {@link User}
      * @param token     Recovery token
      * @param validDate Date, the token expires
      */
     public UserRecoveryToken(final User user, final String token, final Date validDate) {
         this.user = user;
         this.token = token;
-        this.creationDate = new Date();
         this.validDate = validDate;
     }
 
     @Override
     public Long getId() {
         return id;
-    }
-
-    public void setId(final Long id) {
-        this.id = id;
     }
 
     public User getUser() {
@@ -109,33 +98,33 @@ public class UserRecoveryToken implements Identifiable, Serializable {
         final UserRecoveryToken that = (UserRecoveryToken) o;
 
         return new EqualsBuilder()
-                .append(getId(), that.getId())
-                .append(getUser(), that.getUser())
-                .append(getToken(), that.getToken())
-                .append(getCreationDate(), that.getCreationDate())
-                .append(getValidDate(), that.getValidDate())
-                .isEquals();
+            .append(getId(), that.getId())
+            .append(getUser(), that.getUser())
+            .append(getToken(), that.getToken())
+            .append(getCreationDate(), that.getCreationDate())
+            .append(getValidDate(), that.getValidDate())
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(getId())
-                .append(getUser())
-                .append(getToken())
-                .append(getCreationDate())
-                .append(getValidDate())
-                .toHashCode();
+            .append(getId())
+            .append(getUser())
+            .append(getToken())
+            .append(getCreationDate())
+            .append(getValidDate())
+            .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("id", id)
-                .append("user", user)
-                .append("token", token)
-                .append("creationDate", creationDate)
-                .append("validDate", validDate)
-                .toString();
+            .append("id", id)
+            .append("user", user)
+            .append("token", token)
+            .append("creationDate", creationDate)
+            .append("validDate", validDate)
+            .toString();
     }
 }

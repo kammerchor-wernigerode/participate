@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -20,31 +19,31 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "v_event_details")
-public class EventDetails implements Identifiable, Serializable {
+public class EventDetails implements Identifiable<Long> {
 
     @Id
     @ManyToOne
     @JoinColumn(name = "id")
     private Event event;
 
-    @Column(name = "name")
+    @Column
     private String name;
 
     @Column(name = "type")
     private String eventType;
 
-    @Column(name = "description")
+    @Column
     private String description;
 
-    @Column(name = "start_date")
+    @Column
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
-    @Column(name = "end_date")
+    @Column
     @Temporal(TemporalType.DATE)
     private Date endDate;
 
-    @Column(name = "location")
+    @Column
     private String location;
 
     @Column(name = "count_accepted_declined_pending")
@@ -89,7 +88,7 @@ public class EventDetails implements Identifiable, Serializable {
     @Column(name = "bass")
     private String basses;
 
-    @Column(name = "declined")
+    @Column
     private String declined;
 
     @Column(name = "count_invitations")

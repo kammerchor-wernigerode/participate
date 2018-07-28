@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @param <T> Serializable data type
  */
-public interface Identifiable<T extends Serializable> {
+public interface Identifiable<T extends Serializable> extends Serializable {
 
     /**
      * Returns the database id

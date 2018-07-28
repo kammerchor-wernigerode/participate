@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -26,20 +25,19 @@ import java.util.Date;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "persons")
-public class Person implements Identifiable, Serializable {
+public class Person implements Identifiable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "first_name", nullable = false)
+    @Column(nullable = false)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(nullable = false)
     private String lastName;
 
-    @Column(name = "email", unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @CreationTimestamp
@@ -60,18 +58,11 @@ public class Person implements Identifiable, Serializable {
     protected Person() {
     } // JPA only
 
-    public Person(final Person person) {
-        this.id = person.getId();
-        this.lastName = person.getLastName();
-        this.firstName = person.getFirstName();
-        this.email = person.getEmail();
-        this.creationDate = person.getCreationDate();
-        this.lastModified = person.getLastModified();
-        this.displayName = person.getDisplayName();
-        this.sortName = person.getSortName();
-        this.searchName = person.getSearchName();
-    }
-
+    /**
+     * @param lastName  The persons surname
+     * @param firstName The persons given name
+     * @param email     The persons email address
+     */
     public Person(final String lastName, final String firstName, final String email) {
         this.lastName = lastName;
         this.firstName = firstName;
@@ -81,10 +72,6 @@ public class Person implements Identifiable, Serializable {
     @Override
     public Long getId() {
         return id;
-    }
-
-    public void setId(final Long id) {
-        this.id = id;
     }
 
     public String getFirstName() {

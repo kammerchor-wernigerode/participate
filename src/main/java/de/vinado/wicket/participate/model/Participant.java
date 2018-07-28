@@ -15,7 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -25,18 +24,17 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "participants")
-public class Participant implements Identifiable, Serializable {
+public class Participant implements Identifiable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
-    @Column(name = "token", nullable = false, unique = true, length = 50)
+    @Column(nullable = false, unique = true, length = 50)
     private String token;
 
     @ManyToOne
@@ -44,15 +42,15 @@ public class Participant implements Identifiable, Serializable {
     private Singer singer;
 
     @Enumerated
-    @Column(name = "invitation_status", nullable = false)
+    @Column(nullable = false)
     private InvitationStatus invitationStatus;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "from_date")
+    @Column
     private Date fromDate;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "to_date")
+    @Column
     private Date toDate;
 
     @Column(name = "need_catering")
@@ -61,22 +59,19 @@ public class Participant implements Identifiable, Serializable {
     @Column(name = "need_accommodation")
     private boolean accommodation;
 
-    @Column(name = "comment")
+    @Column
     private String comment;
 
-    /**
-     * Hibernate only
-     */
     protected Participant() {
-    }
+    } // JPA only
 
     /**
      * @param event            {@link Event}
      * @param singer           {@link Singer}
      * @param token            Identifier token
      * @param invitationStatus {@link de.vinado.wicket.participate.model.InvitationStatus}
-     * @param catering         Flag, if the singer want dinner
-     * @param accommodation    Flag, if the singer needs a place to sleep
+     * @param catering         Whether the participant wants to participate the restaurant
+     * @param accommodation    Whether the participant needs an accommodation
      * @param comment          Comment overall
      */
     public Participant(final Event event, final Singer singer, final String token,
@@ -101,10 +96,6 @@ public class Participant implements Identifiable, Serializable {
     @Override
     public Long getId() {
         return id;
-    }
-
-    public void setId(final Long id) {
-        this.id = id;
     }
 
     public Event getEvent() {
