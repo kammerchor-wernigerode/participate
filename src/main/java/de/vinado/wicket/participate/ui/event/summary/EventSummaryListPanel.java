@@ -36,6 +36,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -150,7 +151,20 @@ public class EventSummaryListPanel extends Panel {
                 cellItem.add(new Label(componentId, formattedDate));
             }
         });
-        columns.add(new PropertyColumn<>(new ResourceModel("comments", "Comments"), "comment"));
+        columns.add(new PropertyColumn<Participant, String>(new ResourceModel("comments", "Comments"), "comment") {
+            @Override
+            public void populateItem(final Item<ICellPopulator<Participant>> item, final String componentId, final IModel<Participant> rowModel) {
+                item.add(new MultiLineLabel(componentId, getDataModel(rowModel)));
+            }
+
+            @Override
+            public String getCssClass() {
+                if (showAllProperties) {
+                    return super.getCssClass();
+                }
+                return "sr-only";
+            }
+        });
         if (editable) {
             columns.add(new BootstrapAjaxLinkColumn<Participant, String>(FontAwesomeIconType.pencil, new ResourceModel("invitation.edit", "Edit Invitation")) {
                 @Override
