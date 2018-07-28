@@ -4,7 +4,7 @@ import de.vinado.wicket.participate.components.forms.validator.ConditionalValida
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.data.dto.PersonDTO;
-import de.vinado.wicket.participate.service.PersonService;
+import de.vinado.wicket.participate.services.PersonService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.markup.html.form.RequiredTextField;

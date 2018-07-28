@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.ui.resetPassword;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.vinado.wicket.participate.ParticipateApplication;
-import de.vinado.wicket.participate.service.UserService;
+import de.vinado.wicket.participate.services.UserService;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.StatelessForm;

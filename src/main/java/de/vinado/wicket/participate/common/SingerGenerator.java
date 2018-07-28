@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.common;
 
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.SingerDTO;
-import de.vinado.wicket.participate.service.DataService;
+import de.vinado.wicket.participate.services.DataService;
 
 import java.text.Normalizer;
 import java.util.Arrays;

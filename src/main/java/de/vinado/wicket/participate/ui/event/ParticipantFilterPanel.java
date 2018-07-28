@@ -6,7 +6,7 @@ import de.vinado.wicket.participate.data.InvitationStatus;
 import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.filter.ParticipantFilter;
-import de.vinado.wicket.participate.service.EventService;
+import de.vinado.wicket.participate.services.EventService;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;

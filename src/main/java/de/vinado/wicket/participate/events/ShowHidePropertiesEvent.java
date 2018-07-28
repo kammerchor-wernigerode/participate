@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.event;
+package de.vinado.wicket.participate.events;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 

@@ -15,7 +15,7 @@ import javax.persistence.Table;
  * Entity of a Singer.
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- * @see de.vinado.wicket.participate.service.PersonService
+ * @see de.vinado.wicket.participate.services.PersonService
  */
 @Entity
 @Table(name = "singers")

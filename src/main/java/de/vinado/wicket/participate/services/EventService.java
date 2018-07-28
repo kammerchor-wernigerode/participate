@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.service;
+package de.vinado.wicket.participate.services;
 
 import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.ParticipateSession;
@@ -81,7 +81,7 @@ public class EventService extends DataService {
     private EmailService emailService;
 
     /**
-     * {@link de.vinado.wicket.participate.service.DataService}
+     * {@link de.vinado.wicket.participate.services.DataService}
      *
      * @param entityManager Entity manager
      */

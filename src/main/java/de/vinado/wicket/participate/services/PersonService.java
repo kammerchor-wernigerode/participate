@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.service;
+package de.vinado.wicket.participate.services;
 
 import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import de.vinado.wicket.participate.data.Participant;

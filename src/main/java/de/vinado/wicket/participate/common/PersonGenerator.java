@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.common;
 
 import de.vinado.wicket.participate.data.dto.PersonDTO;
-import de.vinado.wicket.participate.service.DataService;
+import de.vinado.wicket.participate.services.DataService;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)

@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.common;
 
-import de.vinado.wicket.participate.service.DataService;
+import de.vinado.wicket.participate.services.DataService;
 
 import java.io.Serializable;
 import java.util.Calendar;

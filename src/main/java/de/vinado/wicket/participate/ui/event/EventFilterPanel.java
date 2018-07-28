@@ -5,7 +5,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField
 import de.vinado.wicket.participate.components.panels.AbstractTableFilterPanel;
 import de.vinado.wicket.participate.data.EventDetails;
 import de.vinado.wicket.participate.data.filter.EventFilter;
-import de.vinado.wicket.participate.service.EventService;
+import de.vinado.wicket.participate.services.EventService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;

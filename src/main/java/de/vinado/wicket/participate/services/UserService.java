@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.service;
+package de.vinado.wicket.participate.services;
 
 import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;

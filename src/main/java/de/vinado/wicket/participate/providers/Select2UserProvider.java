@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.providers;
 
 import de.vinado.wicket.participate.data.User;
-import de.vinado.wicket.participate.service.UserService;
+import de.vinado.wicket.participate.services.UserService;
 import org.wicketstuff.select2.ChoiceProvider;
 import org.wicketstuff.select2.Response;
 

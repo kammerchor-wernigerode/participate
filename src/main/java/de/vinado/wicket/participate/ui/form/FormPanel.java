@@ -9,8 +9,8 @@ import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalForm
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.data.Participant;
 import de.vinado.wicket.participate.data.dto.ParticipantDTO;
-import de.vinado.wicket.participate.event.EventUpdateEvent;
-import de.vinado.wicket.participate.service.EventService;
+import de.vinado.wicket.participate.events.EventUpdateEvent;
+import de.vinado.wicket.participate.services.EventService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.event.Broadcast;

@@ -23,7 +23,7 @@ import java.util.Date;
  * Entity of an Event
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- * @see de.vinado.wicket.participate.service.EventService
+ * @see de.vinado.wicket.participate.services.EventService
  */
 @Entity
 @Table(name = "events")

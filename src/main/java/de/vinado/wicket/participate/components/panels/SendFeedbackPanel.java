@@ -5,7 +5,7 @@ import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.data.dto.SendFeedbackDTO;
 import de.vinado.wicket.participate.data.email.MailData;
-import de.vinado.wicket.participate.service.EmailService;
+import de.vinado.wicket.participate.services.EmailService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.markup.html.form.RequiredTextField;
