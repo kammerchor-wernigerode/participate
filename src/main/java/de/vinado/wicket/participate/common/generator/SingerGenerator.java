@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.common;
+package de.vinado.wicket.participate.common.generator;
 
 import de.vinado.wicket.participate.data.Voice;
 import de.vinado.wicket.participate.data.dto.SingerDTO;
@@ -13,7 +13,7 @@ import java.util.Random;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class SingerGenerator extends AbstractEntityGenerator<SingerDTO> {
+public class SingerGenerator extends EntityGenerator<SingerDTO> {
 
     private static SingerGenerator instance = new SingerGenerator();
 

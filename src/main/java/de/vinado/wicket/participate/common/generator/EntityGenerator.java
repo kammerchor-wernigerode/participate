@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.common;
+package de.vinado.wicket.participate.common.generator;
 
 import de.vinado.wicket.participate.services.DataService;
 
@@ -11,7 +11,7 @@ import java.util.GregorianCalendar;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class AbstractEntityGenerator<T> implements Serializable {
+public abstract class EntityGenerator<T> implements Serializable {
 
     public abstract T generate(final DataService dataService);
 

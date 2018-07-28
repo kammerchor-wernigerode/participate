@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.common;
+package de.vinado.wicket.participate.common.generator;
 
 import de.vinado.wicket.participate.data.dto.EventDTO;
 import de.vinado.wicket.participate.services.DataService;
@@ -6,7 +6,7 @@ import de.vinado.wicket.participate.services.DataService;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class EventGenerator extends AbstractEntityGenerator<EventDTO> {
+public class EventGenerator extends EntityGenerator<EventDTO> {
 
     private static EventGenerator instance = new EventGenerator();
 

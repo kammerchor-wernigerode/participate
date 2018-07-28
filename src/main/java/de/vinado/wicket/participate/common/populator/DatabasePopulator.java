@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.data.database;
+package de.vinado.wicket.participate.common.populator;
 
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.data.database;
+package de.vinado.wicket.participate.common.populator;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.wicket.util.string.Strings;
