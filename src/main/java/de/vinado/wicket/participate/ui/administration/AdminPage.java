@@ -28,7 +28,7 @@ public class AdminPage extends ParticipatePage {
         breadcrumb.setVisible(false);
         add(breadcrumb);
 
-        final BreadCrumbPanel breadCrumbPanel = new AdminTabPanel("adminPanel", breadcrumb);
+        final BreadCrumbPanel breadCrumbPanel = new AdminMasterPanel("adminPanel", breadcrumb);
         breadCrumbPanel.setOutputMarkupId(true);
         breadcrumb.setActive(breadCrumbPanel);
         add(breadCrumbPanel);

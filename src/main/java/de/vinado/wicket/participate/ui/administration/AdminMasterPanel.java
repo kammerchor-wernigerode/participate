@@ -19,9 +19,9 @@ import java.util.List;
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class AdminTabPanel extends BreadCrumbPanel {
+public class AdminMasterPanel extends BreadCrumbPanel {
 
-    public AdminTabPanel(final String id, final IBreadCrumbModel breadCrumbModel) {
+    public AdminMasterPanel(final String id, final IBreadCrumbModel breadCrumbModel) {
         super(id, breadCrumbModel);
 
         final List<ITab> tabs = new ArrayList<>();
