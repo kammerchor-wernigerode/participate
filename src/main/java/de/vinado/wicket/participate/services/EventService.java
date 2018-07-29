@@ -20,6 +20,7 @@ import de.vinado.wicket.participate.model.filters.DetailedParticipantFilter;
 import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.model.ical4j.SimpleDateProperty;
+import freemarker.template.TemplateException;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -55,6 +56,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -718,12 +720,16 @@ public class EventService extends DataService {
                 continue;
             }
 
-            // TODO Create notification template
-            if (InvitationStatus.UNINVITED.equals(participant.getInvitationStatus())) {
-                mailData.addAttachment(newEventAttachment(participant.getEvent()));
-                preparators.add(emailService.getMimeMessagePreparator(mailData, "fm-eventReminder.ftl", true));
-            } else {
-                preparators.add(emailService.getMimeMessagePreparator(mailData, "fm-eventInvite.ftl", true));
+            try {
+                // TODO Create notification template
+                if (InvitationStatus.UNINVITED.equals(participant.getInvitationStatus())) {
+                    mailData.addAttachment(newEventAttachment(participant.getEvent()));
+                    preparators.add(emailService.getMimeMessagePreparator(mailData, "inviteSinger-txt.ftl", "inviteSinger-html.ftl"));
+                } else {
+                    preparators.add(emailService.getMimeMessagePreparator(mailData, "inviteSinger-txt.ftl", "inviteSinger-html.ftl"));
+                }
+            } catch (IOException | TemplateException e) {
+                LOGGER.error("Unable to parse Freemarker template", e);
             }
 
             final Participant loadedParticipant = load(Participant.class, participant.getId());
