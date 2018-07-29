@@ -187,9 +187,9 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
                         final MailData mailData = new MailData();
-                        mailData.setTo(personService.getPersons(model.getObject().getEvent()).stream().map(person -> {
+                        mailData.setTo(personService.getSingers(model.getObject().getEvent()).stream().map(singer -> {
                             try {
-                                return new InternetAddress(person.getEmail(), person.getDisplayName());
+                                return new InternetAddress(singer.getEmail(), singer.getDisplayName());
                             } catch (UnsupportedEncodingException e) {
                                 e.printStackTrace();
                             }

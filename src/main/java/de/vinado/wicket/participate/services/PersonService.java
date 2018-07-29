@@ -21,7 +21,6 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,24 +50,20 @@ public class PersonService extends DataService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(PersonService.class);
 
-    @Autowired
-    private EventService eventService;
-
-    /**
-     * {@link DataService}
-     *
-     * @param entityManager {@link EntityManager}
-     */
     @PersistenceContext
     public void setEntityManager(final EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
+    /**
+     * Creates a new {@link Person}.
+     *
+     * @param dto {@link PersonDTO}
+     * @return Saved {@link Person}
+     */
     @Transactional
     public Person createPerson(final PersonDTO dto) {
-        Person person = new Person(dto.getFirstName(), dto.getLastName(), dto.getEmail());
-        person = save(person);
-        return person;
+        return save(new Person(dto.getFirstName(), dto.getLastName(), dto.getEmail()));
     }
 
     @Transactional
@@ -81,6 +76,12 @@ public class PersonService extends DataService {
         }
     }
 
+    /**
+     * Saves an existing {@link Person}.
+     *
+     * @param dto {@link PersonDTO}
+     * @return Saved {@link Person}
+     */
     @Transactional
     public Person savePerson(final PersonDTO dto) {
         final Person loadedPerson = load(Person.class, dto.getPerson().getId());
@@ -91,10 +92,10 @@ public class PersonService extends DataService {
     }
 
     /**
-     * Creates a new {@link Singer} to the database.
+     * Creates a new {@link Singer}.
      *
      * @param dto {@link SingerDTO}
-     * @return Returns the fresh created Singer
+     * @return Saved {@link Singer}
      */
     @Transactional
     public Singer createSinger(final SingerDTO dto) {
@@ -102,10 +103,10 @@ public class PersonService extends DataService {
     }
 
     /**
-     * Saves an existing {@link Singer} into the database.
+     * Saves an existing {@link Singer}.
      *
      * @param dto {@link SingerDTO}
-     * @return Returns the saved Singer
+     * @return Saved {@link Singer}
      */
     @Transactional
     public Singer saveSinger(final SingerDTO dto) {
@@ -117,6 +118,11 @@ public class PersonService extends DataService {
         return save(loadedSinger);
     }
 
+    /**
+     * Sets the {@link Singer} to inactive.
+     *
+     * @param singer {@link Singer}
+     */
     @Transactional
     public void removeSinger(final Singer singer) {
         final Singer loadedSinger = load(Singer.class, singer.getId());
@@ -124,6 +130,12 @@ public class PersonService extends DataService {
         save(loadedSinger);
     }
 
+    /**
+     * Returns whether the {@link Person} exists.
+     *
+     * @param email {@link Person#email}
+     * @return Whether the {@link Person} exists
+     */
     public boolean hasPerson(final String email) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
@@ -133,6 +145,12 @@ public class PersonService extends DataService {
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
+    /**
+     * Returns whether the {@link Singer} exists.
+     *
+     * @param person {@link Person}
+     * @return Whether the {@link Singer} exists
+     */
     public boolean hasSinger(final Person person) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
@@ -142,10 +160,27 @@ public class PersonService extends DataService {
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
-    public Person getPerson(final Long id) {
-        return load(Person.class, id);
+    /**
+     * Returns whether the {@link Singer} exists.
+     *
+     * @param email {@link Singer#email}
+     * @return Whether the {@link Singer} exists
+     */
+    public boolean hasSinger(final String email) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        final Root<Singer> root = criteriaQuery.from(Singer.class);
+        criteriaQuery.select(criteriaBuilder.count(root));
+        criteriaQuery.where(criteriaBuilder.equal(root.get("email"), email));
+        return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
+    /**
+     * Fetches the {@link Person} for {@link Person#email}.
+     *
+     * @param email {@link Person#email}
+     * @return {@link Person} for {@link Person#email}
+     */
     public Person getPerson(final String email) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Person> criteriaQuery = criteriaBuilder.createQuery(Person.class);
@@ -154,20 +189,31 @@ public class PersonService extends DataService {
         criteriaQuery.where(forEmail);
         try {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (final NoResultException e) {
-            LOGGER.warn("Person with email={} could not be found.", e);
+        } catch (NoResultException e) {
+            LOGGER.trace("Person with email={} could not be found.", e);
             return null;
         }
     }
 
+    /**
+     * Fetches all active {@link Singer}s
+     *
+     * @return List of {@link Singer}s
+     */
     public List<Singer> getSingers() {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
         final Root<Singer> root = criteriaQuery.from(Singer.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("active"), true));
+        criteriaQuery.where(forActive(criteriaBuilder, root));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
+    /**
+     * Fetches a {@link Singer} for {@link Person}.
+     *
+     * @param person {@link Person}
+     * @return {@link Singer} for {@link Person}
+     */
     public Singer getSinger(final Person person) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
@@ -175,58 +221,37 @@ public class PersonService extends DataService {
         criteriaQuery.where(criteriaBuilder.equal(root.get("person"), person));
         try {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (final NoResultException e) {
-            LOGGER.warn("Person {} with, is not an (active) singer.", person.getDisplayName());
-            return null;
-        }
-    }
-
-    public Singer getSinger(final Long singerId) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
-        final Root<Singer> root = criteriaQuery.from(Singer.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("id"), singerId));
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (final NoResultException e) {
-            LOGGER.warn("Singer with id={} could not be found.", singerId);
+        } catch (NoResultException e) {
+            LOGGER.trace("Could not find Singer for person /w id={}", person.getId());
             return null;
         }
     }
 
     /**
-     * Returns a List of all {@link Participant} mappings for the given {@link Singer}.
+     * Fetches a {@link Singer} for {@link Singer#email}.
      *
-     * @param singer Singer
-     * @return List of {@link Participant}s
+     * @param email {@link Singer#email}
+     * @return {@link Singer} for {@link Singer#email}
      */
-    public List<Participant> getParticipants(final Singer singer) {
-        try {
-            final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-            final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-            final Root<Participant> root = criteriaQuery.from(Participant.class);
-            criteriaQuery.where(criteriaBuilder.equal(root.<Singer>get("singer"), singer));
-            return entityManager.createQuery(criteriaQuery).getResultList();
-        } catch (final Exception e) {
-            LOGGER.info("Mapping between Event and Singer does not exist.", e.getMessage());
-            return new ArrayList<>();
-        }
-    }
-
     public Singer getSinger(final String email) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
         final Root<Singer> root = criteriaQuery.from(Singer.class);
-        final Predicate forEmail = criteriaBuilder.equal(root.get("email"), email);
-        criteriaQuery.where(forEmail);
+        criteriaQuery.where(criteriaBuilder.equal(root.get("email"), email));
         try {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (final NoResultException e) {
-            LOGGER.error("No singers with the email address " + email + " found.");
+        } catch (NoResultException e) {
+            LOGGER.trace("Could not find Singer for email=****");
+            return null;
         }
-        return null;
     }
 
+    /**
+     * Fetches all {@link Person}s by {@link Person#searchName} that matches the filter term.
+     *
+     * @param term Filter term
+     * @return Filtered list of {@link Person}s
+     */
     public List<Person> findPersons(final String term) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Person> criteriaQuery = criteriaBuilder.createQuery(Person.class);
@@ -238,15 +263,27 @@ public class PersonService extends DataService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    public List<Person> getPersons(final Event event) {
+    /**
+     * Fetches all {@link Singer}s that participating in the {@link Event}.
+     *
+     * @param event {@link Event}
+     * @return Participating list of {@link Singer}s
+     */
+    public List<Singer> getSingers(final Event event) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Person> criteriaQuery = criteriaBuilder.createQuery(Person.class);
+        final CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
         final Root<Participant> root = criteriaQuery.from(Participant.class);
-        criteriaQuery.select(root.join("singer").get("person"));
+        criteriaQuery.select(root.join("singer"));
         criteriaQuery.where(criteriaBuilder.equal(root.get("event"), event));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
+    /**
+     * Fetches all {@link Singer}s by {@link Singer#searchName} that matches the filter term.
+     *
+     * @param term Filter term
+     * @return Filtered list of {@link Person}s
+     */
     public List<Singer> findSingers(final String term) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
@@ -258,6 +295,48 @@ public class PersonService extends DataService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
+    /**
+     * Fetches all {@link Singer}s that matches the {@link SingerFilter}.
+     *
+     * @param singerFilter {@link SingerFilter}
+     * @return List of filtered {@link Singer}s
+     */
+    public List<Singer> getFilteredSingerList(final SingerFilter singerFilter) {
+        if (null == singerFilter) {
+            return getSingers();
+        }
+
+        if (singerFilter.isShowAll()) {
+            return getAll(Singer.class);
+        }
+
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
+        final Root<Singer> root = criteriaQuery.from(Singer.class);
+
+        final List<Predicate> predicates = new ArrayList<>();
+        predicates.add(criteriaBuilder.equal(root.get("active"), true));
+
+        final String searchTerm = singerFilter.getSearchTerm();
+        if (!Strings.isEmpty(searchTerm)) {
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("searchName")), "%" + searchTerm.toLowerCase() + "%"));
+        }
+
+        final Voice voice = singerFilter.getVoice();
+        if (null != voice) {
+            predicates.add(criteriaBuilder.equal(root.get("voice"), voice));
+        }
+
+        criteriaQuery.where(predicates.toArray(new Predicate[0]));
+        return entityManager.createQuery(criteriaQuery).getResultList();
+    }
+
+    /**
+     * Handles the import of a CSV file with entries of {@link Person}s. The method need Wickets {@link FileUpload}
+     * component. The columns has to be separated through comma.
+     *
+     * @param upload {@link FileUpload}
+     */
     @Transactional
     public void importPersons(final FileUpload upload) {
         try {
@@ -283,49 +362,15 @@ public class PersonService extends DataService {
                 }
             }
         } catch (IOException e) {
-            LOGGER.warn("Could not read input file.");
+            LOGGER.error("Could not read from input file", e);
         }
     }
 
-    public List<Singer> getFilteredSingerList(final SingerFilter filter) {
-        if (null == filter) {
-            return getSingers();
-        }
-
-        if (filter.isShowAll()) {
-            return getAll(Singer.class);
-        }
-
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
-        final Root<Singer> root = criteriaQuery.from(Singer.class);
-
-        final List<Predicate> predicates = new ArrayList<>();
-        predicates.add(criteriaBuilder.equal(root.get("active"), true));
-
-        final String searchTerm = filter.getSearchTerm();
-        if (!Strings.isEmpty(searchTerm)) {
-            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("searchName")), "%" + searchTerm.toLowerCase() + "%"));
-        }
-
-        final Voice voice = filter.getVoice();
-        if (null != voice) {
-            predicates.add(criteriaBuilder.equal(root.get("voice"), voice));
-        }
-
-        criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]));
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    public boolean hasSinger(final String email) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        final Root<Singer> root = criteriaQuery.from(Singer.class);
-        criteriaQuery.select(criteriaBuilder.count(root));
-        criteriaQuery.where(criteriaBuilder.equal(root.get("email"), email));
-        return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
-    }
-
+    /**
+     * Handles the export of all {@link Singer} entries from the database. The resulting CSV is separated by semicolon.
+     *
+     * @return {@link StringResourceStream}
+     */
     public IResourceStream exportSingers() {
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -349,7 +394,7 @@ public class PersonService extends DataService {
         try {
             dataExporter.exportData(dataProvider, columns, outputStream);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Could not export data", e);
         }
 
         return new StringResourceStream(new String(outputStream.toByteArray()));
