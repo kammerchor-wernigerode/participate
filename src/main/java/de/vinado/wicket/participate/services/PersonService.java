@@ -156,7 +156,7 @@ public class PersonService extends DataService {
         final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
         final Root<Singer> root = criteriaQuery.from(Singer.class);
         criteriaQuery.select(criteriaBuilder.count(root));
-        criteriaQuery.where(criteriaBuilder.equal(root.get("person"), person));
+        criteriaQuery.where(criteriaBuilder.equal(root.get("id"), person.getId()));
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
@@ -218,7 +218,7 @@ public class PersonService extends DataService {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
         final Root<Singer> root = criteriaQuery.from(Singer.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("person"), person));
+        criteriaQuery.where(criteriaBuilder.equal(root.get("id"), person.getId()));
         try {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
         } catch (NoResultException e) {
