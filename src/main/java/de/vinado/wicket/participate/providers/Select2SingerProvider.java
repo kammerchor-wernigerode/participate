@@ -39,7 +39,7 @@ public class Select2SingerProvider extends ChoiceProvider<Singer> {
     public Collection<Singer> toChoices(final Collection<String> ids) {
         final ArrayList<Singer> singerList = new ArrayList<>();
         for (String id : ids) {
-            singerList.add(personService.getSinger(Long.parseLong(id)));
+            singerList.add(personService.load(Singer.class, Long.parseLong(id)));
         }
         return singerList;
     }
