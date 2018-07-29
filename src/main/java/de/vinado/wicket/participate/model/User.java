@@ -21,7 +21,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "users")
-public class User implements Identifiable<Long> {
+public class User implements Identifiable<Long>, Hideable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
