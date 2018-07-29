@@ -6,7 +6,6 @@ import de.vinado.wicket.participate.common.ParticipateUtils;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
-import de.vinado.wicket.participate.model.Hideable;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
@@ -961,9 +960,5 @@ public class EventService extends DataService {
 
     private Predicate forUpcomingDate(final CriteriaBuilder criteriaBuilder, final Path<? extends Terminable> eventPath) {
         return criteriaBuilder.greaterThanOrEqualTo(eventPath.get("endDate"), new Date());
-    }
-
-    private Predicate forActive(final CriteriaBuilder criteriaBuilder, final Path<? extends Hideable> hideablePath) {
-        return criteriaBuilder.greaterThanOrEqualTo(hideablePath.get("active"), true);
     }
 }

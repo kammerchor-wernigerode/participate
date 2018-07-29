@@ -1,11 +1,14 @@
 package de.vinado.wicket.participate.services;
 
+import de.vinado.wicket.participate.model.Hideable;
 import de.vinado.wicket.participate.model.Identifiable;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.List;
@@ -99,5 +102,16 @@ public abstract class DataService {
         criteriaQuery.select(criteriaBuilder.count(root));
         criteriaQuery.where(criteriaBuilder.equal(root.get("id"), identifiable.getId()));
         return entityManager.createQuery(criteriaQuery).getSingleResult() > 0;
+    }
+
+    /**
+     * Returns an predefined {@link Predicate} that checks if {@link Hideable} is active.
+     *
+     * @param criteriaBuilder {@link CriteriaBuilder}
+     * @param path            {@link Path} to {@link Hideable}
+     * @return {@link Predicate}
+     */
+    protected Predicate forActive(final CriteriaBuilder criteriaBuilder, final Path<? extends Hideable> path) {
+        return criteriaBuilder.equal(path.get("active"), true);
     }
 }
