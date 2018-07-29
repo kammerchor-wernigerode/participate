@@ -104,17 +104,19 @@ public class UserPanel extends Panel {
                                 new ResourceModel("user.remove.person.question", "Are you sure you want to remove the user-person association?")) {
                                 @Override
                                 protected void onConfirm(final AjaxRequestTarget target) {
-                                    userService.removePersonFromUser(rowModel.getObject());
-                                    dataProvider.set(userService.getAll(User.class));
+                                    final AddUserDTO dto = new AddUserDTO(rowModel.getObject());
+                                    dto.setPerson(null);
+                                    userService.saveUser(dto);
+                                    dataProvider.set(userService.getUsers());
                                     target.add(dataTable);
                                 }
                             });
                         } else {
                             modal.setContent(new AddPersonToUserPanel(modal, new CompoundPropertyModel<>(new AddUserDTO(rowModel.getObject()))) {
                                 @Override
-                                protected void onConfirm(final Person savedPerson, final AjaxRequestTarget target) {
+                                protected void onConfirm(final User savedUser, final AjaxRequestTarget target) {
                                     dataProvider.set(userService.getAll(User.class));
-                                    if (userService.startPasswordReset(savedPerson.getEmail(), true)) {
+                                    if (userService.startPasswordReset(savedUser.getPerson().getEmail(), true)) {
                                         Snackbar.show(target, new ResourceModel("email.send.invitation.success", "An invitation has been sent"));
                                     } else {
                                         Snackbar.show(target, new ResourceModel("email.send.invitation.error", "There was an error sending the invitation"));

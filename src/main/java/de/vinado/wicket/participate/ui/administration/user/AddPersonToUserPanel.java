@@ -5,6 +5,7 @@ import de.vinado.wicket.participate.components.forms.validator.ConditionalValida
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.model.Person;
+import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.AddUserDTO;
 import de.vinado.wicket.participate.providers.Select2PersonProvider;
 import de.vinado.wicket.participate.services.PersonService;
@@ -114,8 +115,8 @@ public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDT
 
         // person
         personS2c = new Select2Choice<>("person",
-                new PropertyModel<>(model, "person"),
-                new Select2PersonProvider(personService));
+            new PropertyModel<>(model, "person"),
+            new Select2PersonProvider(personService));
         personS2c.getSettings().setLanguage(getLocale().getLanguage());
         personS2c.getSettings().setCloseOnSelect(true);
         personS2c.getSettings().setTheme(new Select2BootstrapTheme(true));
@@ -129,7 +130,7 @@ public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDT
         personS2c.add(new ConditionalValidator<Person>(new ResourceModel("person.assign.error", "The person is already assigned to a user")) {
             @Override
             public boolean getCondition(final Person value) {
-                return userService.isPersonAssigned(value);
+                return userService.hasUser(value);
             }
         });
         inner.add(personS2c);
@@ -139,12 +140,12 @@ public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDT
 
     @Override
     protected void onSaveSubmit(final IModel<AddUserDTO> model, final AjaxRequestTarget target) {
-        onConfirm(userService.assignOrCreatePersonForUser(model.getObject()), target);
+        onConfirm(userService.assignPerson(model.getObject()), target);
     }
 
     public IModel<String> getSelectedModel() {
         return selectedModel;
     }
 
-    protected abstract void onConfirm(final Person person, final AjaxRequestTarget target);
+    protected abstract void onConfirm(final User user, final AjaxRequestTarget target);
 }

@@ -92,7 +92,7 @@ public class FormSignInPage extends BasePage {
             setParticipant(model.getObject().getParticipant());
 
             // TODO Password authentication for persons, who are already a user
-            final User user = userService.getUser4PersonId(model.getObject().getSinger().getId());
+            final User user = userService.getUser(model.getObject().getSinger());
             if (null != user) {
                 this.userPassword = user.getPasswordSha256();
             }

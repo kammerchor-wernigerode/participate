@@ -52,7 +52,7 @@ public class ParticipateSession extends AuthenticatedWebSession {
     public void clearSessionData() {
         setEvent(eventService.getLatestEvent());
         setEventFilter(new EventFilter());
-        setUser(userService.getUser4Username(ParticipateSession.get().getUser().getUsername()));
+        setUser(userService.getUser(ParticipateSession.get().getUser().getUsername()));
     }
 
     /**
@@ -60,7 +60,7 @@ public class ParticipateSession extends AuthenticatedWebSession {
      */
     @Override
     protected boolean authenticate(final String usernameOrEmail, final String plainPassword) {
-        final User user = userService.getAuthenticatedUser(usernameOrEmail, plainPassword);
+        final User user = userService.getUser(usernameOrEmail, plainPassword);
         if (null != user) {
             this.user = user;
             if (eventService.hasUpcomingEvents()) {
