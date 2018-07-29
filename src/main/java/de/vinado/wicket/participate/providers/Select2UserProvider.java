@@ -37,10 +37,10 @@ public class Select2UserProvider extends ChoiceProvider<User> {
 
     @Override
     public Collection<User> toChoices(Collection<String> ids) {
-        final ArrayList<User> personList = new ArrayList<>();
+        final ArrayList<User> users = new ArrayList<>();
         for (String id : ids) {
-            personList.add(userService.getUser4PersonId(Long.parseLong(id)));
+            users.add(userService.load(User.class, Long.parseLong(id)));
         }
-        return personList;
+        return users;
     }
 }
