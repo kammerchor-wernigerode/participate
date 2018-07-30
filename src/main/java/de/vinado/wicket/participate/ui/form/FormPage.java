@@ -4,7 +4,6 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.AbstractNavbarCom
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
 import de.vinado.wicket.participate.components.panels.Footer;
-import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
@@ -13,7 +12,6 @@ import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -83,16 +81,7 @@ public class FormPage extends BasePage {
         add(breadcrumb);
 
         final EventPanel eventPanel = new EventPanel("eventPanel", breadcrumb,
-            new LoadableDetachableModel<EventDetails>() {
-                @Override
-                protected EventDetails load() {
-                    if (null == model.getObject()) {
-                        return eventService.getLatestEventDetails();
-                    } else {
-                        return eventService.getEventDetails(FormPage.this.model.getObject().getEvent());
-                    }
-                }
-            }, false);
+            new CompoundPropertyModel<>(eventService.getEventDetails(model.getObject().getEvent())), false);
         add(eventPanel);
 
         final FormPanel formPanel = new FormPanel("formPanel", breadcrumb,
