@@ -87,7 +87,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -187,26 +186,13 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>${maven-resources-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>copy-sass</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/resources/scss</directory>
-                                    <includes>
-                                        <include>**/*.scss</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                            <outputDirectory>${project.build.directory}/sources-sass</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <delimiters>
+                        <delimiter>@</delimiter>
+                    </delimiters>
+                    <useDefaultDelimiters>false</useDefaultDelimiters>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>nl.geodienstencentrum.maven</groupId>
@@ -216,12 +202,14 @@
                     <resources>
                         <resource>
                             <source>
-                                <directory>${project.build.directory}/sources-sass</directory>
+                                <directory>${project.basedir}/src/main/resources/scss</directory>
                                 <includes>
                                     <include>**/*.scss</include>
                                 </includes>
                             </source>
-                            <destination>${project.build.directory}/generated-sources/resources/css</destination>
+                            <destination>
+                                ${project.build.directory}/generated-sources/src/main/java/de/vinado/wicket/participate/resources/css
+                            </destination>
                         </resource>
                     </resources>
                 </configuration>

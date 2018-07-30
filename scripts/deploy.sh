@@ -94,18 +94,19 @@ FILE_NAME=$(basename "$ORIGINAL")
 
 echo " *** Copy $FILE_NAME to $REMOTE_HOST"
 scp "$ORIGINAL" $REMOTE_USER@$REMOTE_HOST:$TEMP_DIR/$FILE_NAME >/dev/null 2>&1 || dieWith "Failed to copy war to $REMOTE_HOST"
-echo " *** Shut down Apache Tomcat Service"
-ssh $REMOTE_USER@$REMOTE_HOST "sudo systemctl stop tomcat.service" >/dev/null 2>&1 || dieWith "Failed to shut down Apache Tomcat Service"
-echo " *** Deploy new Version"
-ssh -t $REMOTE_USER@$REMOTE_HOST "cp $TEMP_DIR/$FILE_NAME $TOMCAT_WEBAPP/ROOT.war" >/dev/null 2>&1 || dieWith "Failed to copy new Version"
-echo " *** Start Apache Tomcat Service"
-ssh $REMOTE_USER@$REMOTE_HOST "sudo systemctl start tomcat.service" >/dev/null 2>&1 || dieWith "Failed to start Apache Tomcat Service"
-sleep 3
-echo " *** Deployment successful"
-echo " *** Run Liquibase Update"
-ssh $REMOTE_USER@$REMOTE_HOST "cd $TOMCAT_WEBAPP/ROOT/WEB-INF/classes && /usr/local/bin/liquibase update" >/dev/null 2>&1 || dieWith "Liquibase Update was not successful"
-echo " *** Liquibase Update successful"
+#echo " *** Shut down Apache Tomcat Service"
+#ssh $REMOTE_USER@$REMOTE_HOST "sudo systemctl stop tomcat.service" >/dev/null 2>&1 || dieWith "Failed to shut down Apache Tomcat Service"
+#echo " *** Deploy new Version"
+#ssh -t $REMOTE_USER@$REMOTE_HOST "cp $TEMP_DIR/$FILE_NAME $TOMCAT_WEBAPP/ROOT.war" >/dev/null 2>&1 || dieWith "Failed to copy new Version"
+#echo " *** Start Apache Tomcat Service"
+#ssh $REMOTE_USER@$REMOTE_HOST "sudo systemctl start tomcat.service" >/dev/null 2>&1 || dieWith "Failed to start Apache Tomcat Service"
+#sleep 3
+#echo " *** Deployment successful"
+#echo " *** Run Liquibase Update"
+#ssh $REMOTE_USER@$REMOTE_HOST "cd $TOMCAT_WEBAPP/ROOT/WEB-INF/classes && /usr/local/bin/liquibase update" >/dev/null 2>&1 || dieWith "Liquibase Update was not successful"
+#echo " *** Liquibase Update successful"
+echo " *** Deployment is currently not supported. You must deploy the application yourself on your remote system"
 clear
-echo " +++ Done"
+#echo " +++ Done"
 
 exit 0
