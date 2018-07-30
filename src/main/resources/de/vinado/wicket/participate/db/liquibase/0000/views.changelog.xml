@@ -4,55 +4,63 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="v_event_member_accepted" author="Vincent Nadoll" runOnChange="true">
+    <changeSet id="v_event_member_accepted" author="Vincent Nadoll" runOnChange="true" dbms="!h2">
         <sql>
             DROP VIEW IF EXISTS v_event_member_accepted;
         </sql>
         <sqlFile path="de/vinado/wicket/participate/db/liquibase/0000/views/v_event_member_accepted.sql"/>
     </changeSet>
-    <changeSet id="v_event_member_declined" author="Vincent Nadoll" runOnChange="true">
+
+    <changeSet id="v_event_member_declined" author="Vincent Nadoll" runOnChange="true" dbms="!h2">
         <sql>
             DROP VIEW IF EXISTS v_event_member_declined;
         </sql>
         <sqlFile path="de/vinado/wicket/participate/db/liquibase/0000/views/v_event_member_declined.sql"/>
     </changeSet>
-    <changeSet id="v_event_member_pending" author="Vincent Nadoll" runOnChange="true">
+
+    <changeSet id="v_event_member_pending" author="Vincent Nadoll" runOnChange="true" dbms="!h2">
         <sql>
             DROP VIEW IF EXISTS v_event_member_pending;
         </sql>
         <sqlFile path="de/vinado/wicket/participate/db/liquibase/0000/views/v_event_member_pending.sql"/>
     </changeSet>
-    <changeSet id="v_event_member_soprano" author="Vincent Nadoll" runOnChange="true">
+
+    <changeSet id="v_event_member_soprano" author="Vincent Nadoll" runOnChange="true" dbms="!h2">
         <sql>
             DROP VIEW IF EXISTS v_event_member_soprano;
         </sql>
         <sqlFile path="de/vinado/wicket/participate/db/liquibase/0000/views/v_event_member_soprano.sql"/>
     </changeSet>
-    <changeSet id="v_event_member_alto" author="Vincent Nadoll" runOnChange="true">
+
+    <changeSet id="v_event_member_alto" author="Vincent Nadoll" runOnChange="true" dbms="!h2">
         <sql>
             DROP VIEW IF EXISTS v_event_member_alto;
         </sql>
         <sqlFile path="de/vinado/wicket/participate/db/liquibase/0000/views/v_event_member_alto.sql"/>
     </changeSet>
-    <changeSet id="v_event_member_tenor" author="Vincent Nadoll" runOnChange="true">
+
+    <changeSet id="v_event_member_tenor" author="Vincent Nadoll" runOnChange="true" dbms="!h2">
         <sql>
             DROP VIEW IF EXISTS v_event_member_tenor;
         </sql>
         <sqlFile path="de/vinado/wicket/participate/db/liquibase/0000/views/v_event_member_tenor.sql"/>
     </changeSet>
-    <changeSet id="v_event_member_bass" author="Vincent Nadoll" runOnChange="true">
+
+    <changeSet id="v_event_member_bass" author="Vincent Nadoll" runOnChange="true" dbms="!h2">
         <sql>
             DROP VIEW IF EXISTS v_event_member_bass;
         </sql>
         <sqlFile path="de/vinado/wicket/participate/db/liquibase/0000/views/v_event_member_bass.sql"/>
     </changeSet>
-    <changeSet id="v_events" author="Vincent Nadoll" runOnChange="true">
+
+    <changeSet id="v_events" author="Vincent Nadoll" runOnChange="true" dbms="!h2">
         <sql>
             DROP VIEW IF EXISTS v_events;
         </sql>
         <sqlFile path="de/vinado/wicket/participate/db/liquibase/0000/views/v_events.sql"/>
     </changeSet>
-    <changeSet id="v_event_details" author="Vincent Nadoll" runOnChange="true">
+
+    <changeSet id="v_event_details" author="Vincent Nadoll" runOnChange="true" dbms="!h2">
         <sql>
             DROP VIEW IF EXISTS v_event_details;
         </sql>
