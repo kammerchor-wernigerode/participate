@@ -4,9 +4,8 @@ import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
-import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.email.MailData;
-import de.vinado.wicket.participate.providers.Select2PersonProvider;
+import de.vinado.wicket.participate.providers.Select2EmailAddressProvider;
 import de.vinado.wicket.participate.services.EmailService;
 import de.vinado.wicket.participate.services.PersonService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -17,6 +16,8 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2MultiChoice;
+
+import javax.mail.internet.InternetAddress;
 
 
 /**
@@ -41,7 +42,7 @@ public class SendEmailPanel extends BootstrapModalPanel<MailData> {
         fromTf.setEnabled(false);
         inner.add(fromTf);
 
-        final Select2MultiChoice<Person> toTf = new Select2MultiChoice<>("to", new Select2PersonProvider(personService));
+        final Select2MultiChoice<InternetAddress> toTf = new Select2MultiChoice<>("to", new Select2EmailAddressProvider(personService));
         toTf.getSettings().setLanguage(getLocale().getLanguage());
         toTf.getSettings().setCloseOnSelect(true);
         toTf.getSettings().setTheme(new Select2BootstrapTheme(true));
