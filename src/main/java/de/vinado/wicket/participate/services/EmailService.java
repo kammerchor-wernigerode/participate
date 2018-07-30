@@ -35,15 +35,11 @@ public class EmailService {
 
     private static final String UTF_8 = StandardCharsets.UTF_8.name();
 
-    private final JavaMailSender sender;
-
-    private final Configuration freeMarker;
+    @Autowired
+    private JavaMailSender sender;
 
     @Autowired
-    public EmailService(final JavaMailSender sender, final Configuration freeMarker) {
-        this.sender = sender;
-        this.freeMarker = freeMarker;
-    }
+    private Configuration freeMarker;
 
     /**
      * Sends plaintext email
