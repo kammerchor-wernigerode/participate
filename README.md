@@ -18,6 +18,8 @@ Install the maven dependencies.
 mvn install
 ```
 
+---
+
 You'll need a MySQL database.
 - Windows: XAMPP
 - Ubuntu: mysql-server
@@ -34,12 +36,56 @@ Start the application.
 mvn spring-boot:run
 ```
 
+### Docker
+
+Build the `kammerchor-wernigerode/paricipate` Docker image with
+
+```bash
+mvn clean package docker:build
+```
+
+and run the following commands to start the MySQL container as well as the Participate container.
+
+```bash
+docker run \
+ --env MYSQL_ROOT_PASSWORD=root \
+ --env MYSQL_DATABASE=db_name \
+ --env MYSQL_USER=db_user \
+ --env MYSQL_PASSWORD=db_pass \
+ --name particiapte-db \
+ mysql:5.7
+ 
+docker run \
+ -p 8080:8080 \
+ --name participate \
+ --link particiapte-db:mysql \
+ kammerchor-wernigerode/participate
+```
+
+---
+
+Alternatively create a new Docker network with
+```bash
+docker network create participate
+```
+and run
+```bash
+docker-compose up -d
+```
+to start both images as a docker service.
+
 ## Deployment
 
 ```bash
-mvn clean install
+mvn clean package
 ```
-creates an war file. In order to run the application you'll need an Apache Tomcat server installed. Also don't forget to configure the `.properties` files to fit your environment.
+creates an executable jar file. Start the application with
+
+```bash
+java -jar target/particpate.jar
+```
+
+or follow the [Docker instructions](#docker) above
 
 ## Licence
 Apache License 2.0 - [Vinado](https://vinado.de) - Built with :heart: in Dresden

@@ -1,0 +1,30 @@
+version: '3'
+
+networks:
+    participate:
+
+services:
+    database:
+        image: mysql:5.7
+        container_name: participate-db
+        restart: always
+        networks:
+        - participate
+        environment:
+            MYSQL_ROOT_PASSWORD: rootpass
+            MYSQL_DATABASE: participate
+            MYSQL_USER: participate
+            MYSQL_PASSWORD: participate
+
+    participate:
+        depends_on:
+        - database
+        image: kammerchor-wernigerode/participate:latest
+        container_name: participate
+        restart: always
+        networks:
+        - participate
+        ports:
+        - 8080:8080
+        links:
+        - 'database:mysql'
