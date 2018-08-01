@@ -52,13 +52,26 @@ docker run \
  --env MYSQL_DATABASE=participate \
  --env MYSQL_USER=participate \
  --env MYSQL_PASSWORD=participate \
- --name particiapte-db \
+ --name participate-db \
  mysql:5.7
  
 docker run \
+ --env APPLICATION_NAME='Application Name' \
+ --env APPLICATION_CUSTOMER='Application Customer' \
+ --env APPLICATION_PASSWORD='application_password' \
+ --env DATABASE_HOST='mysql' \
+ --env DATABASE_PORT=3306 \
+ --env DATABASE_NAME='participate' \
+ --env DATABASE_USER='participate' \
+ --env DATABASE_PASSWORD='participate' \
+ --env MAIL_HOST='mail.domain.tld' \
+ --env MAIL_PORT=587 \
+ --env MAIL_USER='mail.user@domain.tld' \
+ --env MAIL_PASSWORD='mail_password' \
+ --env MAIL_FROM='no-reply@domain.tld' \
  -p 8080:8080 \
  --name participate \
- --link particiapte-db:mysql \
+ --link participate-db:mysql \
  kammerchor-wernigerode/participate
 ```
 
