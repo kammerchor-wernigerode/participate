@@ -22,7 +22,7 @@
     </description>
 
     <properties>
-        <docker.image.prefix>kammerchor-wernigerode</docker.image.prefix>
+        <docker.image.prefix>kchwr</docker.image.prefix>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skipTests>false</skipTests>

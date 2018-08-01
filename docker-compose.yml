@@ -19,7 +19,7 @@ services:
     participate:
         depends_on:
         - database
-        image: kammerchor-wernigerode/participate:latest
+        image: kchwr/participate:latest
         container_name: participate
         restart: always
         networks:

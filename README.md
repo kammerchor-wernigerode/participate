@@ -38,7 +38,7 @@ mvn spring-boot:run
 
 ### Docker
 
-Build the `kammerchor-wernigerode/paricipate` Docker image with
+Build the `kchwr/paricipate` Docker image with
 
 ```bash
 mvn clean package docker:build
@@ -72,7 +72,7 @@ docker run \
  -p 8080:8080 \
  --name participate \
  --link participate-db:mysql \
- kammerchor-wernigerode/participate
+ kchwr/participate
 ```
 
 ---
