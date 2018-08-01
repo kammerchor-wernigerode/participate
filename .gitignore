@@ -1,13 +1,10 @@
+# IDE
 .idea/
 *.iml
+
+# Compiled Files
 target/
 
-scripts/deploy.properties
-
+# Project Files
 src/main/resources/liquibase.properties
-src/main/resources/liquibase.prod.properties
-src/main/resources/application.properties
-src/main/resources/application.prod.properties
-
 src/main/resources/application.yml
-src/main/resources/application.prod.yml

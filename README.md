@@ -49,9 +49,9 @@ and run the following commands to start the MySQL container as well as the Parti
 ```bash
 docker run \
  --env MYSQL_ROOT_PASSWORD=root \
- --env MYSQL_DATABASE=db_name \
- --env MYSQL_USER=db_user \
- --env MYSQL_PASSWORD=db_pass \
+ --env MYSQL_DATABASE=participate \
+ --env MYSQL_USER=participate \
+ --env MYSQL_PASSWORD=participate \
  --name particiapte-db \
  mysql:5.7
  

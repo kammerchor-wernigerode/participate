@@ -16,8 +16,8 @@ spring:
 
     datasource:
         url: 'jdbc:mysql://localhost:3306/participate'
-        username: 'dev'
-        password: 'dev'
+        username: 'participate'
+        password: 'participate'
         driver-class-name: com.mysql.jdbc.Driver
 
     liquibase:
