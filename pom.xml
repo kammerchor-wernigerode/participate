@@ -335,8 +335,26 @@
                             <newName>${docker.image.prefix}/${project.artifactId}:${project.version}</newName>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>push-image</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>push</goal>
+                        </goals>
+                        <configuration>
+                            <imageName>${docker.image.prefix}/${project.artifactId}:${project.version}</imageName>
+                            <imageName>${docker.image.prefix}/${project.artifactId}:latest</imageName>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>Local</id>
+            <url>file:///tmp</url>
+        </repository>
+    </distributionManagement>
 </project>
