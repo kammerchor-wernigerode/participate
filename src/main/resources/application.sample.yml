@@ -1,0 +1,46 @@
+spring:
+    application:
+        name:
+
+    jpa:
+        database: mysql
+        hibernate:
+            naming:
+                implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+                physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+            ddl-auto: validate
+        show-sql: true
+        properties:
+            hibernate.format_sql: true
+            hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+
+    datasource:
+        url: 'jdbc:mysql://localhost:3306/participate'
+        username: 'dev'
+        password: 'dev'
+        driver-class-name: com.mysql.jdbc.Driver
+
+    liquibase:
+        change-log: 'classpath:/de/vinado/wicket/participate/db/liquibase/changelog.xml'
+
+    mail:
+        host: 'localhost'
+        port: 5877
+        username:
+        password:
+        properties:
+            mail.smtp.starttls.enable: true
+            mail.smtp.from:
+
+app:
+    customer:
+    version: @project.version@
+    participate-password:
+    development-mode: true
+
+    mail:
+        footer: ${java.specification.name}
+        sender: ${spring.mail.properties.mail.smtp.from}
+
+logging:
+    file: 'target/logs/wicket.log'

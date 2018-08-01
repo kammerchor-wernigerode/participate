@@ -59,7 +59,7 @@ public class Participant implements Identifiable<Long> {
     @Column(name = "need_accommodation")
     private boolean accommodation;
 
-    @Column
+    @Column(length = 65535, columnDefinition = "TEXT")
     private String comment;
 
     protected Participant() {

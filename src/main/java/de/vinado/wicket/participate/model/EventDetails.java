@@ -32,7 +32,7 @@ public class EventDetails implements Identifiable<Long>, Terminable {
     @Column(name = "type")
     private String eventType;
 
-    @Column
+    @Column(length = 65535, columnDefinition = "LONGTEXT")
     private String description;
 
     @Column
@@ -49,10 +49,10 @@ public class EventDetails implements Identifiable<Long>, Terminable {
     @Column(name = "count_accepted_declined_pending")
     private String countAcceptedDeclinedPending;
 
-    @Column(name = "count_catering")
+    @Column(name = "count_catering", length = 23, columnDefinition = "DECIMAL")
     private Long cateringCount;
 
-    @Column(name = "count_accommodation")
+    @Column(name = "count_accommodation", length = 23, columnDefinition = "DECIMAL")
     private Long accommodationCount;
 
     @Column(name = "count_accepted")
@@ -76,19 +76,19 @@ public class EventDetails implements Identifiable<Long>, Terminable {
     @Column(name = "count_bass")
     private Long bassCount;
 
-    @Column(name = "soprano")
+    @Column(name = "soprano", columnDefinition = "TEXT")
     private String sopranos;
 
-    @Column(name = "alto")
+    @Column(name = "alto", columnDefinition = "TEXT")
     private String altos;
 
-    @Column(name = "tenor")
+    @Column(name = "tenor", columnDefinition = "TEXT")
     private String tenors;
 
-    @Column(name = "bass")
+    @Column(name = "bass", columnDefinition = "TEXT")
     private String basses;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String declined;
 
     @Column(name = "count_invitations")

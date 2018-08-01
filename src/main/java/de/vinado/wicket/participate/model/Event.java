@@ -40,7 +40,7 @@ public class Event implements Identifiable<Long>, Hideable, Terminable {
     @Column
     private String location;
 
-    @Column
+    @Column(length = 65535, columnDefinition = "LONGTEXT")
     private String description;
 
     @Temporal(TemporalType.DATE)
