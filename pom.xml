@@ -303,18 +303,13 @@
             </plugin>
             <plugin>
                 <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>1.1.1</version>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>1.4.3</version>
                 <configuration>
-                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
-                    <dockerDirectory>src/main/docker</dockerDirectory>
-                    <resources>
-                        <resource>
-                            <targetPath>/</targetPath>
-                            <directory>${project.build.directory}</directory>
-                            <include>${project.build.finalName}.jar</include>
-                        </resource>
-                    </resources>
+                    <repository>${docker.image.prefix}/${project.artifactId}</repository>
+                    <buildArgs>
+                        <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+                    </buildArgs>
                 </configuration>
                 <executions>
                     <execution>
@@ -325,25 +320,43 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>tag-image</id>
+                        <id>tag-image-latest</id>
                         <phase>package</phase>
                         <goals>
                             <goal>tag</goal>
                         </goals>
                         <configuration>
-                            <image>${docker.image.prefix}/${project.artifactId}:latest</image>
-                            <newName>${docker.image.prefix}/${project.artifactId}:${project.version}</newName>
+                            <tag>latest</tag>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>push-image</id>
+                        <id>tag-image-version</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>tag</goal>
+                        </goals>
+                        <configuration>
+                            <tag>${project.version}</tag>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>push-image-latest</id>
                         <phase>deploy</phase>
                         <goals>
                             <goal>push</goal>
                         </goals>
                         <configuration>
-                            <imageName>${docker.image.prefix}/${project.artifactId}:${project.version}</imageName>
-                            <imageName>${docker.image.prefix}/${project.artifactId}:latest</imageName>
+                            <tag>latest</tag>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>push-image-version</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>push</goal>
+                        </goals>
+                        <configuration>
+                            <tag>${project.version}</tag>
                         </configuration>
                     </execution>
                 </executions>
