@@ -1,0 +1,7 @@
+# IDE
+.idea/
+*.iml
+
+# Project Files
+src/main/resources/liquibase.properties
+src/main/resources/application.yml
