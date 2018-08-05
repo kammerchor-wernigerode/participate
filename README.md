@@ -98,7 +98,7 @@ creates an executable jar file. Start the application with
 java -jar target/particpate.jar
 ```
 
-or follow the [Docker instructions](#docker) above
+or follow the [Docker instructions](#docker) above.
 
 ## Licence
 Apache License 2.0 - [Vinado](https://vinado.de) - Built with :heart: in Dresden
