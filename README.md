@@ -79,5 +79,10 @@ java -jar target/particpate.jar
 on your machine. Don't forget to configure the properties files to fit your environment or follow the 
 [Docker instructions](#docker) above to deploy the application with Docker.
 
+## Tests / CI
+
+- Liquibase integration tests
+- Travis CI
+
 ## Licence
 Apache License 2.0 - [Vinado](https://vinado.de) - Built with :heart: in Dresden
