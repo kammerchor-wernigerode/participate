@@ -2,7 +2,7 @@
 
 At the end of 2016 I have heard of the Apache Wicket Framework and started to write a closed-source (now open-source) web application for one of my project choirs Kammerchor Wernigerode. We had trouble to plan our weekends because some of the singers did not answer to invitations of the board members. 
 
-This repository exists only for legacy support. If you are interestet in unsing this for your own club I would recommend you to checkout the [kammerchor-wernigerode/eva-api](https://github.com/kammerchor-wernigerode/eva-api) and [kammerchor-wernigerode/eva](https://github.com/kammerchor-wernigerode/eva) repositories.
+This repository exists only for legacy support. If you are interested in using this for your own club I would recommend you to checkout the [kammerchor-wernigerode/eva-api](https://github.com/kammerchor-wernigerode/eva-api) and [kammerchor-wernigerode/eva](https://github.com/kammerchor-wernigerode/eva) repositories.
 
 ## Setup
 
