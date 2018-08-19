@@ -20,11 +20,8 @@ mvn install
 
 ---
 
-You'll need a MySQL database.
-- Windows: XAMPP
-- Ubuntu: mysql-server
-
-When you configured your database and your property files run Liquibase to create the database tables. You can either
+You'll need a MySQL database or a running docker container with MySQL.  
+After you configured your database and your property files run Liquibase to create the database tables. You can either
 run Liquibase manually with
 ```bash
 mvn resources:resources liquibase:update
@@ -38,23 +35,8 @@ mvn spring-boot:run
 
 ### Docker
 
-Build the `kchwr/paricipate` Docker image with
-
+Start a container with
 ```bash
-mvn clean package docker:build
-```
-
-and run the following commands to start the MySQL container as well as the Participate container.
-
-```bash
-docker run \
- --env MYSQL_ROOT_PASSWORD=root \
- --env MYSQL_DATABASE=participate \
- --env MYSQL_USER=participate \
- --env MYSQL_PASSWORD=participate \
- --name participate-db \
- mysql:5.7
- 
 docker run \
  --env APPLICATION_NAME='Application Name' \
  --env APPLICATION_CUSTOMER='Application Customer' \
@@ -74,18 +56,16 @@ docker run \
  --link participate-db:mysql \
  kchwr/participate
 ```
+make sure you are running a database container too.
 
 ---
 
-Alternatively create a new Docker network with
-```bash
-docker network create participate
-```
-and run
+Navigate to `tools/` and run
 ```bash
 docker-compose up -d
 ```
-to start both images as a docker service.
+to start a development database as well as [FakeSMTP](https://github.com/Nilhcem/FakeSMTP).  
+Received emails will be stored in `$HOME/received-emails`.
 
 ## Deployment
 
@@ -93,12 +73,11 @@ to start both images as a docker service.
 mvn clean package
 ```
 creates an executable jar file. Start the application with
-
 ```bash
 java -jar target/particpate.jar
 ```
-
-or follow the [Docker instructions](#docker) above.
+on your machine. Don't forget to configure the properties files to fit your environment or follow the 
+[Docker instructions](#docker) above to deploy the application with Docker.
 
 ## Licence
 Apache License 2.0 - [Vinado](https://vinado.de) - Built with :heart: in Dresden
