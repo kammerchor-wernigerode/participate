@@ -70,16 +70,6 @@ public class PersonService extends DataService {
         return save(new Person(dto.getFirstName(), dto.getLastName(), dto.getEmail()));
     }
 
-    @Transactional
-    public Person getOrCreatePerson(final Person person) {
-        final String email = person.getEmail();
-        if (hasPerson(email)) {
-            return getPerson(email);
-        } else {
-            return save(new Person(person.getFirstName(), person.getLastName(), email));
-        }
-    }
-
     /**
      * Saves an existing {@link Person}.
      *
