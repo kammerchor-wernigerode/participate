@@ -33,13 +33,13 @@ public class Singer extends Person implements Hideable {
     } // JPA only
 
     /**
-     * @param lastName  The singers surname
      * @param firstName The singers given name
+     * @param lastName  The singers surname
      * @param email     The singers email address
      * @param voice     The singers voice group
      */
-    public Singer(final String lastName, final String firstName, final String email, final Voice voice) {
-        super(lastName, firstName, email);
+    public Singer(final String firstName, final String lastName, final String email, final Voice voice) {
+        super(firstName, lastName, email);
         this.voice = voice;
         this.active = true;
     }
