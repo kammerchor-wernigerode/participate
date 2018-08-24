@@ -3,8 +3,9 @@ jdk:
 - oraclejdk8
 
 branches:
-    only:
-    - master
+  only:
+  - master
+  - develop
 
 install:
 - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
@@ -16,10 +17,10 @@ script:
 - mvn test -B
 
 notifications:
-    email:
-        on_failure: never
-        on_success: never
+  email:
+    on_failure: never
+    on_success: never
 
 cache:
-    directories:
-    - $HOME/.m2
+  directories:
+  - $HOME/.m2

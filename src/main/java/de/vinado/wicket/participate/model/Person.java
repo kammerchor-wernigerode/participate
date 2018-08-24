@@ -59,13 +59,13 @@ public class Person implements Identifiable<Long> {
     } // JPA only
 
     /**
-     * @param lastName  The persons surname
      * @param firstName The persons given name
+     * @param lastName  The persons surname
      * @param email     The persons email address
      */
-    public Person(final String lastName, final String firstName, final String email) {
-        this.lastName = lastName;
+    public Person(final String firstName, final String lastName, final String email) {
         this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
     }
 
