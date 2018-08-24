@@ -78,8 +78,8 @@ public class SingersPanel extends Panel {
             public void onClick(final AjaxRequestTarget target, final IModel<Singer> rowModel) {
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                 final Singer singer = rowModel.getObject();
-                modal.setContent(new AddEditSingerPanel(modal, new ResourceModel("singer.edit", "Edit Singer"), new CompoundPropertyModel<>(new
-                    SingerDTO())));
+                modal.setContent(new AddEditSingerPanel(modal, new ResourceModel("singer.edit", "Edit Singer"), new CompoundPropertyModel<>(
+                    new SingerDTO(singer))));
                 modal.show(target);
             }
         });
