@@ -21,6 +21,7 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +51,9 @@ public class PersonService extends DataService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(PersonService.class);
 
+    @Autowired
+    private EventService eventService;
+
     @PersistenceContext
     public void setEntityManager(final EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -64,16 +68,6 @@ public class PersonService extends DataService {
     @Transactional
     public Person createPerson(final PersonDTO dto) {
         return save(new Person(dto.getFirstName(), dto.getLastName(), dto.getEmail()));
-    }
-
-    @Transactional
-    public Person getOrCreatePerson(final Person person) {
-        final String email = person.getEmail();
-        if (hasPerson(email)) {
-            return getPerson(email);
-        } else {
-            return save(new Person(person.getFirstName(), person.getLastName(), email));
-        }
     }
 
     /**
@@ -92,14 +86,18 @@ public class PersonService extends DataService {
     }
 
     /**
-     * Creates a new {@link Singer}.
+     * Creates a new {@link Singer} and creates a new {@link Participant} for each upcoming {@link Event}.
      *
      * @param dto {@link SingerDTO}
      * @return Saved {@link Singer}
      */
     @Transactional
     public Singer createSinger(final SingerDTO dto) {
-        return save(new Singer(dto.getFirstName(), dto.getLastName(), dto.getEmail(), dto.getVoice()));
+        final Singer singer = save(new Singer(dto.getFirstName(), dto.getLastName(), dto.getEmail(), dto.getVoice()));
+
+        eventService.getUpcomingEvents().forEach(event -> eventService.createParticipant(event, singer));
+
+        return singer;
     }
 
     /**
