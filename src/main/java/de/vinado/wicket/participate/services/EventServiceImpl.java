@@ -20,6 +20,8 @@ import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.model.ical4j.SimpleDateProperty;
 import freemarker.template.TemplateException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -76,18 +78,12 @@ import java.util.UUID;
 @Primary
 @Service
 @Transactional
+@Slf4j
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class EventServiceImpl extends DataService implements EventService {
-
-    private final static Logger log = LoggerFactory.getLogger(EventService.class);
 
     private final PersonService personService;
     private final EmailService emailService;
-
-    @Autowired
-    public EventServiceImpl(final PersonService personService, final EmailService emailService) {
-        this.personService = personService;
-        this.emailService = emailService;
-    }
 
     @Override
     @PersistenceContext
