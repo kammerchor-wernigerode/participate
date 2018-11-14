@@ -1,5 +1,7 @@
 package de.vinado.wicket.participate.events;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 import java.io.Serializable;
@@ -9,18 +11,9 @@ import java.io.Serializable;
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Getter
+@RequiredArgsConstructor
 public class SingerUpdateEvent implements Serializable {
 
-    private AjaxRequestTarget target;
-
-    /**
-     * @param target Requested target
-     */
-    public SingerUpdateEvent(final AjaxRequestTarget target) {
-        this.target = target;
-    }
-
-    public AjaxRequestTarget getTarget() {
-        return target;
-    }
+    private final AjaxRequestTarget target;
 }
