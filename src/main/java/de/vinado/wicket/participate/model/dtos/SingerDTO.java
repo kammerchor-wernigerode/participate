@@ -3,6 +3,9 @@ package de.vinado.wicket.participate.model.dtos;
 
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.Voice;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
@@ -12,20 +15,16 @@ import java.io.Serializable;
  * @author Julius Felchow (julius.felchow@gmail.com)
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Getter
+@Setter
+@RequiredArgsConstructor
 public class SingerDTO implements Serializable {
 
     private Singer singer;
-
     private Voice voice;
-
     private String firstName;
-
     private String lastName;
-
     private String email;
-
-    public SingerDTO() {
-    }
 
     public SingerDTO(final Singer singer) {
         this.singer = singer;
@@ -34,45 +33,5 @@ public class SingerDTO implements Serializable {
         this.firstName = singer.getFirstName();
         this.lastName = singer.getLastName();
         this.email = singer.getEmail();
-    }
-
-    public Singer getSinger() {
-        return singer;
-    }
-
-    public void setSinger(final Singer singer) {
-        this.singer = singer;
-    }
-
-    public Voice getVoice() {
-        return voice;
-    }
-
-    public void setVoice(final Voice voice) {
-        this.voice = voice;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(final String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(final String email) {
-        this.email = email;
     }
 }
