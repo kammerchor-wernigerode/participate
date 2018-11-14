@@ -1,9 +1,12 @@
 package de.vinado.wicket.participate.model;
 
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,10 +24,16 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class User implements Identifiable<Long>, Hideable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -46,9 +55,6 @@ public class User implements Identifiable<Long>, Hideable {
     @JoinColumn(name = "person_id")
     private Person person;
 
-    protected User() {
-    } // JPA only
-
     /**
      * @param username      Username
      * @param plainPassword Password in plaintext
@@ -61,103 +67,5 @@ public class User implements Identifiable<Long>, Hideable {
         this.admin = admin;
         this.enabled = enabled;
         this.active = true;
-    }
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(final String username) {
-        this.username = username;
-    }
-
-    public String getPasswordSha256() {
-        return passwordSha256;
-    }
-
-    public void setPasswordSha256(final String passwordSha256) {
-        this.passwordSha256 = passwordSha256;
-    }
-
-    public boolean isAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(final boolean admin) {
-        this.admin = admin;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(final Person person) {
-        this.person = person;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(final boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(final boolean active) {
-        this.active = active;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-
-        if (!(o instanceof User)) return false;
-
-        final User user = (User) o;
-
-        return new EqualsBuilder()
-                .append(admin, user.admin)
-                .append(enabled, user.enabled)
-                .append(active, user.active)
-                .append(id, user.id)
-                .append(username, user.username)
-                .append(passwordSha256, user.passwordSha256)
-                .append(person, user.person)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(username)
-                .append(passwordSha256)
-                .append(admin)
-                .append(enabled)
-                .append(active)
-                .append(person)
-                .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("id", id)
-                .append("username", username)
-                .append("passwordSha256", passwordSha256)
-                .append("admin", admin)
-                .append("enabled", enabled)
-                .append("active", active)
-                .append("person", person)
-                .toString();
     }
 }
