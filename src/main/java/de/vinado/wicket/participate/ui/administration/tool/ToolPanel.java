@@ -14,8 +14,10 @@ import de.vinado.wicket.participate.components.forms.BootstrapForm;
 import de.vinado.wicket.participate.components.links.BootstrapAjaxButton;
 import de.vinado.wicket.participate.components.panels.Collapsible;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
+import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.SingerDTO;
+import de.vinado.wicket.participate.services.DataService;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
 import de.vinado.wicket.participate.services.UserService;
@@ -210,9 +212,10 @@ public class ToolPanel extends Panel {
                 public void onSubmit(final AjaxRequestTarget target, final Form<?> inner) {
                     final Set<SingerDTO> singerDTOSet = new HashSet<>();
 
-                    SingerGenerator.getInstance().generate(eventService, singerDTOSet, singerCount);
+                    SingerGenerator.getInstance().generate((DataService) eventService, singerDTOSet, singerCount);
                     for (SingerDTO singerDTO : singerDTOSet) {
-                        personService.createSinger(singerDTO);
+                        final Singer singer = personService.createSinger(singerDTO);
+                        eventService.getUpcomingEvents().forEach(event -> eventService.createParticipant(event, singer));
                     }
 
                     onSuccess(target, form);
@@ -237,7 +240,7 @@ public class ToolPanel extends Panel {
                 public void onSubmit(final AjaxRequestTarget target, final Form<?> inner) {
                     final Set<EventDTO> eventDTOSet = new HashSet<>();
 
-                    EventGenerator.getInstance().generate(eventService, eventDTOSet, eventCount);
+                    EventGenerator.getInstance().generate((DataService) eventService, eventDTOSet, eventCount);
                     for (EventDTO eventDTO : eventDTOSet) {
                         eventService.createEvent(eventDTO);
                     }

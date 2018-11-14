@@ -21,6 +21,8 @@ import de.vinado.wicket.participate.ui.pages.ExpiredPage;
 import de.vinado.wicket.participate.ui.pages.PageNotFoundPage;
 import de.vinado.wicket.participate.ui.resetPassword.ResetPasswordPage;
 import de.vinado.wicket.participate.ui.singers.SingersPage;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.apache.wicket.Application;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.authentication.strategy.DefaultAuthenticationStrategy;
@@ -55,15 +57,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import javax.servlet.http.HttpServletRequest;
 
 @SpringBootApplication
+@Getter
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ParticipateApplication extends AuthenticatedWebApplication {
 
     public static final PackageResourceReference USER_GUIDE = new PackageResourceReference(ParticipateApplication.class, "resources/pdf/Handbuch.pdf");
 
-    @Autowired
-    private ApplicationProperties applicationProperties;
-
-    @Autowired
-    private DatabasePopulator databasePopulator;
+    private final ApplicationProperties applicationProperties;
+    private final DatabasePopulator databasePopulator;
 
     @Value("${spring.application.name}")
     private String applicationName;
@@ -80,10 +81,6 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
 
     public static ParticipateApplication get() {
         return (ParticipateApplication) Application.get();
-    }
-
-    public String getApplicationName() {
-        return applicationName;
     }
 
     public ApplicationProperties getApplicationProperties() {

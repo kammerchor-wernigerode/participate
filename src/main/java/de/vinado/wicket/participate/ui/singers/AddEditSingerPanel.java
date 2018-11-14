@@ -11,6 +11,7 @@ import de.vinado.wicket.participate.events.SingerUpdateEvent;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.SingerDTO;
+import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
@@ -36,6 +37,10 @@ public class AddEditSingerPanel extends BootstrapModalPanel<SingerDTO> {
     @SpringBean
     @SuppressWarnings("unused")
     private PersonService personService;
+
+    @SpringBean
+    @SuppressWarnings("unused")
+    private EventService eventService;
 
     private boolean edit;
     private boolean remove = false;
@@ -121,7 +126,8 @@ public class AddEditSingerPanel extends BootstrapModalPanel<SingerDTO> {
             personService.saveSinger(model.getObject());
             send(getWebPage(), Broadcast.BREADTH, new SingerUpdateEvent(target));
         } else {
-            personService.createSinger(model.getObject());
+            final Singer singer = personService.createSinger(model.getObject());
+            eventService.getUpcomingEvents().forEach(event -> eventService.createParticipant(event, singer));
         }
         send(getWebPage(), Broadcast.BREADTH, new SingerUpdateEvent(target));
     }

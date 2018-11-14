@@ -51,7 +51,7 @@ public class UserPanel extends Panel {
         super(id);
 
         final SimpleDataProvider<User, String> dataProvider =
-            new SimpleDataProvider<User, String>(userService.getAll(User.class)) {
+            new SimpleDataProvider<User, String>(userService.getAll()) {
                 @Override
                 public String getDefaultSort() {
                     return "id";
@@ -115,7 +115,7 @@ public class UserPanel extends Panel {
                             modal.setContent(new AddPersonToUserPanel(modal, new CompoundPropertyModel<>(new AddUserDTO(rowModel.getObject()))) {
                                 @Override
                                 protected void onConfirm(final User savedUser, final AjaxRequestTarget target) {
-                                    dataProvider.set(userService.getAll(User.class));
+                                    dataProvider.set(userService.getAll());
                                     if (userService.startPasswordReset(savedUser.getPerson().getEmail(), true)) {
                                         Snackbar.show(target, new ResourceModel("email.send.invitation.success", "An invitation has been sent"));
                                     } else {
@@ -148,7 +148,7 @@ public class UserPanel extends Panel {
                                 new CompoundPropertyModel<>(new PersonDTO(person))) {
                                 @Override
                                 protected void onUpdate(final AjaxRequestTarget target) {
-                                    dataProvider.set(userService.getAll(User.class));
+                                    dataProvider.set(userService.getAll());
                                     target.add(dataTable);
                                     Snackbar.show(target, new ResourceModel("person.edit.success", "The person was successfully edited"));
                                 }
@@ -174,7 +174,7 @@ public class UserPanel extends Panel {
                 modal.setContent(new AddUserPanel(modal, new CompoundPropertyModel<>(new AddUserDTO())) {
                     @Override
                     protected void onConfirm(final User user, final AjaxRequestTarget target) {
-                        dataProvider.set(userService.getAll(User.class));
+                        dataProvider.set(userService.getAll());
                         target.add(dataTable);
                         Snackbar.show(target, new ResourceModel("user.add.success", "A new user has been added"));
                     }

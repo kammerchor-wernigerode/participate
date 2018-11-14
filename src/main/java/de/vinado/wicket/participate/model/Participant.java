@@ -1,8 +1,11 @@
 package de.vinado.wicket.participate.model;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,10 +27,16 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "participants")
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class Participant implements Identifiable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     private Long id;
 
     @ManyToOne
@@ -62,9 +71,6 @@ public class Participant implements Identifiable<Long> {
     @Column(length = 65535, columnDefinition = "TEXT")
     private String comment;
 
-    protected Participant() {
-    } // JPA only
-
     /**
      * @param event            {@link Event}
      * @param singer           {@link Singer}
@@ -91,136 +97,5 @@ public class Participant implements Identifiable<Long> {
     public Participant(final Event event, final Singer singer, final String token,
                        final InvitationStatus invitationStatus) {
         this(event, singer, token, invitationStatus, null, null, false, false, null);
-    }
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(final Event event) {
-        this.event = event;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(final String token) {
-        this.token = token;
-    }
-
-    public Date getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(final Date fromDate) {
-        this.fromDate = fromDate;
-    }
-
-    public Date getToDate() {
-        return toDate;
-    }
-
-    public void setToDate(final Date toDate) {
-        this.toDate = toDate;
-    }
-
-    public Singer getSinger() {
-        return singer;
-    }
-
-    public void setSinger(final Singer singer) {
-        this.singer = singer;
-    }
-
-    public InvitationStatus getInvitationStatus() {
-        return invitationStatus;
-    }
-
-    public void setInvitationStatus(final InvitationStatus invitationStatus) {
-        this.invitationStatus = invitationStatus;
-    }
-
-    public boolean isCatering() {
-        return catering;
-    }
-
-    public void setCatering(final boolean catering) {
-        this.catering = catering;
-    }
-
-    public boolean isAccommodation() {
-        return accommodation;
-    }
-
-    public void setAccommodation(final boolean accommodation) {
-        this.accommodation = accommodation;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(final String comment) {
-        this.comment = comment;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-
-        if (!(o instanceof Participant)) return false;
-
-        final Participant that = (Participant) o;
-
-        return new EqualsBuilder()
-            .append(catering, that.catering)
-            .append(accommodation, that.accommodation)
-            .append(id, that.id)
-            .append(event, that.event)
-            .append(token, that.token)
-            .append(singer, that.singer)
-            .append(invitationStatus, that.invitationStatus)
-            .append(fromDate, that.fromDate)
-            .append(toDate, that.toDate)
-            .append(comment, that.comment)
-            .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-            .append(id)
-            .append(event)
-            .append(token)
-            .append(singer)
-            .append(invitationStatus)
-            .append(fromDate)
-            .append(toDate)
-            .append(catering)
-            .append(accommodation)
-            .append(comment)
-            .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("id", id)
-            .append("event", event)
-            .append("token", token)
-            .append("singer", singer)
-            .append("invitationStatus", invitationStatus)
-            .append("fromDate", fromDate)
-            .append("toDate", toDate)
-            .append("catering", catering)
-            .append("accommodation", accommodation)
-            .append("comment", comment)
-            .toString();
     }
 }

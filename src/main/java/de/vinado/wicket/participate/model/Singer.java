@@ -1,8 +1,10 @@
 package de.vinado.wicket.participate.model;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.Polymorphism;
 import org.hibernate.annotations.PolymorphismType;
 
@@ -20,6 +22,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "singers")
 @Polymorphism(type = PolymorphismType.EXPLICIT)
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
+@EqualsAndHashCode(callSuper = true)
 public class Singer extends Person implements Hideable {
 
     @Enumerated
@@ -28,9 +35,6 @@ public class Singer extends Person implements Hideable {
 
     @Column(name = "is_active", nullable = false)
     private boolean active;
-
-    protected Singer() {
-    } // JPA only
 
     /**
      * @param firstName The singers given name
@@ -42,53 +46,5 @@ public class Singer extends Person implements Hideable {
         super(firstName, lastName, email);
         this.voice = voice;
         this.active = true;
-    }
-
-    public Voice getVoice() {
-        return voice;
-    }
-
-    public void setVoice(final Voice voice) {
-        this.voice = voice;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(final boolean active) {
-        this.active = active;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-
-        if (!(o instanceof Singer)) return false;
-
-        final Singer singer = (Singer) o;
-
-        return new EqualsBuilder()
-            .appendSuper(super.equals(o))
-            .append(active, singer.active)
-            .append(voice, singer.voice)
-            .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-            .appendSuper(super.hashCode())
-            .append(voice)
-            .append(active)
-            .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("voice", voice)
-            .append("active", active)
-            .toString();
     }
 }

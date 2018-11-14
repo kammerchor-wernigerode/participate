@@ -14,7 +14,7 @@
     <groupId>de.vinado.wicket</groupId>
     <artifactId>participate</artifactId>
     <packaging>jar</packaging>
-    <version>2.0.3</version>
+    <version>2.1.0</version>
 
     <name>participate</name>
     <description>
@@ -51,6 +51,14 @@
             <groupId>org.mnode.ical4j</groupId>
             <artifactId>ical4j</artifactId>
             <version>2.0.5</version>
+        </dependency>
+
+        <!-- LOMBOK -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- WICKET BOOTSTRAP -->
@@ -300,6 +308,14 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                </configuration>
             </plugin>
         </plugins>
     </build>

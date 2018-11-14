@@ -1,5 +1,7 @@
 package de.vinado.wicket.participate.events;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 import java.io.Serializable;
@@ -7,20 +9,9 @@ import java.io.Serializable;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Getter
+@RequiredArgsConstructor
 public class ShowHidePropertiesEvent implements Serializable {
 
-
-    private AjaxRequestTarget target;
-
-    public ShowHidePropertiesEvent(final AjaxRequestTarget target) {
-        this.target = target;
-    }
-
-    public AjaxRequestTarget getTarget() {
-        return target;
-    }
-
-    public void setTarget(final AjaxRequestTarget target) {
-        this.target = target;
-    }
+    private final AjaxRequestTarget target;
 }

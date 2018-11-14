@@ -1,6 +1,8 @@
 package de.vinado.wicket.participate.events;
 
 import de.vinado.wicket.participate.model.Event;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 import java.io.Serializable;
@@ -10,32 +12,10 @@ import java.io.Serializable;
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Getter
+@RequiredArgsConstructor
 public class EventUpdateEvent implements Serializable {
 
-    /**
-     * {@link Event}
-     */
-    private Event event;
-
-    /**
-     * {@link AjaxRequestTarget}
-     */
-    private AjaxRequestTarget target;
-
-    /**
-     * @param event  Event
-     * @param target Requested target
-     */
-    public EventUpdateEvent(final Event event, final AjaxRequestTarget target) {
-        this.event = event;
-        this.target = target;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public AjaxRequestTarget getTarget() {
-        return target;
-    }
+    private final Event event;
+    private final AjaxRequestTarget target;
 }
