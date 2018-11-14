@@ -1,8 +1,11 @@
 package de.vinado.wicket.participate.model;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -25,10 +28,16 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "events")
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class Event implements Identifiable<Long>, Hideable, Terminable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     private Long id;
 
     @Column(nullable = false)
@@ -52,16 +61,15 @@ public class Event implements Identifiable<Long>, Hideable, Terminable {
     private Date endDate;
 
     @CreationTimestamp
+    @Setter(AccessLevel.NONE)
     private Date creationDate;
 
     @UpdateTimestamp
+    @Setter(AccessLevel.NONE)
     private Date lastModified;
 
     @Column(name = "is_active", nullable = false)
     private boolean active;
-
-    protected Event() {
-    } // JPA only
 
     /**
      * @param name        Event name
@@ -82,75 +90,6 @@ public class Event implements Identifiable<Long>, Hideable, Terminable {
         this.active = true;
     }
 
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public String getEventType() {
-        return eventType;
-    }
-
-    public void setEventType(final String eventType) {
-        this.eventType = eventType;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(final String location) {
-        this.location = location;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(final Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public Date getLastModified() {
-        return lastModified;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(final boolean active) {
-        this.active = active;
-    }
-
     public boolean isSeveralDays() {
         return !getStartDate().equals(getEndDate());
     }
@@ -162,59 +101,5 @@ public class Event implements Identifiable<Long>, Hideable, Terminable {
         } else {
             return dateFormat.format(startDate);
         }
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-
-        if (!(o instanceof Event)) return false;
-
-        final Event event = (Event) o;
-
-        return new EqualsBuilder()
-            .append(active, event.active)
-            .append(id, event.id)
-            .append(name, event.name)
-            .append(eventType, event.eventType)
-            .append(location, event.location)
-            .append(description, event.description)
-            .append(startDate, event.startDate)
-            .append(endDate, event.endDate)
-            .append(creationDate, event.creationDate)
-            .append(lastModified, event.lastModified)
-            .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-            .append(id)
-            .append(name)
-            .append(eventType)
-            .append(location)
-            .append(description)
-            .append(startDate)
-            .append(endDate)
-            .append(creationDate)
-            .append(lastModified)
-            .append(active)
-            .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("id", id)
-            .append("name", name)
-            .append("eventType", eventType)
-            .append("location", location)
-            .append("description", description)
-            .append("startDate", startDate)
-            .append("endDate", endDate)
-            .append("creationDate", creationDate)
-            .append("lastModified", lastModified)
-            .append("active", active)
-            .toString();
     }
 }

@@ -9,13 +9,13 @@ import de.vinado.wicket.participate.model.dtos.AddUserDTO;
 import de.vinado.wicket.participate.model.dtos.PersonDTO;
 import de.vinado.wicket.participate.model.email.MailData;
 import freemarker.template.TemplateException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.string.Strings;
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -45,18 +45,12 @@ import java.util.Map;
 @Primary
 @Service
 @Transactional
+@Slf4j
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserServiceImpl extends DataService implements UserService {
-
-    private final static Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final PersonService personService;
     private final EmailService emailService;
-
-    @Autowired
-    public UserServiceImpl(final PersonService personService, final EmailService emailService) {
-        this.personService = personService;
-        this.emailService = emailService;
-    }
 
     @Override
     @PersistenceContext

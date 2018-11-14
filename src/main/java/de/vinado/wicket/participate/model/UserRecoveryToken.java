@@ -1,8 +1,11 @@
 package de.vinado.wicket.participate.model;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
@@ -22,10 +25,16 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "user_rec_tokens")
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class UserRecoveryToken implements Identifiable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     private Long id;
 
     @ManyToOne
@@ -36,14 +45,12 @@ public class UserRecoveryToken implements Identifiable<Long> {
     private String token;
 
     @CreationTimestamp
+    @Setter(AccessLevel.NONE)
     private Date creationDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date validDate;
-
-    protected UserRecoveryToken() {
-    } // JPA only
 
     /**
      * @param user      The associated {@link User}
@@ -54,77 +61,5 @@ public class UserRecoveryToken implements Identifiable<Long> {
         this.user = user;
         this.token = token;
         this.validDate = validDate;
-    }
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(final User user) {
-        this.user = user;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(final String token) {
-        this.token = token;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public Date getValidDate() {
-        return validDate;
-    }
-
-    public void setValidDate(final Date validDate) {
-        this.validDate = validDate;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-
-        if (!(o instanceof UserRecoveryToken)) return false;
-
-        final UserRecoveryToken that = (UserRecoveryToken) o;
-
-        return new EqualsBuilder()
-            .append(getId(), that.getId())
-            .append(getUser(), that.getUser())
-            .append(getToken(), that.getToken())
-            .append(getCreationDate(), that.getCreationDate())
-            .append(getValidDate(), that.getValidDate())
-            .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-            .append(getId())
-            .append(getUser())
-            .append(getToken())
-            .append(getCreationDate())
-            .append(getValidDate())
-            .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("id", id)
-            .append("user", user)
-            .append("token", token)
-            .append("creationDate", creationDate)
-            .append("validDate", validDate)
-            .toString();
     }
 }

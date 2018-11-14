@@ -9,6 +9,8 @@ import de.vinado.wicket.participate.model.dtos.PersonDTO;
 import de.vinado.wicket.participate.model.dtos.SingerDTO;
 import de.vinado.wicket.participate.model.filters.SingerFilter;
 import de.vinado.wicket.participate.providers.SimpleDataProvider;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.export.CSVDataExporter;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.export.IExportableColumn;
@@ -21,6 +23,7 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,9 +52,9 @@ import static org.apache.commons.codec.CharEncoding.UTF_8;
 @Primary
 @Service
 @Transactional
+@Slf4j
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PersonServiceImpl extends DataService implements PersonService {
-
-    private final static Logger log = LoggerFactory.getLogger(PersonServiceImpl.class);
 
     @Override
     @PersistenceContext

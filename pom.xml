@@ -53,6 +53,14 @@
             <version>2.0.5</version>
         </dependency>
 
+        <!-- LOMBOK -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- WICKET BOOTSTRAP -->
         <dependency>
             <groupId>de.agilecoders.wicket</groupId>

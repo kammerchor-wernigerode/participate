@@ -2,10 +2,13 @@ package de.vinado.wicket.participate.model.email;
 
 import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -19,26 +22,19 @@ import java.util.Map;
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Getter
+@Setter
+@NoArgsConstructor
 public class MailData implements Serializable {
 
     private static final String UTF_8 = StandardCharsets.UTF_8.name();
 
-    @NotNull
-    private InternetAddress from;
-
-    @NotNull
-    private List<InternetAddress> to = new ArrayList<>();
-
+    private @NonNull InternetAddress from;
+    private @NonNull List<InternetAddress> to = new ArrayList<>();
     private String replyTo;
-
     private String subject;
-
     private String message;
-
     private List<EmailAttachment> attachments = new ArrayList<>();
-
-    public MailData() {
-    }
 
     public MailData(final MailData copy) {
         this.from = copy.getFrom();
@@ -49,16 +45,8 @@ public class MailData implements Serializable {
         this.attachments = copy.getAttachments();
     }
 
-    public InternetAddress getFrom() {
-        return from;
-    }
-
     public void setFrom(final String address) throws AddressException {
         this.from = new InternetAddress(address);
-    }
-
-    public void setFrom(final InternetAddress from) {
-        this.from = from;
     }
 
     public void setFrom(final String address, final String personal) {
@@ -67,14 +55,6 @@ public class MailData implements Serializable {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-    }
-
-    public List<InternetAddress> getTo() {
-        return to;
-    }
-
-    public void setTo(final List<InternetAddress> to) {
-        this.to = to;
     }
 
     public void addTo(final InternetAddress to) {
@@ -91,38 +71,6 @@ public class MailData implements Serializable {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-    }
-
-    public String getReplyTo() {
-        return replyTo;
-    }
-
-    public void setReplyTo(final String replyTo) {
-        this.replyTo = replyTo;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(final String subject) {
-        this.subject = subject;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(final String message) {
-        this.message = message;
-    }
-
-    public List<EmailAttachment> getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments(final List<EmailAttachment> attachments) {
-        this.attachments = attachments;
     }
 
     public void addAttachment(final EmailAttachment attachment) {

@@ -4,6 +4,8 @@ import de.vinado.wicket.participate.model.email.EmailAttachment;
 import de.vinado.wicket.participate.model.email.MailData;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,20 +32,14 @@ import java.util.Locale;
  */
 @Primary
 @Service
+@Slf4j
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class EmailServiceImpl implements EmailService {
-
-    private static final Logger log = LoggerFactory.getLogger(EmailService.class);
 
     private static final String UTF_8 = StandardCharsets.UTF_8.name();
 
     private final JavaMailSender sender;
     private final Configuration freeMarker;
-
-    @Autowired
-    public EmailServiceImpl(final JavaMailSender sender, final Configuration freeMarker) {
-        this.sender = sender;
-        this.freeMarker = freeMarker;
-    }
 
     /**
      * {@inheritDoc}
