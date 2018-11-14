@@ -1,6 +1,8 @@
 package de.vinado.wicket.participate.model.filters;
 
 import de.vinado.wicket.participate.model.EventDetails;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.wicket.util.string.Strings;
 
 import java.io.Serializable;
@@ -11,16 +13,14 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Getter
+@Setter
 public class EventDetailsFilter implements Serializable, IFilter<EventDetails> {
 
     private String name;
-
     private Date startDate;
-
     private Date endDate;
-
     private String event;
-
     private String location;
 
     @Override
@@ -51,45 +51,5 @@ public class EventDetailsFilter implements Serializable, IFilter<EventDetails> {
     @Override
     public boolean validate(final String str1, final String str2) {
         return !Strings.isEmpty(str2) && !str1.toLowerCase().contains(str2.toLowerCase());
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(final Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getEvent() {
-        return event;
-    }
-
-    public void setEvent(final String event) {
-        this.event = event;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(final String location) {
-        this.location = location;
     }
 }
