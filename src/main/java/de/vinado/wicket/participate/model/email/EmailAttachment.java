@@ -1,5 +1,8 @@
 package de.vinado.wicket.participate.model.email;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.InputStream;
 import java.io.Serializable;
 
@@ -8,12 +11,12 @@ import java.io.Serializable;
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Getter
+@Setter
 public class EmailAttachment implements Serializable {
 
     private String name;
-
     private String mediaType;
-
     private InputStream inputStream;
 
     /**
@@ -26,30 +29,6 @@ public class EmailAttachment implements Serializable {
     public EmailAttachment(final String name, final String mediaType, final InputStream inputStream) {
         this.name = name;
         this.mediaType = mediaType;
-        this.inputStream = inputStream;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public String getMediaType() {
-        return mediaType;
-    }
-
-    public void setMediaType(final String mediaType) {
-        this.mediaType = mediaType;
-    }
-
-    public InputStream getInputStream() {
-        return inputStream;
-    }
-
-    public void setInputStream(final InputStream inputStream) {
         this.inputStream = inputStream;
     }
 }
