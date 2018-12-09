@@ -39,15 +39,12 @@ import net.fortuna.ical4j.model.property.Version;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.internet.AddressException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -635,14 +632,11 @@ public class EventServiceImpl extends DataService implements EventService {
                 }
             };
 
-            try {
-                mailData.setFrom(ParticipateApplication.get().getApplicationProperties().getMail().getSender());
-                mailData.addTo(singer.getEmail(), singer.getDisplayName());
-                mailData.setSubject(participant.getEvent().getName());
-            } catch (AddressException e) {
-                log.error("Malformed email address", e);
-                continue;
-            }
+            final ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
+
+            mailData.setFrom(properties.getMail().getSender(), properties.getCustomer());
+            mailData.addTo(singer.getEmail(), singer.getDisplayName());
+            mailData.setSubject(participant.getEvent().getName());
 
             try {
                 // TODO Create notification template
