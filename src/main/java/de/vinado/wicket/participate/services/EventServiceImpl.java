@@ -650,9 +650,11 @@ public class EventServiceImpl extends DataService implements EventService {
                 log.error("Unable to parse Freemarker template", e);
             }
 
-            final Participant loadedParticipant = load(Participant.class, participant.getId());
-            loadedParticipant.setInvitationStatus(InvitationStatus.PENDING);
-            save(loadedParticipant);
+            if (InvitationStatus.UNINVITED.equals(participant.getInvitationStatus())) {
+                final Participant loadedParticipant = load(Participant.class, participant.getId());
+                loadedParticipant.setInvitationStatus(InvitationStatus.PENDING);
+                save(loadedParticipant);
+            }
 
             count++;
         }
