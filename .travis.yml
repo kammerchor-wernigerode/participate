@@ -26,6 +26,7 @@ deploy:
   script: bash scripts/docker_push
   on:
     branch: master
+    tags: true
 
 notifications:
   email:
