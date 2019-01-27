@@ -2,25 +2,34 @@ language: java
 jdk:
   - oraclejdk8
 
-branches:
-  only:
-    - master
-    - develop
+services:
+  - docker
 
 cache:
   directories:
     - $HOME/.m2
 
+env:
+  - DOCKER_REPO_SLUG=kchwr/participate
+
 install:
-  - mvn -B -V -e -q -DskipTests -Dmaven.javadoc.skip install
+  - mvn -B -V -DskipTests=true -Dmaven.javadoc.skip=true install
 
 before_script:
   - echo "changeLogFile=de/vinado/wicket/participate/db/liquibase/changelog.xml" > src/main/resources/liquibase.properties
 
 script:
-  - mvn -B -q test
+  - mvn test -B
+
+deploy:
+  provider: script
+  script: bash scripts/docker_push
+  on:
+    branch: master
 
 notifications:
   email:
-    on_failure: never
+    recipients:
+      - vincent.nadoll@gmail.com
     on_success: never
+    on_failure: always

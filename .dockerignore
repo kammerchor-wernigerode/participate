@@ -1,7 +1,23 @@
-# IDE
-.idea/
-*.iml
+# Test classes
+src/test
 
-# Project Files
+# Git files
+.git/
+.gitignore
+
+# Project files
+scripts
+target
+.travis.yml
+*.md
+docker-compose.yml
 src/main/resources/liquibase.properties
 src/main/resources/application.yml
+
+# Log files
+*.log
+
+# IntelliJ IDEA
+.idea
+*.iml
+
