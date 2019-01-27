@@ -1,26 +1,26 @@
 language: java
 jdk:
-- oraclejdk8
+  - oraclejdk8
 
 branches:
   only:
-  - master
-  - develop
+    - master
+    - develop
+
+cache:
+  directories:
+    - $HOME/.m2
 
 install:
-- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  - mvn -B -V -e -q -DskipTests -Dmaven.javadoc.skip install
 
 before_script:
-- echo "changeLogFile=de/vinado/wicket/participate/db/liquibase/changelog.xml" > src/main/resources/liquibase.properties
+  - echo "changeLogFile=de/vinado/wicket/participate/db/liquibase/changelog.xml" > src/main/resources/liquibase.properties
 
 script:
-- mvn test -B
+  - mvn -B -q test
 
 notifications:
   email:
     on_failure: never
     on_success: never
-
-cache:
-  directories:
-  - $HOME/.m2
