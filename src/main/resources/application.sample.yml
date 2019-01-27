@@ -18,7 +18,7 @@ spring:
     url: jdbc:mysql://${DATABASE_HOST:localhost}:${DATABASE_PORT:3361}/${DATABASE_NAME:participate}?useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false
     username: ${DATABASE_USER:participate}
     password: ${DATABASE_PASSWORD:participate}
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   liquibase:
     change-log: 'classpath:/de/vinado/wicket/participate/db/liquibase/changelog.xml'

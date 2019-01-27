@@ -28,7 +28,7 @@ public class Database implements Serializable {
     private Connection connection;
 
     public Database(final String jdbcUrl, final String username, final String password) {
-        this("com.mysql.jdbc.Driver", jdbcUrl, username, password);
+        this("com.mysql.cj.jdbc.Driver", jdbcUrl, username, password);
     }
 
     public Database(final String jdbcDriverClassName, final String jdbcUrl, final String username, final String passwd) {
