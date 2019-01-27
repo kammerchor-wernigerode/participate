@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.services;
 
+import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.email.EmailAttachment;
 import de.vinado.wicket.participate.model.email.MailData;
 import freemarker.template.Configuration;
@@ -7,8 +8,6 @@ import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -40,6 +39,7 @@ public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender sender;
     private final Configuration freeMarker;
+    private final ApplicationProperties applicationProperties;
 
     /**
      * {@inheritDoc}
@@ -89,7 +89,8 @@ public class EmailServiceImpl implements EmailService {
      * <br>
      * Sends multiple plaintext emails
      * <br>
-     * <p>Usage: Define your own Array of MimeMessagePreparators. Typically used to send different emails with different
+     * <p>Usage: Define your own Array of MimeMessagePreparators. Typically used to send different emails with
+     * different
      * data and/or template files</p>
      *
      * @param mimeMessagePreparators Array of {@link MimeMessagePreparator message preparators}
@@ -102,7 +103,8 @@ public class EmailServiceImpl implements EmailService {
     /**
      * Sends multiple plaintext emails
      * <br>
-     * <p>Usage: Define your own Array of MimeMessagePreparators. Typically used to send different emails with different
+     * <p>Usage: Define your own Array of MimeMessagePreparators. Typically used to send different emails with
+     * different
      * data and/or template files.</p>
      *
      * @param mimeMessagePreparators Collection of {@link MimeMessagePreparator message preparators}
@@ -121,7 +123,7 @@ public class EmailServiceImpl implements EmailService {
                                                           final String htmlTemplateFileName) throws IOException,
         TemplateException {
         mailData.setMessage(FreeMarkerTemplateUtils.processTemplateIntoString(
-            freeMarker.getTemplate(plaintextTemplateFileName, Locale.getDefault()), mailData.getData()));
+            freeMarker.getTemplate(plaintextTemplateFileName, Locale.getDefault()), mailData.getData(applicationProperties)));
 
         return getMimeMessagePreparator(mailData, htmlTemplateFileName, true);
     }
@@ -144,7 +146,7 @@ public class EmailServiceImpl implements EmailService {
                     mailData.getMessage(),
                     FreeMarkerTemplateUtils.processTemplateIntoString(
                         freeMarker.getTemplate(templateFileName, Locale.getDefault()),
-                        mailData.getData()
+                        mailData.getData(applicationProperties)
                     )
                 );
             } else if (!Strings.isEmpty(mailData.getMessage())) {
@@ -152,7 +154,7 @@ public class EmailServiceImpl implements EmailService {
             } else if (!Strings.isEmpty(templateFileName)) {
                 if (html) log.warn("You may provide a plaintext version of your email too");
                 helper.setText(FreeMarkerTemplateUtils.processTemplateIntoString(
-                    freeMarker.getTemplate(templateFileName, Locale.getDefault()), mailData.getData()), html);
+                    freeMarker.getTemplate(templateFileName, Locale.getDefault()), mailData.getData(applicationProperties)), html);
             } else {
                 log.error("Error no mail body provided",
                     new NullPointerException("Neither 'templateFileName' nor 'MailData#message' cannot be null"));

@@ -81,6 +81,7 @@ public class EventServiceImpl extends DataService implements EventService {
 
     private final PersonService personService;
     private final EmailService emailService;
+    private final ApplicationProperties applicationProperties;
 
     @Override
     @PersistenceContext
@@ -623,18 +624,19 @@ public class EventServiceImpl extends DataService implements EventService {
 
             final MailData mailData = new MailData() {
                 @Override
-                public Map<String, Object> getData() {
-                    final Map<String, Object> data = super.getData();
+                public Map<String, Object> getData(final ApplicationProperties applicationProperties) {
+                    final Map<String, Object> data = super.getData(applicationProperties);
                     data.put("event", participant.getEvent());
                     data.put("singer", singer);
-                    data.put("acceptLink", ParticipateUtils.generateInvitationLink(participant.getToken()));
+                    data.put("acceptLink", ParticipateUtils.generateInvitationLink(
+                        applicationProperties.getBaseUrl(),
+                        participant.getToken())
+                    );
                     return data;
                 }
             };
 
-            final ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
-
-            mailData.setFrom(properties.getMail().getSender(), properties.getCustomer());
+            mailData.setFrom(applicationProperties.getMail().getSender(), applicationProperties.getCustomer());
             mailData.addTo(singer.getEmail(), singer.getDisplayName());
             mailData.setSubject(participant.getEvent().getName());
 

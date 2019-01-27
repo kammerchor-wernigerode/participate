@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:kch-database;MODE=MYSQL
+    username: kch
+    password: kch
+
+  liquibase:
+    enabled: false

@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.model.email;
 
-import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -83,15 +82,13 @@ public class MailData implements Serializable {
      *
      * @return Map of tagged objects
      */
-    public Map<String, Object> getData() {
+    public Map<String, Object> getData(final ApplicationProperties properties) {
         final Map<String, Object> data = new HashMap<>();
-        final ApplicationProperties.Mail mailProperties = ParticipateApplication.get().getApplicationProperties().getMail();
 
         data.put("from", from);
         data.put("subject", subject);
-        data.put("baseUrl", ParticipateApplication.get().getBaseUrl());
-        data.put("footer", mailProperties.getFooter());
-
+        data.put("baseUrl", properties.getBaseUrl());
+        data.put("footer", properties.getMail().getFooter());
 
         return data;
     }

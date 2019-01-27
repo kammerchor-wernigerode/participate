@@ -1,29 +1,28 @@
 package de.vinado.wicket.participate.configuration;
 
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 /**
  * Reads the properties from "classpath:/application.properties"
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-@Validated
 @Configuration
 @ConfigurationProperties("app")
-@EnableConfigurationProperties
 @Getter
 @Setter
 public class ApplicationProperties {
 
+    private @NotBlank String baseUrl;
     private boolean developmentMode = false;
     private String customer = "";
-    private @NonNull String participatePassword;
+    private @NotBlank String participatePassword;
     private String version;
     private Mail mail;
     private Database database;
@@ -32,7 +31,7 @@ public class ApplicationProperties {
     @Setter
     public static class Mail {
 
-        private @NonNull String sender;
+        private @Pattern(regexp = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,6}$") String sender;
         private String footer = "Participate";
     }
 

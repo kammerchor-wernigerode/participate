@@ -302,8 +302,8 @@ public class UserServiceImpl extends DataService implements UserService {
 
             final MailData mailData = new MailData() {
                 @Override
-                public Map<String, Object> getData() {
-                    final Map<String, Object> data = super.getData();
+                public Map<String, Object> getData(final ApplicationProperties applicationProperties) {
+                    final Map<String, Object> data = super.getData(applicationProperties);
                     data.put("firstName", person.getFirstName());
                     data.put("passwordRecoveryLink", passwordRecoveryLink.toString(Url.StringMode.FULL, Charset.defaultCharset()));
                     data.put("validDuration", validDuration);
@@ -356,8 +356,8 @@ public class UserServiceImpl extends DataService implements UserService {
 
             final MailData mailData = new MailData() {
                 @Override
-                public Map<String, Object> getData() {
-                    final Map<String, Object> data = super.getData();
+                public Map<String, Object> getData(final ApplicationProperties applicationProperties) {
+                    final Map<String, Object> data = super.getData(applicationProperties);
                     data.put("firstName", person.getFirstName());
                     return data;
                 }
