@@ -5,7 +5,7 @@
 TAGS=()
 
 # Splits a tag number e.g. v3.1.0 into an array of ( 3 1 0 ). The given tag must start with a lowercase "v" otherwise
-# then validation fails. The array will be stored in the TAGS variable.
+# the validation fails. The array will be stored in the TAGS variable.
 function split() {
     local tag=$1
 
