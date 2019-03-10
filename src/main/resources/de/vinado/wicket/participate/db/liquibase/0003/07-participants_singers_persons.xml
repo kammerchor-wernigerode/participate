@@ -8,10 +8,10 @@
         <addUniqueConstraint tableName="persons" columnNames="email" constraintName="UC_email"/>
     </changeSet>
 
-    <changeSet id="0003-singers" author="Vincent Nadoll" dbms="!h2">
+    <changeSet id="0003-singers" author="Vincent Nadoll" dbms="mysql">
         <renameTable oldTableName="members" newTableName="singers"/>
 
-        <sql dbms="!mysql">
+        <sql dbms="h2">
             ALTER TABLE singers CHANGE id id BIGINT NOT NULL;
         </sql>
         <sql dbms="mysql">
@@ -42,7 +42,7 @@
     <changeSet id="0003-singers" author="Vincent Nadoll" dbms="h2">
         <renameTable oldTableName="members" newTableName="singers"/>
 
-        <sql dbms="!mysql">
+        <sql dbms="h2">
             ALTER TABLE singers CHANGE id id BIGINT NOT NULL;
         </sql>
         <sql dbms="mysql">
@@ -69,7 +69,7 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="0003-participants" author="Vincent Nadoll" dbms="mysql and postgresql">
+    <changeSet id="0003-participants" author="Vincent Nadoll" dbms="mysql">
         <dropAllForeignKeyConstraints baseTableName="m_member_event"/>
         <dropIndex tableName="m_member_event" indexName="fk_m_ev_member_events"/>
         <dropIndex tableName="m_member_event" indexName="fk_m_ev_member_invite_status"/>
@@ -96,7 +96,7 @@
                       columnDataType="BIGINT"/>
         <modifyDataType tableName="participants" columnName="comment" newDataType="TEXT"/>
 
-        <sql dbms="!mysql">
+        <sql dbms="h2">
             ALTER TABLE participants DROP PRIMARY KEY;
             ALTER TABLE participants CHANGE id id BIGINT NOT NULL;
         </sql>
@@ -133,7 +133,7 @@
 
     </changeSet>
 
-    <changeSet id="0003-participants" author="Vincent Nadoll" dbms="!mysql and !postgresql">
+    <changeSet id="0003-participants" author="Vincent Nadoll" dbms="h2">
         <dropForeignKeyConstraint baseTableName="m_member_event" constraintName="fk_m_ev_member_events"/>
         <dropForeignKeyConstraint baseTableName="m_member_event" constraintName="fk_m_ev_member_members"/>
 
@@ -157,7 +157,7 @@
                       columnDataType="BIGINT"/>
         <modifyDataType tableName="participants" columnName="comment" newDataType="TEXT"/>
 
-        <sql dbms="!mysql">
+        <sql dbms="h2">
             ALTER TABLE participants DROP PRIMARY KEY;
             ALTER TABLE participants CHANGE id id BIGINT NOT NULL;
         </sql>

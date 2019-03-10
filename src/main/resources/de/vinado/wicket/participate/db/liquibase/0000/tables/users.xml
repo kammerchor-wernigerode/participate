@@ -4,7 +4,7 @@
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="0000-tables-users" author="Vincent Nadoll" dbms="!h2" context="migration and !initDb">
+    <changeSet id="0000-tables-users" author="Vincent Nadoll" dbms="mysql">
         <createTable tableName="users">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_members"/>
@@ -32,7 +32,7 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="0000-tables-users" author="Vincent Nadoll" dbms="h2" context="migration and !initDb">
+    <changeSet id="0000-tables-users" author="Vincent Nadoll" dbms="h2">
         <createTable tableName="users">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users"/>
