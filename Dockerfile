@@ -1,24 +1,25 @@
-FROM maven:3-alpine as maven
+FROM maven:3-jdk-8 as maven
+RUN mkdir -p  /usr/src/app
+WORKDIR       /usr/src/app
 
-LABEL maintainer="Vincent Nadoll <vincent.nadoll@gmail.com>"
+COPY pom.xml /usr/src/app
+RUN mvn -B -q dependency:go-offline
 
-WORKDIR /usr/src/app
-COPY pom.xml .
-RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:go-offline --fail-never
-
-COPY . .
-COPY src/main/resources/application-docker.yml src/main/resources/application.yml
+COPY src     /usr/src/app/src
+COPY src/main/resources/application-docker.yml /usr/src/app/src/main/resources/application.yml
 RUN ( \
     echo 'changeLogFile=de/vinado/wicket/participate/db/liquibase/changelog.xml'; \
-    ) > src/main/resources/liquibase.properties
+    ) > /usr/src/app/src/main/resources/liquibase.properties
 # Due to missing depencencies, mvn does not run with -o (offline)
-RUN mvn -B -e -q verify
+RUN mvn -q package
 
 
-FROM openjdk:8-jdk-alpine
+FROM openjdk:8-jre-alpine
+RUN mkdir -p /app
+WORKDIR      /app
 
 ARG JAR_FILE=participate.jar
-COPY --from=maven /usr/src/app/target/$JAR_FILE ./app.jar
+COPY --from=maven /usr/src/app/target/$JAR_FILE /app/application.jar
 
 EXPOSE 8080
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar" ,"/app/application.jar"]
