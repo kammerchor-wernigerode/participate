@@ -31,8 +31,6 @@ import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
-import org.apache.wicket.markup.html.IPackageResourceGuard;
-import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.https.HttpsConfig;
@@ -42,7 +40,6 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.version.CachingResourceVersion;
@@ -64,8 +61,6 @@ import javax.servlet.http.HttpServletRequest;
 @Getter
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ParticipateApplication extends AuthenticatedWebApplication {
-
-    public static final PackageResourceReference USER_GUIDE = new PackageResourceReference(ParticipateApplication.class, "resources/pdf/Handbuch.pdf");
 
     private final ApplicationProperties applicationProperties;
     private final DatabasePopulator databasePopulator;
@@ -115,17 +110,6 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
     @Override
     public void init() {
         super.init();
-
-        final IPackageResourceGuard guard = getResourceSettings().getPackageResourceGuard();
-        if (guard instanceof SecurePackageResourceGuard) {
-            ((SecurePackageResourceGuard) guard).addPattern("+**.otf");
-            ((SecurePackageResourceGuard) guard).addPattern("+**.eot");
-            ((SecurePackageResourceGuard) guard).addPattern("+**.svg");
-            ((SecurePackageResourceGuard) guard).addPattern("+**.ttf");
-            ((SecurePackageResourceGuard) guard).addPattern("+**.woff");
-            ((SecurePackageResourceGuard) guard).addPattern("+**.woff2");
-            ((SecurePackageResourceGuard) guard).addPattern("+**.pdf");
-        }
 
         getApplicationSettings().setUploadProgressUpdatesEnabled(true);
         getMarkupSettings().setDefaultMarkupEncoding("UTF-8");

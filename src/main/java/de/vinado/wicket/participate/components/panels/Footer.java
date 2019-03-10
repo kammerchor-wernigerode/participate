@@ -10,8 +10,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.PopupSettings;
-import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 
@@ -50,15 +48,10 @@ public class Footer extends Panel {
                 setVisible(!developmentMode);
             }
         });
-        add(new Label("applicationName", ParticipateApplication.get().getApplicationProperties().getCustomer()));
+        add(new Label("customer", ParticipateApplication.get().getApplicationProperties().getCustomer()));
         add(new Label("year", new SimpleDateFormat("yyyy").format(new Date())));
-//        add(new Label("version", ParticipateApplication.get().getApplicationProperties().getVersion()));
-        add(new ResourceLink<Void>("documentation", ParticipateApplication.USER_GUIDE) {
-            @Override
-            protected void onConfigure() {
-                setVisible(!developmentMode && signedIn);
-            }
-        }.setPopupSettings(new PopupSettings(PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS).setHeight(500).setWidth(700)));
+        add(new Label("applicationName", ParticipateApplication.get().getApplicationName()));
+        add(new Label("version", ParticipateApplication.get().getApplicationProperties().getVersion()));
     }
 
     @Override
