@@ -20,6 +20,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
 
+import static de.vinado.wicket.participate.model.InvitationStatus.ACCEPTED;
+import static de.vinado.wicket.participate.model.InvitationStatus.DECLINED;
+import static de.vinado.wicket.participate.model.InvitationStatus.PENDING;
+import static de.vinado.wicket.participate.model.InvitationStatus.UNINVITED;
+
 /**
  * Entity of mapping between {@link Event} and {@link Singer}
  *
@@ -97,5 +102,21 @@ public class Participant implements Identifiable<Long> {
     public Participant(final Event event, final Singer singer, final String token,
                        final InvitationStatus invitationStatus) {
         this(event, singer, token, invitationStatus, null, null, false, false, null);
+    }
+
+    public boolean isUninvited() {
+        return UNINVITED.equals(invitationStatus);
+    }
+
+    public boolean isPending() {
+        return PENDING.equals(invitationStatus);
+    }
+
+    public boolean isAccepted() {
+        return ACCEPTED.equals(invitationStatus);
+    }
+
+    public boolean isDeclined() {
+        return DECLINED.equals(invitationStatus);
     }
 }
