@@ -13,7 +13,7 @@ env:
   - DOCKER_REPO_SLUG=kchwr/participate
 
 install:
-  - mvn -B -V install
+  - mvn -B -V -DskipTests=true -Dmaven.javadoc.skip=true install
 
 before_script:
   - echo "changeLogFile=de/vinado/wicket/participate/db/liquibase/changelog.xml" > src/main/resources/liquibase.properties
