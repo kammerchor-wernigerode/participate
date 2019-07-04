@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Reads the properties from "classpath:/application.properties"
@@ -26,6 +28,7 @@ public class ApplicationProperties {
     private String version;
     private Mail mail;
     private Database database;
+    private Features features;
 
     @Getter
     @Setter
@@ -43,5 +46,16 @@ public class ApplicationProperties {
         private String remoteUrl;
         private String remoteUsername;
         private String remotePassword;
+    }
+
+    @Getter
+    @Setter
+    public static class Features {
+
+        private final List<Feature> enabled = new ArrayList<>();
+
+        public boolean hasFeature(final Feature feature) {
+            return enabled.contains(feature);
+        }
     }
 }
