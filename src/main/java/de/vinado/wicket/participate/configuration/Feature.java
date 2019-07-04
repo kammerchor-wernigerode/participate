@@ -10,7 +10,7 @@ public enum Feature {
     /**
      * If enabled, pending invitation will receive a reminder notification.
      *
-     * @see de.vinado.wicket.participate.tasks.InvitationTask
+     * @see de.vinado.wicket.participate.Scheduler
      */
     REMIND_OVERDUE,
 }
