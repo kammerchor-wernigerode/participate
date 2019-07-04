@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.tasks;
 
+import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.services.EventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import static de.vinado.wicket.participate.configuration.Feature.REMIND_OVERDUE;
 import static de.vinado.wicket.participate.model.InvitationStatus.PENDING;
 import static java.util.Calendar.DATE;
 
@@ -22,6 +24,7 @@ import static java.util.Calendar.DATE;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class InvitationTask {
 
+    private final ApplicationProperties applicationProperties;
     private final EventService eventService;
 
     private static Date addDays(final Date date, final int days) {
@@ -33,17 +36,19 @@ public class InvitationTask {
 
     @Scheduled(cron = "0 0 9 ? * SUN")
     public void remindOverdue() {
-        final Date nextWeek = addDays(new Date(), 7);
-        log.info("Run overdue invitations job");
+        if (applicationProperties.getFeatures().hasFeature(REMIND_OVERDUE)) {
+            final Date nextWeek = addDays(new Date(), 7);
+            log.info("Run overdue invitations job");
 
-        eventService.getUpcomingEvents().stream()
-            .filter(event -> nextWeek.after(event.getStartDate()))
-            .forEach(event -> {
-                final int invitations = eventService.inviteParticipants(eventService.getParticipants(event, true).stream()
-                    .filter(participant -> PENDING.equals(participant.getInvitationStatus()))
-                    .collect(Collectors.toList()));
+            eventService.getUpcomingEvents().stream()
+                .filter(event -> nextWeek.after(event.getStartDate()))
+                .forEach(event -> {
+                    final int invitations = eventService.inviteParticipants(eventService.getParticipants(event, true).stream()
+                        .filter(participant -> PENDING.equals(participant.getInvitationStatus()))
+                        .collect(Collectors.toList()));
 
-                log.info("Ran overdue job for event w\\ id=" + event.getId() + " and sent email to " + invitations + " participants.");
-            });
+                    log.info("Ran overdue job for event w\\ id=" + event.getId() + " and sent email to " + invitations + " participants.");
+                });
+        }
     }
 }
