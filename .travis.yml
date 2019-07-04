@@ -13,27 +13,27 @@ env:
   - DOCKER_REPO_SLUG=kchwr/participate
 
 install:
-  - mvn -B -V -DskipTests=true -Dmaven.javadoc.skip=true install
+  - mvn -B -V install
 
 before_script:
   - echo "changeLogFile=de/vinado/wicket/participate/db/liquibase/changelog.xml" > src/main/resources/liquibase.properties
 
 script:
-  - mvn test -B
+  - mvn -B test
 
 deploy:
   - provider: script
-    script: bash scripts/docker_push
+    script: bash scripts/docker-push.sh
     on:
       branch: master
   - provider: script
-    script: bash scripts/docker_push
+    script: bash scripts/docker-push.sh
     on:
       tags: true
 
 notifications:
   email:
     recipients:
-      - vincent.nadoll@gmail.com
+      - me@vinado.de
     on_success: never
     on_failure: always

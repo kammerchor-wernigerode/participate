@@ -6,7 +6,7 @@ src/test
 .gitignore
 
 # Project files
-scripts
+scripts/docker-push.sh
 target
 .travis.yml
 *.md
@@ -20,4 +20,3 @@ src/main/resources/application.yml
 # IntelliJ IDEA
 .idea
 *.iml
-

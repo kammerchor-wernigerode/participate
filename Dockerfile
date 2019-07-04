@@ -20,6 +20,8 @@ WORKDIR      /app
 
 ARG JAR_FILE=participate.jar
 COPY --from=maven /usr/src/app/target/$JAR_FILE /app/application.jar
+COPY scripts/docker-entrypoint.sh /usr/local/bin/
 
 EXPOSE 8080
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar" ,"/app/application.jar"]
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["/usr/bin/java", "-Djava.security.egd=file:/dev/./urandom", "-jar" ,"/app/application.jar"]
