@@ -433,18 +433,6 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public List<Participant> getParticipants(final Event event, final boolean invited) {
-        if (invited) {
-            return getInvitedParticipants(event);
-        } else {
-            return getUninvitedParticipants(event);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public List<Participant> getInvitedParticipants(final Event event) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);

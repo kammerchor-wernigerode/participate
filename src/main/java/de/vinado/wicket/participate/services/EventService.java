@@ -192,7 +192,9 @@ public interface EventService {
      * @param invited Whether the {@link Participant} is not invited.
      * @return The list of ordered {@link Participant}.
      */
-    List<Participant> getParticipants(Event event, boolean invited);
+    default List<Participant> getParticipants(final Event event, final boolean invited) {
+        return invited ? getInvitedParticipants(event) : getUninvitedParticipants(event);
+    }
 
     /**
      * Fetches all invited {@link Participant}s of the given {@link Event} ordered by {@link Participant#singer}s
