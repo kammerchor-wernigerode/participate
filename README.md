@@ -63,6 +63,8 @@ docker run \
 ```
 make sure you are running a database container too.
 
+*The Docker example does not cover proprietary features. Check the `Feature` class for more information.*
+
 ---
 
 Navigate to `tools/` and run

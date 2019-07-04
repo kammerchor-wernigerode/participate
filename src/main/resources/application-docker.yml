@@ -41,6 +41,8 @@ app:
   mail:
     footer: ${spring.application.name}
     sender: ${spring.mail.properties.mail.smtp.from}
+  features:
+    enabled: ${ENABLED_FEATURES}
 
 logging:
   file: 'target/logs/wicket.log'
