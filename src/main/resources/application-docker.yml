@@ -43,6 +43,7 @@ app:
     sender: ${spring.mail.properties.mail.smtp.from}
   features:
     enabled: ${ENABLED_FEATURES}
+    scoresManager: ${SCORES_MANAGER_EMAIL}
 
 logging:
   file: 'target/logs/wicket.log'
