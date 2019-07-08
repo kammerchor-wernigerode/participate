@@ -42,7 +42,8 @@ app:
     footer: ${spring.application.name}
     sender: ${spring.mail.properties.mail.smtp.from}
 # features:
-#   enabled: ${ENABLED_FEATURES:-REMIND_OVERDUE}
+#   enabled: REMIND_OVERDUE,NOTIFY_SCORES_MANAGER
+#   scores-manager-email: some@email.com
 
 logging:
   file: 'target/logs/wicket.log'

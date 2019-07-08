@@ -21,6 +21,8 @@ import java.util.List;
 @Setter
 public class ApplicationProperties {
 
+    private static final String EMAIL_PATTERN = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,6}$";
+
     private @NotBlank String baseUrl;
     private boolean developmentMode = false;
     private String customer = "";
@@ -34,7 +36,7 @@ public class ApplicationProperties {
     @Setter
     public static class Mail {
 
-        private @Pattern(regexp = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,6}$") String sender;
+        private @Pattern(regexp = EMAIL_PATTERN) String sender;
         private String footer = "Participate";
     }
 
@@ -53,6 +55,7 @@ public class ApplicationProperties {
     public static class Features {
 
         private final List<Feature> enabled = new ArrayList<>();
+        private @Pattern(regexp = EMAIL_PATTERN) String scoresManagerEmail;
 
         public boolean hasFeature(final Feature feature) {
             return enabled.contains(feature);
