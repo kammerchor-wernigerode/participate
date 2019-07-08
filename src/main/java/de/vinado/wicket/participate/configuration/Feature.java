@@ -13,4 +13,9 @@ public enum Feature {
      * @see de.vinado.wicket.participate.Scheduler
      */
     REMIND_OVERDUE,
+
+    /**
+     * If enabled, a list of event attendees will be sent to the club's score's manager.
+     */
+    NOTIFY_SCORES_MANAGER,
 }
