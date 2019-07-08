@@ -2,13 +2,13 @@ package de.vinado.wicket.participate.services;
 
 import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
+import de.vinado.wicket.participate.email.Email;
+import de.vinado.wicket.participate.email.service.EmailService;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.UserRecoveryToken;
 import de.vinado.wicket.participate.model.dtos.AddUserDTO;
 import de.vinado.wicket.participate.model.dtos.PersonDTO;
-import de.vinado.wicket.participate.model.email.MailData;
-import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -31,8 +31,8 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.io.IOException;
-import java.nio.charset.Charset;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -300,31 +300,31 @@ public class UserServiceImpl extends DataService implements UserService {
             passwordRecoveryLink.concatSegments(urlSegments);
             passwordRecoveryLink.setQueryParameter("token", token.getToken());
 
-            final MailData mailData = new MailData() {
+            final Email email = new Email() {
                 @Override
-                public Map<String, Object> getData(final ApplicationProperties applicationProperties) {
-                    final Map<String, Object> data = super.getData(applicationProperties);
+                public Map<String, Object> getData(final ApplicationProperties properties) {
+                    final Map<String, Object> data = super.getData(properties);
                     data.put("firstName", person.getFirstName());
-                    data.put("passwordRecoveryLink", passwordRecoveryLink.toString(Url.StringMode.FULL, Charset.defaultCharset()));
+                    data.put("passwordRecoveryLink", passwordRecoveryLink.toString(Url.StringMode.FULL, StandardCharsets.UTF_8));
                     data.put("validDuration", validDuration);
                     return data;
                 }
             };
-            mailData.setFrom(properties.getMail().getSender(), applicationName);
-            mailData.addTo(person.getEmail(), person.getDisplayName());
-            mailData.setSubject(initial ? "Konto aktivieren" : "Passwort zurücksetzen");
+            email.setFrom(properties.getMail().getSender(), applicationName);
+            email.addTo(person.getEmail(), person.getDisplayName());
+            email.setSubject(initial ? "Konto aktivieren" : "Passwort zurücksetzen");
 
             if (initial) {
-                emailService.send(mailData, "newUser-txt.ftl", "newUser-html.ftl");
+                emailService.send(email, "newUser-txt.ftl", "newUser-html.ftl");
             } else {
-                emailService.send(mailData, "passwordReset-txt.ftl", "passwordReset-html.ftl");
+                emailService.send(email, "passwordReset-txt.ftl", "passwordReset-html.ftl");
             }
 
             return true;
         } catch (NoResultException e) {
             log.warn("Password recovery for unknown login: {}.", usernameOrEmail);
-        } catch (TemplateException | IOException e) {
-            log.error("Unable to parse Freemarker template", e);
+        } catch (UnsupportedEncodingException e) {
+            log.error("Encoding is not supported", e);
         }
 
         return false;
@@ -354,7 +354,7 @@ public class UserServiceImpl extends DataService implements UserService {
 
             final Person person = user.getPerson();
 
-            final MailData mailData = new MailData() {
+            final Email email = new Email() {
                 @Override
                 public Map<String, Object> getData(final ApplicationProperties applicationProperties) {
                     final Map<String, Object> data = super.getData(applicationProperties);
@@ -362,17 +362,17 @@ public class UserServiceImpl extends DataService implements UserService {
                     return data;
                 }
             };
-            mailData.setFrom(properties.getMail().getSender(), applicationName);
-            mailData.addTo(person.getEmail(), person.getDisplayName());
-            mailData.setSubject("Dein Passwort wurde aktualisiert");
+            email.setFrom(properties.getMail().getSender(), applicationName);
+            email.addTo(person.getEmail(), person.getDisplayName());
+            email.setSubject("Dein Passwort wurde aktualisiert");
 
-            emailService.send(mailData, "passwordResetSuccess-txt.ftl", "passwordResetSuccess-html.ftl");
+            emailService.send(email, "passwordResetSuccess-txt.ftl", "passwordResetSuccess-html.ftl");
 
             return true;
         } catch (NoResultException e) {
             log.error("Invalid password recovery token for: {}.", recoveryToken);
-        } catch (TemplateException | IOException e) {
-            log.error("Unable to parse Freemarker template", e);
+        } catch (UnsupportedEncodingException e) {
+            log.error("Encoding is not supported", e);
         }
 
         return false;
@@ -387,10 +387,11 @@ public class UserServiceImpl extends DataService implements UserService {
     }
 
     /**
-     * Generates a new alphanumeric {@link UserRecoveryToken#token}
-     * with a length of 20 chars. If the token already exists the function calls itself .
+     * Generates a new alphanumeric {@link UserRecoveryToken#getToken()} with a length of 20 chars. If the token already
+     * exists the function calls itself .
      *
      * @return Password reset token
+     *
      * @see #hasUserRecoveryToken(String)
      */
     private String generateRecoveryToken() {

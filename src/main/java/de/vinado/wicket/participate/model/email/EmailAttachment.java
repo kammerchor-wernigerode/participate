@@ -10,9 +10,11 @@ import java.io.Serializable;
  * Mail attachment wrapper object
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
+ * @deprecated use {@link de.vinado.wicket.participate.email.EmailAttachment} instead
  */
 @Getter
 @Setter
+@Deprecated
 public class EmailAttachment implements Serializable {
 
     private String name;
