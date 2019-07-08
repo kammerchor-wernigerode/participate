@@ -4,6 +4,9 @@ import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.common.ParticipateUtils;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
+import de.vinado.wicket.participate.email.Email;
+import de.vinado.wicket.participate.email.EmailAttachment;
+import de.vinado.wicket.participate.email.service.EmailService;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.InvitationStatus;
@@ -13,13 +16,10 @@ import de.vinado.wicket.participate.model.Terminable;
 import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
-import de.vinado.wicket.participate.model.email.EmailAttachment;
-import de.vinado.wicket.participate.model.email.MailData;
 import de.vinado.wicket.participate.model.filters.DetailedParticipantFilter;
 import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.model.ical4j.SimpleDateProperty;
-import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.fortuna.ical4j.model.DateTime;
@@ -41,7 +41,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.string.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
-import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,17 +54,18 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Stream;
+
+import static com.pivovarit.function.ThrowingFunction.sneaky;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Provides interaction with the database. The service implementation takes care of {@link Event} and Event related
@@ -604,53 +605,43 @@ public class EventServiceImpl extends DataService implements EventService {
      */
     @Override
     public int inviteParticipants(final List<Participant> participants) {
-        int count = 0;
-        final List<MimeMessagePreparator> preparators = new ArrayList<>();
+        final Stream<Email> invitations = participants
+            .stream()
+            .map(sneaky(participant -> {
+                final Singer singer = participant.getSinger();
 
-        for (Participant participant : participants) {
-            final Singer singer = participant.getSinger();
+                final Email email = new Email() {
+                    @Override
+                    public Map<String, Object> getData(final ApplicationProperties properties) {
+                        final Map<String, Object> data = super.getData(properties);
+                        data.put("event", participant.getEvent());
+                        data.put("singer", singer);
+                        data.put("acceptLink", ParticipateUtils.generateInvitationLink(
+                            properties.getBaseUrl(),
+                            participant.getToken())
+                        );
 
-            final MailData mailData = new MailData() {
-                @Override
-                public Map<String, Object> getData(final ApplicationProperties applicationProperties) {
-                    final Map<String, Object> data = super.getData(applicationProperties);
-                    data.put("event", participant.getEvent());
-                    data.put("singer", singer);
-                    data.put("acceptLink", ParticipateUtils.generateInvitationLink(
-                        applicationProperties.getBaseUrl(),
-                        participant.getToken())
-                    );
-                    return data;
-                }
-            };
+                        return data;
+                    }
+                };
 
-            mailData.setFrom(applicationProperties.getMail().getSender(), applicationProperties.getCustomer());
-            mailData.addTo(singer.getEmail(), singer.getDisplayName());
-            mailData.setSubject(participant.getEvent().getName());
+                email.setFrom(applicationProperties.getMail().getSender(), applicationProperties.getCustomer());
+                email.addTo(singer.getEmail(), singer.getDisplayName());
+                email.setSubject(participant.getEvent().getName());
+                email.setAttachments(Collections.singleton(newEventAttachment(participant.getEvent())));
 
-            try {
-                // TODO Create notification template
                 if (InvitationStatus.UNINVITED.equals(participant.getInvitationStatus())) {
-                    mailData.addAttachment(newEventAttachment(participant.getEvent()));
-                    preparators.add(emailService.getMimeMessagePreparator(mailData, "inviteSinger-txt.ftl", "inviteSinger-html.ftl"));
-                } else {
-                    preparators.add(emailService.getMimeMessagePreparator(mailData, "inviteSinger-txt.ftl", "inviteSinger-html.ftl"));
+                    final Participant loadedParticipant = load(Participant.class, participant.getId());
+                    loadedParticipant.setInvitationStatus(InvitationStatus.PENDING);
+                    save(loadedParticipant);
                 }
-            } catch (IOException | TemplateException e) {
-                log.error("Unable to parse Freemarker template", e);
-            }
 
-            if (InvitationStatus.UNINVITED.equals(participant.getInvitationStatus())) {
-                final Participant loadedParticipant = load(Participant.class, participant.getId());
-                loadedParticipant.setInvitationStatus(InvitationStatus.PENDING);
-                save(loadedParticipant);
-            }
+                return email;
+            }));
 
-            count++;
-        }
-
-        emailService.send(preparators.toArray(new MimeMessagePreparator[0]));
-        return count;
+        // TODO Create notification template
+        emailService.send(invitations, "inviteSinger-txt.ftl", "inviteSinger-html.ftl");
+        return participants.size();
     }
 
     /**
@@ -704,8 +695,7 @@ public class EventServiceImpl extends DataService implements EventService {
         cal.getComponents().add(vEvent);
 
         try {
-            return new EmailAttachment("participate-event.ics", "text/calendar",
-                new ByteArrayInputStream(cal.toString().getBytes(StandardCharsets.UTF_8.name())));
+            return new EmailAttachment("participate-event.ics", MediaType.valueOf("text/calendar"), cal.toString().getBytes(UTF_8.name()));
         } catch (UnsupportedEncodingException e) {
             throw new WicketRuntimeException("UnsupportedEncodingException", e);
         }

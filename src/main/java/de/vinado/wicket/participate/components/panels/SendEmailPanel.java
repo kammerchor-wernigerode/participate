@@ -4,32 +4,36 @@ import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
+import de.vinado.wicket.participate.email.Email;
+import de.vinado.wicket.participate.email.service.EmailService;
 import de.vinado.wicket.participate.model.email.MailData;
 import de.vinado.wicket.participate.providers.Select2EmailAddressProvider;
-import de.vinado.wicket.participate.services.EmailService;
 import de.vinado.wicket.participate.services.PersonService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2MultiChoice;
 
 import javax.mail.internet.InternetAddress;
+import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
 
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Slf4j
 public class SendEmailPanel extends BootstrapModalPanel<MailData> {
 
-    @SuppressWarnings("unused")
     @SpringBean
     private PersonService personService;
 
-    @SuppressWarnings("unused")
     @SpringBean
     private EmailService emailService;
 
@@ -61,8 +65,21 @@ public class SendEmailPanel extends BootstrapModalPanel<MailData> {
 
     @Override
     protected void onSaveSubmit(final IModel<MailData> model, final AjaxRequestTarget target) {
-        emailService.send(model.getObject());
-        Snackbar.show(target, new ResourceModel("email.send.success", "Email sent"));
+        final MailData mailData = model.getObject();
+        final Email email = new Email();
+        try {
+            email.setFrom(mailData.getFrom().getAddress(), mailData.getFrom().getPersonal());
+
+            email.setTo(new HashSet<>(mailData.getTo()));
+            email.setSubject(mailData.getSubject());
+            email.setMessage(mailData.getMessage());
+
+            emailService.send(email);
+            Snackbar.show(target, new ResourceModel("email.send.success", "Email sent"));
+        } catch (UnsupportedEncodingException e) {
+            log.error("Encoding is not supported", e);
+            Snackbar.show(target, Model.of("The application encountered an unsupported encoding"));
+        }
     }
 
     @Override

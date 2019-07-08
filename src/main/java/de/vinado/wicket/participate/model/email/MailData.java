@@ -20,10 +20,12 @@ import java.util.Map;
  * Mail data wrapper object
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
+ * @deprecated use {@link de.vinado.wicket.participate.email.Email} instead
  */
 @Getter
 @Setter
 @NoArgsConstructor
+@Deprecated
 public class MailData implements Serializable {
 
     private static final String UTF_8 = StandardCharsets.UTF_8.name();

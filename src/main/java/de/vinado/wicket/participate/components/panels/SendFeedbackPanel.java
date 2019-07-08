@@ -3,27 +3,30 @@ package de.vinado.wicket.participate.components.panels;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
+import de.vinado.wicket.participate.email.Email;
+import de.vinado.wicket.participate.email.service.EmailService;
 import de.vinado.wicket.participate.model.dtos.SendFeedbackDTO;
-import de.vinado.wicket.participate.model.email.MailData;
-import de.vinado.wicket.participate.services.EmailService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import javax.mail.internet.AddressException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Slf4j
 public class SendFeedbackPanel extends BootstrapModalPanel<SendFeedbackDTO> {
 
     @SpringBean
-    @SuppressWarnings("unused")
     private EmailService emailService;
 
     /**
@@ -43,18 +46,21 @@ public class SendFeedbackPanel extends BootstrapModalPanel<SendFeedbackDTO> {
 
     @Override
     protected void onSaveSubmit(final IModel<SendFeedbackDTO> model, final AjaxRequestTarget target) {
-        final MailData mailData = new MailData();
+        final Email mailData = new Email();
 
         try {
             mailData.setFrom("no-reply@vinado.de", model.getObject().getName());
-            mailData.addTo("vincent@vinado.de");
+            mailData.addTo("me@vinado.de");
             mailData.setSubject(model.getObject().getSubject());
             mailData.setMessage(model.getObject().getMessage());
 
             emailService.send(mailData);
             Snackbar.show(target, new ResourceModel("send.feedback.success", "Thanks for your feedback"));
+        } catch (UnsupportedEncodingException e) {
+            log.error("Encoding is not supported", e);
         } catch (AddressException e) {
-            e.printStackTrace();
+            log.error("Encountered malformed email address", e);
+            Snackbar.show(target, Model.of("The application encountered a malformed email address. Abort."));
         }
     }
 }
