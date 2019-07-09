@@ -30,6 +30,17 @@ function tag_and_push() {
     [[ ${tag} != "latest" ]] && docker tag ${DOCKER_REPO_SLUG}:latest ${DOCKER_REPO_SLUG}:${tag}
     docker push ${DOCKER_REPO_SLUG}:${tag}
 
+    # Call webhook for automated deployment
+    if [[ ${tag} == "latest" ]] && [[ ! -z ${WEBHOOK_TARGET_ADDRESS} ]]; then
+        curl -X POST \
+         --write-out "%{http_code}\n" \
+         --silent \
+         --show-error \
+         --connect-timeout 5 \
+         --output /dev/null \
+         ${WEBHOOK_TARGET_ADDRESS}
+    fi
+
     return 0
 }
 
