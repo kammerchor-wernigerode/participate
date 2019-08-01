@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.detect.Detector;
 import org.apache.tika.io.TikaInputStream;
@@ -29,7 +28,6 @@ import static org.apache.tika.metadata.TikaMetadataKeys.RESOURCE_NAME_KEY;
  *
  * @author Vincent Nadoll
  */
-@Slf4j
 @Builder
 @ToString(exclude = "data")
 @EqualsAndHashCode
