@@ -47,23 +47,6 @@ function tag_and_push() {
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin || (echo "Unable to login"; exit 1)
 docker build -t ${DOCKER_REPO_SLUG}:latest .
 
-# Distinguish between the push and cron event of the Travis CI. A push event will always leeds to a new :edge Docker
-# image, while cron leeds to a new :nightly image.
-# More about Travis events and environment variables on https://docs.travis-ci.com/user/environment-variables/
-case ${TRAVIS_EVENT_TYPE} in
-    "push")
-        tag_and_push "edge"
-        ;;
-    "cron")
-        # Only tag and push with nightly if the branch matches master
-        [[ ${TRAVIS_BRANCH} = "master" ]] && tag_and_push "nightly"
-        ;;
-    *)
-        echo "Unknown Travis event type"
-        exit 1
-        ;;
-esac
-
 # Matching branch name and git tag implies a new release. The Docker image will be tagged with :latest and convenient
 # version numbers. E.g. v0.0.1=>0.0.1  v0.1.0=>0.1,0.1.0  v0.1.2=>0.1,0.1.2  v1.0.0=>1,1.0,1.0.0  v1.0.3=>1,1.0,1.0.3
 # v1.2.0=>1,1.2,1.2.0  v1.2.3=>1,1.2,1.2.3
