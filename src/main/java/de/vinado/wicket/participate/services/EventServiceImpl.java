@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.string.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -620,6 +621,7 @@ public class EventServiceImpl extends DataService implements EventService {
                             properties.getBaseUrl(),
                             participant.getToken())
                         );
+                        data.put("deadline", DateUtils.addDays(participant.getEvent().getStartDate(), -14));
 
                         return data;
                     }

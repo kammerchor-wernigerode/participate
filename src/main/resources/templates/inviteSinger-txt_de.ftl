@@ -17,6 +17,7 @@ Ein Ort wurde noch nicht festgelegt.
 </#if>
 
 Sag uns bitte, ob und wie viel Zeit du hast, ob du einen Schlafplatz brauchst oder ob du Schlafplätze anbieten kannst.
+<#if deadline??>Beachte bitte, dass die Organisation der Schlafplätze zwei Woche vor Beginn abgeschlossen ist. Alle Antworten, die nach dem ${deadline} bearbeitet werden, werden nicht mehr berücksichtigt.</#if>
 
 ${acceptLink}
 
