@@ -11,6 +11,9 @@ import de.vinado.wicket.participate.events.EventUpdateEvent;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.event.Broadcast;
@@ -28,6 +31,7 @@ import org.apache.wicket.util.string.Strings;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -38,8 +42,14 @@ public class FormPanel extends BreadCrumbPanel {
     @SpringBean
     private EventService eventService;
 
+    @Getter
+    @Setter
+    private boolean deadlineMissed;
+
     public FormPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<ParticipantDTO> model) {
         super(id, breadCrumbModel, model);
+
+        this.deadlineMissed = DateUtils.addDays(new Date(), 14).after(model.getObject().getEvent().getStartDate());
 
         final DatetimePickerConfig fromConfig = new DatetimePickerConfig();
         fromConfig.useLocale("de");
@@ -103,7 +113,15 @@ public class FormPanel extends BreadCrumbPanel {
 
         final CheckBox accommodationCb = new CheckBox("accommodation");
         accommodationCb.add(BootstrapHorizontalFormDecorator.decorate());
+        accommodationCb.setEnabled(!deadlineMissed);
         wmc.add(accommodationCb);
+
+        final WebMarkupContainer deadlineWmc = new WebMarkupContainer("deadlineWmc");
+        deadlineWmc.setVisible(deadlineMissed);
+        wmc.add(deadlineWmc);
+
+        final Label missedDeadlineWarning = new Label("deadlineMissed", new ResourceModel("invitation.missed-deadline.warning", "You are not able to change your accommodation answer because you missed the deadline of two weeks before the event starts."));
+        deadlineWmc.add(missedDeadlineWarning);
 
         final TextArea commentTa = new TextArea("comment");
         commentTa.setLabel(new ResourceModel("comments", "More comments"));
