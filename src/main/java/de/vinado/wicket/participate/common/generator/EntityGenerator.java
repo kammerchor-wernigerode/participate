@@ -41,11 +41,4 @@ public abstract class EntityGenerator<T> implements Serializable {
 
         return gc.getTime();
     }
-
-    Date addDays(final Date date, final int days) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.add(Calendar.DATE, days);
-        return cal.getTime();
-    }
 }

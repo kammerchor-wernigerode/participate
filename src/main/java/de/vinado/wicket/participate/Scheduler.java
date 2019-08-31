@@ -13,6 +13,7 @@ import de.vinado.wicket.participate.services.PersonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.wicket.util.io.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,6 @@ import javax.mail.internet.InternetAddress;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -38,7 +38,6 @@ import java.util.stream.Stream;
 import static de.vinado.wicket.participate.configuration.Feature.NOTIFY_SCORES_MANAGER;
 import static de.vinado.wicket.participate.configuration.Feature.REMIND_OVERDUE;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.Calendar.DATE;
 import static java.util.Collections.singleton;
 
 /**
@@ -88,7 +87,7 @@ public class Scheduler {
             log.warn("Score's manager could not be found.");
         }
 
-        final Date nextWeek = addDays(new Date(), 7);
+        final Date nextWeek = DateUtils.addDays(new Date(), 7);
         final String from = applicationProperties.getMail().getSender();
 
         try {
@@ -146,7 +145,7 @@ public class Scheduler {
         }
 
         log.info("Enter overdue invitation job");
-        final Date nextWeek = addDays(new Date(), 7);
+        final Date nextWeek = DateUtils.addDays(new Date(), 7);
         final Set<Long> eventIds = new HashSet<>();
         final List<Participant> participants = eventService.getUpcomingEvents()
             .stream()
@@ -181,20 +180,6 @@ public class Scheduler {
         infoBuilder.append(" invitations.");
 
         log.info(infoBuilder.toString());
-    }
-
-    /**
-     * Adds the given days to the given date.
-     *
-     * @param date date to add days to
-     * @param days days to add
-     * @return date with added days
-     */
-    private static Date addDays(final Date date, final int days) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.add(DATE, days);
-        return cal.getTime();
     }
 
     /**
