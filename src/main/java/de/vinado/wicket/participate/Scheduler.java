@@ -136,7 +136,7 @@ public class Scheduler {
     }
 
     /**
-     * Searches for every upcoming event in range of +7 days and their pending invitations. Overdue participants receive
+     * Searches for every upcoming event in range of +14 days and their pending invitations. Overdue participants receive
      * an email notification.
      */
     private void remindOverdue() {
@@ -145,7 +145,7 @@ public class Scheduler {
         }
 
         log.info("Enter overdue invitation job");
-        final Date nextWeek = DateUtils.addDays(new Date(), 7);
+        final Date nextWeek = DateUtils.addDays(new Date(), 14);
         final Set<Long> eventIds = new HashSet<>();
         final List<Participant> participants = eventService.getUpcomingEvents()
             .stream()
