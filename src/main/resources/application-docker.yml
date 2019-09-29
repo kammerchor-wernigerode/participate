@@ -46,4 +46,4 @@ app:
     scores-manager-email: ${SCORES_MANAGER_EMAIL}
 
 logging:
-  file: 'target/logs/wicket.log'
+  path: ${LOG_PATH:/tmp}

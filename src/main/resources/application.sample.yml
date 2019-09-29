@@ -45,5 +45,5 @@ app:
 #   enabled: REMIND_OVERDUE,NOTIFY_SCORES_MANAGER
 #   scores-manager-email: some@email.com
 
-logging:
-  file: 'target/logs/wicket.log'
+#logging:
+#  path: ${LOG_PATH:/tmp}

@@ -56,6 +56,7 @@ docker run \
  --env SMTP_PASSWORD='mail_password' \
  --env MAIL_FROM='no-reply@domain.tld' \
  --env BASE_URL='http://localhost:8080' \
+ --env LOG_PATH=/tmp \
  -p 8080:8080 \
  --name participate \
  --link participate-db:mysql \
