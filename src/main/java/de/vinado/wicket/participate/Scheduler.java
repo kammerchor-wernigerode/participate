@@ -79,7 +79,7 @@ public class Scheduler {
 
         final String scoresManagerEmail = features.getScoresManagerEmail();
         if (Strings.isBlank(scoresManagerEmail)) {
-            throw new NullPointerException("Score's manager email must not be null when NOTIFY_SCORES_MANAGER is enabled");
+            throw new IllegalArgumentException("Score's manager email must not be null when NOTIFY_SCORES_MANAGER is enabled");
         }
 
         final Person scoresManager = personService.getPerson(scoresManagerEmail);
