@@ -46,7 +46,8 @@ app:
     enabled: ${ENABLED_FEATURES}
     scores-manager-email: ${SCORES_MANAGER_EMAIL}
   cronjob:
-    weekly: 0 0 9 ? * SUN
+    remind-overdue: 0 0 9 ? * SUN
+    notify-scores-manager: 0 0 9 ? * FRI
 
 logging:
   path: logs
