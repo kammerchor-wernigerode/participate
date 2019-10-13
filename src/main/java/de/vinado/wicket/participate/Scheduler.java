@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.logging.log4j.util.Strings;
+import org.apache.wicket.util.string.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -68,9 +68,7 @@ public class Scheduler {
         log.info("Enter score's manager reminder job");
 
         final String scoresManagerEmail = features.getScoresManagerEmail();
-        if (Strings.isBlank(scoresManagerEmail)) {
-            throw new IllegalArgumentException("Score's manager email must not be null when NOTIFY_SCORES_MANAGER is enabled");
-        }
+        requireNonEmpty(scoresManagerEmail, "Score's manager email must not be null when NOTIFY_SCORES_MANAGER is enabled");
 
         final Person scoresManager = personService.getPerson(scoresManagerEmail);
         if (null == scoresManager) {
@@ -177,5 +175,22 @@ public class Scheduler {
         }
 
         return buffer;
+    }
+
+    /**
+     * Checks that the string is empty and throws a customized {@link NullPointerException} if it is.
+     *
+     * @param string  the string to check for emptiness
+     * @param message detail message to be used in the event that a {@code NullPointerException} is thrown
+     * @return {@code string} if not empty
+     *
+     * @throws NullPointerException if {@code string} is empty
+     */
+    private static String requireNonEmpty(final String string, final String message) {
+        if (Strings.isEmpty(string)) {
+            throw new NullPointerException(message);
+        }
+
+        return string;
     }
 }
