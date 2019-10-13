@@ -84,7 +84,7 @@ public class Scheduler {
 
         final Person scoresManager = personService.getPerson(scoresManagerEmail);
         if (null == scoresManager) {
-            log.warn("Score's manager could not be found.");
+            log.warn("Score's manager could not be found");
         }
 
         final Date nextWeek = DateUtils.addDays(new Date(), 7);
@@ -160,26 +160,8 @@ public class Scheduler {
 
 
         final int eventAmount = eventIds.size();
-        final StringBuilder infoBuilder = new StringBuilder();
-        infoBuilder.append("Ran overdue job for ");
-        infoBuilder.append(eventAmount);
-
-        if (eventAmount == 0) {
-            infoBuilder.append(" events. ");
-        } else if (eventAmount == 1) {
-            infoBuilder.append(" event: ");
-            infoBuilder.append(StringUtils.join(eventIds, ""));
-            infoBuilder.append(" ");
-        } else {
-            infoBuilder.append(" event:\n\n  ");
-            infoBuilder.append(StringUtils.join(eventIds, "\n "));
-            infoBuilder.append("\n\n");
-        }
-        infoBuilder.append("Sent ");
-        infoBuilder.append(invitationsSent);
-        infoBuilder.append(" invitations.");
-
-        log.info(infoBuilder.toString());
+        log.info("Ran overdue job for {} event{} /w ids=[{}]", eventAmount, 1 == eventAmount ? "" : "s", StringUtils.join(eventIds, ", "));
+        log.info("Sent {} invitation{}.", invitationsSent, 1 == invitationsSent ? "" : "s");
     }
 
     /**
