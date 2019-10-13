@@ -97,8 +97,8 @@ public class Scheduler {
                         final Email email = new Email();
                         email.setFrom(from);
                         email.setTo(singleton(recipient));
-                        email.setSubject("Attendee List for " + event.getName());
-                        email.setMessage("See attachment for attendee list.\n");
+                        email.setSubject(String.format("Participant list for event: %s", event.getName()));
+                        email.setMessage("Attached you will find the list of participants.\n");
                         email.setAttachments(singleton(
                             new EmailAttachment("attendee-list.csv", MimeType.valueOf("text/csv"), getAttendeeByteArray(attendees))
                         ));
@@ -114,7 +114,7 @@ public class Scheduler {
                 })
                 .filter(Objects::nonNull);
 
-            emailService.send(emails);
+            emailService.send(emails, "scoresManagerNotification-txt.ftl", false);
             log.info("Ran score's manager reminder job");
         } catch (AddressException e) {
             log.error("Malformed email address encountered", e);
