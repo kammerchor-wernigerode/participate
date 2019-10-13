@@ -6,6 +6,7 @@ import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
+import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.model.filters.DetailedParticipantFilter;
@@ -299,16 +300,18 @@ public interface EventService {
      * Sends an invitation to all participating {@link Singer}s of an {@link Event}.
      *
      * @param participants List of {@link Participant}s to invite
+     * @param organizer    the organizer's email address
      * @return Amount of sent emails
      */
-    int inviteParticipants(List<Participant> participants);
+    int inviteParticipants(List<Participant> participants, User organizer);
 
     /**
      * Sends an invitation to the given {@link Participant}
      *
      * @param participant {@link Participant}
+     * @param organizer   the organizer's email address
      */
-    void inviteParticipant(Participant participant);
+    void inviteParticipant(Participant participant, User organizer);
 
     /**
      * Fetches all {@link EventDetails} that matches the {@link EventFilter}.

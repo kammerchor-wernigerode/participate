@@ -1,7 +1,5 @@
 package de.vinado.wicket.participate.services;
 
-import de.vinado.wicket.participate.ParticipateApplication;
-import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.common.ParticipateUtils;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.email.Email;
@@ -11,8 +9,10 @@ import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
+import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.Terminable;
+import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
@@ -38,9 +38,9 @@ import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.string.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -62,6 +62,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -84,6 +85,9 @@ public class EventServiceImpl extends DataService implements EventService {
     private final PersonService personService;
     private final EmailService emailService;
     private final ApplicationProperties applicationProperties;
+
+    @Value("${spring.application.name:KCH Paritcipate}")
+    private String applicationName;
 
     @Override
     @PersistenceContext
@@ -605,7 +609,7 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public int inviteParticipants(final List<Participant> participants) {
+    public int inviteParticipants(final List<Participant> participants, final User organizer) {
         final Stream<Email> invitations = participants
             .stream()
             .map(sneaky(participant -> {
@@ -630,7 +634,7 @@ public class EventServiceImpl extends DataService implements EventService {
                 email.setFrom(applicationProperties.getMail().getSender(), applicationProperties.getCustomer());
                 email.addTo(singer.getEmail(), singer.getDisplayName());
                 email.setSubject(participant.getEvent().getName());
-                email.setAttachments(Collections.singleton(newEventAttachment(participant.getEvent())));
+                email.setAttachments(Collections.singleton(newEventAttachment(participant.getEvent(), organizer)));
 
                 if (InvitationStatus.UNINVITED.equals(participant.getInvitationStatus())) {
                     final Participant loadedParticipant = load(Participant.class, participant.getId());
@@ -650,8 +654,8 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public void inviteParticipant(final Participant participant) {
-        inviteParticipants(Collections.singletonList(participant));
+    public void inviteParticipant(final Participant participant, final User organizer) {
+        inviteParticipants(Collections.singletonList(participant), organizer);
     }
 
     /**
@@ -660,15 +664,16 @@ public class EventServiceImpl extends DataService implements EventService {
      * @param event the {@link Event} with information used in the attachment
      * @return a new {@link EmailAttachment}
      */
-    private EmailAttachment newEventAttachment(final Event event) {
+    private EmailAttachment newEventAttachment(final Event event, final User organizer) {
         final String eventName = event.getEventType() + " in " + event.getLocation();
-        final ApplicationProperties appProperties = ParticipateApplication.get().getApplicationProperties();
 
         final net.fortuna.ical4j.model.Calendar cal = new net.fortuna.ical4j.model.Calendar();
-        cal.getProperties().add(new ProdId(""
-            + "-//" + appProperties.getCustomer() + "// "
-            + ParticipateApplication.get().getApplicationName() + " " + appProperties.getVersion()
-            + "//DE"));
+        cal.getProperties().add(new ProdId(String.format(
+            "-//%s//%s %s//DE",
+            applicationProperties.getCustomer(),
+            applicationName,
+            applicationProperties.getVersion()
+        )));
         cal.getProperties().add(Version.VERSION_2_0);
         cal.getProperties().add(CalScale.GREGORIAN);
         cal.getProperties().add(Method.REQUEST);
@@ -688,18 +693,20 @@ public class EventServiceImpl extends DataService implements EventService {
             vEvent.getProperties().add(new SimpleDateProperty(SimpleDateProperty.Type.DTEND, event.getEndDate()));
         }
 
-        if (null != ParticipateSession.get().getUser().getPerson()) {
-            Organizer organizer = new Organizer(URI.create("mailto:" + ParticipateSession.get().getUser().getPerson().getEmail()));
-            vEvent.getProperties().add(organizer);
-            vEvent.getProperties().getProperty(Property.ORGANIZER).getParameters().add(new Cn(appProperties.getCustomer()));
-        }
+        String orgaEmail = Optional.ofNullable(organizer)
+            .map(User::getPerson)
+            .map(Person::getEmail)
+            .orElse(applicationProperties.getMail().getSender());
+        Organizer vOrganizer = new Organizer(URI.create("mailto:" + orgaEmail));
+        vEvent.getProperties().add(vOrganizer);
+        vEvent.getProperties().getProperty(Property.ORGANIZER).getParameters().add(new Cn(applicationProperties.getCustomer()));
 
         cal.getComponents().add(vEvent);
 
         try {
             return new EmailAttachment("participate-event.ics", MediaType.valueOf("text/calendar"), cal.toString().getBytes(UTF_8.name()));
         } catch (UnsupportedEncodingException e) {
-            throw new WicketRuntimeException("UnsupportedEncodingException", e);
+            throw new RuntimeException("UnsupportedEncodingException", e);
         }
     }
 

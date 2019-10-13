@@ -15,6 +15,7 @@ import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
+import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.email.MailData;
 import de.vinado.wicket.participate.services.EventService;
@@ -138,6 +139,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     return super.newDropDownMenu(id, model);
                 }
 
+                final User organizer = ParticipateSession.get().getUser();
                 final RepeatingView dropDownMenu = super.newDropDownMenu(id, model);
                 dropDownMenu.add(new DropDownItem(dropDownMenu.newChildId(), new ResourceModel("email.send.invitation", "Send Invitation"),
                     FontAwesomeIconType.envelope_square) {
@@ -145,7 +147,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     protected void onClick(final AjaxRequestTarget target) {
                         final List<Participant> participants = eventService.getParticipants(model.getObject().getEvent(), false);
 
-                        final int count = eventService.inviteParticipants(participants);
+                        final int count = eventService.inviteParticipants(participants, organizer);
 
                         send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
                         Snackbar.show(target, "Einladung wurde an "
@@ -168,7 +170,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
                                 protected void onConfirm(AjaxRequestTarget target) {
                                     final List<Participant> participants = eventService.getParticipants(model.getObject().getEvent(), InvitationStatus.PENDING);
 
-                                    final int count = eventService.inviteParticipants(participants);
+                                    final int count = eventService.inviteParticipants(participants, organizer);
 
                                     send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
                                     Snackbar.show(target, "Erinnerung wurde an "

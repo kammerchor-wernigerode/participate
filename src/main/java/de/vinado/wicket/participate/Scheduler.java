@@ -156,8 +156,7 @@ public class Scheduler {
             .filter(Participant::isPending)
             .collect(Collectors.toList());
 
-        final int invitationsSent = eventService.inviteParticipants(participants);
-
+        final int invitationsSent = eventService.inviteParticipants(participants, null);
 
         final int eventAmount = eventIds.size();
         log.info("Ran overdue job for {} event{} /w ids=[{}]", eventAmount, 1 == eventAmount ? "" : "s", StringUtils.join(eventIds, ", "));

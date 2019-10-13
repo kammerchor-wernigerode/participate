@@ -5,6 +5,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.select.BootstrapSelect;
+import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.behavoirs.AutosizeBehavior;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.participate.common.ParticipateUtils;
@@ -157,7 +158,7 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
             : new ResourceModel("email.send.invitation", "Send Invitation")) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                eventService.inviteParticipant(model.getObject().getParticipant());
+                eventService.inviteParticipant(model.getObject().getParticipant(), ParticipateSession.get().getUser());
                 modal.close(target);
                 if (!InvitationStatus.UNINVITED.equals(model.getObject().getInvitationStatus())) {
                     Snackbar.show(target, new ResourceModel("email.send.reminder.success", "A reminder has been sent"));
