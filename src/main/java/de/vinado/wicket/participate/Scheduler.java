@@ -56,21 +56,11 @@ public class Scheduler {
     private final EmailService emailService;
 
     /**
-     * A weekly cronjob that runs every week.
-     */
-    @Scheduled(cron = "${app.cronjob.weekly:0 0 9 ? * SUN}")
-    public void weekly() {
-        log.info("Run weekly cronjob");
-
-        remindOverdue();
-        notifyScoresManager();
-    }
-
-    /**
      * Searches for every upcoming event in range of +7 days and their accepted invitations to send the singers name and
      * voice to the club's score's manager.
      */
-    private void notifyScoresManager() {
+    @Scheduled(cron = "${app.cronjob.notify-scores-manager:0 0 9 ? * FRI}")
+    public void runNotifyScoresManagerJob() {
         final ApplicationProperties.Features features = applicationProperties.getFeatures();
         if (!features.hasFeature(NOTIFY_SCORES_MANAGER)) {
             return;
@@ -87,7 +77,7 @@ public class Scheduler {
             log.warn("Score's manager could not be found");
         }
 
-        final Date nextWeek = DateUtils.addDays(new Date(), 7);
+        final Date nextWeek = DateUtils.addDays(new Date(), 9);
         final String from = applicationProperties.getMail().getSender();
 
         try {
@@ -136,10 +126,11 @@ public class Scheduler {
     }
 
     /**
-     * Searches for every upcoming event in range of +14 days and their pending invitations. Overdue participants receive
-     * an email notification.
+     * Searches for every upcoming event in range of +14 days and their pending invitations. Overdue participants
+     * receive an email notification.
      */
-    private void remindOverdue() {
+    @Scheduled(cron = "${app.cronjob.remind-overdue:0 0 9 ? * SUN}")
+    private void runRemindOverdueJob() {
         if (!applicationProperties.getFeatures().hasFeature(REMIND_OVERDUE)) {
             return;
         }
