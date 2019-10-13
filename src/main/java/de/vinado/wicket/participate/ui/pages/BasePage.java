@@ -8,6 +8,7 @@ import de.agilecoders.wicket.core.markup.html.references.RespondJavaScriptRefere
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
 import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
+import de.vinado.wicket.participate.resources.FaviconResourceReference;
 import de.vinado.wicket.participate.resources.css.ParticipateCssResourceReference;
 import de.vinado.wicket.participate.resources.css.SnackbarCssResourceReference;
 import de.vinado.wicket.participate.resources.js.BusyIndicatorJsResourceReference;
@@ -98,6 +99,7 @@ public abstract class BasePage extends WebPage {
     public void renderHead(final IHeaderResponse response) {
         response.render(MetaDataHeaderItem.forMetaTag("viewport", "width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"));
         response.render(MetaDataHeaderItem.forMetaTag("robots", "noindex, nofollow"));
+        response.render(forLinkTag("shortcut icon", "image/x-icon", urlFor(FaviconResourceReference.INSTANCE, null).toString()));
         response.render(new FilteredHeaderItem(JavaScriptHeaderItem.forReference(ParticipateJsResourceReference.INSTANCE), "footer-container"));
         response.render(RespondJavaScriptReference.headerItem());
         if (!getRequest().getRequestParameters().getParameterValue("bootlint").isNull()) {
@@ -108,5 +110,21 @@ public abstract class BasePage extends WebPage {
         response.render(CssReferenceHeaderItem.forReference(SnackbarCssResourceReference.INSTANCE));
         response.render(JavaScriptReferenceHeaderItem.forReference(SnackbarJsResourceReference.INSTANCE));
         response.render(JavaScriptReferenceHeaderItem.forReference(BusyIndicatorJsResourceReference.INSTANCE));
+    }
+
+    /**
+     * Factory method to create &lt;link&gt; tag.
+     *
+     * @param rel  the 'rel' attribute of the tag
+     * @param type the 'type' attribute of the tag
+     * @param href the 'href' attribute of the tag
+     * @return A new {@link MetaDataHeaderItem}
+     */
+    private static MetaDataHeaderItem forLinkTag(String rel, String type, String href) {
+        MetaDataHeaderItem headerItem = new MetaDataHeaderItem("link");
+        headerItem.addTagAttribute("rel", rel);
+        headerItem.addTagAttribute("type", type);
+        headerItem.addTagAttribute("href", href);
+        return headerItem;
     }
 }
