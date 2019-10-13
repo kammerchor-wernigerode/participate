@@ -45,6 +45,8 @@ app:
   features:
     enabled: ${ENABLED_FEATURES}
     scores-manager-email: ${SCORES_MANAGER_EMAIL}
+  cronjob:
+    weekly: 0 0 9 ? * SUN
 
 logging:
-  path: ${LOG_PATH:/tmp}
+  path: logs

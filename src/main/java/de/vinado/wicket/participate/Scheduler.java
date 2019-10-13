@@ -56,11 +56,11 @@ public class Scheduler {
     private final EmailService emailService;
 
     /**
-     * A weekly cronjob that runs every sunday at 9 AM.
+     * A weekly cronjob that runs every week.
      */
-    @Scheduled(cron = "0 0 9 ? * SUN")
+    @Scheduled(cron = "${app.cronjob.weekly:0 0 9 ? * SUN}")
     public void weekly() {
-        log.info("Run weekly cronjob: 0 0 9 ? * SUN");
+        log.info("Run weekly cronjob");
 
         remindOverdue();
         notifyScoresManager();
