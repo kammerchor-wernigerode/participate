@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -59,6 +60,10 @@ public class ApplicationProperties {
 
         public boolean hasFeature(final Feature feature) {
             return enabled.contains(feature);
+        }
+
+        public List<Feature> getEnabled() {
+            return Collections.unmodifiableList(this.enabled);
         }
     }
 }
