@@ -153,28 +153,25 @@ public class Scheduler {
     }
 
     /**
-     * Writes the singer's surname, given name and voice to a CSV byte array.
+     * Writes the singer's surname and given name to a comma-separated byte array. Even though the CSV holds only one
+     * column.
      *
-     * @param singers the singers to write to the CSV byte array
-     * @return byte array of singers
+     * @param singers the singers to be written to the byte array
+     * @return byte array of CSV data
      *
-     * @throws IOException if an error occurs during closing the streams
+     * @throws IOException if an error occurs during stream processing
      */
     private byte[] getAttendeeByteArray(final Collection<Singer> singers) throws IOException {
-        byte[] buffer;
-
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-            final CSVWriter writer = new CSVWriter(new OutputStreamWriter(stream, UTF_8));
-            writer.writeNext(new String[]{"Surname", "Given Name", "Voice"});
+            final CSVWriter writer = new CSVWriter(new OutputStreamWriter(stream, UTF_8), ';', '\u0000', '\u0000', "\n");
             singers.stream()
-                .map(singer -> new String[]{singer.getLastName(), singer.getFirstName(), singer.getVoice().name()})
+                // this is intended
+                .map(singer -> new String[]{String.format("%s, %s", singer.getLastName(), singer.getFirstName())})
                 .forEach(writer::writeNext);
             writer.close();
 
-            buffer = stream.toByteArray();
+            return stream.toByteArray();
         }
-
-        return buffer;
     }
 
     /**
