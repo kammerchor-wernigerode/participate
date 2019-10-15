@@ -128,7 +128,7 @@ public class Scheduler {
      * receive an email notification.
      */
     @Scheduled(cron = "${app.cronjob.remind-overdue:0 0 9 ? * SUN}")
-    private void runRemindOverdueJob() {
+    public void runRemindOverdueJob() {
         if (!applicationProperties.getFeatures().hasFeature(REMIND_OVERDUE)) {
             return;
         }
