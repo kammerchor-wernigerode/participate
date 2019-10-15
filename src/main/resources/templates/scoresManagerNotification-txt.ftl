@@ -1,1 +1,1 @@
-Attendee List for ${eventName}.
+Attached you will find the list of participants.
