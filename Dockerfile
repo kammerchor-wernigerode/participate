@@ -22,9 +22,9 @@ ARG JAR_FILE=participate.jar
 COPY --from=maven /usr/src/app/target/$JAR_FILE /app/application.jar
 COPY scripts/docker-entrypoint.sh /usr/local/bin/
 
-RUN mkdir -p /app/logs
 ENV LOG_PATH /app/logs
-VOLUME ["/app/logs"]
+RUN mkdir -p $LOG_PATH
+VOLUME ["${LOG_PATH}"]
 
 EXPOSE 8080
 ENTRYPOINT ["docker-entrypoint.sh"]

@@ -50,4 +50,4 @@ app:
     notify-scores-manager: 0 0 9 ? * FRI
 
 logging:
-  path: logs
+  path: ${LOG_PATH:logs}
