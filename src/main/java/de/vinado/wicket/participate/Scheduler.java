@@ -56,7 +56,7 @@ public class Scheduler {
     private final EmailService emailService;
 
     /**
-     * Searches for every upcoming event in range of +7 days and their accepted invitations to send the singers name and
+     * Searches for every upcoming event in range of +9 days and their accepted invitations to send the singers name and
      * voice to the club's score's manager.
      */
     @Scheduled(cron = "${app.cronjob.notify-scores-manager:0 0 9 ? * FRI}")
