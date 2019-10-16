@@ -170,7 +170,6 @@
     </dependencies>
 
     <build>
-        <finalName>participate</finalName>
         <resources>
             <resource>
                 <filtering>true</filtering>
