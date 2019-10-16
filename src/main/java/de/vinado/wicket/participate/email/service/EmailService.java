@@ -29,26 +29,6 @@ public interface EmailService {
     }
 
     /**
-     * Sends a multipart email. Template files are typically stored in {@code classpath:templates}.
-     *
-     * @param email            the email to send
-     * @param templateFileName the template file name
-     * @param html             whether template files is in HTML syntax
-     */
-    void send(Email email, String templateFileName, boolean html);
-
-    /**
-     * Sends multiple multipart emails. Template files are typically stored under {@code classpath:templates}.
-     *
-     * @param emails           a stream of emails to send
-     * @param templateFileName the template file name
-     * @param html             whether template files is in HTML syntax
-     */
-    default void send(Stream<Email> emails, String templateFileName, boolean html) {
-        emails.forEach(email -> send(email, templateFileName, html));
-    }
-
-    /**
      * Sends a multipart email. Template files are typically stored under {@code classpath:templates}.
      *
      * @param email                     the email to send

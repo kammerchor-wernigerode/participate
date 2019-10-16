@@ -114,7 +114,7 @@ public class Scheduler {
                 })
                 .filter(Objects::nonNull);
 
-            emailService.send(emails, "scoresManagerNotification-txt.ftl", false);
+            emailService.send(emails, "scoresManagerNotification-txt.ftl", null);
             log.info("Ran score's manager reminder job");
         } catch (AddressException e) {
             log.error("Malformed email address encountered", e);

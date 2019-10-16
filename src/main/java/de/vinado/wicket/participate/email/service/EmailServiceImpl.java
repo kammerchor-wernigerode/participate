@@ -6,6 +6,7 @@ import de.vinado.wicket.participate.email.EmailAttachment;
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -66,39 +67,6 @@ public class EmailServiceImpl implements EmailService {
         final MimeMessagePreparator[] preparedMessages = emails.map(email ->
             (MimeMessagePreparator) mimeMessage ->
                 prepareMimeMessage(mimeMessage, email))
-            .toArray(MimeMessagePreparator[]::new);
-        log.debug("{} email(s) prepared and ready to ship", preparedMessages.length);
-
-        sender.send(preparedMessages);
-    }
-
-    /**
-     * Sends a multipart email. Template files are typically stored in {@code classpath:templates}.
-     *
-     * @param email            the email to send
-     * @param templateFileName the template file name
-     * @param html             whether template files is in HTML syntax
-     */
-    @Override
-    public void send(final Email email, final String templateFileName, final boolean html) {
-        final MimeMessagePreparator message = mimeMessage -> prepareMimeMessage(mimeMessage, email, templateFileName, html);
-        log.debug("Email prepared and ready to ship");
-
-        sender.send(message);
-    }
-
-    /**
-     * Sends multiple multipart emails. Template files are typically stored under {@code classpath:templates}.
-     *
-     * @param emails           a stream of emails to send
-     * @param templateFileName the template file name
-     * @param html             whether template files is in HTML syntax
-     */
-    @Override
-    public void send(final Stream<Email> emails, final String templateFileName, final boolean html) {
-        final MimeMessagePreparator[] preparedMessages = emails.map(email ->
-            (MimeMessagePreparator) mimeMessage ->
-                prepareMimeMessage(mimeMessage, email, templateFileName, html))
             .toArray(MimeMessagePreparator[]::new);
         log.debug("{} email(s) prepared and ready to ship", preparedMessages.length);
 
@@ -199,13 +167,21 @@ public class EmailServiceImpl implements EmailService {
     private void prepareMimeMessage(final MimeMessage mimeMessage, final Email email,
                                     final String plaintextTemplateFileName, final String htmlTemplateFileName)
         throws MessagingException, IOException, TemplateException {
-        final MimeMessageHelper helper = newMimeMessageHelper(email, mimeMessage, true);
+        if (StringUtils.isBlank(plaintextTemplateFileName)) {
+            prepareMimeMessage(mimeMessage, email, htmlTemplateFileName, true);
+        } else if (StringUtils.isBlank(htmlTemplateFileName)) {
+            prepareMimeMessage(mimeMessage, email, plaintextTemplateFileName, false);
+        } else if (StringUtils.isNotBlank(plaintextTemplateFileName) && StringUtils.isNotBlank(htmlTemplateFileName)) {
+            final MimeMessageHelper helper = newMimeMessageHelper(email, mimeMessage, true);
 
-        final String htmlText = templateService.processTemplate(htmlTemplateFileName, email.getData(applicationProperties), HTML);
-        final String plainText = templateService.processTemplate(plaintextTemplateFileName, email.getData(applicationProperties), PLAIN);
-        log.debug("Processed HTML and plain text email templates.");
+            final String htmlText = templateService.processTemplate(htmlTemplateFileName, email.getData(applicationProperties), HTML);
+            final String plainText = templateService.processTemplate(plaintextTemplateFileName, email.getData(applicationProperties), PLAIN);
+            log.debug("Processed HTML and plain text email templates.");
 
-        helper.setText(plainText, htmlText);
+            helper.setText(plainText, htmlText);
+        } else {
+            throw new IllegalArgumentException("Neither plaintext nor HTML template is set. Make sure at least one is not blank.");
+        }
     }
 
     /**
