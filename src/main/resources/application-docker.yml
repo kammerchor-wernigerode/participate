@@ -36,7 +36,6 @@ spring:
 app:
   base-url: ${BASE_URL}
   customer: ${APPLICATION_CUSTOMER}
-  version: @project.version@
   participate-password: ${APPLICATION_PASSWORD}
   development-mode: false
   mail:

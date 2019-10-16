@@ -1,8 +1,11 @@
 package de.vinado.wicket.participate.configuration;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Configuration;
 
 import javax.validation.constraints.NotBlank;
@@ -19,7 +22,10 @@ import java.util.List;
 @ConfigurationProperties("app")
 @Getter
 @Setter
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ApplicationProperties {
+
+    private final BuildProperties buildProperties;
 
     private static final String EMAIL_PATTERN = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,6}$";
 
@@ -27,10 +33,13 @@ public class ApplicationProperties {
     private boolean developmentMode = false;
     private String customer = "";
     private @NotBlank String participatePassword;
-    private String version;
     private Mail mail;
     private Database database;
     private Features features;
+
+    public String getVersion() {
+        return buildProperties.getVersion();
+    }
 
     @Getter
     @Setter
