@@ -11,6 +11,7 @@ import lombok.var;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.boot.info.BuildProperties;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,6 +32,7 @@ public class SchedulerTest {
 
     private static final Date NOW = new Date();
 
+    private BuildProperties buildProperties;
     private ApplicationProperties properties;
     private EventService eventService;
     private PersonService personService;
@@ -39,7 +41,8 @@ public class SchedulerTest {
 
     @Before
     public void setUp() throws Exception {
-        properties = spy(ApplicationProperties.class);
+        buildProperties = mock(BuildProperties.class);
+        properties = spy(new ApplicationProperties(buildProperties));
         eventService = mock(EventService.class);
         personService = mock(PersonService.class);
         emailService = mock(EmailService.class);
