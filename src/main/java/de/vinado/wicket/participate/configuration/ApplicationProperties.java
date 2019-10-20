@@ -35,7 +35,6 @@ public class ApplicationProperties {
     private @NotBlank String participatePassword;
     private Mail mail;
     private Database database;
-    private Features features;
 
     public String getVersion() {
         return buildProperties.getVersion();
@@ -57,17 +56,5 @@ public class ApplicationProperties {
         private String remoteUrl;
         private String remoteUsername;
         private String remotePassword;
-    }
-
-    @Getter
-    @Setter
-    public static class Features {
-
-        private final List<Feature> enabled = new ArrayList<>();
-        private @Pattern(regexp = EMAIL_PATTERN) String scoresManagerEmail;
-
-        public boolean hasFeature(final Feature feature) {
-            return enabled.contains(feature);
-        }
     }
 }
