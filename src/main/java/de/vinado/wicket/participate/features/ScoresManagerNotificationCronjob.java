@@ -107,7 +107,9 @@ public class ScoresManagerNotificationCronjob {
     private boolean filter(Event event) {
         LocalDate now = LocalDate.now();
         Date startDate = event.getStartDate();
-        return configuration.getOffset() >= DAYS.between(now, convert(startDate));
+        boolean future = new Date().before(startDate);
+        boolean inScope = configuration.getOffset() >= DAYS.between(now, convert(startDate));
+        return future && inScope;
     }
 
     /**
