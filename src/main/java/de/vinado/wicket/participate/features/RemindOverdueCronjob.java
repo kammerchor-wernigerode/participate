@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.Min;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -79,7 +80,7 @@ public class RemindOverdueCronjob {
      * Converts a {@link Date} into a {@link LocalDate}.
      */
     private static LocalDate convert(Date date) {
-        return date.toInstant()
+        return Instant.ofEpochMilli(date.getTime())
             .atZone(ZoneId.systemDefault())
             .toLocalDate();
     }
