@@ -30,6 +30,7 @@ import javax.validation.constraints.Pattern;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Comparator;
@@ -113,7 +114,7 @@ public class ScoresManagerNotificationCronjob {
      * Converts a {@link Date} into a {@link LocalDate}.
      */
     private static LocalDate convert(Date date) {
-        return date.toInstant()
+        return Instant.ofEpochMilli(date.getTime())
             .atZone(ZoneId.systemDefault())
             .toLocalDate();
     }
