@@ -5,6 +5,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.select.BootstrapSelect;
+import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.behavoirs.AutosizeBehavior;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalFormDecorator;
@@ -12,7 +13,6 @@ import de.vinado.wicket.participate.common.ParticipateUtils;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
-import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
@@ -41,10 +41,6 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
     @SuppressWarnings("unused")
     @SpringBean
     private EventService eventService;
-
-    @SuppressWarnings("unused")
-    @SpringBean
-    private ApplicationProperties applicationProperties;
 
     public EditInvitationPanel(final BootstrapModal modal, final IModel<ParticipantDTO> model) {
         super(modal, new ResourceModel("invitation.edit", "Edit Invitation"), model);
@@ -171,7 +167,7 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
         inner.add(inviteSingerBtn);
 
         inner.add(new Label("token", ParticipateUtils.generateInvitationLink(
-            applicationProperties.getBaseUrl(),
+            ParticipateApplication.get().getApplicationProperties().getBaseUrl(),
             model.getObject().getToken())
         ));
     }
