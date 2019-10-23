@@ -87,6 +87,25 @@ java -jar target/particpate.jar
 on your machine. Don't forget to configure the properties files to fit your environment or follow the 
 [Docker instructions](#docker) above to deploy the application with Docker.
 
+## Features
+
+Lately, two features have been added, which can be turned on and off by means of *enabled*-flag in the `application.yml`
+file.
+
+### Remind overdue singers
+
+If the feature is activated, all participants who have not yet registered for the next event will receive another 
+invitation by email. By default, all events are considered that are up to 14 days in the future.
+
+The cron expression and the offset are configurable. However, the email address of the manager must be configured.
+
+### Score's manager notification
+
+Before the start of the next event, the score's manager will receive an email with a list of attending members. By default,
+all events are considered that are up to 7 days in the future.
+
+The cron expression and the offset are configurable.
+
 ## Tests / CI
 
 - Liquibase integration tests
