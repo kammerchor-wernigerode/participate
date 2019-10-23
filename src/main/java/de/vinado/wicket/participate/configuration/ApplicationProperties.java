@@ -10,8 +10,6 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Reads the properties from "classpath:/application.properties"
