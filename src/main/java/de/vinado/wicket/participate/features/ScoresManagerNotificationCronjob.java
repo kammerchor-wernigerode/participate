@@ -179,17 +179,17 @@ public class ScoresManagerNotificationCronjob {
     }
 
     /**
-     * Checks that the string is empty and throws a customized {@link NullPointerException} if it is.
+     * Checks that the string is empty and throws a customized {@link IllegalArgumentException} if it is.
      *
      * @param string  the string to check for emptiness
-     * @param message detail message to be used in the event that a {@code NullPointerException} is thrown
+     * @param message detail message to be used in the event that a {@code IllegalArgumentException} is thrown
      * @return {@code string} if not empty
      *
-     * @throws NullPointerException if {@code string} is empty
+     * @throws IllegalArgumentException if {@code string} is empty
      */
-    private static String requireNonEmpty(final String string, final String message) {
+    private static String requireNonEmpty(final String string, final String message) throws IllegalArgumentException {
         if (Strings.isEmpty(string)) {
-            throw new NullPointerException(message);
+            throw new IllegalArgumentException(message);
         }
 
         return string;
