@@ -66,7 +66,7 @@ public class ScoresManagerNotificationCronjob {
     private final EmailService emailService;
 
     /**
-     * Searches for upcomings events and their accepted invitations to send the singers name to the club's score's
+     * Searches for upcoming events and their accepted invitations to send the singers name to the club's score's
      * manager.
      */
     @Scheduled(cron = CRON_EXPRESSION)
