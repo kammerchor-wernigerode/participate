@@ -52,7 +52,7 @@ public class DismissableBootstrapModalPanel<T> extends GenericPanel<T> {
      * @return new content component
      */
     private Component newContentComponent(String id, IModel<T> model) {
-        return new MultiLineLabel(CONTENT_LABEL_ID, model);
+        return new MultiLineLabel(id, model);
     }
 
     /**
