@@ -41,7 +41,6 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.util.string.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -86,7 +85,6 @@ public class EventServiceImpl extends DataService implements EventService {
     private final PersonService personService;
     private final EmailService emailService;
     private final ApplicationProperties applicationProperties;
-    private final BuildProperties buildProperties;
 
     @Value("${spring.application.name:KCH Paritcipate}")
     private String applicationName;
@@ -674,7 +672,7 @@ public class EventServiceImpl extends DataService implements EventService {
             "-//%s//%s %s//DE",
             applicationProperties.getCustomer(),
             applicationName,
-            buildProperties.getVersion()
+            applicationProperties.getBuildProperties().getVersion()
         )));
         cal.getProperties().add(Version.VERSION_2_0);
         cal.getProperties().add(CalScale.GREGORIAN);
