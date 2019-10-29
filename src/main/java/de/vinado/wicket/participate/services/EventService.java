@@ -340,4 +340,10 @@ public interface EventService {
      * @return An filtered and ordered list of {@link Participant}.
      */
     List<Participant> getDetailedFilteredParticipants(Event event, DetailedParticipantFilter filter);
+
+    /**
+     * @param participant the participant on which to determine whether the deadline has passed
+     * @return {@code true} if the the given participant missed the deadline; {@code false} otherwise
+     */
+    boolean afterDeadline(Participant participant);
 }

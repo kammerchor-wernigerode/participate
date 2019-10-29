@@ -36,6 +36,7 @@ public class ApplicationProperties {
     private Mail mail;
     private Database database;
     private Features features;
+    private int deadlineOffset = -1;
 
     public String getVersion() {
         return buildProperties.getVersion();

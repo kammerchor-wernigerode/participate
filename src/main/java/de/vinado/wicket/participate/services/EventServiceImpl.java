@@ -57,6 +57,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -67,7 +68,9 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static com.pivovarit.function.ThrowingFunction.sneaky;
+import static de.vinado.wicket.participate.common.DateUtils.convert;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * Provides interaction with the database. The service implementation takes care of {@link Event} and Event related
@@ -866,6 +869,17 @@ public class EventServiceImpl extends DataService implements EventService {
 
         criteriaQuery.orderBy(criteriaBuilder.asc(singerJoin.get("lastName")));
         return entityManager.createQuery(criteriaQuery).getResultList();
+    }
+
+    @Override
+    public boolean afterDeadline(Participant participant) {
+        if (0 > applicationProperties.getDeadlineOffset()) {
+            return false;
+        }
+
+        LocalDate now = LocalDate.now();
+        Date startDate = participant.getEvent().getStartDate();
+        return applicationProperties.getDeadlineOffset() >= DAYS.between(now, convert(startDate));
     }
 
     private Predicate forUpcomingDate(final CriteriaBuilder criteriaBuilder, final Path<? extends Terminable> eventPath) {
