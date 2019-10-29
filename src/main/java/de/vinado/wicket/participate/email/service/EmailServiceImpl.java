@@ -55,6 +55,7 @@ public class EmailServiceImpl implements EmailService {
         log.debug("Email prepared and ready to ship");
 
         sender.send(message);
+        logSuccess(1);
     }
 
     /**
@@ -71,6 +72,7 @@ public class EmailServiceImpl implements EmailService {
         log.debug("{} email(s) prepared and ready to ship", preparedMessages.length);
 
         sender.send(preparedMessages);
+        logSuccess(preparedMessages.length);
     }
 
     /**
@@ -86,6 +88,7 @@ public class EmailServiceImpl implements EmailService {
         log.debug("Email prepared and ready to ship");
 
         sender.send(message);
+        logSuccess(1);
     }
 
     /**
@@ -104,6 +107,7 @@ public class EmailServiceImpl implements EmailService {
         log.debug("{} email(s) prepared and ready to ship", preparedMessages.length);
 
         sender.send(preparedMessages);
+        logSuccess(preparedMessages.length);
     }
 
     /**
@@ -217,5 +221,16 @@ public class EmailServiceImpl implements EmailService {
         }
 
         return helper;
+    }
+
+    /**
+     * Logs the success of emailing to the console.
+     *
+     * @param amount the amount of emails sent
+     */
+    private void logSuccess(final int amount) {
+        if (0 != amount) {
+            log.info("Sent {} email{}", amount, 1 == amount ? "" : "s");
+        }
     }
 }

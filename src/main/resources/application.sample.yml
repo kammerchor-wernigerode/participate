@@ -16,7 +16,7 @@ spring:
       hibernate.dialect: org.hibernate.dialect.MySQL57Dialect
 
   datasource:
-    url: jdbc:mysql://${DATABASE_HOST:localhost}:${DATABASE_PORT:3361}/${DATABASE_NAME:participate}?useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://${DATABASE_HOST:localhost}:${DATABASE_PORT:3306}/${DATABASE_NAME:participate}?useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false
     username: ${DATABASE_USER:participate}
     password: ${DATABASE_PASSWORD:participate}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -44,12 +44,17 @@ app:
   mail:
     footer: ${spring.application.name}
     sender: ${spring.mail.properties.mail.smtp.from}
-  cronjob:
-    remind-overdue: 0 0 9 ? * SUN
-    notify-scores-manager: 0 0 9 ? * FRI
-# features:
-#   enabled: REMIND_OVERDUE,NOTIFY_SCORES_MANAGER
-#   scores-manager-email: some@email.com
+
+  features:
+    remind-overdue:
+      enabled: ${OVERDUE_ENABLED:false}
+      cron-expression: ${OVERDUE_CRON:0 0 9 ? * SUN}
+      offset: ${OVERDUE_OFFSET:14}
+    scores-manager-notification:
+      enabled: ${SCORES_MANAGER_ENABLED:false}
+      cron-expression: ${SCORES_MANAGER_CRON:0 0 9 ? * SUN}
+      offset: ${SCORES_MANAGER_OFFSET:7}
+      scores-manager-email: ${SCORES_MANAGER_EMAIL}
 
 #logging:
 #  path: ${LOG_PATH:/tmp}

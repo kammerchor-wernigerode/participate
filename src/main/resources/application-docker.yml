@@ -44,12 +44,17 @@ app:
   mail:
     footer: ${spring.application.name}
     sender: ${spring.mail.properties.mail.smtp.from}
+
   features:
-    enabled: ${ENABLED_FEATURES}
-    scores-manager-email: ${SCORES_MANAGER_EMAIL}
-  cronjob:
-    remind-overdue: 0 0 9 ? * SUN
-    notify-scores-manager: 0 0 9 ? * FRI
+    remind-overdue:
+      enabled: ${OVERDUE_ENABLED:false}
+      cron-expression: ${OVERDUE_CRON:0 0 9 ? * SUN}
+      offset: ${OVERDUE_OFFSET:14}
+    scores-manager-notification:
+      enabled: ${SCORES_MANAGER_ENABLED:false}
+      cron-expression: ${SCORES_MANAGER_CRON:0 0 9 ? * SUN}
+      offset: ${SCORES_MANAGER_OFFSET:7}
+      scores-manager-email: ${SCORES_MANAGER_EMAIL}
 
 logging:
   path: ${LOG_PATH:logs}
