@@ -143,7 +143,7 @@
                                             </tr>
                                             </tbody>
                                         </table>
-                                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Du kannst deine Angabe jederzeit ändern, indem du erneut auf den Button klickst.<#if deadline??> Beachte bitte, dass eine Zusage nach dem ${deadline?date}, in Hinsicht auf die Schlafplatzplanung, nicht mehr berücksichtigt werden kann.</#if></p>
+                                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Du kannst deine Angabe jederzeit ändern, indem du erneut auf den Button klickst.<#if deadline??> Beachte bitte, dass eine Zusage nach dem ${deadline?date} nicht mehr bearbeitet wird.</#if></p>
                                     </td>
                                 </tr>
                             </table>

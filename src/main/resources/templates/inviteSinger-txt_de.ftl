@@ -17,7 +17,7 @@ Ein Ort wurde noch nicht festgelegt.
 </#if>
 
 Sag uns bitte, ob und wie viel Zeit du hast, ob du einen Schlafplatz brauchst oder ob du Schlafplätze anbieten kannst.
-<#if deadline??>Beachte bitte, dass eine Zusage nach dem ${deadline?date}, in Hinsicht auf die Schlafplatzplanung, nicht mehr berücksichtigt werden kann.</#if>
+<#if deadline??>Beachte bitte, dass eine Zusage nach dem ${deadline?date} nicht mehr bearbeitet wird.</#if>
 
 ${acceptLink}
 
