@@ -4,13 +4,10 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.vinado.wicket.participate.ParticipateApplication;
-import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.behavoirs.AjaxDownload;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapFormDecorator;
 import de.vinado.wicket.participate.common.generator.EventGenerator;
 import de.vinado.wicket.participate.common.generator.SingerGenerator;
-import de.vinado.wicket.participate.common.populator.DatabasePopulator;
-import de.vinado.wicket.participate.components.forms.BootstrapForm;
 import de.vinado.wicket.participate.components.links.BootstrapAjaxButton;
 import de.vinado.wicket.participate.components.panels.Collapsible;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
@@ -28,8 +25,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.NumberTextField;
-import org.apache.wicket.markup.html.form.PasswordTextField;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -37,7 +32,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -61,9 +55,6 @@ public class ToolPanel extends Panel {
     @SpringBean
     private UserService userService;
 
-    @Autowired
-    private DatabasePopulator databasePopulator;
-
     public ToolPanel(final String id) {
         super(id);
 
@@ -83,12 +74,6 @@ public class ToolPanel extends Panel {
             }
         });
         if (developmentMode) {
-            tabs.add(new AbstractTab(new ResourceModel("tools.mirror.database", "Mirror Database")) {
-                @Override
-                public WebMarkupContainer getPanel(final String panelId) {
-                    return new SyncDatabasePanel(panelId);
-                }
-            });
             tabs.add(new AbstractTab(new ResourceModel("tools.generate.data", "Generate Data")) {
                 @Override
                 public WebMarkupContainer getPanel(final String panelId) {
@@ -278,91 +263,6 @@ public class ToolPanel extends Panel {
 
         public void setEventCount(final Long eventCount) {
             this.eventCount = eventCount;
-        }
-    }
-
-    private class SyncDatabasePanel extends Panel {
-
-        private String url;
-
-        private String username;
-
-        private String password;
-
-        public SyncDatabasePanel(final String id) {
-            super(id);
-
-            final NotificationPanel feedback = new NotificationPanel("feedback");
-            feedback.setOutputMarkupPlaceholderTag(true);
-            add(feedback);
-
-            final BootstrapForm form = new BootstrapForm("form", new CompoundPropertyModel(this));
-            add(form);
-
-            final WebMarkupContainer wmc = new WebMarkupContainer("wmc");
-            wmc.setOutputMarkupId(true);
-            form.add(wmc);
-
-            final Label label = new Label("label", new ResourceModel("tools.mirror.database.source", "Source Database"));
-            wmc.add(label);
-
-            final TextField usernameTf = new TextField("username");
-            usernameTf.setRequired(true);
-            wmc.add(usernameTf);
-
-            final PasswordTextField passwordTf = new PasswordTextField("password");
-            passwordTf.setRequired(true);
-            wmc.add(passwordTf);
-
-            final TextField dbUrlTf = new TextField("url");
-            dbUrlTf.setRequired(true);
-            wmc.add(dbUrlTf);
-
-            final BootstrapAjaxButton submitBtn = new BootstrapAjaxButton("submit",
-                new ResourceModel("submit", "Submit"), form, Buttons.Type.Primary) {
-                @Override
-                protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-                    databasePopulator.run();
-
-                    // Resets session data to default and reloads the user
-                    ParticipateSession.get().clearSessionData();
-
-                    target.add(form);
-                }
-
-                @Override
-                protected FeedbackPanel getFeedbackPanel() {
-                    return feedback;
-                }
-            };
-            submitBtn.setSize(Buttons.Size.Small);
-            wmc.add(submitBtn);
-
-            form.addBootstrapFormDecorator();
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(final String url) {
-            this.url = url;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(final String username) {
-            this.username = username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(final String password) {
-            this.password = password;
         }
     }
 }
