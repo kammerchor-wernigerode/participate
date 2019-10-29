@@ -32,7 +32,6 @@ public class ApplicationProperties {
     private String customer = "";
     private @NotBlank String participatePassword;
     private Mail mail;
-    private Database database;
 
     public String getVersion() {
         return buildProperties.getVersion();
@@ -44,15 +43,5 @@ public class ApplicationProperties {
 
         private @Pattern(regexp = EMAIL_PATTERN) String sender;
         private String footer = "Participate";
-    }
-
-    @Getter
-    @Setter
-    public static class Database {
-
-        private boolean mirrorRemoteDatabase = false;
-        private String remoteUrl;
-        private String remoteUsername;
-        private String remotePassword;
     }
 }

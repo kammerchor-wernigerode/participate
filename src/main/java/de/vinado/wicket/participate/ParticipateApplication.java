@@ -9,7 +9,6 @@ import de.agilecoders.wicket.core.settings.IBootstrapSettings;
 import de.agilecoders.wicket.extensions.javascript.GoogleClosureJavaScriptCompressor;
 import de.agilecoders.wicket.extensions.javascript.YuiCssCompressor;
 import de.agilecoders.wicket.less.BootstrapLess;
-import de.vinado.wicket.participate.common.populator.DatabasePopulator;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.ui.administration.AdminPage;
 import de.vinado.wicket.participate.ui.event.EventsPage;
@@ -63,7 +62,6 @@ import javax.servlet.http.HttpServletRequest;
 public class ParticipateApplication extends AuthenticatedWebApplication {
 
     private final ApplicationProperties applicationProperties;
-    private final DatabasePopulator databasePopulator;
 
     @Value("${spring.application.name}")
     private String applicationName;
@@ -155,11 +153,6 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
                 return new RenderPageRequestHandler(new PageProvider(new ErrorPage(ex)));
             }
         });
-
-        // Database Populator
-        if (isInDevelopmentMode() && null != applicationProperties.getDatabase() && applicationProperties.getDatabase().isMirrorRemoteDatabase()) {
-            databasePopulator.run();
-        }
     }
 
     @Override
