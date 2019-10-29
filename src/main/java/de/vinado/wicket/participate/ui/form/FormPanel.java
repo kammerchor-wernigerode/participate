@@ -168,6 +168,7 @@ public class FormPanel extends BreadCrumbPanel {
         if (eventService.hasDeadlineExpired(model.getObject().getParticipant())) {
             messageModel = new ResourceModel("invitation.accept.deadline.after", ""
                 + "Please contact the responsible person again, as the deadline has already expired. So you can be sure that we have you on the screen.\n\n"
+                + "Please contact the responsible person, as the deadline has already expired. So you can be sure that we have you on the screen.\n\n"
                 + "Please note that you have to organize a sleeping place for yourself.\n\n"
                 + "If you have general questions about the event, feel free to contact the person in charge.");
         } else {
