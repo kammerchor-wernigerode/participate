@@ -24,16 +24,13 @@ public class EventServiceTest {
 
     private static final Date NOW = new Date();
 
-    private PersonService personService;
-    private EmailService emailService;
-    private ApplicationProperties applicationProperties;
     private EventServiceImpl service;
 
     @Before
-    public void setUp() throws Exception {
-        personService = mock(PersonService.class);
-        emailService = mock(EmailService.class);
-        applicationProperties = mock(ApplicationProperties.class);
+    public void setUp() {
+        var personService = mock(PersonService.class);
+        var emailService = mock(EmailService.class);
+        var applicationProperties = mock(ApplicationProperties.class);
 
         service = new EventServiceImpl(personService, emailService, applicationProperties);
 
@@ -41,7 +38,7 @@ public class EventServiceTest {
     }
 
     @Test
-    public void testAfterDeadline_after() {
+    public void testDeadlineAfter() {
         var event = mockEvent(1L, DateUtils.addDays(NOW, 7));
         var participant = mock(Participant.class);
         when(participant.getEvent()).thenReturn(event);
@@ -52,7 +49,7 @@ public class EventServiceTest {
     }
 
     @Test
-    public void testAfterDeadline_before() {
+    public void testDeadlineBefore() {
         var event = mockEvent(1L, DateUtils.addDays(NOW, 30));
         var participant = mock(Participant.class);
         when(participant.getEvent()).thenReturn(event);
