@@ -672,7 +672,7 @@ public class EventServiceImpl extends DataService implements EventService {
             "-//%s//%s %s//DE",
             applicationProperties.getCustomer(),
             applicationName,
-            applicationProperties.getBuildProperties().getVersion()
+            applicationProperties.getVersion()
         )));
         cal.getProperties().add(Version.VERSION_2_0);
         cal.getProperties().add(CalScale.GREGORIAN);
