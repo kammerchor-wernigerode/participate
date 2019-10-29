@@ -874,7 +874,7 @@ public class EventServiceImpl extends DataService implements EventService {
     }
 
     @Override
-    public boolean afterDeadline(Participant participant) {
+    public boolean hasDeadlineExpired(Participant participant) {
         if (0 > applicationProperties.getDeadlineOffset()) {
             return false;
         }

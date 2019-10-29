@@ -46,7 +46,7 @@ public class EventServiceTest {
         var participant = mock(Participant.class);
         when(participant.getEvent()).thenReturn(event);
 
-        var after = service.afterDeadline(participant);
+        var after = service.hasDeadlineExpired(participant);
 
         assertTrue(after);
     }
@@ -57,7 +57,7 @@ public class EventServiceTest {
         var participant = mock(Participant.class);
         when(participant.getEvent()).thenReturn(event);
 
-        var after = service.afterDeadline(participant);
+        var after = service.hasDeadlineExpired(participant);
 
         assertFalse(after);
     }

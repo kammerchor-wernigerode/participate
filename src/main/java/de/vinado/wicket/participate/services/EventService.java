@@ -345,5 +345,5 @@ public interface EventService {
      * @param participant the participant on which to determine whether the deadline has passed
      * @return {@code true} if the the given participant missed the deadline; {@code false} otherwise
      */
-    boolean afterDeadline(Participant participant);
+    boolean hasDeadlineExpired(Participant participant);
 }

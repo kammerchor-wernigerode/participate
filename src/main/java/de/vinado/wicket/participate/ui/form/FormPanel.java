@@ -165,7 +165,7 @@ public class FormPanel extends BreadCrumbPanel {
         ResourceModel titleModel = new ResourceModel("invitation.accept.success", "Thank you for your registration!");
         ResourceModel messageModel;
 
-        if (eventService.afterDeadline(model.getObject().getParticipant())) {
+        if (eventService.hasDeadlineExpired(model.getObject().getParticipant())) {
             messageModel = new ResourceModel("invitation.accept.deadline.after", ""
                 + "Please contact the responsible person again, as the deadline has already expired. So you can be sure that we have you on the screen.\n\n"
                 + "Please note that you have to organize a sleeping place for yourself.\n\n"
