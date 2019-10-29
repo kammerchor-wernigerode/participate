@@ -150,7 +150,7 @@ public class FormPanel extends BreadCrumbPanel {
     private void displaySuccessionModal(AjaxRequestTarget target, IModel<ParticipantDTO> model) {
         ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
         BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-        ResourceModel titleModel = new ResourceModel("invitation.accept.success", "Thank you for your registration!");
+        ResourceModel titleModel = new ResourceModel("invitation.accept.success", "Thanks you for your registration!");
         TemplateModel messageModel;
         Map<String, Object> data = new HashMap<>();
         data.put("sleepingPlaceResponsible", properties.getSleepingPlaceResponsible());
