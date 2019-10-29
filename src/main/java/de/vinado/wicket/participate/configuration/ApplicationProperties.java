@@ -37,6 +37,8 @@ public class ApplicationProperties {
     private Database database;
     private Features features;
     private int deadlineOffset = -1;
+    private String organizationResponsible;
+    private String sleepingPlaceResponsible;
 
     public String getVersion() {
         return buildProperties.getVersion();
