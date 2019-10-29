@@ -617,6 +617,8 @@ public class EventServiceImpl extends DataService implements EventService {
             .stream()
             .map(sneaky(participant -> {
                 final Singer singer = participant.getSinger();
+                int offset = 1 - applicationProperties.getDeadlineOffset();
+                Date deadline = DateUtils.addDays(participant.getEvent().getStartDate(), offset);
 
                 final Email email = new Email() {
                     @Override
@@ -628,7 +630,7 @@ public class EventServiceImpl extends DataService implements EventService {
                             properties.getBaseUrl(),
                             participant.getToken())
                         );
-                        data.put("deadline", DateUtils.addDays(participant.getEvent().getStartDate(), -14));
+                        data.put("deadline", offset > 1 ? null : deadline);
 
                         return data;
                     }
