@@ -218,6 +218,7 @@ public class EventService extends DataService {
      * @param dto the participant who accepts the invitation
      * @return the saved participant
      */
+    @Transactional
     public Participant acceptEvent(ParticipantDTO dto) {
         dto.setInvitationStatus(InvitationStatus.ACCEPTED);
         return saveParticipant(dto);
@@ -229,6 +230,7 @@ public class EventService extends DataService {
      * @param dto the participant who declines the invitation
      * @return the saved participant
      */
+    @Transactional
     public Participant declineEvent(ParticipantDTO dto) {
         dto.setInvitationStatus(InvitationStatus.DECLINED);
         dto.setFromDate(null);
@@ -594,6 +596,7 @@ public class EventService extends DataService {
      * @param participant the participant to invite
      * @param organizer   the organizer
      */
+    @Transactional
     public void inviteParticipant(Participant participant, User organizer) {
         inviteParticipants(Collections.singletonList(participant), organizer);
     }

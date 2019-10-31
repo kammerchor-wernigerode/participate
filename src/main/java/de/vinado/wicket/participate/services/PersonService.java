@@ -344,6 +344,7 @@ public class PersonService extends DataService {
      *
      * @param upload the uploaded file
      */
+    @Transactional
     public void importPersons(FileUpload upload) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(upload.getInputStream(), Charset.forName("UTF-8")));
