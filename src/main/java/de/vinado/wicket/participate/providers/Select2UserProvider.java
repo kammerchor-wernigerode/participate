@@ -2,22 +2,23 @@ package de.vinado.wicket.participate.providers;
 
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.services.UserService;
+import lombok.RequiredArgsConstructor;
 import org.wicketstuff.select2.ChoiceProvider;
 import org.wicketstuff.select2.Response;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
+ * Provides a list of users for a substring of their {@code username}.
+ *
+ * @author Vincent Nadoll
  */
+@RequiredArgsConstructor
 public class Select2UserProvider extends ChoiceProvider<User> {
 
-    private UserService userService;
-
-    public Select2UserProvider(final UserService userService) {
-        this.userService = userService;
-    }
+    private final UserService userService;
 
     @Override
     public String getDisplayValue(User user) {
@@ -31,16 +32,16 @@ public class Select2UserProvider extends ChoiceProvider<User> {
 
     @Override
     public void query(String term, int page, Response<User> response) {
-        response.addAll(userService.findUsers("%" + term + "%"));
+        response.addAll(userService.findUsers(term));
         response.setHasMore(false);
     }
 
     @Override
     public Collection<User> toChoices(Collection<String> ids) {
-        final ArrayList<User> users = new ArrayList<>();
-        for (String id : ids) {
-            users.add(userService.getUser(Long.parseLong(id)));
-        }
-        return users;
+        return ids.stream()
+            .map(Long::parseLong)
+            .map(userService::getUser)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
     }
 }

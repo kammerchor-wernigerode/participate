@@ -97,7 +97,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         inner.add(isSeveralDaysCb);
 
         final Select2Choice<String> eventTypeS2c = new Select2Choice<>("eventType",
-            new Select2StringProvider(eventService.getEventTypes()));
+            new Select2StringProvider(eventService::getEventTypes));
         eventTypeS2c.add(new AjaxFocusBehavior());
         eventTypeS2c.setLabel(new ResourceModel("event", "Event"));
         eventTypeS2c.add(BootstrapHorizontalFormDecorator.decorate());
@@ -149,7 +149,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         inner.add(endDateTf);
 
         final Select2Choice<String> locationS2c = new Select2Choice<>("location",
-            new Select2StringProvider(eventService.getLocationList()));
+            new Select2StringProvider(eventService::getLocationList));
         locationS2c.setLabel(new ResourceModel("location", "Location"));
         locationS2c.add(BootstrapHorizontalFormDecorator.decorate());
         locationS2c.getSettings().setLanguage(getLocale().getLanguage());
