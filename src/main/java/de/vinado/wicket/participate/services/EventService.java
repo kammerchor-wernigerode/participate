@@ -55,7 +55,6 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -69,7 +68,6 @@ import java.util.stream.Stream;
 
 import static com.pivovarit.function.ThrowingFunction.sneaky;
 import static de.vinado.wicket.participate.common.DateUtils.convert;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
@@ -270,8 +268,10 @@ public class EventService extends DataService {
      *
      * @param singer the participant's singer
      * @return the latest event's participant
+     *
+     * @throws NoResultException in case the participant could not be found
      */
-    public Participant getLatestParticipant(Singer singer) {
+    public Participant getLatestParticipant(Singer singer) throws NoResultException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
         Root<Participant> root = criteriaQuery.from(Participant.class);
@@ -279,52 +279,43 @@ public class EventService extends DataService {
         Predicate forSinger = criteriaBuilder.equal(root.get("singer"), singer);
         criteriaQuery.where(forSinger, forUpcomingDate(criteriaBuilder, eventJoin), forActive(criteriaBuilder, eventJoin));
         criteriaQuery.orderBy(criteriaBuilder.asc(eventJoin.get("startDate")));
-        try {
-            return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
-        } catch (NoResultException e) {
-            log.trace("Could not find Participant of latest event for Singer /w id={}", singer.getId());
-            return null;
-        }
+        return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
     }
 
     /**
      * @return the latest event details
+     *
+     * @throws NoResultException in case an upcoming event doesn't exist
      */
-    public EventDetails getLatestEventDetails() {
+    public EventDetails getLatestEventDetails() throws NoResultException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
         Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
         criteriaQuery.where(forUpcomingDate(criteriaBuilder, root));
-        try {
-            return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
-        } catch (NoResultException e) {
-            log.trace("Could not find any upcoming Event");
-            return null;
-        }
+        return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
     }
 
     /**
      * @return the latest event
+     *
+     * @throws NoResultException in case an upcoming event doesn't exist
      */
-    public Event getLatestEvent() {
+    public Event getLatestEvent() throws NoResultException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Event> criteriaQuery = criteriaBuilder.createQuery(Event.class);
         Root<Event> root = criteriaQuery.from(Event.class);
         criteriaQuery.where(forUpcomingDate(criteriaBuilder, root));
         criteriaQuery.orderBy(criteriaBuilder.asc(root.get("startDate")));
-        try {
-            return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
-        } catch (NoResultException e) {
-            log.trace("Could not find any upcoming Event");
-            return null;
-        }
+        return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
     }
 
     /**
      * @param eventDetails the event details on which the successor is determined
      * @return the succeeding event details
+     *
+     * @throws NoResultException in case the next event could not be found
      */
-    public EventDetails getSuccessor(EventDetails eventDetails) {
+    public EventDetails getSuccessor(EventDetails eventDetails) throws NoResultException {
         Date startDate = load(EventDetails.class, eventDetails.getId()).getStartDate();
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -332,19 +323,16 @@ public class EventService extends DataService {
         Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
         Predicate forStartDate = criteriaBuilder.greaterThan(root.get("startDate"), startDate);
         criteriaQuery.where(forUpcomingDate(criteriaBuilder, root), forStartDate);
-        try {
-            return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
-        } catch (NoResultException e) {
-            log.trace("Could not find successor of Event /w id={}", eventDetails.getEvent().getId());
-            return null;
-        }
+        return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
     }
 
     /**
      * @param eventDetails the event details on which the predecessor is determined
      * @return the previous event details
+     *
+     * @throws NoResultException in case the previous event could not be found
      */
-    public EventDetails getPredecessor(EventDetails eventDetails) {
+    public EventDetails getPredecessor(EventDetails eventDetails) throws NoResultException {
         Date startDate = load(EventDetails.class, eventDetails.getId()).getStartDate();
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -353,12 +341,7 @@ public class EventService extends DataService {
         Predicate forStartDate = criteriaBuilder.lessThan(root.get("startDate"), startDate);
         criteriaQuery.where(forUpcomingDate(criteriaBuilder, root), forStartDate);
         criteriaQuery.orderBy(criteriaBuilder.desc(root.get("startDate")));
-        try {
-            return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
-        } catch (NoResultException e) {
-            log.trace("Could not find predecessor of Event /w id={}", eventDetails.getEvent().getId());
-            return null;
-        }
+        return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
     }
 
     /**
@@ -414,18 +397,15 @@ public class EventService extends DataService {
      *
      * @param event the event for which the details should be fetched
      * @return the event details for the event
+     *
+     * @throws NoResultException in case the event details could not be found
      */
-    public EventDetails getEventDetails(Event event) {
+    public EventDetails getEventDetails(Event event) throws NoResultException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
         Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
         criteriaQuery.where(criteriaBuilder.equal(root.get("event"), event));
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (NoResultException e) {
-            log.trace("Could not find Event Details for Event /w id={}", event.getId());
-            return null;
-        }
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
     /**
@@ -508,18 +488,15 @@ public class EventService extends DataService {
      *
      * @param token the token to get the participant of
      * @return the participant
+     *
+     * @throws NoResultException in case the participant could not be found
      */
-    public Participant getParticipant(String token) {
+    public Participant getParticipant(String token) throws NoResultException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
         Root<Participant> root = criteriaQuery.from(Participant.class);
         criteriaQuery.where(criteriaBuilder.equal(root.<String>get("token"), token));
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (NoResultException e) {
-            log.trace("Could not find Participant /w token={}", token);
-            return null;
-        }
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
     /**
@@ -646,11 +623,7 @@ public class EventService extends DataService {
 
         cal.getComponents().add(vEvent);
 
-        try {
-            return new EmailAttachment("participate-event.ics", MediaType.valueOf("text/calendar"), cal.toString().getBytes(UTF_8.name()));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("UnsupportedEncodingException", e);
-        }
+        return new EmailAttachment("participate-event.ics", MediaType.valueOf("text/calendar"), cal.toString().getBytes());
     }
 
     /**

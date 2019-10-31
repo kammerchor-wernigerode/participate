@@ -23,6 +23,8 @@ import de.vinado.wicket.participate.services.PersonService;
 import de.vinado.wicket.participate.ui.event.details.EventSummaryPanel;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import de.vinado.wicket.participate.ui.pages.ParticipatePage;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -40,8 +42,13 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import javax.mail.internet.InternetAddress;
+import javax.persistence.NoResultException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.pivovarit.function.ThrowingFunction.sneaky;
@@ -49,6 +56,7 @@ import static com.pivovarit.function.ThrowingFunction.sneaky;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Slf4j
 public class EventMasterPanel extends BreadCrumbPanel {
 
     @SpringBean
@@ -99,15 +107,16 @@ public class EventMasterPanel extends BreadCrumbPanel {
         eventListPanel.setOutputMarkupId(true);
         add(eventListPanel);
 
-        final EventDetails eventView;
-        if (null == ParticipateSession.get().getEvent()) {
-            if (eventService.hasUpcomingEvents()) {
-                eventView = eventService.getLatestEventDetails();
-            } else {
-                eventView = new EventDetails();
-            }
+        Optional<Event> event = Optional.ofNullable(ParticipateSession.get().getEvent());
+        EventDetails eventView = new EventDetails();
+        if (event.isPresent()) {
+            eventView = detailsOf(event.get(), log::warn).get();
         } else {
-            eventView = eventService.getEventDetails(ParticipateSession.get().getEvent());
+            try {
+                eventView = eventService.getLatestEventDetails();
+            } catch (NoResultException e) {
+                log.debug("Next upcoming event doesn't exist");
+            }
         }
 
         eventPanel = new BootstrapPanel<EventDetails>("event", new CompoundPropertyModel<>(eventView),
@@ -127,9 +136,13 @@ public class EventMasterPanel extends BreadCrumbPanel {
                 setDefaultBtnIcon(FontAwesomeIconType.check);
                 setDefaultBtnLabelModel(new ResourceModel("show.event.summary", "Show Event Summary"));
                 return new BreadCrumbPanelLink(id, breadCrumbModel, (IBreadCrumbPanelFactory) (componentId, breadCrumbModel1)
-                    -> new EventSummaryPanel(componentId, breadCrumbModel1,
-                    new CompoundPropertyModel<>(eventService.getEventDetails(model.getObject().getEvent())),
-                    model.getObject().getEndDate().after(new Date())));
+                    -> {
+                    EventDetails eventDetails = detailsOf(model.getObject().getEvent(), log::error)
+                        .orElseThrow(() -> new WicketRuntimeException("Event must not be null"));
+
+                    return new EventSummaryPanel(componentId, breadCrumbModel1, new CompoundPropertyModel<>(eventDetails),
+                        model.getObject().getEndDate().after(new Date()));
+                });
             }
 
             @Override
@@ -211,7 +224,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
                             new CompoundPropertyModel<>(new EventDTO(model.getObject().getEvent()))) {
                             @Override
                             public void onUpdate(final Event savedEvent, final AjaxRequestTarget target) {
-                                model.setObject(eventService.getEventDetails(savedEvent));
+                                model.setObject(detailsOf(savedEvent, log::debug).get());
                                 ParticipateSession.get().setEvent(model.getObject().getEvent());
                                 send(getPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
                                 Snackbar.show(target, new ResourceModel("event.edit.success", "The event was successfully edited"));
@@ -237,15 +250,32 @@ public class EventMasterPanel extends BreadCrumbPanel {
             final RemoveEventUpdateEvent event = (RemoveEventUpdateEvent) payload;
             final AjaxRequestTarget target = event.getTarget();
 
-            if (!eventService.hasUpcomingEvents()) {
-                ParticipateSession.get().setEvent(null);
-            } else {
+            try {
                 ParticipateSession.get().setEvent(eventService.getLatestEvent());
                 setDefaultModelObject(eventService.getLatestEventDetails());
+            } catch (NoResultException e) {
+                log.debug("Next upcoming event doesn't exist");
+                ParticipateSession.get().setEvent(null);
             }
 
             target.add(eventListPanel);
             target.add(eventPanel);
+        }
+    }
+
+    /**
+     * Retrieves the details for the given event.
+     *
+     * @param event    the event for which the details should be fetched
+     * @param severity the severity in case the event details could not be found
+     * @return optional of event details
+     */
+    private Optional<EventDetails> detailsOf(Event event, BiConsumer<String, String> severity) {
+        try {
+            return Optional.ofNullable(eventService.getEventDetails(event));
+        } catch (NoResultException e) {
+            severity.accept("Could not find event details for event /w name={}", event.getName());
+            return Optional.empty();
         }
     }
 

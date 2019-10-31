@@ -14,7 +14,9 @@ import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.UserService;
 import de.vinado.wicket.participate.ui.pages.BasePage;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.authentication.strategy.DefaultAuthenticationStrategy;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
@@ -37,6 +39,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 
+import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +47,7 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Slf4j
 public class FormSignInPage extends BasePage {
 
     @SuppressWarnings("unused")
@@ -194,7 +198,7 @@ public class FormSignInPage extends BasePage {
     private boolean signIn(final String password) {
         if (!Strings.isEmpty(password)) {
             if (Strings.isEmpty(getUsername())) {
-                setParticipant(eventService.getParticipant(getToken()));
+                setParticipant(getParticipant(getToken()));
             }
             return password.equals(participatePassword) || password.equals(userPassword);
         }
@@ -218,17 +222,19 @@ public class FormSignInPage extends BasePage {
                 final String token = data[0];
                 password = data[1];
 
-                final Singer cookieSinger = eventService.getParticipant(token).getSinger();
+                final Singer cookieSinger = getParticipant(token).getSinger();
                 final Singer singer = model.getObject().getSinger();
                 if (singer.equals(cookieSinger)) {
                     final Event event = model.getObject().getEvent();
                     if (event.isActive() && event.getEndDate().after(new Date())) {
                         onAccept(model.getObject().getParticipant());
                     } else {
-                        final Participant latest = eventService.getLatestParticipant(model.getObject().getSinger());
-                        if (null != latest) {
+                        try {
+                            final Participant latest = eventService.getLatestParticipant(singer);
                             strategy.save(latest.getToken(), password);
                             onAccept(latest);
+                        } catch (NoResultException e) {
+                            log.warn("Couldn't save login cookie. Participant could not be found for singer w/ email={}", singer.getEmail());
                         }
                     }
                 } else {
@@ -278,5 +284,19 @@ public class FormSignInPage extends BasePage {
 
     public void setRememberMe(final boolean rememberMe) {
         this.rememberMe = rememberMe;
+    }
+
+    /**
+     * Retrieves the participant for its token.
+     *
+     * @param token the token to get the participant of
+     * @return the participant
+     */
+    private Participant getParticipant(String token) {
+        try {
+            return eventService.getParticipant(token);
+        } catch (NoResultException e) {
+            throw new WicketRuntimeException(String.format("Could not find participant /w token=%s", token), e);
+        }
     }
 }

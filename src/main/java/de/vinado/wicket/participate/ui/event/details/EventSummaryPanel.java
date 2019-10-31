@@ -12,6 +12,7 @@ import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.EventsPage;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -29,11 +30,13 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import javax.persistence.NoResultException;
 import java.util.List;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Slf4j
 public class EventSummaryPanel extends BreadCrumbPanel {
 
     @SpringBean
@@ -63,13 +66,14 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         final BootstrapAjaxLink previousEventBtn = new BootstrapAjaxLink("previousEventBtn", Buttons.Type.Link) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                final EventDetails previousEvent =
-                    eventService.getPredecessor(model.getObject());
-                if (null != previousEvent) {
+                try {
+                    final EventDetails previousEvent = eventService.getPredecessor(model.getObject());
                     ParticipateSession.get().setEvent(previousEvent.getEvent());
                     send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
                     model.setObject(previousEvent);
                     target.add(form);
+                } catch (NoResultException e) {
+                    log.debug("Could not find predecessor of event /w name={}", model.getObject().getEvent().getName());
                 }
             }
         };
@@ -92,12 +96,14 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         final BootstrapAjaxLink nextEventBtn = new BootstrapAjaxLink("nextEventBtn", Buttons.Type.Link) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                final EventDetails nextEvent = eventService.getSuccessor(model.getObject());
-                if (null != nextEvent) {
+                try {
+                    final EventDetails nextEvent = eventService.getSuccessor(model.getObject());
                     ParticipateSession.get().setEvent(nextEvent.getEvent());
                     send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
                     model.setObject(nextEvent);
                     target.add(form);
+                } catch (NoResultException e) {
+                    log.debug("Could not find successor of event /w name={}", model.getObject().getEvent().getName());
                 }
             }
         };
