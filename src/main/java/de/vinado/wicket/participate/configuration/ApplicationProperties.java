@@ -32,6 +32,9 @@ public class ApplicationProperties {
     private String customer = "";
     private @NotBlank String participatePassword;
     private Mail mail;
+    private int deadlineOffset = -1;
+    private String organizationResponsible;
+    private String sleepingPlaceResponsible;
 
     public String getVersion() {
         return buildProperties.getVersion();

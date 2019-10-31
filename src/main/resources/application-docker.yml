@@ -38,6 +38,9 @@ app:
   customer: ${APPLICATION_CUSTOMER}
   participate-password: ${APPLICATION_PASSWORD}
   development-mode: false
+  deadline-offset: ${DEADLINE_OFFSET:-1}
+  organization-responsible: ${RESPONSIBLE_ORGANIZATION}
+  sleeping-place-responsible: ${RESPONSIBLE_SLEEPING_PLACE}
   mail:
     footer: ${spring.application.name}
     sender: ${spring.mail.properties.mail.smtp.from}

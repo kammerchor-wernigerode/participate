@@ -41,7 +41,6 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.util.string.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -58,6 +57,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -68,7 +68,9 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static com.pivovarit.function.ThrowingFunction.sneaky;
+import static de.vinado.wicket.participate.common.DateUtils.convert;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * Provides interaction with the database. The service implementation takes care of {@link Event} and Event related
@@ -86,7 +88,6 @@ public class EventServiceImpl extends DataService implements EventService {
     private final PersonService personService;
     private final EmailService emailService;
     private final ApplicationProperties applicationProperties;
-    private final BuildProperties buildProperties;
 
     @Value("${spring.application.name:KCH Paritcipate}")
     private String applicationName;
@@ -616,6 +617,8 @@ public class EventServiceImpl extends DataService implements EventService {
             .stream()
             .map(sneaky(participant -> {
                 final Singer singer = participant.getSinger();
+                int offset = 1 - applicationProperties.getDeadlineOffset();
+                Date deadline = DateUtils.addDays(participant.getEvent().getStartDate(), offset);
 
                 final Email email = new Email() {
                     @Override
@@ -627,7 +630,7 @@ public class EventServiceImpl extends DataService implements EventService {
                             properties.getBaseUrl(),
                             participant.getToken())
                         );
-                        data.put("deadline", DateUtils.addDays(participant.getEvent().getStartDate(), -14));
+                        data.put("deadline", offset > 1 ? null : deadline);
 
                         return data;
                     }
@@ -674,7 +677,7 @@ public class EventServiceImpl extends DataService implements EventService {
             "-//%s//%s %s//DE",
             applicationProperties.getCustomer(),
             applicationName,
-            buildProperties.getVersion()
+            applicationProperties.getVersion()
         )));
         cal.getProperties().add(Version.VERSION_2_0);
         cal.getProperties().add(CalScale.GREGORIAN);
@@ -868,6 +871,17 @@ public class EventServiceImpl extends DataService implements EventService {
 
         criteriaQuery.orderBy(criteriaBuilder.asc(singerJoin.get("lastName")));
         return entityManager.createQuery(criteriaQuery).getResultList();
+    }
+
+    @Override
+    public boolean hasDeadlineExpired(Participant participant) {
+        if (0 > applicationProperties.getDeadlineOffset()) {
+            return false;
+        }
+
+        LocalDate now = LocalDate.now();
+        Date startDate = participant.getEvent().getStartDate();
+        return applicationProperties.getDeadlineOffset() >= DAYS.between(now, convert(startDate));
     }
 
     private Predicate forUpcomingDate(final CriteriaBuilder criteriaBuilder, final Path<? extends Terminable> eventPath) {
