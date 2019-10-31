@@ -46,5 +46,6 @@ public class ApplicationProperties {
 
         private @Pattern(regexp = EMAIL_PATTERN) String sender;
         private String footer = "Participate";
+        private @Pattern(regexp = EMAIL_PATTERN) String replyTo;
     }
 }

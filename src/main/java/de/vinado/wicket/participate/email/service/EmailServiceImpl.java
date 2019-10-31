@@ -7,6 +7,7 @@ import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -210,6 +211,12 @@ public class EmailServiceImpl implements EmailService {
         helper.setBcc(email.getBcc().toArray(new InternetAddress[0]));
         if (null != email.getReplyTo()) helper.setReplyTo(email.getReplyTo());
         helper.setSubject(email.getSubject());
+
+        if (null != email.getReplyTo()) {
+            helper.setReplyTo(email.getReplyTo());
+        } else if (Strings.isNotBlank(applicationProperties.getMail().getReplyTo())) {
+            helper.setReplyTo(new InternetAddress(applicationProperties.getMail().getReplyTo()));
+        }
 
         if (multipart) {
             int i = 0;
