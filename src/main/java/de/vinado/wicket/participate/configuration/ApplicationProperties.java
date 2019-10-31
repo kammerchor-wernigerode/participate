@@ -32,6 +32,9 @@ public class ApplicationProperties {
     private String customer = "";
     private @NotBlank String participatePassword;
     private Mail mail;
+    private int deadlineOffset = -1;
+    private String organizationResponsible;
+    private String sleepingPlaceResponsible;
 
     public String getVersion() {
         return buildProperties.getVersion();
@@ -43,5 +46,6 @@ public class ApplicationProperties {
 
         private @Pattern(regexp = EMAIL_PATTERN) String sender;
         private String footer = "Participate";
+        private @Pattern(regexp = EMAIL_PATTERN) String replyTo;
     }
 }

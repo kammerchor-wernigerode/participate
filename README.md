@@ -54,7 +54,8 @@ docker run \
  --env SMTP_PORT=587 \
  --env SMTP_USER='mail.user@domain.tld' \
  --env SMTP_PASSWORD='mail_password' \
- --env MAIL_FROM='no-reply@domain.tld' \
+ --env MAIL_FROM='mail.user@domain.tld' \
+ --env MAIL_REPLY_TO='no-reply@domain.tld' \
  --env BASE_URL='http://localhost:8080' \
  --env LOG_PATH=/tmp \
  -p 8080:8080 \

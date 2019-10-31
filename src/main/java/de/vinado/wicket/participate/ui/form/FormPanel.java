@@ -4,13 +4,19 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxButt
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
+import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.behavoirs.AutosizeBehavior;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalFormDecorator;
+import de.vinado.wicket.participate.components.modals.BootstrapModal;
+import de.vinado.wicket.participate.components.modals.DismissableBootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
+import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.events.EventUpdateEvent;
 import de.vinado.wicket.participate.model.Participant;
+import de.vinado.wicket.participate.model.TemplateModel;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
+import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.event.Broadcast;
@@ -28,6 +34,8 @@ import org.apache.wicket.util.string.Strings;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -117,7 +125,7 @@ public class FormPanel extends BreadCrumbPanel {
                 send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(
                     eventService.acceptEvent(model.getObject()).getEvent(),
                     target));
-                Snackbar.show(target, new ResourceModel("invitation.accept.success", "Your data has been saved. You can leave this page now."));
+                displaySuccessionModal(target, model);
                 target.add(form);
             }
         };
@@ -137,6 +145,33 @@ public class FormPanel extends BreadCrumbPanel {
         declineBtn.setLabel(new ResourceModel("decline", "Decline"));
         declineBtn.setSize(Buttons.Size.Small);
         wmc.add(declineBtn);
+    }
+
+    private void displaySuccessionModal(AjaxRequestTarget target, IModel<ParticipantDTO> model) {
+        ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
+        BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        ResourceModel titleModel = new ResourceModel("invitation.accept.success", "Thanks you for your registration!");
+        TemplateModel messageModel;
+        Map<String, Object> data = new HashMap<>();
+        data.put("sleepingPlaceResponsible", properties.getSleepingPlaceResponsible());
+        data.put("organizer", properties.getOrganizationResponsible());
+
+        if (eventService.hasDeadlineExpired(model.getObject().getParticipant())) {
+            messageModel = new TemplateModel("registrationSuccess.afterDeadline-txt.ftl", ""
+                + "Please contact the responsible person, as the deadline has already expired. So you can be sure that we have you on the screen.\n\n"
+                + "Please note that you have to organize a sleeping place for yourself.\n\n"
+                + "If you have general questions about the event, feel free to contact the person in charge.",
+                data);
+        } else {
+            messageModel = new TemplateModel("registrationSuccess.beforeDeadline-txt.ftl",
+                "If you have questions about the event, feel free to contact the responsible person.",
+                data);
+        }
+
+        DismissableBootstrapModalPanel<String> confirmation = new DismissableBootstrapModalPanel<>(modal,
+            titleModel, messageModel);
+        modal.setContent(confirmation);
+        modal.show(target);
     }
 
     @Override

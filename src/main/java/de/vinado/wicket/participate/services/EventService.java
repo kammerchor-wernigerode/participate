@@ -57,6 +57,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -67,7 +68,9 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static com.pivovarit.function.ThrowingFunction.sneaky;
+import static de.vinado.wicket.participate.common.DateUtils.convert;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * The service takes care of event and event related objects.
@@ -822,6 +825,20 @@ public class EventService extends DataService {
      */
     public List<Participant> getParticipants(Event event, boolean invited) {
         return invited ? getInvitedParticipants(event) : getUninvitedParticipants(event);
+    }
+
+    /**
+     * @param participant the participant on which to determine whether the deadline has passed
+     * @return {@code true} if the the given participant missed the deadline; {@code false} otherwise
+     */
+    public boolean hasDeadlineExpired(Participant participant) {
+        if (0 > applicationProperties.getDeadlineOffset()) {
+            return false;
+        }
+
+        LocalDate now = LocalDate.now();
+        Date startDate = participant.getEvent().getStartDate();
+        return applicationProperties.getDeadlineOffset() >= DAYS.between(now, convert(startDate));
     }
 
     /**
