@@ -72,13 +72,14 @@ public class ParticipateSession extends AuthenticatedWebSession {
      */
     @Override
     protected boolean authenticate(final String usernameOrEmail, final String plainPassword) {
-        final User user = userService.getUser(usernameOrEmail, plainPassword);
-        if (null != user) {
-            this.user = user;
+        try {
+            this.user = userService.getUser(usernameOrEmail, plainPassword);
             this.event = next();
-
             return true;
+        } catch (NoResultException e) {
+            log.info("Failed to authenticate for user={} and password=******", usernameOrEmail);
         }
+
         return false;
     }
 

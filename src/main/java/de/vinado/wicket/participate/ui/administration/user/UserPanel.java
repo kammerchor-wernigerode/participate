@@ -19,6 +19,7 @@ import de.vinado.wicket.participate.model.dtos.PersonDTO;
 import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import de.vinado.wicket.participate.services.UserService;
 import de.vinado.wicket.participate.ui.pages.BasePage;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
@@ -33,12 +34,14 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Slf4j
 public class UserPanel extends Panel {
 
     @SpringBean
@@ -115,12 +118,17 @@ public class UserPanel extends Panel {
                             modal.setContent(new AddPersonToUserPanel(modal, new CompoundPropertyModel<>(new AddUserDTO(rowModel.getObject()))) {
                                 @Override
                                 protected void onConfirm(final User savedUser, final AjaxRequestTarget target) {
+                                    final String email = savedUser.getPerson().getEmail();
+
                                     dataProvider.set(userService.getAll());
-                                    if (userService.startPasswordReset(savedUser.getPerson().getEmail(), true)) {
+                                    try {
+                                        userService.startPasswordReset(email, true);
                                         Snackbar.show(target, new ResourceModel("email.send.invitation.success", "An invitation has been sent"));
-                                    } else {
+                                    } catch (NoResultException e) {
+                                        log.warn("Failed to initialize password recovery for user w/ person email={}", email);
                                         Snackbar.show(target, new ResourceModel("email.send.invitation.error", "There was an error sending the invitation"));
                                     }
+
                                     target.add(dataTable);
                                 }
                             });

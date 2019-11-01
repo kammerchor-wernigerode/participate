@@ -96,9 +96,15 @@ public class FormSignInPage extends BasePage {
             setParticipant(model.getObject().getParticipant());
 
             // TODO Password authentication for persons, who are already a user
-            final User user = userService.getUser(model.getObject().getSinger());
-            if (null != user) {
-                this.userPassword = user.getPasswordSha256();
+            try {
+                Singer singer = model.getObject().getSinger();
+                User user = userService.getUser(singer);
+
+                if (user.isActive()) {
+                    this.userPassword = user.getPasswordSha256();
+                }
+            } catch (NoResultException e) {
+                log.debug("Could not find user w/ singer email={}", model.getObject().getSinger().getEmail());
             }
         }
 

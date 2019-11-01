@@ -20,6 +20,7 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -106,10 +107,7 @@ public class UserService extends DataService {
     @Transactional
     public User assignPerson(AddUserDTO dto) {
         User user = dto.getUser();
-        if (null == user) {
-            log.error("User must not be null");
-            return null;
-        }
+        Assert.notNull(user, "The given dto.user must not be null!");
 
         user = load(User.class, user.getId());
         Person person = dto.getPerson();
@@ -187,19 +185,16 @@ public class UserService extends DataService {
      *
      * @param username the username of the user to be retrieved
      * @return the user with the given username
+     *
+     * @throws NoResultException in case the user could not be found
      */
-    public User getUser(String username) {
+    public User getUser(String username) throws NoResultException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
         Root<User> root = criteriaQuery.from(User.class);
         Predicate forUsername = criteriaBuilder.equal(root.<String>get("username"), username);
         criteriaQuery.where(forUsername);
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (NoResultException e) {
-            log.trace("Could not find User for username={}", username);
-            return null;
-        }
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
     /**
@@ -207,19 +202,16 @@ public class UserService extends DataService {
      *
      * @param person the assigned person of the user to retrieve
      * @return the user with the assigned person
+     *
+     * @throws NoResultException in case the user could not be found
      */
-    public User getUser(Person person) {
+    public User getUser(Person person) throws NoResultException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
         Root<User> root = criteriaQuery.from(User.class);
         Predicate forPerson = criteriaBuilder.equal(root.get("person"), person);
         criteriaQuery.where(forPerson, forActive(criteriaBuilder, root));
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (NoResultException e) {
-            log.trace("Could not find User for Person /w id={}", person.getId());
-            return null;
-        }
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
     /**
@@ -228,8 +220,10 @@ public class UserService extends DataService {
      * @param login         either username or email address of the user to retrieve
      * @param plainPassword the user's plaintext password
      * @return the user for his given credentials
+     *
+     * @throws NoResultException in case the user could not be authenticated
      */
-    public User getUser(String login, String plainPassword) {
+    public User getUser(String login, String plainPassword) throws NoResultException {
         String passwordSha256 = DigestUtils.sha256Hex(plainPassword);
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
@@ -241,12 +235,7 @@ public class UserService extends DataService {
         Join<User, Person> personJoin = root.join("person", JoinType.LEFT);
         Predicate forEmail = criteriaBuilder.equal(criteriaBuilder.lower(personJoin.get("email")), login.toLowerCase());
         criteriaQuery.where(criteriaBuilder.and(forActive, forEnabled, forPassword), criteriaBuilder.or(forUsername, forEmail));
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (NoResultException e) {
-            log.info("Login failed for {} and ****", login);
-            return null;
-        }
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
     /**
@@ -294,21 +283,20 @@ public class UserService extends DataService {
      * @param login   either username or email address of the user to start the password recovery for
      * @param initial whether the user is asked to set a password after registration ({@code true}) or the user lost his
      *                password wants to reset the password ({@code false})
-     * @return {@code true} if the initialization succeeded; {@code false} otherwise
+     * @throws NoResultException in case the user could not be found
      */
     @Transactional
-    public boolean startPasswordReset(String login, boolean initial) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-        Root<User> root = criteriaQuery.from(User.class);
-        Join<User, Person> personJoin = root.join("person");
-        Predicate forUsername = criteriaBuilder.equal(root.get("username"), login);
-        Expression<String> emailExpr = criteriaBuilder.lower(personJoin.get("email"));
-        Predicate forEmail = criteriaBuilder.equal(emailExpr, login.toLowerCase());
-        criteriaQuery.where(criteriaBuilder.or(forUsername, forEmail));
+    public void startPasswordReset(String login, boolean initial) throws NoResultException {
         try {
+            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+            Root<User> root = criteriaQuery.from(User.class);
+            Join<User, Person> personJoin = root.join("person", JoinType.LEFT);
+            Predicate forUsername = criteriaBuilder.equal(root.get("username"), login);
+            Expression<String> emailExpr = criteriaBuilder.lower(personJoin.get("email"));
+            Predicate forEmail = criteriaBuilder.equal(emailExpr, login.toLowerCase());
+            criteriaQuery.where(criteriaBuilder.or(forUsername, forEmail));
             User user = entityManager.createQuery(criteriaQuery).getSingleResult();
-
             Person person = user.getPerson();
 
             ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
@@ -346,15 +334,9 @@ public class UserService extends DataService {
             } else {
                 emailService.send(email, "passwordReset-txt.ftl", "passwordReset-html.ftl");
             }
-
-            return true;
-        } catch (NoResultException e) {
-            log.warn("Password recovery for unknown login: {}.", login);
         } catch (UnsupportedEncodingException e) {
             log.error("Encoding is not supported", e);
         }
-
-        return false;
     }
 
     /**
@@ -362,16 +344,16 @@ public class UserService extends DataService {
      *
      * @param recoveryToken    the user's recovery token
      * @param newPlainPassword the new password to be saved
-     * @return {@code true} if the finish process succeeded; {@code false} otherwise
+     * @throws NoResultException in case the token could not be removed
      */
     @Transactional
-    public boolean finishPasswordReset(String recoveryToken, String newPlainPassword) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<UserRecoveryToken> criteriaQuery = criteriaBuilder.createQuery(UserRecoveryToken.class);
-        Root<UserRecoveryToken> root = criteriaQuery.from(UserRecoveryToken.class);
-        Predicate forRecoveryToken = criteriaBuilder.equal(root.get("token"), recoveryToken);
-        criteriaQuery.where(criteriaBuilder.and(forRecoveryToken));
+    public void finishPasswordReset(String recoveryToken, String newPlainPassword) throws NoResultException {
         try {
+            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<UserRecoveryToken> criteriaQuery = criteriaBuilder.createQuery(UserRecoveryToken.class);
+            Root<UserRecoveryToken> root = criteriaQuery.from(UserRecoveryToken.class);
+            Predicate forRecoveryToken = criteriaBuilder.equal(root.get("token"), recoveryToken);
+            criteriaQuery.where(criteriaBuilder.and(forRecoveryToken));
             UserRecoveryToken token = entityManager.createQuery(criteriaQuery).getSingleResult();
 
             User user = token.getUser();
@@ -398,15 +380,9 @@ public class UserService extends DataService {
             email.setSubject("Dein Passwort wurde aktualisiert");
 
             emailService.send(email, "passwordResetSuccess-txt.ftl", "passwordResetSuccess-html.ftl");
-
-            return true;
-        } catch (NoResultException e) {
-            log.error("Invalid password recovery token for: {}.", recoveryToken);
         } catch (UnsupportedEncodingException e) {
             log.error("Encoding is not supported", e);
         }
-
-        return false;
     }
 
     /**
