@@ -177,19 +177,16 @@ public class PersonService extends DataService {
      *
      * @param email the email address of the person to retrieve
      * @return the person with the given email address
+     *
+     * @throws NoResultException in case the person could not be found
      */
-    public Person getPerson(String email) {
+    public Person getPerson(String email) throws NoResultException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Person> criteriaQuery = criteriaBuilder.createQuery(Person.class);
         Root<Person> root = criteriaQuery.from(Person.class);
         Predicate forEmail = criteriaBuilder.equal(root.get("email"), email);
         criteriaQuery.where(forEmail);
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (NoResultException e) {
-            log.trace("Person with email={} could not be found.", e);
-            return null;
-        }
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
     /**
@@ -220,18 +217,15 @@ public class PersonService extends DataService {
      *
      * @param person the assigned person of the singer to retrieve
      * @return the singer with the assigned person
+     *
+     * @throws NoResultException in case the singer could not be found
      */
-    public Singer getSinger(Person person) {
+    public Singer getSinger(Person person) throws NoResultException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
         Root<Singer> root = criteriaQuery.from(Singer.class);
         criteriaQuery.where(criteriaBuilder.equal(root.get("id"), person.getId()));
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (NoResultException e) {
-            log.trace("Could not find Singer for person /w id={}", person.getId());
-            return null;
-        }
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
     /**
@@ -239,18 +233,15 @@ public class PersonService extends DataService {
      *
      * @param email the email address of the singer to retrieve
      * @return the singer with the given email address
+     *
+     * @throws NoResultException in case the singer could not be found
      */
-    public Singer getSinger(String email) {
+    public Singer getSinger(String email) throws NoResultException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
         Root<Singer> root = criteriaQuery.from(Singer.class);
         criteriaQuery.where(criteriaBuilder.equal(root.get("email"), email));
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (NoResultException e) {
-            log.trace("Could not find Singer for email=****");
-            return null;
-        }
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
     /**

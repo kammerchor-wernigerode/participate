@@ -2,10 +2,12 @@ package de.vinado.wicket.participate.providers;
 
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.services.PersonService;
+import lombok.extern.slf4j.Slf4j;
 import org.wicketstuff.select2.ChoiceProvider;
 import org.wicketstuff.select2.Response;
 
 import javax.mail.internet.InternetAddress;
+import javax.persistence.NoResultException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Slf4j
 public class Select2EmailAddressProvider extends ChoiceProvider<InternetAddress> {
 
     private PersonService personService;
@@ -42,7 +45,11 @@ public class Select2EmailAddressProvider extends ChoiceProvider<InternetAddress>
     public Collection<InternetAddress> toChoices(final Collection<String> addresses) {
         final ArrayList<Person> personList = new ArrayList<>();
         for (String email : addresses) {
-            personList.add(personService.getPerson(email));
+            try {
+                personList.add(personService.getPerson(email));
+            } catch (NoResultException e) {
+                log.debug("Could not find person w/ email={}", email);
+            }
         }
         return personList.stream().map(this::newInternetAddress).collect(Collectors.toList());
     }
