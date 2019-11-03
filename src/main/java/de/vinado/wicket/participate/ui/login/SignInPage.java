@@ -78,7 +78,7 @@ public class SignInPage extends BasePage {
                     }
 
                     try {
-                        userService.startPasswordReset(email, false);
+                        userService.initializePasswordRecovery(email, getLocalizer().getString("account.reset.password", this, "Password Reset"));
                         Snackbar.show(target, new ResourceModel("password.reset.success", "An email has been sent. Check your inbox."));
                     } catch (NoResultException e) {
                         log.warn("Failed to initialize password recovery for user w/ person email={}", email);

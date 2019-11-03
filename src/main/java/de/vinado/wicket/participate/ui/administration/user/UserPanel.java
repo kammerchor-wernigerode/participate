@@ -118,14 +118,12 @@ public class UserPanel extends Panel {
                             modal.setContent(new AddPersonToUserPanel(modal, new CompoundPropertyModel<>(new AddUserDTO(rowModel.getObject()))) {
                                 @Override
                                 protected void onConfirm(final User savedUser, final AjaxRequestTarget target) {
-                                    final String email = savedUser.getPerson().getEmail();
-
                                     dataProvider.set(userService.getAll());
                                     try {
-                                        userService.startPasswordReset(email, true);
+                                        userService.initializeUserRegistration(savedUser, getLocalizer().getString("account.activation", this, "Account Activation"));
                                         Snackbar.show(target, new ResourceModel("email.send.invitation.success", "An invitation has been sent"));
                                     } catch (NoResultException e) {
-                                        log.warn("Failed to initialize password recovery for user w/ person email={}", email);
+                                        log.warn("Failed to initialize password recovery for user w/ person email={}", savedUser.getPerson().getEmail());
                                         Snackbar.show(target, new ResourceModel("email.send.invitation.error", "There was an error sending the invitation"));
                                     }
 
