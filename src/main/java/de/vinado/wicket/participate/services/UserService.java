@@ -51,7 +51,7 @@ import java.util.Map;
 @Slf4j
 @Service
 @Setter(value = AccessLevel.PROTECTED, onMethod = @__(@Autowired))
-public class UserService extends DataService {
+public class UserService {
 
     private UserRepository userRepository;
     private UserRecoveryTokenRepository userRecoveryTokenRepository;
@@ -64,12 +64,6 @@ public class UserService extends DataService {
     @Value("${spring.application.name:KCH Participate}")
     private String applicationName;
 
-    @Override
-    @PersistenceContext
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-
     /**
      * Creates a new user.
      *
@@ -78,7 +72,7 @@ public class UserService extends DataService {
      */
     @Transactional
     public User createUser(AddUserDTO dto) {
-        return save(new User(dto.getUsername(), dto.getPassword(), false, true));
+        return userRepository.save(new User(dto.getUsername(), dto.getPassword(), false, true));
     }
 
     /**
@@ -86,17 +80,19 @@ public class UserService extends DataService {
      *
      * @param dto the DTO of the user to be updated
      * @return the saved user
+     *
+     * @throws NoResultException in case the user could not be found
      */
     @Transactional
-    public User saveUser(AddUserDTO dto) {
-        User loadedUser = load(User.class, dto.getUser().getId());
+    public User saveUser(AddUserDTO dto) throws NoResultException {
+        User loadedUser = userRepository.findById(dto.getUser().getId()).orElseThrow(NoResultException::new);
         loadedUser.setUsername(dto.getUsername());
         if (!Strings.isEmpty(dto.getPassword())) {
             loadedUser.setPasswordSha256(null != dto.getPassword() ? DigestUtils.sha256Hex(dto.getPassword()) : null);
         }
         loadedUser.setAdmin(dto.getUser().isAdmin());
         loadedUser.setEnabled(dto.getUser().isEnabled());
-        return save(loadedUser);
+        return userRepository.save(loadedUser);
     }
 
     /**
@@ -106,9 +102,9 @@ public class UserService extends DataService {
      */
     @Transactional
     public void removeUser(User user) {
-        User loadedUser = load(User.class, user.getId());
+        User loadedUser = userRepository.findById(user.getId()).orElseThrow(NoResultException::new);
         loadedUser.setActive(false);
-        save(loadedUser);
+        userRepository.save(loadedUser);
     }
 
     /**
@@ -122,7 +118,7 @@ public class UserService extends DataService {
         User user = dto.getUser();
         Assert.notNull(user, "The given dto.user must not be null!");
 
-        user = load(User.class, user.getId());
+        user = userRepository.findById(user.getId()).orElseThrow(NoResultException::new);
         Person person = dto.getPerson();
 
         if (null == person) {
@@ -138,7 +134,7 @@ public class UserService extends DataService {
         }
 
         user.setPerson(person);
-        return save(user);
+        return userRepository.save(user);
     }
 
     /**
@@ -150,7 +146,9 @@ public class UserService extends DataService {
      */
     @Transactional
     protected UserRecoveryToken createUserRecoveryToken(User user, int validDuration) {
-        return save(new UserRecoveryToken(user, generateRecoveryToken(), DateTime.now().plusDays(validDuration).toDate()));
+        UserRecoveryToken token = new UserRecoveryToken(user, generateRecoveryToken(),
+            DateTime.now().plusDays(validDuration).toDate());
+        return userRecoveryTokenRepository.save(token);
     }
 
     /**
@@ -159,11 +157,7 @@ public class UserService extends DataService {
      * @return a list of users
      */
     public List<User> getUsers() {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-        Root<User> root = criteriaQuery.from(User.class);
-        criteriaQuery.where(forActive(criteriaBuilder, root));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        return userRepository.findAll();
     }
 
     /**
@@ -173,14 +167,7 @@ public class UserService extends DataService {
      * @return a list of filtered users
      */
     public List<User> findUsers(String usernameSubstring) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-        Root<User> root = criteriaQuery.from(User.class);
-        Predicate forTerm = criteriaBuilder.like(
-            criteriaBuilder.lower(root.get("username")),
-            "%" + usernameSubstring.toLowerCase().trim() + "%");
-        criteriaQuery.where(forTerm, forActive(criteriaBuilder, root));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        return userRepository.findAllByUsernameLikeIgnoreCase(usernameSubstring);
     }
 
     /**
@@ -190,7 +177,7 @@ public class UserService extends DataService {
      * @return the user with the given ID
      */
     public User getUser(Long id) {
-        return load(User.class, id);
+        return userRepository.findById(id).orElseThrow(NoResultException::new);
     }
 
     /**
@@ -202,12 +189,7 @@ public class UserService extends DataService {
      * @throws NoResultException in case the user could not be found
      */
     public User getUser(String username) throws NoResultException {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-        Root<User> root = criteriaQuery.from(User.class);
-        Predicate forUsername = criteriaBuilder.equal(root.<String>get("username"), username);
-        criteriaQuery.where(forUsername);
-        return entityManager.createQuery(criteriaQuery).getSingleResult();
+        return userRepository.findByUsername(username).orElseThrow(NoResultException::new);
     }
 
     /**
@@ -219,12 +201,7 @@ public class UserService extends DataService {
      * @throws NoResultException in case the user could not be found
      */
     public User getUser(Person person) throws NoResultException {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-        Root<User> root = criteriaQuery.from(User.class);
-        Predicate forPerson = criteriaBuilder.equal(root.get("person"), person);
-        criteriaQuery.where(forPerson, forActive(criteriaBuilder, root));
-        return entityManager.createQuery(criteriaQuery).getSingleResult();
+        return userRepository.findByPerson(person).orElseThrow(NoResultException::new);
     }
 
     /**
@@ -237,18 +214,8 @@ public class UserService extends DataService {
      * @throws NoResultException in case the user could not be authenticated
      */
     public User getUser(String login, String plainPassword) throws NoResultException {
-        String passwordSha256 = DigestUtils.sha256Hex(plainPassword);
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-        Root<User> root = criteriaQuery.from(User.class);
-        Predicate forActive = forActive(criteriaBuilder, root);
-        Predicate forEnabled = criteriaBuilder.equal(root.get("enabled"), true);
-        Predicate forUsername = criteriaBuilder.equal(root.get("username"), login);
-        Predicate forPassword = criteriaBuilder.equal(root.get("passwordSha256"), passwordSha256);
-        Join<User, Person> personJoin = root.join("person", JoinType.LEFT);
-        Predicate forEmail = criteriaBuilder.equal(criteriaBuilder.lower(personJoin.get("email")), login.toLowerCase());
-        criteriaQuery.where(criteriaBuilder.and(forActive, forEnabled, forPassword), criteriaBuilder.or(forUsername, forEmail));
-        return entityManager.createQuery(criteriaQuery).getSingleResult();
+        String password = DigestUtils.sha256Hex(plainPassword);
+        return userRepository.authenticate(login, password).orElseThrow(NoResultException::new);
     }
 
     /**
@@ -256,12 +223,7 @@ public class UserService extends DataService {
      * @return {@code true} if a user exist for the given username; {@code false} otherwise
      */
     public boolean hasUser(String username) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        Root<User> root = criteriaQuery.from(User.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.<String>get("username"), username));
-        criteriaQuery.select(criteriaBuilder.count(root));
-        return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
+        return userRepository.existsByUsername(username);
     }
 
     /**
@@ -269,12 +231,7 @@ public class UserService extends DataService {
      * @return {@code true} if a user with the assigned person exist; {@code false} otherwise
      */
     public boolean hasUser(Person person) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        Root<User> root = criteriaQuery.from(User.class);
-        criteriaQuery.select(criteriaBuilder.count(root));
-        criteriaQuery.where(criteriaBuilder.equal(root.get("person"), person));
-        return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
+        return userRepository.existsByPerson(person);
     }
 
     /**
@@ -282,12 +239,7 @@ public class UserService extends DataService {
      * @return {@code true} if a user with the assigned recovery token exist; {@code false} otherwise
      */
     public boolean hasUserRecoveryToken(String token) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        Root<UserRecoveryToken> root = criteriaQuery.from(UserRecoveryToken.class);
-        criteriaQuery.select(criteriaBuilder.count(root.get("token")));
-        criteriaQuery.where(criteriaBuilder.equal(root.get("token"), token));
-        return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
+        return userRecoveryTokenRepository.existsByToken(token);
     }
 
     /**

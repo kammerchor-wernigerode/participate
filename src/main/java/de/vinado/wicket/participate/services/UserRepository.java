@@ -16,6 +16,11 @@ import java.util.Optional;
 public interface UserRepository extends CrudRepository<User, Long> {
 
     /**
+     * @return list of all active users
+     */
+    List<User> findAll();
+
+    /**
      * Retrieves all users where the given username matches partially.
      *
      * @param username the username which have to match partially
