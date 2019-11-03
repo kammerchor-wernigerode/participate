@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.services;
 
-import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.service.EmailService;
@@ -14,7 +13,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.wicket.request.Url;
 import org.apache.wicket.util.string.Strings;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,23 +21,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -93,18 +80,6 @@ public class UserService {
         loadedUser.setAdmin(dto.getUser().isAdmin());
         loadedUser.setEnabled(dto.getUser().isEnabled());
         return userRepository.save(loadedUser);
-    }
-
-    /**
-     * Removes the user.
-     *
-     * @param user the user to be removed
-     */
-    @Transactional
-    public void removeUser(User user) {
-        User loadedUser = userRepository.findById(user.getId()).orElseThrow(NoResultException::new);
-        loadedUser.setActive(false);
-        userRepository.save(loadedUser);
     }
 
     /**
@@ -243,69 +218,6 @@ public class UserService {
     }
 
     /**
-     * Initializes a password recovery.
-     *
-     * @param login   either username or email address of the user to start the password recovery for
-     * @param initial whether the user is asked to set a password after registration ({@code true}) or the user lost his
-     *                password wants to reset the password ({@code false})
-     * @throws NoResultException in case the user could not be found
-     */
-    @Deprecated
-    @Transactional
-    public void startPasswordReset(String login, boolean initial) throws NoResultException {
-        try {
-            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-            Root<User> root = criteriaQuery.from(User.class);
-            Join<User, Person> personJoin = root.join("person", JoinType.LEFT);
-            Predicate forUsername = criteriaBuilder.equal(root.get("username"), login);
-            Expression<String> emailExpr = criteriaBuilder.lower(personJoin.get("email"));
-            Predicate forEmail = criteriaBuilder.equal(emailExpr, login.toLowerCase());
-            criteriaQuery.where(criteriaBuilder.or(forUsername, forEmail));
-            User user = entityManager.createQuery(criteriaQuery).getSingleResult();
-            Person person = user.getPerson();
-
-            ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
-            String applicationName = ParticipateApplication.get().getApplicationName();
-            int validDuration = initial ? 30 : 7;
-            UserRecoveryToken token = createUserRecoveryToken(user, validDuration);
-
-            Url baseUrl = ParticipateApplication.get().getRequestedUrl();
-            List<String> urlSegments = new ArrayList<>();
-            urlSegments.add("resetPassword");
-            Url passwordRecoveryLink = new Url();
-            passwordRecoveryLink.setProtocol(baseUrl.getProtocol());
-            passwordRecoveryLink.setHost(baseUrl.getHost());
-            if (80 != baseUrl.getPort() && 443 != baseUrl.getPort())
-                passwordRecoveryLink.setPort(baseUrl.getPort());
-            passwordRecoveryLink.concatSegments(urlSegments);
-            passwordRecoveryLink.setQueryParameter("token", token.getToken());
-
-            Email email = new Email() {
-                @Override
-                public Map<String, Object> getData(ApplicationProperties properties) {
-                    Map<String, Object> data = super.getData(properties);
-                    data.put("firstName", person.getFirstName());
-                    data.put("passwordRecoveryLink", passwordRecoveryLink.toString(Url.StringMode.FULL, StandardCharsets.UTF_8));
-                    data.put("validDuration", validDuration);
-                    return data;
-                }
-            };
-            email.setFrom(properties.getMail().getSender(), applicationName);
-            email.addTo(person.getEmail(), person.getDisplayName());
-            email.setSubject(initial ? "Konto aktivieren" : "Passwort zurücksetzen");
-
-            if (initial) {
-                emailService.send(email, "newUser-txt.ftl", "newUser-html.ftl");
-            } else {
-                emailService.send(email, "passwordReset-txt.ftl", "passwordReset-html.ftl");
-            }
-        } catch (UnsupportedEncodingException e) {
-            log.error("Encoding is not supported", e);
-        }
-    }
-
-    /**
      * Initializes the user registration process. An email will be sent to the given user requesting to set his password
      * within 30 days to be able to login.
      *
@@ -413,13 +325,6 @@ public class UserService {
         } catch (UnsupportedEncodingException e) {
             log.error("Encoding is not supported", e);
         }
-    }
-
-    /**
-     * @return list of all users
-     */
-    public List<User> getAll() {
-        return getAll(User.class);
     }
 
     /**
