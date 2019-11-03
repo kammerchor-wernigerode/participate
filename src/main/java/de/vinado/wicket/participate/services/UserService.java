@@ -18,6 +18,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.util.string.Strings;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -33,6 +34,10 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +53,16 @@ import java.util.Map;
 @Setter(value = AccessLevel.PROTECTED, onMethod = @__(@Autowired))
 public class UserService extends DataService {
 
+    private UserRepository userRepository;
+    private UserRecoveryTokenRepository userRecoveryTokenRepository;
+
     private PersonService personService;
     private EmailService emailService;
+    private ApplicationProperties applicationProperties;
+
+    @Setter(AccessLevel.NONE)
+    @Value("${spring.application.name:KCH Participate}")
+    private String applicationName;
 
     @Override
     @PersistenceContext
@@ -285,6 +298,7 @@ public class UserService extends DataService {
      *                password wants to reset the password ({@code false})
      * @throws NoResultException in case the user could not be found
      */
+    @Deprecated
     @Transactional
     public void startPasswordReset(String login, boolean initial) throws NoResultException {
         try {
@@ -340,6 +354,78 @@ public class UserService extends DataService {
     }
 
     /**
+     * Initializes the user registration process. An email will be sent to the given user requesting to set his password
+     * within 30 days to be able to login.
+     *
+     * @param user    the user to send the registration email to
+     * @param subject the subject of the registration email
+     */
+    @Transactional
+    public void initializeUserRegistration(User user, String subject) {
+        final int validityDuration = 30;
+        UserRecoveryToken token = createUserRecoveryToken(user, validityDuration);
+        Email email = preparePasswordReset(token, validityDuration, subject);
+        emailService.send(email, "newUser-txt.ftl", "newUser-html.ftl");
+    }
+
+    /**
+     * Initializes the user password recovery process. An email will be sent to the given email address, with a password
+     * reset link on which the user can change his password.
+     *
+     * @param login   the users login; {@code username} or {@code person.email}
+     * @param subject the subject of the recovery email
+     * @throws NoResultException in case the user could not be found for the given login
+     */
+    @Transactional
+    public void initializePasswordRecovery(String login, String subject) throws NoResultException {
+        final int validityDuration = 7;
+        User user = userRepository.findByLogin(login).orElseThrow(NoResultException::new);
+        UserRecoveryToken token = createUserRecoveryToken(user, validityDuration);
+        Email message = preparePasswordReset(token, validityDuration, subject);
+        emailService.send(message, "passwordReset-txt.ftl", "passwordReset-html.ftl");
+    }
+
+    /**
+     * Prepares the password reset MIME message
+     *
+     * @param token            the password reset token
+     * @param validityDuration the duration (days) in which the token is valid
+     * @param subject          the message's subject
+     * @return prepared password reset email
+     */
+    @Transactional
+    protected Email preparePasswordReset(UserRecoveryToken token, int validityDuration, String subject) {
+        try {
+            URL baseUrl = new URL(applicationProperties.getBaseUrl());
+            URI recoveryUri = new URI(baseUrl.getProtocol(), null, baseUrl.getHost(), baseUrl.getPort(),
+                "/resetPassword", String.format("token=%s", token.getToken()), null);
+
+            Person person = token.getUser().getPerson();
+            Email email = new Email() {
+                @Override
+                public Map<String, Object> getData(ApplicationProperties properties) {
+                    Map<String, Object> data = super.getData(properties);
+                    data.put("firstName", person.getFirstName());
+                    data.put("passwordRecoveryLink", recoveryUri.toString());
+                    data.put("validDuration", validityDuration);
+                    return data;
+                }
+            };
+            email.setFrom(applicationProperties.getMail().getSender(), applicationName);
+            email.addTo(person.getEmail(), person.getDisplayName());
+            email.setSubject(subject);
+
+            return email;
+        } catch (UnsupportedEncodingException e) {
+            log.error("Encountered unsupported character encoding", e);
+        } catch (URISyntaxException | MalformedURLException e) {
+            log.error("Encountered malformed URI/URL", e);
+        }
+
+        return null;
+    }
+
+    /**
      * Finishes the password recovery process. A success email will be sent to the user afterwards.
      *
      * @param recoveryToken    the user's recovery token
@@ -349,21 +435,13 @@ public class UserService extends DataService {
     @Transactional
     public void finishPasswordReset(String recoveryToken, String newPlainPassword) throws NoResultException {
         try {
-            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<UserRecoveryToken> criteriaQuery = criteriaBuilder.createQuery(UserRecoveryToken.class);
-            Root<UserRecoveryToken> root = criteriaQuery.from(UserRecoveryToken.class);
-            Predicate forRecoveryToken = criteriaBuilder.equal(root.get("token"), recoveryToken);
-            criteriaQuery.where(criteriaBuilder.and(forRecoveryToken));
-            UserRecoveryToken token = entityManager.createQuery(criteriaQuery).getSingleResult();
-
+            UserRecoveryToken token = userRecoveryTokenRepository.findByToken(recoveryToken)
+                .orElseThrow(NoResultException::new);
             User user = token.getUser();
             user.setPasswordSha256(DigestUtils.sha256Hex(newPlainPassword));
-            save(user);
+            userRepository.save(user);
 
-            remove(token);
-
-            ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
-            String applicationName = ParticipateApplication.get().getApplicationName();
+            userRecoveryTokenRepository.delete(token);
 
             Person person = user.getPerson();
 
@@ -375,7 +453,7 @@ public class UserService extends DataService {
                     return data;
                 }
             };
-            email.setFrom(properties.getMail().getSender(), applicationName);
+            email.setFrom(applicationProperties.getMail().getSender(), applicationName);
             email.addTo(person.getEmail(), person.getDisplayName());
             email.setSubject("Dein Passwort wurde aktualisiert");
 
