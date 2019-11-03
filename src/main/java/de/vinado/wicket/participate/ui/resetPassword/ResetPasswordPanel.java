@@ -87,7 +87,8 @@ public class ResetPasswordPanel extends Panel {
         protected void onSubmit() {
             try {
                 IAuthenticationStrategy strategy = getApplication().getSecuritySettings().getAuthenticationStrategy();
-                userService.finishPasswordReset(getRecoveryToken(), getPassword());
+                userService.finishPasswordReset(getRecoveryToken(), getPassword(),
+                    getLocalizer().getString("account.reset.success", this, "Your password reset succeeded"));
                 strategy.remove();
                 getRequestCycle().setResponsePage(ParticipateApplication.get().getHomePage());
             } catch (NoResultException e) {

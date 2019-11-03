@@ -292,12 +292,14 @@ public class UserService {
     /**
      * Finishes the password recovery process. A success email will be sent to the user afterwards.
      *
-     * @param recoveryToken    the user's recovery token
-     * @param newPlainPassword the new password to be saved
+     * @param recoveryToken       the user's recovery token
+     * @param newPlainPassword    the new password to be hashed and saved
+     * @param successEmailSubject the subject of the success email sent to the user
      * @throws NoResultException in case the token could not be removed
      */
     @Transactional
-    public void finishPasswordReset(String recoveryToken, String newPlainPassword) throws NoResultException {
+    public void finishPasswordReset(String recoveryToken, String newPlainPassword, String successEmailSubject)
+        throws NoResultException {
         try {
             UserRecoveryToken token = userRecoveryTokenRepository.findByToken(recoveryToken)
                 .orElseThrow(NoResultException::new);
@@ -308,7 +310,6 @@ public class UserService {
             userRecoveryTokenRepository.delete(token);
 
             Person person = user.getPerson();
-
             Email email = new Email() {
                 @Override
                 public Map<String, Object> getData(ApplicationProperties applicationProperties) {
@@ -319,11 +320,11 @@ public class UserService {
             };
             email.setFrom(applicationProperties.getMail().getSender(), applicationName);
             email.addTo(person.getEmail(), person.getDisplayName());
-            email.setSubject("Dein Passwort wurde aktualisiert");
+            email.setSubject(successEmailSubject);
 
             emailService.send(email, "passwordResetSuccess-txt.ftl", "passwordResetSuccess-html.ftl");
         } catch (UnsupportedEncodingException e) {
-            log.error("Encoding is not supported", e);
+            log.error("Encountered unsupported character encoding", e);
         }
     }
 
