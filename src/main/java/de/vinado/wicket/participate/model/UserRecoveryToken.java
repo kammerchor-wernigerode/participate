@@ -1,12 +1,11 @@
 package de.vinado.wicket.participate.model;
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,11 +24,9 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "user_rec_tokens")
-@Getter
-@Setter
-@NoArgsConstructor
-@ToString
-@EqualsAndHashCode
+@Where(clause = "valid_date > current_timestamp() or valid_date is null")
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserRecoveryToken implements Identifiable<Long> {
 
     @Id
