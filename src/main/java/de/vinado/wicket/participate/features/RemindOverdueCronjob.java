@@ -15,15 +15,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.Min;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static de.vinado.wicket.participate.common.DateUtils.convert;
 import static de.vinado.wicket.participate.features.RemindOverdueCronjob.Configuration.CRON_EXPRESSION;
 import static de.vinado.wicket.participate.features.RemindOverdueCronjob.Configuration.FEATURE_ENABLED;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -75,15 +74,6 @@ public class RemindOverdueCronjob {
         boolean future = new Date().before(startDate);
         boolean inScope = configuration.getOffset() >= DAYS.between(now, convert(startDate));
         return future && inScope;
-    }
-
-    /**
-     * Converts a {@link Date} into a {@link LocalDate}.
-     */
-    private static LocalDate convert(Date date) {
-        return Instant.ofEpochMilli(date.getTime())
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate();
     }
 
     /**

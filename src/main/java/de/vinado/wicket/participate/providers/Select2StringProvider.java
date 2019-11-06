@@ -1,38 +1,39 @@
 package de.vinado.wicket.participate.providers;
 
-import org.apache.wicket.util.string.Strings;
+import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
+import org.apache.logging.log4j.util.Supplier;
 import org.wicketstuff.select2.Response;
 import org.wicketstuff.select2.StringTextChoiceProvider;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 /**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
+ * Choice provider that recommends options from the list of provided choices.
+ *
+ * @author Vincent Nadoll
  */
+@RequiredArgsConstructor
 public class Select2StringProvider extends StringTextChoiceProvider {
 
-    private List<String> strings;
-
-    public Select2StringProvider(final List<String> strings) {
-        this.strings = strings;
-    }
+    private transient final Supplier<Collection<String>> choiceProvider;
 
     @Override
-    public void query(final String term, final int page, final Response<String> response) {
+    public void query(String term, int page, Response<String> response) {
+        Collection<String> choices = choiceProvider.get();
+
         if (Strings.isEmpty(term)) {
-            response.addAll(this.strings);
+            response.addAll(choices);
             return;
         }
 
-        final List<String> strings = new ArrayList<>();
-        for (String string : this.strings) {
-            if (!Strings.isEmpty(string) && string.toLowerCase().startsWith(term.toLowerCase()) && !string.equalsIgnoreCase(term)) {
-                strings.add(string);
-            }
-        }
-        strings.sort(String.CASE_INSENSITIVE_ORDER);
-        response.addAll(strings);
+        choices.stream()
+            .filter(Strings::isNotBlank)
+            .filter(s -> s.toLowerCase().startsWith(term.toLowerCase()))
+            .filter(s -> !s.equalsIgnoreCase(term))
+            .sorted(String.CASE_INSENSITIVE_ORDER)
+            .forEach(response::add);
+
         response.add(term);
     }
 }

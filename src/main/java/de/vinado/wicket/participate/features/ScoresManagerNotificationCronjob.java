@@ -31,9 +31,7 @@ import javax.validation.constraints.Pattern;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -43,6 +41,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.pivovarit.function.ThrowingFunction.sneaky;
+import static de.vinado.wicket.participate.common.DateUtils.convert;
 import static de.vinado.wicket.participate.features.ScoresManagerNotificationCronjob.Configuration.CRON_EXPRESSION;
 import static de.vinado.wicket.participate.features.ScoresManagerNotificationCronjob.Configuration.FEATURE_ENABLED;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -121,15 +120,6 @@ public class ScoresManagerNotificationCronjob {
         boolean future = new Date().before(startDate);
         boolean inScope = configuration.getOffset() >= DAYS.between(now, convert(startDate));
         return future && inScope;
-    }
-
-    /**
-     * Converts a {@link Date} into a {@link LocalDate}.
-     */
-    private static LocalDate convert(Date date) {
-        return Instant.ofEpochMilli(date.getTime())
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate();
     }
 
     /**

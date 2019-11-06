@@ -1,65 +1,54 @@
 package de.vinado.wicket.participate.providers;
 
-import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.services.PersonService;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.wicketstuff.select2.ChoiceProvider;
 import org.wicketstuff.select2.Response;
 
 import javax.mail.internet.InternetAddress;
-import javax.persistence.NoResultException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.pivovarit.function.ThrowingFunction.sneaky;
+
 /**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
+ * Provides a list of persons for a substring of their {@code email} address.
+ *
+ * @author Vincent Nadoll
  */
-@Slf4j
+@RequiredArgsConstructor
 public class Select2EmailAddressProvider extends ChoiceProvider<InternetAddress> {
 
-    private PersonService personService;
+    private static final String UTF_8 = StandardCharsets.UTF_8.name();
 
-    public Select2EmailAddressProvider(final PersonService personService) {
-        this.personService = personService;
-    }
+    private final PersonService personService;
 
     @Override
-    public String getDisplayValue(final InternetAddress address) {
+    public String getDisplayValue(InternetAddress address) {
         return address.toString();
     }
 
     @Override
-    public String getIdValue(final InternetAddress address) {
+    public String getIdValue(InternetAddress address) {
         return address.getAddress();
     }
 
     @Override
-    public void query(final String term, final int page, final Response<InternetAddress> response) {
-        response.addAll(personService.findPersons("%" + term + "%").stream().map(this::newInternetAddress).collect(Collectors.toList()));
+    public void query(String term, int page, Response<InternetAddress> response) {
+        personService.findPersons(term).stream()
+            .map(sneaky(person -> new InternetAddress(person.getEmail(), person.getDisplayName(), UTF_8)))
+            .forEach(response::add);
         response.setHasMore(false);
     }
 
     @Override
-    public Collection<InternetAddress> toChoices(final Collection<String> addresses) {
-        final ArrayList<Person> personList = new ArrayList<>();
-        for (String email : addresses) {
-            try {
-                personList.add(personService.retrievePerson(email));
-            } catch (NoResultException e) {
-                log.debug("Could not find person w/ email={}", email);
-            }
-        }
-        return personList.stream().map(this::newInternetAddress).collect(Collectors.toList());
-    }
-
-    private InternetAddress newInternetAddress(final Person person) {
-        try {
-            return new InternetAddress(person.getEmail(), person.getDisplayName(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return new InternetAddress();
-        }
+    public Collection<InternetAddress> toChoices(Collection<String> addresses) {
+        return addresses.stream()
+            .map(personService::retrievePerson)
+            .filter(Objects::nonNull)
+            .map(sneaky(person -> new InternetAddress(person.getEmail(), person.getDisplayName(), UTF_8)))
+            .collect(Collectors.toList());
     }
 }
