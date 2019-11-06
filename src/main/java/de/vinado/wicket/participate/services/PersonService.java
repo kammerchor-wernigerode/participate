@@ -1,7 +1,5 @@
 package de.vinado.wicket.participate.services;
 
-import de.vinado.wicket.participate.model.Event;
-import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.Voice;
@@ -36,11 +34,9 @@ import javax.persistence.criteria.Root;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.apache.commons.codec.CharEncoding.UTF_8;
 
 /**
  * This service takes care of persons and person related objects.
@@ -50,13 +46,14 @@ import static org.apache.commons.codec.CharEncoding.UTF_8;
 @Slf4j
 @Service
 @Setter(value = AccessLevel.PROTECTED, onMethod = @__(@Autowired))
-public class PersonService extends DataService {
+public class PersonService {
 
-    @Override
-    @PersistenceContext
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+    private static final String UTF_8 = StandardCharsets.UTF_8.name();
+
+    @Setter(onMethod = @__(@PersistenceContext))
+    private EntityManager entityManager;
+    private PersonRepository personRepository;
+    private SingerRepository singerRepository;
 
     /**
      * Creates a new person.
@@ -66,7 +63,8 @@ public class PersonService extends DataService {
      */
     @Transactional
     public Person createPerson(PersonDTO dto) {
-        return save(new Person(dto.getFirstName(), dto.getLastName(), dto.getEmail()));
+        Person person = new Person(dto.getFirstName(), dto.getLastName(), dto.getEmail());
+        return personRepository.save(person);
     }
 
     /**
@@ -74,14 +72,16 @@ public class PersonService extends DataService {
      *
      * @param dto the DTO of the person to be updated
      * @return the saved person
+     *
+     * @throws NoResultException in case the person to be saved could not be found
      */
     @Transactional
-    public Person savePerson(PersonDTO dto) {
-        Person loadedPerson = load(Person.class, dto.getPerson().getId());
+    public Person savePerson(PersonDTO dto) throws NoResultException {
+        Person loadedPerson = personRepository.findById(dto.getPerson().getId()).orElseThrow(NoResultException::new);
         loadedPerson.setFirstName(dto.getFirstName());
         loadedPerson.setLastName(dto.getLastName());
         loadedPerson.setEmail(dto.getEmail());
-        return save(loadedPerson);
+        return personRepository.save(loadedPerson);
     }
 
     /**
@@ -92,7 +92,8 @@ public class PersonService extends DataService {
      */
     @Transactional
     public Singer createSinger(SingerDTO dto) {
-        return save(new Singer(dto.getFirstName(), dto.getLastName(), dto.getEmail(), dto.getVoice()));
+        Singer singer = new Singer(dto.getFirstName(), dto.getLastName(), dto.getEmail(), dto.getVoice());
+        return singerRepository.save(singer);
     }
 
     /**
@@ -100,15 +101,17 @@ public class PersonService extends DataService {
      *
      * @param dto the DTO of the singer to be updated
      * @return the saved singer
+     *
+     * @throws NoResultException in case the singer to be saved could not be found
      */
     @Transactional
-    public Singer saveSinger(SingerDTO dto) {
-        Singer loadedSinger = load(Singer.class, dto.getSinger().getId());
+    public Singer saveSinger(SingerDTO dto) throws NoResultException {
+        Singer loadedSinger = singerRepository.findById(dto.getSinger().getId()).orElseThrow(NoResultException::new);
         loadedSinger.setFirstName(dto.getFirstName());
         loadedSinger.setLastName(dto.getLastName());
         loadedSinger.setEmail(dto.getEmail());
         loadedSinger.setVoice(dto.getVoice());
-        return save(loadedSinger);
+        return singerRepository.save(loadedSinger);
     }
 
     /**
@@ -118,9 +121,7 @@ public class PersonService extends DataService {
      */
     @Transactional
     public void removeSinger(Singer singer) {
-        Singer loadedSinger = load(Singer.class, singer.getId());
-        loadedSinger.setActive(false);
-        save(loadedSinger);
+        singerRepository.delete(singer);
     }
 
     /**
@@ -128,12 +129,7 @@ public class PersonService extends DataService {
      * @return {@code true} if the given email address is assigned to a person; {@code false} otherwise
      */
     public boolean hasPerson(String email) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        Root<Person> root = criteriaQuery.from(Person.class);
-        criteriaQuery.select(criteriaBuilder.count(root));
-        criteriaQuery.where(criteriaBuilder.equal(criteriaBuilder.lower(root.get("email")), email.toLowerCase()));
-        return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
+        return personRepository.existsByEmail(email);
     }
 
     /**
@@ -141,12 +137,7 @@ public class PersonService extends DataService {
      * @return {@code true} if a singer is assigned to a person; {@code false} otherwise
      */
     public boolean hasSinger(Person person) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        Root<Singer> root = criteriaQuery.from(Singer.class);
-        criteriaQuery.select(criteriaBuilder.count(root));
-        criteriaQuery.where(criteriaBuilder.equal(root.get("id"), person.getId()));
-        return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
+        return singerRepository.existsById(person.getId());
     }
 
     /**
@@ -154,12 +145,7 @@ public class PersonService extends DataService {
      * @return {@code true} if the given email address is assigned to a singer; {@code false} otherwise
      */
     public boolean hasSinger(String email) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        Root<Singer> root = criteriaQuery.from(Singer.class);
-        criteriaQuery.select(criteriaBuilder.count(root));
-        criteriaQuery.where(criteriaBuilder.equal(root.get("email"), email));
-        return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
+        return singerRepository.existsByEmail(email);
     }
 
     /**
@@ -167,9 +153,11 @@ public class PersonService extends DataService {
      *
      * @param id the ID of the person to retrieve
      * @return the person with the given ID
+     *
+     * @throws NoResultException in case the person could not be found
      */
-    public Person getPerson(Long id) {
-        return load(Person.class, id);
+    public Person getPerson(Long id) throws NoResultException {
+        return personRepository.findById(id).orElseThrow(NoResultException::new);
     }
 
     /**
@@ -181,12 +169,7 @@ public class PersonService extends DataService {
      * @throws NoResultException in case the person could not be found
      */
     public Person getPerson(String email) throws NoResultException {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Person> criteriaQuery = criteriaBuilder.createQuery(Person.class);
-        Root<Person> root = criteriaQuery.from(Person.class);
-        Predicate forEmail = criteriaBuilder.equal(root.get("email"), email);
-        criteriaQuery.where(forEmail);
-        return entityManager.createQuery(criteriaQuery).getSingleResult();
+        return personRepository.findByEmail(email).orElseThrow(NoResultException::new);
     }
 
     /**
@@ -194,9 +177,11 @@ public class PersonService extends DataService {
      *
      * @param id the ID of the singer to retrieve
      * @return the singer with the given ID
+     *
+     * @throws NoResultException in case the singer could not be found
      */
-    public Singer getSinger(Long id) {
-        return load(Singer.class, id);
+    public Singer getSinger(Long id) throws NoResultException {
+        return singerRepository.findById(id).orElseThrow(NoResultException::new);
     }
 
     /**
@@ -205,11 +190,7 @@ public class PersonService extends DataService {
      * @return list of singers
      */
     public List<Singer> getSingers() {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
-        Root<Singer> root = criteriaQuery.from(Singer.class);
-        criteriaQuery.where(forActive(criteriaBuilder, root));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        return singerRepository.findAll();
     }
 
     /**
@@ -221,11 +202,7 @@ public class PersonService extends DataService {
      * @throws NoResultException in case the singer could not be found
      */
     public Singer getSinger(Person person) throws NoResultException {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
-        Root<Singer> root = criteriaQuery.from(Singer.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("id"), person.getId()));
-        return entityManager.createQuery(criteriaQuery).getSingleResult();
+        return singerRepository.findById(person.getId()).orElseThrow(NoResultException::new);
     }
 
     /**
@@ -237,11 +214,7 @@ public class PersonService extends DataService {
      * @throws NoResultException in case the singer could not be found
      */
     public Singer getSinger(String email) throws NoResultException {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
-        Root<Singer> root = criteriaQuery.from(Singer.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("email"), email));
-        return entityManager.createQuery(criteriaQuery).getSingleResult();
+        return singerRepository.findByEmail(email).orElseThrow(NoResultException::new);
     }
 
     /**
@@ -251,29 +224,7 @@ public class PersonService extends DataService {
      * @return list of filtered persons
      */
     public List<Person> findPersons(String searchNameSubstring) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Person> criteriaQuery = criteriaBuilder.createQuery(Person.class);
-        Root<Person> root = criteriaQuery.from(Person.class);
-        Predicate forSearchParam = criteriaBuilder.like(
-            criteriaBuilder.lower(root.get("searchName")),
-            "%" + searchNameSubstring.toLowerCase().trim() + "%");
-        criteriaQuery.where(forSearchParam);
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    /**
-     * Retrieves singers attending the given event.
-     *
-     * @param event the event on which the singers attend
-     * @return list of attending singers
-     */
-    public List<Singer> getSingers(Event event) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
-        Root<Participant> root = criteriaQuery.from(Participant.class);
-        criteriaQuery.select(root.join("singer"));
-        criteriaQuery.where(criteriaBuilder.equal(root.get("event"), event));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        return personRepository.findAllBySearchNameLikeIgnoreCase(searchNameSubstring);
     }
 
     /**
@@ -283,14 +234,7 @@ public class PersonService extends DataService {
      * @return list of filtered singers
      */
     public List<Singer> findSingers(String searchNameSubstring) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
-        Root<Singer> root = criteriaQuery.from(Singer.class);
-        criteriaQuery.where(criteriaBuilder.like(
-            criteriaBuilder.lower(root.get("searchName")),
-            "%" + searchNameSubstring.toLowerCase() + "%"
-        ));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        return singerRepository.findAllBySearchNameLikeIgnoreCase(searchNameSubstring);
     }
 
     /**
@@ -305,7 +249,7 @@ public class PersonService extends DataService {
         }
 
         if (filter.isShowAll()) {
-            return getAll(Singer.class);
+            return singerRepository.findAll();
         }
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -338,7 +282,7 @@ public class PersonService extends DataService {
     @Transactional
     public void importPersons(FileUpload upload) {
         try {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(upload.getInputStream(), Charset.forName("UTF-8")));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(upload.getInputStream(), UTF_8));
             String line;
             while (null != (line = bufferedReader.readLine())) {
                 String[] personCSV = line.split(",");
@@ -368,13 +312,16 @@ public class PersonService extends DataService {
 
     /**
      * Handles the export of all singer entries from the database. The resulting CSV is separated by semicolon.
+     * <p>
+     * TODO move to controller
      *
      * @return {@link StringResourceStream}
      */
     public IResourceStream exportSingers() {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        IDataProvider<Singer> dataProvider = new SimpleDataProvider<Singer, String>(getAll(Singer.class)) {
+        List<Singer> singers = singerRepository.findAll();
+        IDataProvider<Singer> dataProvider = new SimpleDataProvider<Singer, String>(singers) {
             @Override
             public String getDefaultSort() {
                 return "lastName";

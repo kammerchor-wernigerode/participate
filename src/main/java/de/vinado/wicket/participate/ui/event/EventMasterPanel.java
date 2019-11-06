@@ -200,8 +200,9 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     FontAwesomeIconType.envelope) {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
-                        final List<InternetAddress> recipients = personService.getSingers(model.getObject())
+                        final List<InternetAddress> recipients = eventService.getParticipants(model.getObject())
                             .stream()
+                            .map(Participant::getSinger)
                             .map(sneaky(singer -> new InternetAddress(singer.getEmail(), singer.getDisplayName())))
                             .collect(Collectors.toList());
 
