@@ -295,26 +295,20 @@ public class EventService {
 
     /**
      * @param eventDetails the event details on which the successor is determined
-     * @return the succeeding event details
-     *
-     * @throws NoResultException in case the next event could not be found
+     * @return optional of the succeeding event details
      */
-    public EventDetails getSuccessor(EventDetails eventDetails) throws NoResultException {
-        // TODO Return optional
+    public Optional<EventDetails> getSuccessor(EventDetails eventDetails) {
         Date startDate = eventDetails.getStartDate();
-        return eventDetailsRepository.findFirstByStartDateAfter(startDate).orElseThrow(NoResultException::new);
+        return eventDetailsRepository.findFirstByStartDateAfter(startDate);
     }
 
     /**
      * @param eventDetails the event details on which the predecessor is determined
-     * @return the previous event details
-     *
-     * @throws NoResultException in case the previous event could not be found
+     * @return optional of the previous event details
      */
-    public EventDetails getPredecessor(EventDetails eventDetails) throws NoResultException {
-        // TODO Return optional
+    public Optional<EventDetails> getPredecessor(EventDetails eventDetails) {
         Date startDate = eventDetails.getStartDate();
-        return eventDetailsRepository.findFirstByStartDateBeforeOrderByStartDateDesc(startDate).orElseThrow(NoResultException::new);
+        return eventDetailsRepository.findFirstByStartDateBeforeOrderByStartDateDesc(startDate);
     }
 
     /**

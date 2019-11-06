@@ -30,7 +30,6 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import javax.persistence.NoResultException;
 import java.util.List;
 
 /**
@@ -66,15 +65,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         final BootstrapAjaxLink previousEventBtn = new BootstrapAjaxLink("previousEventBtn", Buttons.Type.Link) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                try {
-                    final EventDetails previousEvent = eventService.getPredecessor(model.getObject());
-                    ParticipateSession.get().setEvent(previousEvent);
-                    send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
-                    model.setObject(previousEvent);
-                    target.add(form);
-                } catch (NoResultException e) {
-                    log.debug("Could not find predecessor of event /w name={}", model.getObject().getName());
-                }
+                eventService.getPredecessor(model.getObject()).ifPresent(event -> setEvent(target, event));
             }
         };
         previousEventBtn.setOutputMarkupPlaceholderTag(true);
@@ -96,15 +87,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         final BootstrapAjaxLink nextEventBtn = new BootstrapAjaxLink("nextEventBtn", Buttons.Type.Link) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                try {
-                    final EventDetails nextEvent = eventService.getSuccessor(model.getObject());
-                    ParticipateSession.get().setEvent(nextEvent);
-                    send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
-                    model.setObject(nextEvent);
-                    target.add(form);
-                } catch (NoResultException e) {
-                    log.debug("Could not find successor of event /w name={}", model.getObject().getName());
-                }
+                eventService.getSuccessor(model.getObject()).ifPresent(event -> setEvent(target, event));
             }
         };
         nextEventBtn.setOutputMarkupPlaceholderTag(true);
@@ -156,6 +139,13 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         };
         listPanel.setOutputMarkupId(true);
         wmc.add(listPanel);
+    }
+
+    private void setEvent(AjaxRequestTarget target, EventDetails event) {
+        ParticipateSession.get().setEvent(event);
+        send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
+        model.setObject(event);
+        target.add(form);
     }
 
     @Override
