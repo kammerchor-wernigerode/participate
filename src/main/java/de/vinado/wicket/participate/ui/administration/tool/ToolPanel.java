@@ -8,11 +8,17 @@ import de.vinado.wicket.participate.behavoirs.AjaxDownload;
 import de.vinado.wicket.participate.components.links.BootstrapAjaxButton;
 import de.vinado.wicket.participate.components.panels.Collapsible;
 import de.vinado.wicket.participate.model.Event;
+import de.vinado.wicket.participate.model.Singer;
+import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
 import de.vinado.wicket.participate.services.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.export.CSVDataExporter;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.export.IExportableColumn;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -22,17 +28,23 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.io.ByteArrayOutputStream;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Slf4j
 public class ToolPanel extends Panel {
 
     @SuppressWarnings("unused")
@@ -136,7 +148,7 @@ public class ToolPanel extends Panel {
             final BootstrapAjaxButton exportBtn = new BootstrapAjaxButton("exportBtn", new ResourceModel("export", "Export"), Buttons.Type.Primary) {
                 @Override
                 protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-                    export.go(target, personService.exportSingers(), "singer-export.csv");
+                    export.go(target, csvResourceOf(personService.list()), "singer-export.csv");
                     target.add(exportForm);
                 }
 
@@ -157,6 +169,39 @@ public class ToolPanel extends Panel {
 
         public void setFile(final FileUpload file) {
             this.file = file;
+        }
+    }
+
+    /**
+     * Handles the export of all singer entries from the database. The resulting CSV is separated by semicolon.
+     *
+     * @return the singer CSV as resource stream
+     */
+    private static IResourceStream csvResourceOf(List<Singer> singers) {
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            IDataProvider<Singer> dataProvider = new SimpleDataProvider<Singer, String>(singers) {
+                @Override
+                public String getDefaultSort() {
+                    return "lastName";
+                }
+            };
+
+            List<IExportableColumn<Singer, ?>> columns = new ArrayList<>();
+            columns.add(new PropertyColumn<>(new ResourceModel("lastName", "Surname"), "lastName"));
+            columns.add(new PropertyColumn<>(new ResourceModel("firstName", "Given Name"), "firstName"));
+            columns.add(new PropertyColumn<>(new ResourceModel("email", "Email"), "email"));
+            columns.add(new PropertyColumn<>(new ResourceModel("voice", "Voice"), "voice"));
+
+            CSVDataExporter dataExporter = new CSVDataExporter();
+            dataExporter.setDelimiter(',');
+            dataExporter.setCharacterSet(StandardCharsets.UTF_8.name());
+            dataExporter.exportData(dataProvider, columns, outputStream);
+
+            byte[] data = outputStream.toByteArray();
+            return new StringResourceStream(new String(data));
+        } catch (IOException e) {
+            throw new WicketRuntimeException("Failed to export singer data", e);
         }
     }
 }

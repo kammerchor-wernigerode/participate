@@ -6,19 +6,10 @@ import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.PersonDTO;
 import de.vinado.wicket.participate.model.dtos.SingerDTO;
 import de.vinado.wicket.participate.model.filters.SingerFilter;
-import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.export.CSVDataExporter;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.export.IExportableColumn;
-import org.apache.wicket.markup.repeater.data.IDataProvider;
-import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.util.io.ByteArrayOutputStream;
-import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +26,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -49,8 +39,6 @@ import java.util.stream.Stream;
 @Service
 @Setter(value = AccessLevel.PROTECTED, onMethod = @__(@Autowired))
 public class PersonService {
-
-    private static final String UTF_8 = StandardCharsets.UTF_8.name();
 
     @Setter(onMethod = @__(@PersistenceContext))
     private EntityManager entityManager;
@@ -321,42 +309,5 @@ public class PersonService {
         }
 
         return true;
-    }
-
-    /**
-     * Handles the export of all singer entries from the database. The resulting CSV is separated by semicolon.
-     * <p>
-     * TODO move to controller
-     *
-     * @return {@link StringResourceStream}
-     */
-    public IResourceStream exportSingers() {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-        List<Singer> singers = singerRepository.findAll();
-        IDataProvider<Singer> dataProvider = new SimpleDataProvider<Singer, String>(singers) {
-            @Override
-            public String getDefaultSort() {
-                return "lastName";
-            }
-        };
-
-        List<IExportableColumn<Singer, ?>> columns = new ArrayList<>();
-        columns.add(new PropertyColumn<>(new ResourceModel("lastName", "Surname"), "lastName"));
-        columns.add(new PropertyColumn<>(new ResourceModel("firstName", "Given Name"), "firstName"));
-        columns.add(new PropertyColumn<>(new ResourceModel("email", "Email"), "email"));
-        columns.add(new PropertyColumn<>(new ResourceModel("voice", "Voice"), "voice"));
-        columns.add(new PropertyColumn<>(new ResourceModel("active", "Active"), "active"));
-
-        CSVDataExporter dataExporter = new CSVDataExporter();
-        dataExporter.setDelimiter(';');
-        dataExporter.setCharacterSet(UTF_8);
-        try {
-            dataExporter.exportData(dataProvider, columns, outputStream);
-        } catch (IOException e) {
-            log.error("Could not export data", e);
-        }
-
-        return new StringResourceStream(new String(outputStream.toByteArray()));
     }
 }
