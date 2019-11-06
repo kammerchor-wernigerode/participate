@@ -46,7 +46,7 @@ public class Select2EmailAddressProvider extends ChoiceProvider<InternetAddress>
         final ArrayList<Person> personList = new ArrayList<>();
         for (String email : addresses) {
             try {
-                personList.add(personService.getPerson(email));
+                personList.add(personService.retrievePerson(email));
             } catch (NoResultException e) {
                 log.debug("Could not find person w/ email={}", email);
             }

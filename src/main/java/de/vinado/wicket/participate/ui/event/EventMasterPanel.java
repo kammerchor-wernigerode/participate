@@ -73,7 +73,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
 
         ((Breadcrumb) getBreadCrumbModel()).setVisible(false);
 
-        eventListPanel = new BootstrapPanel<List<EventDetails>>("events", new CompoundPropertyModel<>(eventService.getUpcomingEventDetails()), new ResourceModel("overview", "Overview")) {
+        eventListPanel = new BootstrapPanel<List<EventDetails>>("events", new CompoundPropertyModel<>(eventService.listEventDetails()), new ResourceModel("overview", "Overview")) {
             @Override
             protected Panel newBodyPanel(final String id, final IModel<List<EventDetails>> model) {
                 return new EventsPanel(id, model);
@@ -111,7 +111,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
             eventView = detailsOf(event.get(), log::warn).get();
         } else {
             try {
-                eventView = eventService.getLatestEventDetails();
+                eventView = eventService.retrieveNextEventDetails();
             } catch (NoResultException e) {
                 log.debug("Next upcoming event doesn't exist");
             }
@@ -121,7 +121,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
             new ResourceModel("event", "Event")) {
             @Override
             protected void onConfigure() {
-                setVisible(eventService.hasUpcomingEvents());
+                setVisible(eventService.upcomingExist());
             }
 
             @Override
@@ -156,9 +156,9 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     FontAwesomeIconType.envelope_square) {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
-                        final List<Participant> participants = eventService.getParticipants(model.getObject(), false);
+                        final List<Participant> participants = eventService.listParticipants(model.getObject(), false);
 
-                        final int count = eventService.inviteParticipants(participants, organizer);
+                        final int count = eventService.invite(participants, organizer);
 
                         send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
                         Snackbar.show(target, "Einladung wurde an "
@@ -172,16 +172,16 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     @Override
                     protected void onClick(AjaxRequestTarget target) {
                         final Event event = model.getObject();
-                        if (eventService.hasParticipant(event)) {
+                        if (eventService.participantExist(event)) {
                             final BootstrapModal modal = ((ParticipatePage) getWebPage()).getModal();
                             modal.setContent(new BootstrapModalConfirmationPanel(modal,
                                 new ResourceModel("email.send.reminder", "Send Reminder"),
                                 new ResourceModel("email.send.reminder.question", "Some singers have already received an invitation. Should they be remembered?")) {
                                 @Override
                                 protected void onConfirm(AjaxRequestTarget target) {
-                                    final List<Participant> participants = eventService.getParticipants(model.getObject(), InvitationStatus.PENDING);
+                                    final List<Participant> participants = eventService.listParticipants(model.getObject(), InvitationStatus.PENDING);
 
-                                    final int count = eventService.inviteParticipants(participants, organizer);
+                                    final int count = eventService.invite(participants, organizer);
 
                                     send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
                                     Snackbar.show(target, "Erinnerung wurde an "
@@ -200,7 +200,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     FontAwesomeIconType.envelope) {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
-                        final List<InternetAddress> recipients = eventService.getParticipants(model.getObject())
+                        final List<InternetAddress> recipients = eventService.listParticipants(model.getObject())
                             .stream()
                             .map(Participant::getSinger)
                             .map(sneaky(singer -> new InternetAddress(singer.getEmail(), singer.getDisplayName())))
@@ -250,8 +250,8 @@ public class EventMasterPanel extends BreadCrumbPanel {
             final AjaxRequestTarget target = event.getTarget();
 
             try {
-                ParticipateSession.get().setEvent(eventService.getLatestEvent());
-                setDefaultModelObject(eventService.getLatestEventDetails());
+                ParticipateSession.get().setEvent(eventService.retrieveNextEvent());
+                setDefaultModelObject(eventService.retrieveNextEventDetails());
             } catch (NoResultException e) {
                 log.debug("Next upcoming event doesn't exist");
                 ParticipateSession.get().setEvent(null);
@@ -271,7 +271,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
      */
     private Optional<EventDetails> detailsOf(Event event, BiConsumer<String, String> severity) {
         try {
-            return Optional.ofNullable(eventService.getEventDetails(event));
+            return Optional.ofNullable(eventService.detailsOf(event));
         } catch (NoResultException e) {
             severity.accept("Could not find event details for event /w name={}", event.getName());
             return Optional.empty();

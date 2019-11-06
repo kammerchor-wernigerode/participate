@@ -65,7 +65,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         final BootstrapAjaxLink previousEventBtn = new BootstrapAjaxLink("previousEventBtn", Buttons.Type.Link) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                eventService.getPredecessor(model.getObject()).ifPresent(event -> setEvent(target, event));
+                eventService.predecessorOf(model.getObject()).ifPresent(event -> setEvent(target, event));
             }
         };
         previousEventBtn.setOutputMarkupPlaceholderTag(true);
@@ -87,7 +87,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         final BootstrapAjaxLink nextEventBtn = new BootstrapAjaxLink("nextEventBtn", Buttons.Type.Link) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                eventService.getSuccessor(model.getObject()).ifPresent(event -> setEvent(target, event));
+                eventService.successorOf(model.getObject()).ifPresent(event -> setEvent(target, event));
             }
         };
         nextEventBtn.setOutputMarkupPlaceholderTag(true);
@@ -117,7 +117,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
             new LoadableDetachableModel<List<Participant>>() {
                 @Override
                 protected List<Participant> load() {
-                    return eventService.getParticipants(model.getObject());
+                    return eventService.listParticipants(model.getObject());
                 }
             }, new PropertyModel<>(model, "name")) {
             @Override

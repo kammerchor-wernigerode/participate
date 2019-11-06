@@ -62,7 +62,7 @@ public class PersonService {
      * @return the created person
      */
     @Transactional
-    public Person createPerson(PersonDTO dto) {
+    public Person create(PersonDTO dto) {
         Person person = new Person(dto.getFirstName(), dto.getLastName(), dto.getEmail());
         return personRepository.save(person);
     }
@@ -76,7 +76,7 @@ public class PersonService {
      * @throws NoResultException in case the person to be saved could not be found
      */
     @Transactional
-    public Person savePerson(PersonDTO dto) throws NoResultException {
+    public Person save(PersonDTO dto) throws NoResultException {
         Person loadedPerson = personRepository.findById(dto.getPerson().getId()).orElseThrow(NoResultException::new);
         loadedPerson.setFirstName(dto.getFirstName());
         loadedPerson.setLastName(dto.getLastName());
@@ -91,7 +91,7 @@ public class PersonService {
      * @return the created singer
      */
     @Transactional
-    public Singer createSinger(SingerDTO dto) {
+    public Singer create(SingerDTO dto) {
         Singer singer = new Singer(dto.getFirstName(), dto.getLastName(), dto.getEmail(), dto.getVoice());
         return singerRepository.save(singer);
     }
@@ -105,7 +105,7 @@ public class PersonService {
      * @throws NoResultException in case the singer to be saved could not be found
      */
     @Transactional
-    public Singer saveSinger(SingerDTO dto) throws NoResultException {
+    public Singer save(SingerDTO dto) throws NoResultException {
         Singer loadedSinger = singerRepository.findById(dto.getSinger().getId()).orElseThrow(NoResultException::new);
         loadedSinger.setFirstName(dto.getFirstName());
         loadedSinger.setLastName(dto.getLastName());
@@ -120,7 +120,7 @@ public class PersonService {
      * @param singer the singer to be removed
      */
     @Transactional
-    public void removeSinger(Singer singer) {
+    public void delete(Singer singer) {
         singerRepository.delete(singer);
     }
 
@@ -128,7 +128,7 @@ public class PersonService {
      * @param email the person email to check
      * @return {@code true} if the given email address is assigned to a person; {@code false} otherwise
      */
-    public boolean hasPerson(String email) {
+    public boolean personExist(String email) {
         return personRepository.existsByEmail(email);
     }
 
@@ -136,7 +136,7 @@ public class PersonService {
      * @param person the person for which the singer should be checked
      * @return {@code true} if a singer is assigned to a person; {@code false} otherwise
      */
-    public boolean hasSinger(Person person) {
+    public boolean singerExist(Person person) {
         return singerRepository.existsById(person.getId());
     }
 
@@ -144,7 +144,7 @@ public class PersonService {
      * @param email the singer email to check
      * @return {@code true} if the given email address is assigned to a singer; {@code false} otherwise
      */
-    public boolean hasSinger(String email) {
+    public boolean singerExist(String email) {
         return singerRepository.existsByEmail(email);
     }
 
@@ -156,7 +156,7 @@ public class PersonService {
      *
      * @throws NoResultException in case the person could not be found
      */
-    public Person getPerson(Long id) throws NoResultException {
+    public Person retrievePerson(Long id) throws NoResultException {
         return personRepository.findById(id).orElseThrow(NoResultException::new);
     }
 
@@ -168,7 +168,7 @@ public class PersonService {
      *
      * @throws NoResultException in case the person could not be found
      */
-    public Person getPerson(String email) throws NoResultException {
+    public Person retrievePerson(String email) throws NoResultException {
         return personRepository.findByEmail(email).orElseThrow(NoResultException::new);
     }
 
@@ -180,7 +180,7 @@ public class PersonService {
      *
      * @throws NoResultException in case the singer could not be found
      */
-    public Singer getSinger(Long id) throws NoResultException {
+    public Singer retrieveSinger(Long id) throws NoResultException {
         return singerRepository.findById(id).orElseThrow(NoResultException::new);
     }
 
@@ -189,7 +189,7 @@ public class PersonService {
      *
      * @return list of singers
      */
-    public List<Singer> getSingers() {
+    public List<Singer> list() {
         return singerRepository.findAll();
     }
 
@@ -201,7 +201,7 @@ public class PersonService {
      *
      * @throws NoResultException in case the singer could not be found
      */
-    public Singer getSinger(Person person) throws NoResultException {
+    public Singer retrieveSinger(Person person) throws NoResultException {
         return singerRepository.findById(person.getId()).orElseThrow(NoResultException::new);
     }
 
@@ -213,7 +213,7 @@ public class PersonService {
      *
      * @throws NoResultException in case the singer could not be found
      */
-    public Singer getSinger(String email) throws NoResultException {
+    public Singer retrieveSinger(String email) throws NoResultException {
         return singerRepository.findByEmail(email).orElseThrow(NoResultException::new);
     }
 
@@ -243,9 +243,9 @@ public class PersonService {
      * @param filter the filter to apply to the singers
      * @return list of filtered singers
      */
-    public List<Singer> getFilteredSingerList(SingerFilter filter) {
+    public List<Singer> list(SingerFilter filter) {
         if (null == filter) {
-            return getSingers();
+            return list();
         }
 
         if (filter.isShowAll()) {
@@ -292,14 +292,14 @@ public class PersonService {
                     String lastName = personCSV[0];
                     String email = personCSV[2];
 
-                    if (!hasPerson(email)) {
+                    if (!personExist(email)) {
                         if (!Strings.isEmpty(firstName) && !Strings.isEmpty(lastName) && !Strings.isEmpty(email)) {
                             SingerDTO singerDTO = new SingerDTO();
                             singerDTO.setFirstName(firstName);
                             singerDTO.setLastName(lastName);
                             singerDTO.setEmail(email);
 
-                            Singer singer = createSinger(singerDTO);
+                            Singer singer = create(singerDTO);
 //                            eventService.getUpcomingEvents().forEach(event -> eventService.createParticipant(event, singer));
                         }
                     }

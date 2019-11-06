@@ -59,7 +59,7 @@ public class ParticipateSession extends AuthenticatedWebSession {
 
         String username = ParticipateSession.get().getUser().getUsername();
         try {
-            User user = userService.getUser(username);
+            User user = userService.retrieve(username);
             setUser(user);
         } catch (NoResultException e) {
             log.warn("Could not retrieve user w/ username={}", username);
@@ -73,7 +73,7 @@ public class ParticipateSession extends AuthenticatedWebSession {
     @Override
     protected boolean authenticate(final String usernameOrEmail, final String plainPassword) {
         try {
-            this.user = userService.getUser(usernameOrEmail, plainPassword);
+            this.user = userService.retrieve(usernameOrEmail, plainPassword);
             this.event = next();
             return true;
         } catch (NoResultException e) {
@@ -126,7 +126,7 @@ public class ParticipateSession extends AuthenticatedWebSession {
      */
     private Event next() {
         try {
-            return eventService.getLatestEvent();
+            return eventService.retrieveNextEvent();
         } catch (NoResultException e) {
             log.debug("Could not find next event");
             return null;

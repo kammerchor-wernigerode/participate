@@ -75,7 +75,7 @@ public class EventPanel extends BreadCrumbPanel {
         form = new Form("form") {
             @Override
             protected void onConfigure() {
-                dataProvider.set(eventService.getParticipants(model.getObject()));
+                dataProvider.set(eventService.listParticipants(model.getObject()));
             }
         };
         add(form);
@@ -99,7 +99,7 @@ public class EventPanel extends BreadCrumbPanel {
             new LoadableDetachableModel<List<Participant>>() {
                 @Override
                 protected List<Participant> load() {
-                    return eventService.getParticipants(model.getObject());
+                    return eventService.listParticipants(model.getObject());
                 }
             },
             new CompoundPropertyModel<>(new ParticipantFilter()), new PropertyModel<>(model, "event"), editable) {
@@ -164,9 +164,9 @@ public class EventPanel extends BreadCrumbPanel {
                         @Override
                         protected void onSaveSubmit(final IModel<ParticipantDTO> savedModel, final AjaxRequestTarget target) {
                             try {
-                                Participant participant = eventService.saveParticipant(savedModel.getObject());
-                                model.setObject(eventService.getEventDetails(participant.getEvent()));
-                                dataProvider.set(eventService.getParticipants(model.getObject()));
+                                Participant participant = eventService.save(savedModel.getObject());
+                                model.setObject(eventService.detailsOf(participant.getEvent()));
+                                dataProvider.set(eventService.listParticipants(model.getObject()));
                                 Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
                                 target.add(form);
                             } catch (NoResultException e) {
@@ -206,7 +206,7 @@ public class EventPanel extends BreadCrumbPanel {
                 final EventUpdateEvent updateEvent = (EventUpdateEvent) payload;
                 final AjaxRequestTarget target = updateEvent.getTarget();
                 final Event event = updateEvent.getEvent();
-                model.setObject(eventService.getEventDetails(event));
+                model.setObject(eventService.detailsOf(event));
                 target.add(form);
             } catch (NoResultException e) {
                 throw new WicketRuntimeException("Updated event must not be null", e);

@@ -98,7 +98,7 @@ public class FormSignInPage extends BasePage {
             // TODO Password authentication for persons, who are already a user
             try {
                 Singer singer = model.getObject().getSinger();
-                User user = userService.getUser(singer);
+                User user = userService.retrieve(singer);
 
                 if (user.isActive()) {
                     this.userPassword = user.getPasswordSha256();
@@ -177,7 +177,7 @@ public class FormSignInPage extends BasePage {
                         if (null == model.getObject()) {
                             return new ArrayList<>();
                         } else {
-                            return eventService.getParticipants(model.getObject().getSinger());
+                            return eventService.listParticipants(model.getObject().getSinger());
                         }
                     }
                 }, new ChoiceRenderer<>("event.name"));
@@ -236,7 +236,7 @@ public class FormSignInPage extends BasePage {
                         onAccept(model.getObject().getParticipant());
                     } else {
                         try {
-                            final Participant latest = eventService.getLatestParticipant(singer);
+                            final Participant latest = eventService.retrieveNextParticipant(singer);
                             strategy.save(latest.getToken(), password);
                             onAccept(latest);
                         } catch (NoResultException e) {
@@ -300,7 +300,7 @@ public class FormSignInPage extends BasePage {
      */
     private Participant getParticipant(String token) {
         try {
-            return eventService.getParticipant(token);
+            return eventService.retrieveParticipant(token);
         } catch (NoResultException e) {
             throw new WicketRuntimeException(String.format("Could not find participant /w token=%s", token), e);
         }

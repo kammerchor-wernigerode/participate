@@ -58,7 +58,7 @@ public class UserService {
      * @return the created user
      */
     @Transactional
-    public User createUser(AddUserDTO dto) {
+    public User create(AddUserDTO dto) {
         return userRepository.save(new User(dto.getUsername(), dto.getPassword(), false, true));
     }
 
@@ -71,7 +71,7 @@ public class UserService {
      * @throws NoResultException in case the user could not be found
      */
     @Transactional
-    public User saveUser(AddUserDTO dto) throws NoResultException {
+    public User save(AddUserDTO dto) throws NoResultException {
         User loadedUser = userRepository.findById(dto.getUser().getId()).orElseThrow(NoResultException::new);
         loadedUser.setUsername(dto.getUsername());
         if (!Strings.isEmpty(dto.getPassword())) {
@@ -97,14 +97,14 @@ public class UserService {
         Person person = dto.getPerson();
 
         if (null == person) {
-            if (personService.hasPerson(dto.getEmail())) {
-                person = personService.getPerson(dto.getEmail());
+            if (personService.personExist(dto.getEmail())) {
+                person = personService.retrievePerson(dto.getEmail());
             } else {
                 PersonDTO personDTO = new PersonDTO();
                 personDTO.setFirstName(dto.getFirstName());
                 personDTO.setLastName(dto.getLastName());
                 personDTO.setEmail(dto.getEmail());
-                person = personService.createPerson(personDTO);
+                person = personService.create(personDTO);
             }
         }
 
@@ -120,7 +120,7 @@ public class UserService {
      * @return the created recovery token
      */
     @Transactional
-    protected UserRecoveryToken createUserRecoveryToken(User user, int validDuration) {
+    protected UserRecoveryToken create(User user, int validDuration) {
         UserRecoveryToken token = new UserRecoveryToken(user, generateRecoveryToken(),
             DateTime.now().plusDays(validDuration).toDate());
         return userRecoveryTokenRepository.save(token);
@@ -131,7 +131,7 @@ public class UserService {
      *
      * @return a list of users
      */
-    public List<User> getUsers() {
+    public List<User> list() {
         return userRepository.findAll();
     }
 
@@ -151,7 +151,7 @@ public class UserService {
      * @param id the ID of the users to be retrieved
      * @return the user with the given ID
      */
-    public User getUser(Long id) {
+    public User retrieve(Long id) {
         return userRepository.findById(id).orElseThrow(NoResultException::new);
     }
 
@@ -163,7 +163,7 @@ public class UserService {
      *
      * @throws NoResultException in case the user could not be found
      */
-    public User getUser(String username) throws NoResultException {
+    public User retrieve(String username) throws NoResultException {
         return userRepository.findByUsername(username).orElseThrow(NoResultException::new);
     }
 
@@ -175,7 +175,7 @@ public class UserService {
      *
      * @throws NoResultException in case the user could not be found
      */
-    public User getUser(Person person) throws NoResultException {
+    public User retrieve(Person person) throws NoResultException {
         return userRepository.findByPerson(person).orElseThrow(NoResultException::new);
     }
 
@@ -188,7 +188,7 @@ public class UserService {
      *
      * @throws NoResultException in case the user could not be authenticated
      */
-    public User getUser(String login, String plainPassword) throws NoResultException {
+    public User retrieve(String login, String plainPassword) throws NoResultException {
         String password = DigestUtils.sha256Hex(plainPassword);
         return userRepository.authenticate(login, password).orElseThrow(NoResultException::new);
     }
@@ -197,7 +197,7 @@ public class UserService {
      * @param username the user's username to be checked for existence
      * @return {@code true} if a user exist for the given username; {@code false} otherwise
      */
-    public boolean hasUser(String username) {
+    public boolean exist(String username) {
         return userRepository.existsByUsername(username);
     }
 
@@ -205,7 +205,7 @@ public class UserService {
      * @param person the assigned person of the user to be checked for existence
      * @return {@code true} if a user with the assigned person exist; {@code false} otherwise
      */
-    public boolean hasUser(Person person) {
+    public boolean exist(Person person) {
         return userRepository.existsByPerson(person);
     }
 
@@ -213,7 +213,7 @@ public class UserService {
      * @param token the user's recovery token to be checked for existence
      * @return {@code true} if a user with the assigned recovery token exist; {@code false} otherwise
      */
-    public boolean hasUserRecoveryToken(String token) {
+    public boolean userRecoveryTokenExist(String token) {
         return userRecoveryTokenRepository.existsByToken(token);
     }
 
@@ -227,7 +227,7 @@ public class UserService {
     @Transactional
     public void initializeUserRegistration(User user, String subject) {
         final int validityDuration = 30;
-        UserRecoveryToken token = createUserRecoveryToken(user, validityDuration);
+        UserRecoveryToken token = create(user, validityDuration);
         Email email = preparePasswordReset(token, validityDuration, subject);
         emailService.send(email, "newUser-txt.ftl", "newUser-html.ftl");
     }
@@ -244,7 +244,7 @@ public class UserService {
     public void initializePasswordRecovery(String login, String subject) throws NoResultException {
         final int validityDuration = 7;
         User user = userRepository.findByLogin(login).orElseThrow(NoResultException::new);
-        UserRecoveryToken token = createUserRecoveryToken(user, validityDuration);
+        UserRecoveryToken token = create(user, validityDuration);
         Email message = preparePasswordReset(token, validityDuration, subject);
         emailService.send(message, "passwordReset-txt.ftl", "passwordReset-html.ftl");
     }
@@ -333,12 +333,12 @@ public class UserService {
      *
      * @return a new password recovery token
      *
-     * @see #hasUserRecoveryToken(String)
+     * @see #userRecoveryTokenExist(String)
      */
     private String generateRecoveryToken() {
         String recoveryToken = RandomStringUtils.randomAlphanumeric(20);
 
-        if (hasUserRecoveryToken(recoveryToken)) {
+        if (userRecoveryTokenExist(recoveryToken)) {
             return generateRecoveryToken();
         } else {
             return recoveryToken;

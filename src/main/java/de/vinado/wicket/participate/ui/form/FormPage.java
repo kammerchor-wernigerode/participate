@@ -58,7 +58,7 @@ public class FormPage extends BasePage {
         final String token = parameters.get("token").to(String.class);
         if (null == model.getObject()) {
             try {
-                model.setObject(eventService.getParticipant(token));
+                model.setObject(eventService.retrieveParticipant(token));
                 this.model = model;
                 setDefaultModel(this.model);
             } catch (NoResultException e) {
@@ -92,7 +92,7 @@ public class FormPage extends BasePage {
         add(breadcrumb);
 
         try {
-            EventDetails details = eventService.getEventDetails(model.getObject().getEvent());
+            EventDetails details = eventService.detailsOf(model.getObject().getEvent());
             final EventPanel eventPanel = new EventPanel("eventPanel", breadcrumb, new CompoundPropertyModel<>(details), false);
             add(eventPanel);
         } catch (NoResultException e) {

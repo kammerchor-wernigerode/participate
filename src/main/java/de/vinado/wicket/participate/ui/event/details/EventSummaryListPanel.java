@@ -75,7 +75,7 @@ public class EventSummaryListPanel extends Panel {
             new LoadableDetachableModel<List<Participant>>() {
                 @Override
                 protected List<Participant> load() {
-                    return eventService.getParticipants(ParticipateSession.get().getEvent());
+                    return eventService.listParticipants(ParticipateSession.get().getEvent());
                 }
             }, new CompoundPropertyModel<>(new DetailedParticipantFilter()), editable) {
             @Override
@@ -178,11 +178,11 @@ public class EventSummaryListPanel extends Panel {
                         @Override
                         protected void onSaveSubmit(final IModel<ParticipantDTO> savedModel, final AjaxRequestTarget target) {
                             try {
-                                final Participant savedParticipant = eventService.saveParticipant(savedModel.getObject());
-                                final EventDetails savedEventDetails = eventService.getEventDetails(savedParticipant.getEvent());
+                                final Participant savedParticipant = eventService.save(savedModel.getObject());
+                                final EventDetails savedEventDetails = eventService.detailsOf(savedParticipant.getEvent());
 
                                 send(getWebPage(), Broadcast.BREADTH, new EventSummaryUpdateEvent(savedEventDetails, target));
-                                dataProvider.set(eventService.getParticipants(event));
+                                dataProvider.set(eventService.listParticipants(event));
                                 target.add(dataTable);
                                 Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
                             } catch (NoResultException e) {
@@ -224,7 +224,7 @@ public class EventSummaryListPanel extends Panel {
         }
 
         if (payload instanceof AjaxUpdateEvent) {
-            dataProvider.set(eventService.getParticipants(ParticipateSession.get().getEvent()));
+            dataProvider.set(eventService.listParticipants(ParticipateSession.get().getEvent()));
             ((AjaxUpdateEvent) payload).getTarget().add(dataTable);
         }
     }

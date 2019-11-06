@@ -82,7 +82,7 @@ public class ScoresManagerNotificationCronjob {
                 .map(sneaky(name -> new InternetAddress(scoresManagerEmail, name)))
                 .orElse(new InternetAddress(scoresManagerEmail));
 
-            final Stream<Email> emails = eventService.getUpcomingEvents()
+            final Stream<Email> emails = eventService.listEvents()
                 .stream()
                 .filter(this::filter)
                 .map(event -> prepare(event, recipient))
@@ -103,7 +103,7 @@ public class ScoresManagerNotificationCronjob {
      */
     private Optional<String> getScoresManagerName(String email) {
         try {
-            return Optional.ofNullable(personService.getPerson(email))
+            return Optional.ofNullable(personService.retrievePerson(email))
                 .map(Person::getDisplayName);
         } catch (NoResultException e) {
             log.debug("Score's manager's name could not be determined");
@@ -141,7 +141,7 @@ public class ScoresManagerNotificationCronjob {
      */
     private Email prepare(Event event, InternetAddress recipient) {
         try {
-            final List<Singer> attendees = eventService.getInvitedParticipants(event)
+            final List<Singer> attendees = eventService.listInvitedParticipants(event)
                 .stream()
                 .filter(Participant::isAccepted)
                 .map(Participant::getSinger)

@@ -45,7 +45,7 @@ public abstract class AddEditPersonPanel extends BootstrapModalPanel<PersonDTO> 
                     return false;
                 }
 
-                return personService.hasPerson(value);
+                return personService.personExist(value);
             }
         });
         inner.add(emailTf);
@@ -56,9 +56,9 @@ public abstract class AddEditPersonPanel extends BootstrapModalPanel<PersonDTO> 
     @Override
     protected void onSaveSubmit(final IModel<PersonDTO> model, final AjaxRequestTarget target) {
         if (edit) {
-            personService.savePerson(model.getObject());
+            personService.save(model.getObject());
         } else {
-            personService.createPerson(model.getObject());
+            personService.create(model.getObject());
         }
         onUpdate(target);
     }

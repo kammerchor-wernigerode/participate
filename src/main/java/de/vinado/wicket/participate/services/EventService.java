@@ -105,7 +105,7 @@ public class EventService {
      * @return created event
      */
     @Transactional
-    public Event createEvent(EventDTO dto) {
+    public Event create(EventDTO dto) {
         if (Strings.isEmpty(dto.getName())) {
             dto.setName(ParticipateUtils.getGenericEventName(dto));
         }
@@ -122,8 +122,8 @@ public class EventService {
         event = eventRepository.save(event);
 
         // Event to singer
-        for (Singer singer : personService.getSingers()) {
-            createParticipant(event, singer);
+        for (Singer singer : personService.list()) {
+            create(event, singer);
         }
 
         return event;
@@ -138,7 +138,7 @@ public class EventService {
      * @throws NoResultException in case the event could not be found
      */
     @Transactional
-    public Event saveEvent(EventDTO dto) throws NoResultException {
+    public Event save(EventDTO dto) throws NoResultException {
         Event loadedEvent = eventRepository.findById(dto.getEvent().getId()).orElseThrow(NoResultException::new);
 
         if (Strings.isEmpty(dto.getName())) {
@@ -163,7 +163,7 @@ public class EventService {
      * @param event the event to be removed
      */
     @Transactional
-    public void removeEvent(Event event) {
+    public void delete(Event event) {
         eventRepository.delete(event);
     }
 
@@ -175,7 +175,7 @@ public class EventService {
      * @return the created participant
      */
     @Transactional
-    public Participant createParticipant(Event event, Singer singer) {
+    public Participant create(Event event, Singer singer) {
         Participant participant = new Participant(event, singer, generateEventToken(20), InvitationStatus.UNINVITED);
         return participantRepository.save(participant);
     }
@@ -189,7 +189,7 @@ public class EventService {
     private String generateEventToken(int length) {
         String accessToken = RandomStringUtils.randomAlphanumeric(length);
 
-        if (hasToken(accessToken)) {
+        if (tokenExist(accessToken)) {
             return generateEventToken(length);
         } else {
             return accessToken;
@@ -205,7 +205,7 @@ public class EventService {
      * @throws NoResultException in case the participant could not be found
      */
     @Transactional
-    public Participant saveParticipant(ParticipantDTO dto) throws NoResultException {
+    public Participant save(ParticipantDTO dto) throws NoResultException {
         Participant loadedParticipant = participantRepository.findById(dto.getParticipant().getId()).orElseThrow(NoResultException::new);
         loadedParticipant.setInvitationStatus(dto.getInvitationStatus());
         loadedParticipant.setFromDate(dto.getFromDate());
@@ -225,9 +225,9 @@ public class EventService {
      * @throws NoResultException in case the participant to save could not be found
      */
     @Transactional
-    public Participant acceptEvent(ParticipantDTO dto) throws NoResultException {
+    public Participant accept(ParticipantDTO dto) throws NoResultException {
         dto.setInvitationStatus(InvitationStatus.ACCEPTED);
-        return saveParticipant(dto);
+        return save(dto);
     }
 
     /**
@@ -239,27 +239,27 @@ public class EventService {
      * @throws NoResultException in case the participant to save could not be found
      */
     @Transactional
-    public Participant declineEvent(ParticipantDTO dto) throws NoResultException {
+    public Participant decline(ParticipantDTO dto) throws NoResultException {
         dto.setInvitationStatus(InvitationStatus.DECLINED);
         dto.setFromDate(null);
         dto.setToDate(null);
         dto.setCatering(false);
         dto.setAccommodation(false);
-        return saveParticipant(dto);
+        return save(dto);
     }
 
     /**
      * @param token the participation token to check
      * @return {@code true} if the given token exist; {@code false} otherwise
      */
-    public boolean hasToken(String token) {
+    public boolean tokenExist(String token) {
         return participantRepository.existsByToken(token);
     }
 
     /**
      * @return {@code true} if an upcoming event exist; {@code false} otherwise
      */
-    public boolean hasUpcomingEvents() {
+    public boolean upcomingExist() {
         return !eventRepository.findAll().isEmpty();
     }
 
@@ -271,7 +271,7 @@ public class EventService {
      *
      * @throws NoResultException in case the participant could not be found
      */
-    public Participant getLatestParticipant(Singer singer) throws NoResultException {
+    public Participant retrieveNextParticipant(Singer singer) throws NoResultException {
         return participantRepository.findFirstBySingerOrderByEventStartDateAsc(singer).orElseThrow(NoResultException::new);
     }
 
@@ -280,7 +280,7 @@ public class EventService {
      *
      * @throws NoResultException in case an upcoming event doesn't exist
      */
-    public EventDetails getLatestEventDetails() throws NoResultException {
+    public EventDetails retrieveNextEventDetails() throws NoResultException {
         return eventDetailsRepository.findFirstBy().orElseThrow(NoResultException::new);
     }
 
@@ -289,7 +289,7 @@ public class EventService {
      *
      * @throws NoResultException in case an upcoming event doesn't exist
      */
-    public Event getLatestEvent() throws NoResultException {
+    public Event retrieveNextEvent() throws NoResultException {
         return eventRepository.findFirstByOrderByStartDateAsc().orElseThrow(NoResultException::new);
     }
 
@@ -297,7 +297,7 @@ public class EventService {
      * @param eventDetails the event details on which the successor is determined
      * @return optional of the succeeding event details
      */
-    public Optional<EventDetails> getSuccessor(EventDetails eventDetails) {
+    public Optional<EventDetails> successorOf(EventDetails eventDetails) {
         Date startDate = eventDetails.getStartDate();
         return eventDetailsRepository.findFirstByStartDateAfter(startDate);
     }
@@ -306,7 +306,7 @@ public class EventService {
      * @param eventDetails the event details on which the predecessor is determined
      * @return optional of the previous event details
      */
-    public Optional<EventDetails> getPredecessor(EventDetails eventDetails) {
+    public Optional<EventDetails> predecessorOf(EventDetails eventDetails) {
         Date startDate = eventDetails.getStartDate();
         return eventDetailsRepository.findFirstByStartDateBeforeOrderByStartDateDesc(startDate);
     }
@@ -314,21 +314,21 @@ public class EventService {
     /**
      * @return list of upcoming events
      */
-    public List<Event> getUpcomingEvents() {
+    public List<Event> listEvents() {
         return eventRepository.findAllByOrderByStartDateAsc();
     }
 
     /**
      * @return list of upcoming event details
      */
-    public List<EventDetails> getUpcomingEventDetails() {
+    public List<EventDetails> listEventDetails() {
         return eventDetailsRepository.findAll();
     }
 
     /**
      * @return list of previous event types
      */
-    public List<String> getEventTypes() {
+    public List<String> listEventTypes() {
         JdbcTemplate template = new SimpleJdbcCall(dataSource).getJdbcTemplate();
         return template.queryForList("SELECT * FROM v_event_types", String.class);
     }
@@ -336,7 +336,7 @@ public class EventService {
     /**
      * @return list of previous event locations
      */
-    public List<String> getLocationList() {
+    public List<String> listEventLocations() {
         JdbcTemplate template = new SimpleJdbcCall(dataSource).getJdbcTemplate();
         return template.queryForList("SELECT * FROM v_event_locations", String.class);
     }
@@ -347,7 +347,7 @@ public class EventService {
      * @param event the event for which the details should be fetched
      * @return the event details for the event
      */
-    public EventDetails getEventDetails(Event event) {
+    public EventDetails detailsOf(Event event) {
         return eventDetailsRepository.findById(event.getId()).get();
     }
 
@@ -357,7 +357,7 @@ public class EventService {
      * @param event the event for which the participants should be fetched
      * @return list of participants
      */
-    public List<Participant> getParticipants(Event event) {
+    public List<Participant> listParticipants(Event event) {
         return participantRepository.findAllByEventOrderBySingerLastNameAsc(event);
     }
 
@@ -367,7 +367,7 @@ public class EventService {
      * @param event the event for which the participants should be fetched
      * @return list of invited participants
      */
-    public List<Participant> getInvitedParticipants(Event event) {
+    public List<Participant> listInvitedParticipants(Event event) {
         return participantRepository.findAllByEventOrderBySingerLastNameAsc(event).parallelStream()
             .filter(participant -> !InvitationStatus.UNINVITED.equals(participant.getInvitationStatus()))
             .collect(Collectors.toList());
@@ -379,7 +379,7 @@ public class EventService {
      * @param event the event for which the participants should be fetched
      * @return list of uninvited participants
      */
-    public List<Participant> getUninvitedParticipants(Event event) {
+    public List<Participant> listUninvitedParticipants(Event event) {
         return participantRepository.findAllByEventOrderBySingerLastNameAsc(event).parallelStream()
             .filter(participant -> InvitationStatus.UNINVITED.equals(participant.getInvitationStatus()))
             .collect(Collectors.toList());
@@ -392,7 +392,7 @@ public class EventService {
      * @param invitationStatus the invitation for which the participants should be fetched
      * @return list of participants
      */
-    public List<Participant> getParticipants(Event event, InvitationStatus invitationStatus) {
+    public List<Participant> listParticipants(Event event, InvitationStatus invitationStatus) {
         return participantRepository.findAllByEventOrderBySingerLastNameAsc(event).parallelStream()
             .filter(participant -> participant.getInvitationStatus().equals(invitationStatus))
             .collect(Collectors.toList());
@@ -402,7 +402,7 @@ public class EventService {
      * @param event the event to check if a participant exists
      * @return {@code true} if an participant exist; {@code false} otherwise
      */
-    public boolean hasParticipant(Event event) {
+    public boolean participantExist(Event event) {
         return participantRepository.existsByEvent(event);
     }
 
@@ -414,7 +414,7 @@ public class EventService {
      *
      * @throws NoResultException in case the participant could not be found
      */
-    public Participant getParticipant(String token) throws NoResultException {
+    public Participant retrieveParticipant(String token) throws NoResultException {
         return participantRepository.findByToken(token).orElseThrow(NoResultException::new);
     }
 
@@ -424,7 +424,7 @@ public class EventService {
      * @param singer the singer for which all its participant should be fetched
      * @return list of participants
      */
-    public List<Participant> getParticipants(Singer singer) {
+    public List<Participant> listParticipants(Singer singer) {
         final Date now = new Date();
         return participantRepository.findAllBySinger(singer).parallelStream()
             .filter(participant -> participant.getEvent().isActive())
@@ -444,7 +444,7 @@ public class EventService {
      * @throws NoResultException in case the participant could not be found
      */
     @Transactional
-    public int inviteParticipants(List<Participant> participants, User organizer) throws NoResultException {
+    public int invite(List<Participant> participants, User organizer) throws NoResultException {
         Stream<Email> invitations = participants
             .stream()
             .map(sneaky(participant -> {
@@ -494,8 +494,8 @@ public class EventService {
      * @throws NoResultException in case the participant to invite could not be found
      */
     @Transactional
-    public void inviteParticipant(Participant participant, User organizer) throws NoResultException {
-        inviteParticipants(Collections.singletonList(participant), organizer);
+    public void invite(Participant participant, User organizer) throws NoResultException {
+        invite(Collections.singletonList(participant), organizer);
     }
 
     /**
@@ -552,9 +552,9 @@ public class EventService {
      * @param eventFilter the filter to apply to the event details
      * @return list of filtered event details
      */
-    public List<EventDetails> getFilteredEventDetails(EventFilter eventFilter) {
+    public List<EventDetails> listEventDetails(EventFilter eventFilter) {
         if (null == eventFilter) {
-            return getUpcomingEventDetails();
+            return listEventDetails();
         }
 
         if (eventFilter.isShowAll()) {
@@ -612,9 +612,9 @@ public class EventService {
      * @param filter the filter to apply to the participants
      * @return list of filtered participants
      */
-    public List<Participant> getFilteredParticipants(Event event, ParticipantFilter filter) {
+    public List<Participant> listParticipants(Event event, ParticipantFilter filter) {
         if (null == filter) {
-            return getParticipants(event);
+            return listParticipants(event);
         }
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -653,9 +653,9 @@ public class EventService {
      * @param filter the filter to apply to the participants
      * @return list of detailed filtered participants
      */
-    public List<Participant> getDetailedFilteredParticipants(Event event, DetailedParticipantFilter filter) {
+    public List<Participant> listParticipants(Event event, DetailedParticipantFilter filter) {
         if (null == filter) {
-            return getParticipants(event);
+            return listParticipants(event);
         }
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -719,8 +719,8 @@ public class EventService {
      * @param invited whether the participants are invited
      * @return list of participants
      */
-    public List<Participant> getParticipants(Event event, boolean invited) {
-        return invited ? getInvitedParticipants(event) : getUninvitedParticipants(event);
+    public List<Participant> listParticipants(Event event, boolean invited) {
+        return invited ? listInvitedParticipants(event) : listUninvitedParticipants(event);
     }
 
     /**
