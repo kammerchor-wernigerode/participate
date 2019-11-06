@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Polymorphism;
 import org.hibernate.annotations.PolymorphismType;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +23,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "singers")
 @Polymorphism(type = PolymorphismType.EXPLICIT)
+@Where(clause = "is_active = true")
 @Getter
 @Setter
 @NoArgsConstructor

@@ -12,6 +12,7 @@ import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.EventsPage;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -34,6 +35,7 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Slf4j
 public class EventSummaryPanel extends BreadCrumbPanel {
 
     @SpringBean
@@ -63,14 +65,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         final BootstrapAjaxLink previousEventBtn = new BootstrapAjaxLink("previousEventBtn", Buttons.Type.Link) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                final EventDetails previousEvent =
-                    eventService.getPredecessor(model.getObject());
-                if (null != previousEvent) {
-                    ParticipateSession.get().setEvent(previousEvent.getEvent());
-                    send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
-                    model.setObject(previousEvent);
-                    target.add(form);
-                }
+                eventService.predecessorOf(model.getObject()).ifPresent(event -> setEvent(target, event));
             }
         };
         previousEventBtn.setOutputMarkupPlaceholderTag(true);
@@ -92,13 +87,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         final BootstrapAjaxLink nextEventBtn = new BootstrapAjaxLink("nextEventBtn", Buttons.Type.Link) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                final EventDetails nextEvent = eventService.getSuccessor(model.getObject());
-                if (null != nextEvent) {
-                    ParticipateSession.get().setEvent(nextEvent.getEvent());
-                    send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
-                    model.setObject(nextEvent);
-                    target.add(form);
-                }
+                eventService.successorOf(model.getObject()).ifPresent(event -> setEvent(target, event));
             }
         };
         nextEventBtn.setOutputMarkupPlaceholderTag(true);
@@ -128,7 +117,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
             new LoadableDetachableModel<List<Participant>>() {
                 @Override
                 protected List<Participant> load() {
-                    return eventService.getParticipants(model.getObject().getEvent());
+                    return eventService.listParticipants(model.getObject());
                 }
             }, new PropertyModel<>(model, "name")) {
             @Override
@@ -150,6 +139,13 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         };
         listPanel.setOutputMarkupId(true);
         wmc.add(listPanel);
+    }
+
+    private void setEvent(AjaxRequestTarget target, EventDetails event) {
+        ParticipateSession.get().setEvent(event);
+        send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
+        model.setObject(event);
+        target.add(form);
     }
 
     @Override

@@ -40,7 +40,7 @@ public abstract class AddUserPanel extends BootstrapModalPanel<AddUserDTO> {
                     return false;
                 }
 
-                return userService.hasUser(value);
+                return userService.exist(value);
             }
         });
         inner.add(usernameTf);
@@ -49,7 +49,7 @@ public abstract class AddUserPanel extends BootstrapModalPanel<AddUserDTO> {
 
     @Override
     protected void onSaveSubmit(final IModel<AddUserDTO> model, final AjaxRequestTarget target) {
-        onConfirm(userService.createUser(model.getObject()), target);
+        onConfirm(userService.create(model.getObject()), target);
     }
 
     protected abstract void onConfirm(final User user, final AjaxRequestTarget target);

@@ -27,6 +27,7 @@ import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.EditInvitationPanel;
 import de.vinado.wicket.participate.ui.pages.BasePage;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
@@ -46,6 +47,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import javax.persistence.NoResultException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +75,7 @@ public class EventSummaryListPanel extends Panel {
             new LoadableDetachableModel<List<Participant>>() {
                 @Override
                 protected List<Participant> load() {
-                    return eventService.getParticipants(ParticipateSession.get().getEvent());
+                    return eventService.listParticipants(ParticipateSession.get().getEvent());
                 }
             }, new CompoundPropertyModel<>(new DetailedParticipantFilter()), editable) {
             @Override
@@ -175,13 +177,17 @@ public class EventSummaryListPanel extends Panel {
                     modal.setContent(new EditInvitationPanel(modal, new CompoundPropertyModel<>(participantDTO)) {
                         @Override
                         protected void onSaveSubmit(final IModel<ParticipantDTO> savedModel, final AjaxRequestTarget target) {
-                            final Participant savedParticipant = eventService.saveParticipant(savedModel.getObject());
-                            final EventDetails savedEventDetails = eventService.getEventDetails(savedParticipant.getEvent());
+                            try {
+                                final Participant savedParticipant = eventService.save(savedModel.getObject());
+                                final EventDetails savedEventDetails = eventService.detailsOf(savedParticipant.getEvent());
 
-                            send(getWebPage(), Broadcast.BREADTH, new EventSummaryUpdateEvent(savedEventDetails, target));
-                            dataProvider.set(eventService.getParticipants(event));
-                            target.add(dataTable);
-                            Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
+                                send(getWebPage(), Broadcast.BREADTH, new EventSummaryUpdateEvent(savedEventDetails, target));
+                                dataProvider.set(eventService.listParticipants(event));
+                                target.add(dataTable);
+                                Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
+                            } catch (NoResultException e) {
+                                throw new WicketRuntimeException("Saved participant's event must not be null", e);
+                            }
                         }
                     });
                     modal.show(target);
@@ -218,7 +224,7 @@ public class EventSummaryListPanel extends Panel {
         }
 
         if (payload instanceof AjaxUpdateEvent) {
-            dataProvider.set(eventService.getParticipants(ParticipateSession.get().getEvent()));
+            dataProvider.set(eventService.listParticipants(ParticipateSession.get().getEvent()));
             ((AjaxUpdateEvent) payload).getTarget().add(dataTable);
         }
     }

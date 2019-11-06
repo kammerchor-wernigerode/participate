@@ -90,19 +90,19 @@ public abstract class EditAccountPanel extends BootstrapModalPanel<EditAccountDT
             personDTO.setFirstName(modelObject.getFirstName());
             personDTO.setLastName(modelObject.getLastName());
             personDTO.setEmail(modelObject.getEmail());
-            personService.savePerson(personDTO);
+            personService.save(personDTO);
             if (null != modelObject.getSinger()) {
                 final Singer singer = modelObject.getSinger();
                 final SingerDTO singerDTO = new SingerDTO();
                 singerDTO.setVoice(modelObject.getVoice());
-                personService.saveSinger(singerDTO);
+                personService.save(singerDTO);
             }
         }
 
         final AddUserDTO userDTO = new AddUserDTO(modelObject.getUser());
         userDTO.setUsername(modelObject.getUsername());
         userDTO.setPassword(modelObject.getPassword());
-        onConfirm(userService.saveUser(userDTO), target);
+        onConfirm(userService.save(userDTO), target);
     }
 
     protected abstract void onConfirm(final User user, final AjaxRequestTarget target);

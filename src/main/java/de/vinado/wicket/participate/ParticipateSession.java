@@ -5,6 +5,7 @@ import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.Session;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
@@ -12,12 +13,15 @@ import org.apache.wicket.injection.Injector;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import javax.persistence.NoResultException;
+
 /**
  * Custom {@link AuthenticatedWebSession}. This class based on a username and password, and a method implementation that
  * gets the Roles.
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Slf4j
 public class ParticipateSession extends AuthenticatedWebSession {
 
     @SuppressWarnings("unused")
@@ -50,9 +54,17 @@ public class ParticipateSession extends AuthenticatedWebSession {
     }
 
     public void clearSessionData() {
-        setEvent(eventService.getLatestEvent());
         setEventFilter(new EventFilter());
-        setUser(userService.getUser(ParticipateSession.get().getUser().getUsername()));
+        setEvent(next());
+
+        String username = ParticipateSession.get().getUser().getUsername();
+        try {
+            User user = userService.retrieve(username);
+            setUser(user);
+        } catch (NoResultException e) {
+            log.warn("Could not retrieve user w/ username={}", username);
+            setUser(null);
+        }
     }
 
     /**
@@ -60,15 +72,14 @@ public class ParticipateSession extends AuthenticatedWebSession {
      */
     @Override
     protected boolean authenticate(final String usernameOrEmail, final String plainPassword) {
-        final User user = userService.getUser(usernameOrEmail, plainPassword);
-        if (null != user) {
-            this.user = user;
-            if (eventService.hasUpcomingEvents()) {
-                this.event = eventService.getLatestEvent();
-            }
-
+        try {
+            this.user = userService.retrieve(usernameOrEmail, plainPassword);
+            this.event = next();
             return true;
+        } catch (NoResultException e) {
+            log.info("Failed to authenticate for user={} and password=******", usernameOrEmail);
         }
+
         return false;
     }
 
@@ -108,5 +119,17 @@ public class ParticipateSession extends AuthenticatedWebSession {
 
     public void setEventFilter(final EventFilter eventFilter) {
         this.eventFilter = eventFilter;
+    }
+
+    /**
+     * @return the next upcoming event
+     */
+    private Event next() {
+        try {
+            return eventService.retrieveNextEvent();
+        } catch (NoResultException e) {
+            log.debug("Could not find next event");
+            return null;
+        }
     }
 }

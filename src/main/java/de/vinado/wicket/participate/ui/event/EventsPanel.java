@@ -85,8 +85,8 @@ public class EventsPanel extends Panel {
                 final AjaxLinkPanel selectEventLink = new AjaxLinkPanel(componentId, new PropertyModel<>(rowModel, getPropertyExpression())) {
                     @Override
                     public void onClick(final AjaxRequestTarget target) {
-                        ParticipateSession.get().setEvent(rowModel.getObject().getEvent());
-                        send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(rowModel.getObject().getEvent(), target));
+                        ParticipateSession.get().setEvent(rowModel.getObject());
+                        send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(rowModel.getObject(), target));
                         target.add(dataTable);
                     }
                 };
@@ -150,7 +150,7 @@ public class EventsPanel extends Panel {
         if (payload instanceof AjaxUpdateEvent) {
             final AjaxUpdateEvent updateEvent = (AjaxUpdateEvent) payload;
             final AjaxRequestTarget target = updateEvent.getTarget();
-            model.setObject(eventService.getUpcomingEventDetails());
+            model.setObject(eventService.listEventDetails());
             dataProvider.set(model.getObject());
             target.add(dataTable);
         }

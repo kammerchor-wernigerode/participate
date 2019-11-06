@@ -1,12 +1,12 @@
 package de.vinado.wicket.participate.model;
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +15,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -22,13 +24,22 @@ import javax.persistence.Table;
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@NamedQueries({
+    @NamedQuery(
+        name = "User.findByLogin",
+        query = "select u from User u left join u.person p where u.username = :login or p.email = upper(:login)"
+    ),
+    @NamedQuery(
+        name = "User.authenticate",
+        query = "select u from User u left join u.person p where (u.username = :login or p.email = upper(:login)) and u.passwordSha256 = :password"
+    )
+})
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
-@NoArgsConstructor
-@ToString
-@EqualsAndHashCode
+@Where(clause = "is_active = true")
+@SQLDelete(sql = "update users set is_active = false where id = ?")
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User implements Identifiable<Long>, Hideable {
 
     @Id

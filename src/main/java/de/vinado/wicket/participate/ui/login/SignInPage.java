@@ -5,6 +5,7 @@ import de.vinado.wicket.participate.components.panels.Collapsible;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.services.UserService;
 import de.vinado.wicket.participate.ui.pages.BasePage;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
@@ -19,6 +20,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 
+import javax.persistence.NoResultException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Slf4j
 public class SignInPage extends BasePage {
 
     @SuppressWarnings("unused")
@@ -67,13 +70,18 @@ public class SignInPage extends BasePage {
             final AjaxSubmitLink submitBtn = new AjaxSubmitLink("submit") {
                 @Override
                 protected void onSubmit(final AjaxRequestTarget target, final Form<?> inner) {
-                    if (Strings.isEmpty(model.getObject().getEmail())) {
+                    final String email = model.getObject().getEmail();
+
+                    if (Strings.isEmpty(email)) {
                         Snackbar.show(target, new ResourceModel("password.reset.email", "Enter your email address"));
                         return;
                     }
-                    if (userService.startPasswordReset(model.getObject().getEmail(), false)) {
+
+                    try {
+                        userService.initializePasswordRecovery(email, getLocalizer().getString("account.reset.password", this, "Password Reset"));
                         Snackbar.show(target, new ResourceModel("password.reset.success", "An email has been sent. Check your inbox."));
-                    } else {
+                    } catch (NoResultException e) {
+                        log.warn("Failed to initialize password recovery for user w/ person email={}", email);
                         Snackbar.show(target, new ResourceModel("email.send.error", "There was an error while sending the email"));
                     }
                 }

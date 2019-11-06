@@ -1,11 +1,9 @@
 package de.vinado.wicket.participate.model;
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,11 +30,8 @@ import static de.vinado.wicket.participate.model.InvitationStatus.UNINVITED;
  */
 @Entity
 @Table(name = "participants")
-@Getter
-@Setter
-@NoArgsConstructor
-@ToString
-@EqualsAndHashCode
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Participant implements Identifiable<Long> {
 
     @Id

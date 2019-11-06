@@ -24,7 +24,7 @@ public class EventServiceTest {
 
     private static final Date NOW = new Date();
 
-    private EventServiceImpl service;
+    private EventService service;
 
     @Before
     public void setUp() {
@@ -32,7 +32,10 @@ public class EventServiceTest {
         EmailService emailService = mock(EmailService.class);
         ApplicationProperties applicationProperties = mock(ApplicationProperties.class);
 
-        service = new EventServiceImpl(personService, emailService, applicationProperties);
+        service = new EventService();
+        service.setPersonService(personService);
+        service.setEmailService(emailService);
+        service.setApplicationProperties(applicationProperties);
 
         doReturn(13).when(applicationProperties).getDeadlineOffset();
     }

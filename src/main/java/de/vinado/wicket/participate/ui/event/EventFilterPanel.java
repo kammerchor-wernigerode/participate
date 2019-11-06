@@ -82,11 +82,11 @@ public abstract class EventFilterPanel extends AbstractTableFilterPanel<EventDet
 
     @Override
     public List<EventDetails> getFilteredData(final EventFilter filter) {
-        return eventService.getFilteredEventDetails(filter);
+        return eventService.listEventDetails(filter);
     }
 
     @Override
     public List<EventDetails> getDefaultData() {
-        return eventService.getUpcomingEventDetails();
+        return eventService.listEventDetails();
     }
 }

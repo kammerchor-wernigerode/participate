@@ -40,7 +40,7 @@ public class Select2SingerProvider extends ChoiceProvider<Singer> {
     public Collection<Singer> toChoices(Collection<String> ids) {
         return ids.stream()
             .map(Long::parseLong)
-            .map(personService::getSinger)
+            .map(personService::retrieveSinger)
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
     }

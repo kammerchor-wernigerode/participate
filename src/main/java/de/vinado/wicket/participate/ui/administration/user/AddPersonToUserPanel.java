@@ -108,7 +108,7 @@ public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDT
                     return false;
                 }
 
-                return personService.hasPerson(value);
+                return personService.personExist(value);
             }
         });
         wmc.add(emailTf);
@@ -130,7 +130,7 @@ public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDT
         personS2c.add(new ConditionalValidator<Person>(new ResourceModel("person.assign.error", "The person is already assigned to a user")) {
             @Override
             public boolean getCondition(final Person value) {
-                return userService.hasUser(value);
+                return userService.exist(value);
             }
         });
         inner.add(personS2c);

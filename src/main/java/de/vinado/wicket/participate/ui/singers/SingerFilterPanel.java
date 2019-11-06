@@ -53,11 +53,11 @@ public abstract class SingerFilterPanel extends AbstractTableFilterPanel<Singer,
 
     @Override
     public List<Singer> getFilteredData(final SingerFilter filter) {
-        return personService.getFilteredSingerList(filter);
+        return personService.list(filter);
     }
 
     @Override
     public List<Singer> getDefaultData() {
-        return personService.getSingers();
+        return personService.list();
     }
 }

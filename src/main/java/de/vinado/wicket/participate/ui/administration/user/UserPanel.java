@@ -19,6 +19,7 @@ import de.vinado.wicket.participate.model.dtos.PersonDTO;
 import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import de.vinado.wicket.participate.services.UserService;
 import de.vinado.wicket.participate.ui.pages.BasePage;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
@@ -33,12 +34,14 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Slf4j
 public class UserPanel extends Panel {
 
     @SpringBean
@@ -51,7 +54,7 @@ public class UserPanel extends Panel {
         super(id);
 
         final SimpleDataProvider<User, String> dataProvider =
-            new SimpleDataProvider<User, String>(userService.getAll()) {
+            new SimpleDataProvider<User, String>(userService.list()) {
                 @Override
                 public String getDefaultSort() {
                     return "id";
@@ -106,8 +109,8 @@ public class UserPanel extends Panel {
                                 protected void onConfirm(final AjaxRequestTarget target) {
                                     final AddUserDTO dto = new AddUserDTO(rowModel.getObject());
                                     dto.setPerson(null);
-                                    userService.saveUser(dto);
-                                    dataProvider.set(userService.getUsers());
+                                    userService.save(dto);
+                                    dataProvider.set(userService.list());
                                     target.add(dataTable);
                                 }
                             });
@@ -115,12 +118,15 @@ public class UserPanel extends Panel {
                             modal.setContent(new AddPersonToUserPanel(modal, new CompoundPropertyModel<>(new AddUserDTO(rowModel.getObject()))) {
                                 @Override
                                 protected void onConfirm(final User savedUser, final AjaxRequestTarget target) {
-                                    dataProvider.set(userService.getAll());
-                                    if (userService.startPasswordReset(savedUser.getPerson().getEmail(), true)) {
+                                    dataProvider.set(userService.list());
+                                    try {
+                                        userService.initializeUserRegistration(savedUser, getLocalizer().getString("account.activation", this, "Account Activation"));
                                         Snackbar.show(target, new ResourceModel("email.send.invitation.success", "An invitation has been sent"));
-                                    } else {
+                                    } catch (NoResultException e) {
+                                        log.warn("Failed to initialize password recovery for user w/ person email={}", savedUser.getPerson().getEmail());
                                         Snackbar.show(target, new ResourceModel("email.send.invitation.error", "There was an error sending the invitation"));
                                     }
+
                                     target.add(dataTable);
                                 }
                             });
@@ -148,7 +154,7 @@ public class UserPanel extends Panel {
                                 new CompoundPropertyModel<>(new PersonDTO(person))) {
                                 @Override
                                 protected void onUpdate(final AjaxRequestTarget target) {
-                                    dataProvider.set(userService.getAll());
+                                    dataProvider.set(userService.list());
                                     target.add(dataTable);
                                     Snackbar.show(target, new ResourceModel("person.edit.success", "The person was successfully edited"));
                                 }
@@ -174,7 +180,7 @@ public class UserPanel extends Panel {
                 modal.setContent(new AddUserPanel(modal, new CompoundPropertyModel<>(new AddUserDTO())) {
                     @Override
                     protected void onConfirm(final User user, final AjaxRequestTarget target) {
-                        dataProvider.set(userService.getAll());
+                        dataProvider.set(userService.list());
                         target.add(dataTable);
                         Snackbar.show(target, new ResourceModel("user.add.success", "A new user has been added"));
                     }

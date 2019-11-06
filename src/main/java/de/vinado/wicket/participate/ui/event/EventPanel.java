@@ -23,6 +23,7 @@ import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.pages.BasePage;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
@@ -46,6 +47,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 
+import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +75,7 @@ public class EventPanel extends BreadCrumbPanel {
         form = new Form("form") {
             @Override
             protected void onConfigure() {
-                dataProvider.set(eventService.getParticipants(model.getObject().getEvent()));
+                dataProvider.set(eventService.listParticipants(model.getObject()));
             }
         };
         add(form);
@@ -97,7 +99,7 @@ public class EventPanel extends BreadCrumbPanel {
             new LoadableDetachableModel<List<Participant>>() {
                 @Override
                 protected List<Participant> load() {
-                    return eventService.getParticipants(model.getObject().getEvent());
+                    return eventService.listParticipants(model.getObject());
                 }
             },
             new CompoundPropertyModel<>(new ParticipantFilter()), new PropertyModel<>(model, "event"), editable) {
@@ -161,10 +163,15 @@ public class EventPanel extends BreadCrumbPanel {
                     modal.setContent(new EditInvitationPanel(modal, new CompoundPropertyModel<>(new ParticipantDTO(rowModel.getObject()))) {
                         @Override
                         protected void onSaveSubmit(final IModel<ParticipantDTO> savedModel, final AjaxRequestTarget target) {
-                            model.setObject(eventService.getEventDetails(eventService.saveParticipant(savedModel.getObject()).getEvent()));
-                            dataProvider.set(eventService.getParticipants(model.getObject().getEvent()));
-                            Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
-                            target.add(form);
+                            try {
+                                Participant participant = eventService.save(savedModel.getObject());
+                                model.setObject(eventService.detailsOf(participant.getEvent()));
+                                dataProvider.set(eventService.listParticipants(model.getObject()));
+                                Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
+                                target.add(form);
+                            } catch (NoResultException e) {
+                                throw new WicketRuntimeException("Saved participant's event property must not be null", e);
+                            }
                         }
                     });
                     modal.show(target);
@@ -195,11 +202,15 @@ public class EventPanel extends BreadCrumbPanel {
         super.onEvent(iEvent);
         final Object payload = iEvent.getPayload();
         if (payload instanceof EventUpdateEvent) {
-            final EventUpdateEvent updateEvent = (EventUpdateEvent) payload;
-            final AjaxRequestTarget target = updateEvent.getTarget();
-            final Event event = updateEvent.getEvent();
-            model.setObject(eventService.getEventDetails(event));
-            target.add(form);
+            try {
+                final EventUpdateEvent updateEvent = (EventUpdateEvent) payload;
+                final AjaxRequestTarget target = updateEvent.getTarget();
+                final Event event = updateEvent.getEvent();
+                model.setObject(eventService.detailsOf(event));
+                target.add(form);
+            } catch (NoResultException e) {
+                throw new WicketRuntimeException("Updated event must not be null", e);
+            }
         }
 
         if (payload instanceof AjaxUpdateEvent) {
