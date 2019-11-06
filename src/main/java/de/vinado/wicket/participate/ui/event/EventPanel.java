@@ -75,7 +75,7 @@ public class EventPanel extends BreadCrumbPanel {
         form = new Form("form") {
             @Override
             protected void onConfigure() {
-                dataProvider.set(eventService.getParticipants(model.getObject().getEvent()));
+                dataProvider.set(eventService.getParticipants(model.getObject()));
             }
         };
         add(form);
@@ -99,7 +99,7 @@ public class EventPanel extends BreadCrumbPanel {
             new LoadableDetachableModel<List<Participant>>() {
                 @Override
                 protected List<Participant> load() {
-                    return eventService.getParticipants(model.getObject().getEvent());
+                    return eventService.getParticipants(model.getObject());
                 }
             },
             new CompoundPropertyModel<>(new ParticipantFilter()), new PropertyModel<>(model, "event"), editable) {
@@ -166,7 +166,7 @@ public class EventPanel extends BreadCrumbPanel {
                             try {
                                 Participant participant = eventService.saveParticipant(savedModel.getObject());
                                 model.setObject(eventService.getEventDetails(participant.getEvent()));
-                                dataProvider.set(eventService.getParticipants(model.getObject().getEvent()));
+                                dataProvider.set(eventService.getParticipants(model.getObject()));
                                 Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
                                 target.add(form);
                             } catch (NoResultException e) {

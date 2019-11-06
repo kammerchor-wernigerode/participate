@@ -137,7 +137,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
                 setDefaultBtnLabelModel(new ResourceModel("show.event.summary", "Show Event Summary"));
                 return new BreadCrumbPanelLink(id, breadCrumbModel, (IBreadCrumbPanelFactory) (componentId, breadCrumbModel1)
                     -> {
-                    EventDetails eventDetails = detailsOf(model.getObject().getEvent(), log::error)
+                    EventDetails eventDetails = detailsOf(model.getObject(), log::error)
                         .orElseThrow(() -> new WicketRuntimeException("Event must not be null"));
 
                     return new EventSummaryPanel(componentId, breadCrumbModel1, new CompoundPropertyModel<>(eventDetails),
@@ -158,7 +158,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     FontAwesomeIconType.envelope_square) {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
-                        final List<Participant> participants = eventService.getParticipants(model.getObject().getEvent(), false);
+                        final List<Participant> participants = eventService.getParticipants(model.getObject(), false);
 
                         final int count = eventService.inviteParticipants(participants, organizer);
 
@@ -173,7 +173,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     FontAwesomeIconType.exclamation) {
                     @Override
                     protected void onClick(AjaxRequestTarget target) {
-                        final Event event = model.getObject().getEvent();
+                        final Event event = model.getObject();
                         if (eventService.hasParticipant(event)) {
                             final BootstrapModal modal = ((ParticipatePage) getWebPage()).getModal();
                             modal.setContent(new BootstrapModalConfirmationPanel(modal,
@@ -181,7 +181,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
                                 new ResourceModel("email.send.reminder.question", "Some singers have already received an invitation. Should they be remembered?")) {
                                 @Override
                                 protected void onConfirm(AjaxRequestTarget target) {
-                                    final List<Participant> participants = eventService.getParticipants(model.getObject().getEvent(), InvitationStatus.PENDING);
+                                    final List<Participant> participants = eventService.getParticipants(model.getObject(), InvitationStatus.PENDING);
 
                                     final int count = eventService.inviteParticipants(participants, organizer);
 
@@ -202,7 +202,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     FontAwesomeIconType.envelope) {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
-                        final List<InternetAddress> recipients = personService.getSingers(model.getObject().getEvent())
+                        final List<InternetAddress> recipients = personService.getSingers(model.getObject())
                             .stream()
                             .map(sneaky(singer -> new InternetAddress(singer.getEmail(), singer.getDisplayName())))
                             .collect(Collectors.toList());
@@ -221,11 +221,11 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     protected void onClick(final AjaxRequestTarget target) {
                         final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                         modal.setContent(new AddEditEventPanel(modal, new ResourceModel("event.edit", "Edit Event"),
-                            new CompoundPropertyModel<>(new EventDTO(model.getObject().getEvent()))) {
+                            new CompoundPropertyModel<>(new EventDTO(model.getObject()))) {
                             @Override
                             public void onUpdate(final Event savedEvent, final AjaxRequestTarget target) {
                                 model.setObject(detailsOf(savedEvent, log::debug).get());
-                                ParticipateSession.get().setEvent(model.getObject().getEvent());
+                                ParticipateSession.get().setEvent(model.getObject());
                                 send(getPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
                                 Snackbar.show(target, new ResourceModel("event.edit.success", "The event was successfully edited"));
                             }

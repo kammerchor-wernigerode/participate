@@ -68,12 +68,12 @@ public class EventSummaryPanel extends BreadCrumbPanel {
             public void onClick(final AjaxRequestTarget target) {
                 try {
                     final EventDetails previousEvent = eventService.getPredecessor(model.getObject());
-                    ParticipateSession.get().setEvent(previousEvent.getEvent());
+                    ParticipateSession.get().setEvent(previousEvent);
                     send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
                     model.setObject(previousEvent);
                     target.add(form);
                 } catch (NoResultException e) {
-                    log.debug("Could not find predecessor of event /w name={}", model.getObject().getEvent().getName());
+                    log.debug("Could not find predecessor of event /w name={}", model.getObject().getName());
                 }
             }
         };
@@ -98,12 +98,12 @@ public class EventSummaryPanel extends BreadCrumbPanel {
             public void onClick(final AjaxRequestTarget target) {
                 try {
                     final EventDetails nextEvent = eventService.getSuccessor(model.getObject());
-                    ParticipateSession.get().setEvent(nextEvent.getEvent());
+                    ParticipateSession.get().setEvent(nextEvent);
                     send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
                     model.setObject(nextEvent);
                     target.add(form);
                 } catch (NoResultException e) {
-                    log.debug("Could not find successor of event /w name={}", model.getObject().getEvent().getName());
+                    log.debug("Could not find successor of event /w name={}", model.getObject().getName());
                 }
             }
         };
@@ -134,7 +134,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
             new LoadableDetachableModel<List<Participant>>() {
                 @Override
                 protected List<Participant> load() {
-                    return eventService.getParticipants(model.getObject().getEvent());
+                    return eventService.getParticipants(model.getObject());
                 }
             }, new PropertyModel<>(model, "name")) {
             @Override
