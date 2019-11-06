@@ -214,7 +214,7 @@ public class PersonService {
      * @return list of filtered persons
      */
     public List<Person> findPersons(String searchNameSubstring) {
-        return personRepository.findAllBySearchNameLikeIgnoreCase(searchNameSubstring);
+        return personRepository.findAllBySearchNameLikeIgnoreCase("%" + searchNameSubstring + "%");
     }
 
     /**
@@ -224,7 +224,7 @@ public class PersonService {
      * @return list of filtered singers
      */
     public List<Singer> findSingers(String searchNameSubstring) {
-        return singerRepository.findAllBySearchNameLikeIgnoreCase(searchNameSubstring);
+        return singerRepository.findAllBySearchNameLikeIgnoreCase("%" + searchNameSubstring + "%");
     }
 
     /**

@@ -142,7 +142,7 @@ public class UserService {
      * @return a list of filtered users
      */
     public List<User> findUsers(String usernameSubstring) {
-        return userRepository.findAllByUsernameLikeIgnoreCase(usernameSubstring);
+        return userRepository.findAllByUsernameLikeIgnoreCase("%" + usernameSubstring + "%");
     }
 
     /**
