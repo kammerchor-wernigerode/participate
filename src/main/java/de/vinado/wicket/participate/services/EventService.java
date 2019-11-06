@@ -487,18 +487,6 @@ public class EventService {
     }
 
     /**
-     * Sends an invitation to the given participant.
-     *
-     * @param participant the participant to invite
-     * @param organizer   the organizer
-     * @throws NoResultException in case the participant to invite could not be found
-     */
-    @Transactional
-    public void invite(Participant participant, User organizer) throws NoResultException {
-        invite(Collections.singletonList(participant), organizer);
-    }
-
-    /**
      * Creates a new iCal attachment for event invitations.
      *
      * @param event the event with information used in the attachment
