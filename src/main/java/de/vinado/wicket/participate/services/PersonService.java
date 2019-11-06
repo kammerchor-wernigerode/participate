@@ -10,10 +10,10 @@ import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.export.CSVDataExporter;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.export.IExportableColumn;
-import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.io.ByteArrayOutputStream;
@@ -33,10 +33,12 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * This service takes care of persons and person related objects.
@@ -274,40 +276,51 @@ public class PersonService {
     }
 
     /**
-     * Handles the import of a CSV file with entries of persons. The method need Wickets {@link FileUpload} component.
-     * The columns has to be separated through comma.
+     * Handles the import of a CSV file with entries of persons. Example: Nadoll,Vincent,me@vinado.de\n
      *
-     * @param upload the uploaded file
+     * @param input the CSV as input stream
      */
     @Transactional
-    public void importPersons(FileUpload upload) {
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(upload.getInputStream(), UTF_8));
-            String line;
-            while (null != (line = bufferedReader.readLine())) {
-                String[] personCSV = line.split(",");
-
-                if (personCSV.length == 3) {
-                    String firstName = personCSV[1];
-                    String lastName = personCSV[0];
-                    String email = personCSV[2];
-
-                    if (!personExist(email)) {
-                        if (!Strings.isEmpty(firstName) && !Strings.isEmpty(lastName) && !Strings.isEmpty(email)) {
-                            SingerDTO singerDTO = new SingerDTO();
-                            singerDTO.setFirstName(firstName);
-                            singerDTO.setLastName(lastName);
-                            singerDTO.setEmail(email);
-
-                            Singer singer = create(singerDTO);
-//                            eventService.getUpcomingEvents().forEach(event -> eventService.createParticipant(event, singer));
-                        }
-                    }
-                }
-            }
-        } catch (IOException e) {
-            log.error("Could not read from input file", e);
+    public Stream<Singer> importPersons(InputStream input) throws IOException {
+        try (BufferedReader buffer = new BufferedReader(new InputStreamReader(input))) {
+            return buffer.lines()
+                .map(line -> line.split(","))
+                .filter(columns -> columns.length == 3)
+                .filter(columns -> !personExist(columns[2]))
+                .filter(this::nonBlank)
+                .map(this::newSingerDto)
+                .map(this::create);
         }
+    }
+
+    /**
+     * Creates a new singer DTO from a stream array.
+     *
+     * @param columns the singer data as array: 0 = lastName, 1 = firstName, 2 = email address
+     * @return new singer DTO
+     */
+    private SingerDTO newSingerDto(final String[] columns) {
+        SingerDTO singerDTO = new SingerDTO();
+        singerDTO.setLastName(columns[0]);
+        singerDTO.setFirstName(columns[1]);
+        singerDTO.setEmail(columns[2]);
+        return singerDTO;
+    }
+
+    /**
+     * Ensures non array entry is {@literal null} or blank.
+     *
+     * @param strings the array to be checked
+     * @return {@code true} if non entry is blank; {@code false} otherwise
+     */
+    private boolean nonBlank(final String[] strings) {
+        for (String string : strings) {
+            if (StringUtils.isBlank(string)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

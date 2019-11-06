@@ -7,9 +7,11 @@ import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.behavoirs.AjaxDownload;
 import de.vinado.wicket.participate.components.links.BootstrapAjaxButton;
 import de.vinado.wicket.participate.components.panels.Collapsible;
+import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
 import de.vinado.wicket.participate.services.UserService;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
@@ -24,6 +26,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,7 +103,15 @@ public class ToolPanel extends Panel {
                 @Override
                 protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
                     if (null != file) {
-                        personService.importPersons(file);
+                        try {
+                            List<Event> events = eventService.listEvents();
+                            personService.importPersons(file.getInputStream())
+                                .forEach(singer -> events.parallelStream()
+                                    .forEach(event -> eventService.create(event, singer))
+                                );
+                        } catch (IOException e) {
+                            throw new WicketRuntimeException("Could not read from uploaded file", e);
+                        }
                     }
                 }
 
