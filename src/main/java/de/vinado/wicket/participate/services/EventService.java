@@ -11,7 +11,6 @@ import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
-import de.vinado.wicket.participate.model.Terminable;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
@@ -43,6 +42,8 @@ import org.apache.wicket.util.string.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,18 +53,20 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.sql.DataSource;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.pivovarit.function.ThrowingFunction.sneaky;
@@ -78,7 +81,14 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @Slf4j
 @Service
 @Setter(value = AccessLevel.PROTECTED, onMethod = @__(@Autowired))
-public class EventService extends DataService {
+public class EventService {
+
+    @Setter(onMethod = @__(@PersistenceContext))
+    private EntityManager entityManager;
+    private DataSource dataSource;
+    private EventRepository eventRepository;
+    private ParticipantRepository participantRepository;
+    private EventDetailsRepository eventDetailsRepository;
 
     private PersonService personService;
     private EmailService emailService;
@@ -87,12 +97,6 @@ public class EventService extends DataService {
     @Setter(AccessLevel.NONE)
     @Value("${spring.application.name:KCH Participate}")
     private String applicationName;
-
-    @Override
-    @PersistenceContext
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
 
     /**
      * Creates a new event.
@@ -115,7 +119,7 @@ public class EventService extends DataService {
             dto.getStartDate(),
             dto.getEndDate()
         );
-        event = save(event);
+        event = eventRepository.save(event);
 
         // Event to singer
         for (Singer singer : personService.getSingers()) {
@@ -130,10 +134,12 @@ public class EventService extends DataService {
      *
      * @param dto the DTO of the event to be updated
      * @return the saved event
+     *
+     * @throws NoResultException in case the event could not be found
      */
     @Transactional
-    public Event saveEvent(EventDTO dto) {
-        Event loadedEvent = load(Event.class, dto.getEvent().getId());
+    public Event saveEvent(EventDTO dto) throws NoResultException {
+        Event loadedEvent = eventRepository.findById(dto.getEvent().getId()).orElseThrow(NoResultException::new);
 
         if (Strings.isEmpty(dto.getName())) {
             dto.setName(ParticipateUtils.getGenericEventName(dto));
@@ -148,7 +154,7 @@ public class EventService extends DataService {
 
         // TODO Compare old and new and send notification if necessary
 
-        return save(loadedEvent);
+        return eventRepository.save(loadedEvent);
     }
 
     /**
@@ -158,9 +164,7 @@ public class EventService extends DataService {
      */
     @Transactional
     public void removeEvent(Event event) {
-        Event loadedEvent = load(Event.class, event.getId());
-        loadedEvent.setActive(false);
-        save(loadedEvent);
+        eventRepository.delete(event);
     }
 
     /**
@@ -173,7 +177,7 @@ public class EventService extends DataService {
     @Transactional
     public Participant createParticipant(Event event, Singer singer) {
         Participant participant = new Participant(event, singer, generateEventToken(20), InvitationStatus.UNINVITED);
-        return save(participant);
+        return participantRepository.save(participant);
     }
 
     /**
@@ -197,17 +201,19 @@ public class EventService extends DataService {
      *
      * @param dto the DTO of the participant to be updated
      * @return the saved participant
+     *
+     * @throws NoResultException in case the participant could not be found
      */
     @Transactional
-    public Participant saveParticipant(ParticipantDTO dto) {
-        Participant loadedParticipant = load(Participant.class, dto.getParticipant().getId());
+    public Participant saveParticipant(ParticipantDTO dto) throws NoResultException {
+        Participant loadedParticipant = participantRepository.findById(dto.getParticipant().getId()).orElseThrow(NoResultException::new);
         loadedParticipant.setInvitationStatus(dto.getInvitationStatus());
         loadedParticipant.setFromDate(dto.getFromDate());
         loadedParticipant.setToDate(dto.getToDate());
         loadedParticipant.setCatering(dto.isCatering());
         loadedParticipant.setAccommodation(dto.isAccommodation());
         loadedParticipant.setComment(dto.getComment());
-        return save(loadedParticipant);
+        return participantRepository.save(loadedParticipant);
     }
 
     /**
@@ -215,9 +221,11 @@ public class EventService extends DataService {
      *
      * @param dto the participant who accepts the invitation
      * @return the saved participant
+     *
+     * @throws NoResultException in case the participant to save could not be found
      */
     @Transactional
-    public Participant acceptEvent(ParticipantDTO dto) {
+    public Participant acceptEvent(ParticipantDTO dto) throws NoResultException {
         dto.setInvitationStatus(InvitationStatus.ACCEPTED);
         return saveParticipant(dto);
     }
@@ -227,9 +235,11 @@ public class EventService extends DataService {
      *
      * @param dto the participant who declines the invitation
      * @return the saved participant
+     *
+     * @throws NoResultException in case the participant to save could not be found
      */
     @Transactional
-    public Participant declineEvent(ParticipantDTO dto) {
+    public Participant declineEvent(ParticipantDTO dto) throws NoResultException {
         dto.setInvitationStatus(InvitationStatus.DECLINED);
         dto.setFromDate(null);
         dto.setToDate(null);
@@ -243,24 +253,14 @@ public class EventService extends DataService {
      * @return {@code true} if the given token exist; {@code false} otherwise
      */
     public boolean hasToken(String token) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        Root<Participant> root = criteriaQuery.from(Participant.class);
-        criteriaQuery.select(criteriaBuilder.count(root));
-        criteriaQuery.where(criteriaBuilder.equal(root.get("token"), token));
-        return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
+        return participantRepository.existsByToken(token);
     }
 
     /**
      * @return {@code true} if an upcoming event exist; {@code false} otherwise
      */
     public boolean hasUpcomingEvents() {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        Root<Event> root = criteriaQuery.from(Event.class);
-        criteriaQuery.select(criteriaBuilder.count(root));
-        criteriaQuery.where(forActive(criteriaBuilder, root), forUpcomingDate(criteriaBuilder, root));
-        return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
+        return !eventRepository.findAll().isEmpty();
     }
 
     /**
@@ -272,14 +272,7 @@ public class EventService extends DataService {
      * @throws NoResultException in case the participant could not be found
      */
     public Participant getLatestParticipant(Singer singer) throws NoResultException {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        Root<Participant> root = criteriaQuery.from(Participant.class);
-        Join<Participant, Event> eventJoin = root.join("event");
-        Predicate forSinger = criteriaBuilder.equal(root.get("singer"), singer);
-        criteriaQuery.where(forSinger, forUpcomingDate(criteriaBuilder, eventJoin), forActive(criteriaBuilder, eventJoin));
-        criteriaQuery.orderBy(criteriaBuilder.asc(eventJoin.get("startDate")));
-        return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
+        return participantRepository.findFirstBySingerOrderByEventStartDateAsc(singer).orElseThrow(NoResultException::new);
     }
 
     /**
@@ -288,11 +281,7 @@ public class EventService extends DataService {
      * @throws NoResultException in case an upcoming event doesn't exist
      */
     public EventDetails getLatestEventDetails() throws NoResultException {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
-        Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
-        criteriaQuery.where(forUpcomingDate(criteriaBuilder, root));
-        return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
+        return eventDetailsRepository.findFirstBy().orElseThrow(NoResultException::new);
     }
 
     /**
@@ -301,12 +290,7 @@ public class EventService extends DataService {
      * @throws NoResultException in case an upcoming event doesn't exist
      */
     public Event getLatestEvent() throws NoResultException {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Event> criteriaQuery = criteriaBuilder.createQuery(Event.class);
-        Root<Event> root = criteriaQuery.from(Event.class);
-        criteriaQuery.where(forUpcomingDate(criteriaBuilder, root));
-        criteriaQuery.orderBy(criteriaBuilder.asc(root.get("startDate")));
-        return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
+        return eventRepository.findFirstByOrderByStartDateAsc().orElseThrow(NoResultException::new);
     }
 
     /**
@@ -316,14 +300,9 @@ public class EventService extends DataService {
      * @throws NoResultException in case the next event could not be found
      */
     public EventDetails getSuccessor(EventDetails eventDetails) throws NoResultException {
-        Date startDate = load(EventDetails.class, eventDetails.getId()).getStartDate();
-
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
-        Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
-        Predicate forStartDate = criteriaBuilder.greaterThan(root.get("startDate"), startDate);
-        criteriaQuery.where(forUpcomingDate(criteriaBuilder, root), forStartDate);
-        return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
+        // TODO Return optional
+        Date startDate = eventDetails.getStartDate();
+        return eventDetailsRepository.findFirstByStartDateAfter(startDate).orElseThrow(NoResultException::new);
     }
 
     /**
@@ -333,63 +312,39 @@ public class EventService extends DataService {
      * @throws NoResultException in case the previous event could not be found
      */
     public EventDetails getPredecessor(EventDetails eventDetails) throws NoResultException {
-        Date startDate = load(EventDetails.class, eventDetails.getId()).getStartDate();
-
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
-        Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
-        Predicate forStartDate = criteriaBuilder.lessThan(root.get("startDate"), startDate);
-        criteriaQuery.where(forUpcomingDate(criteriaBuilder, root), forStartDate);
-        criteriaQuery.orderBy(criteriaBuilder.desc(root.get("startDate")));
-        return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
+        // TODO Return optional
+        Date startDate = eventDetails.getStartDate();
+        return eventDetailsRepository.findFirstByStartDateBeforeOrderByStartDateDesc(startDate).orElseThrow(NoResultException::new);
     }
 
     /**
      * @return list of upcoming events
      */
     public List<Event> getUpcomingEvents() {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Event> criteriaQuery = criteriaBuilder.createQuery(Event.class);
-        Root<Event> root = criteriaQuery.from(Event.class);
-        criteriaQuery.orderBy(criteriaBuilder.asc(root.<Event>get("startDate")));
-        criteriaQuery.where(forUpcomingDate(criteriaBuilder, root));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        return eventRepository.findAllByOrderByStartDateAsc();
     }
 
     /**
      * @return list of upcoming event details
      */
     public List<EventDetails> getUpcomingEventDetails() {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
-        Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
-        Join<EventDetails, Event> eventJoin = root.join("event");
-        criteriaQuery.where(forActive(criteriaBuilder, eventJoin), forUpcomingDate(criteriaBuilder, eventJoin));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        return eventDetailsRepository.findAll();
     }
 
     /**
      * @return list of previous event types
      */
     public List<String> getEventTypes() {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<String> criteriaQuery = criteriaBuilder.createQuery(String.class);
-        Root<Event> root = criteriaQuery.from(Event.class);
-        criteriaQuery.select(root.get("eventType"));
-        criteriaQuery.groupBy(root.<String>get("eventType"));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        JdbcTemplate template = new SimpleJdbcCall(dataSource).getJdbcTemplate();
+        return template.queryForList("SELECT * FROM v_event_types", String.class);
     }
 
     /**
      * @return list of previous event locations
      */
     public List<String> getLocationList() {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<String> criteriaQuery = criteriaBuilder.createQuery(String.class);
-        Root<Event> root = criteriaQuery.from(Event.class);
-        criteriaQuery.select(root.get("location"));
-        criteriaQuery.groupBy(root.<String>get("location"));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        JdbcTemplate template = new SimpleJdbcCall(dataSource).getJdbcTemplate();
+        return template.queryForList("SELECT * FROM v_event_locations", String.class);
     }
 
     /**
@@ -397,15 +352,9 @@ public class EventService extends DataService {
      *
      * @param event the event for which the details should be fetched
      * @return the event details for the event
-     *
-     * @throws NoResultException in case the event details could not be found
      */
-    public EventDetails getEventDetails(Event event) throws NoResultException {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
-        Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("event"), event));
-        return entityManager.createQuery(criteriaQuery).getSingleResult();
+    public EventDetails getEventDetails(Event event) {
+        return eventDetailsRepository.findById(event.getId()).get();
     }
 
     /**
@@ -415,12 +364,7 @@ public class EventService extends DataService {
      * @return list of participants
      */
     public List<Participant> getParticipants(Event event) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        Root<Participant> root = criteriaQuery.from(Participant.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.<Event>get("event"), event));
-        criteriaQuery.orderBy(criteriaBuilder.asc(root.join("singer").get("lastName")));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        return participantRepository.findAllByEventOrderBySingerLastNameAsc(event);
     }
 
     /**
@@ -430,14 +374,9 @@ public class EventService extends DataService {
      * @return list of invited participants
      */
     public List<Participant> getInvitedParticipants(Event event) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        Root<Participant> root = criteriaQuery.from(Participant.class);
-        Predicate forEvent = criteriaBuilder.equal(root.<Event>get("event"), event);
-        Predicate forInvitationStatus = criteriaBuilder.notEqual(root.get("invitationStatus"), InvitationStatus.UNINVITED);
-        criteriaQuery.where(forEvent, forInvitationStatus);
-        criteriaQuery.orderBy(criteriaBuilder.asc(root.join("singer").get("lastName")));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        return participantRepository.findAllByEventOrderBySingerLastNameAsc(event).parallelStream()
+            .filter(participant -> !InvitationStatus.UNINVITED.equals(participant.getInvitationStatus()))
+            .collect(Collectors.toList());
     }
 
     /**
@@ -447,7 +386,9 @@ public class EventService extends DataService {
      * @return list of uninvited participants
      */
     public List<Participant> getUninvitedParticipants(Event event) {
-        return getParticipants(event, InvitationStatus.UNINVITED);
+        return participantRepository.findAllByEventOrderBySingerLastNameAsc(event).parallelStream()
+            .filter(participant -> InvitationStatus.UNINVITED.equals(participant.getInvitationStatus()))
+            .collect(Collectors.toList());
     }
 
     /**
@@ -458,14 +399,9 @@ public class EventService extends DataService {
      * @return list of participants
      */
     public List<Participant> getParticipants(Event event, InvitationStatus invitationStatus) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        Root<Participant> root = criteriaQuery.from(Participant.class);
-        Predicate forEvent = criteriaBuilder.equal(root.<Event>get("event"), event);
-        Predicate forInvitationStatus = criteriaBuilder.equal(root.get("invitationStatus"), invitationStatus);
-        criteriaQuery.where(forEvent, forInvitationStatus);
-        criteriaQuery.orderBy(criteriaBuilder.asc(root.join("singer").get("lastName")));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        return participantRepository.findAllByEventOrderBySingerLastNameAsc(event).parallelStream()
+            .filter(participant -> participant.getInvitationStatus().equals(invitationStatus))
+            .collect(Collectors.toList());
     }
 
     /**
@@ -473,14 +409,7 @@ public class EventService extends DataService {
      * @return {@code true} if an participant exist; {@code false} otherwise
      */
     public boolean hasParticipant(Event event) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        Root<Participant> root = criteriaQuery.from(Participant.class);
-        Predicate forEvent = criteriaBuilder.equal(root.get("event"), event);
-        Predicate forInvited = criteriaBuilder.notEqual(root.get("invitationStatus"), InvitationStatus.UNINVITED);
-        criteriaQuery.select(criteriaBuilder.count(root));
-        criteriaQuery.where(forInvited, forEvent);
-        return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
+        return participantRepository.existsByEvent(event);
     }
 
     /**
@@ -492,11 +421,7 @@ public class EventService extends DataService {
      * @throws NoResultException in case the participant could not be found
      */
     public Participant getParticipant(String token) throws NoResultException {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        Root<Participant> root = criteriaQuery.from(Participant.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.<String>get("token"), token));
-        return entityManager.createQuery(criteriaQuery).getSingleResult();
+        return participantRepository.findByToken(token).orElseThrow(NoResultException::new);
     }
 
     /**
@@ -506,16 +431,13 @@ public class EventService extends DataService {
      * @return list of participants
      */
     public List<Participant> getParticipants(Singer singer) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        Root<Participant> root = criteriaQuery.from(Participant.class);
-        Predicate forSinger = criteriaBuilder.equal(root.get("singer"), singer);
-        Join<Participant, Event> eventJoin = root.join("event");
-        criteriaQuery.where(forSinger, forActive(criteriaBuilder, eventJoin), forUpcomingDate(criteriaBuilder, eventJoin));
-        criteriaQuery.orderBy(
-            criteriaBuilder.asc(eventJoin.get("startDate")),
-            criteriaBuilder.asc(root.join("singer").get("lastName")));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        final Date now = new Date();
+        return participantRepository.findAllBySinger(singer).parallelStream()
+            .filter(participant -> participant.getEvent().isActive())
+            .filter(participant -> participant.getEvent().getStartDate().after(now))
+            .sorted(Comparator.comparing(o -> o.getEvent().getStartDate()))
+            .sorted(Comparator.comparing(o -> o.getSinger().getLastName(), String.CASE_INSENSITIVE_ORDER))
+            .collect(Collectors.toList());
     }
 
     /**
@@ -524,9 +446,11 @@ public class EventService extends DataService {
      * @param participants the list of participant to invite
      * @param organizer    the organizer
      * @return the amount of sent emails
+     *
+     * @throws NoResultException in case the participant could not be found
      */
     @Transactional
-    public int inviteParticipants(List<Participant> participants, User organizer) {
+    public int inviteParticipants(List<Participant> participants, User organizer) throws NoResultException {
         Stream<Email> invitations = participants
             .stream()
             .map(sneaky(participant -> {
@@ -554,9 +478,10 @@ public class EventService extends DataService {
                 email.setAttachments(Collections.singleton(newEventAttachment(participant.getEvent(), organizer)));
 
                 if (InvitationStatus.UNINVITED.equals(participant.getInvitationStatus())) {
-                    Participant loadedParticipant = load(Participant.class, participant.getId());
+                    Participant loadedParticipant = participantRepository.findById(participant.getId())
+                        .orElseThrow(NoResultException::new);
                     loadedParticipant.setInvitationStatus(InvitationStatus.PENDING);
-                    save(loadedParticipant);
+                    participantRepository.save(loadedParticipant);
                 }
 
                 return email;
@@ -572,9 +497,10 @@ public class EventService extends DataService {
      *
      * @param participant the participant to invite
      * @param organizer   the organizer
+     * @throws NoResultException in case the participant to invite could not be found
      */
     @Transactional
-    public void inviteParticipant(Participant participant, User organizer) {
+    public void inviteParticipant(Participant participant, User organizer) throws NoResultException {
         inviteParticipants(Collections.singletonList(participant), organizer);
     }
 
@@ -638,7 +564,7 @@ public class EventService extends DataService {
         }
 
         if (eventFilter.isShowAll()) {
-            return getAll(EventDetails.class);
+            return eventDetailsRepository.findAll();
         }
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -815,16 +741,5 @@ public class EventService extends DataService {
         LocalDate now = LocalDate.now();
         Date startDate = participant.getEvent().getStartDate();
         return applicationProperties.getDeadlineOffset() >= DAYS.between(now, convert(startDate));
-    }
-
-    /**
-     * Returns a configured end-date-predicate
-     *
-     * @param criteriaBuilder Java persistence criteria builder
-     * @param entity          the entity for which the end date should be greater than or equal
-     * @return upcoming-date-predicate
-     */
-    private Predicate forUpcomingDate(CriteriaBuilder criteriaBuilder, Path<? extends Terminable> entity) {
-        return criteriaBuilder.greaterThanOrEqualTo(entity.get("endDate"), new Date());
     }
 }
