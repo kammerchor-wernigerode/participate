@@ -3,6 +3,7 @@ package de.vinado.wicket.participate.services;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Singer;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public interface ParticipantRepository extends CrudRepository<Participant, Long>
      * @param singer the singer for which the participants should be fetched
      * @return list of participants
      */
+    @Query(name = "Participant.findAllBySinger")
     List<Participant> findAllBySinger(Singer singer);
 
     /**

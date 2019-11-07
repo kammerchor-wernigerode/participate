@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -28,6 +29,10 @@ import static de.vinado.wicket.participate.model.InvitationStatus.UNINVITED;
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@NamedQuery(
+    name = "Participant.findAllBySinger",
+    query = "select p from Participant p where p.event.endDate > current_timestamp and p.singer = :singer"
+)
 @Entity
 @Table(name = "participants")
 @Data
