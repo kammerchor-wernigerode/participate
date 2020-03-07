@@ -33,7 +33,7 @@ public class SingersMasterPanel extends BreadCrumbPanel {
         super(id, breadCrumbModel);
 
         final BootstrapPanel<List<Singer>> singersPanel = new BootstrapPanel<List<Singer>>("singersPanel",
-            new CompoundPropertyModel<>(personService.list()), new ResourceModel("singers", "Singers")) {
+            new CompoundPropertyModel<>(personService.getSingers()), new ResourceModel("singers", "Singers")) {
             @Override
             protected Panel newBodyPanel(final String id, final IModel<List<Singer>> model) {
                 return new SingersPanel(id, model);

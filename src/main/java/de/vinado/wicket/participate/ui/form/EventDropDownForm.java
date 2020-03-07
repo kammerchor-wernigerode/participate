@@ -37,7 +37,7 @@ public abstract class EventDropDownForm extends NavbarForm<Participant> {
             new LoadableDetachableModel<List<? extends Participant>>() {
                     @Override
                     protected List<? extends Participant> load() {
-                        return eventService.listParticipants(model.getObject().getSinger());
+                        return eventService.getParticipants(model.getObject().getSinger());
                     }
                 },
                 new ChoiceRenderer<>("event.name"));

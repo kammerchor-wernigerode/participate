@@ -91,7 +91,7 @@ public class ParticipatePage extends BasePage {
                                 final Person person = user.getPerson();
                                 Singer singer = null;
                                 if (null != person) {
-                                    singer = personService.singerExist(person) ? personService.retrieveSinger(person) : null;
+                                    singer = personService.hasSinger(person) ? personService.getSinger(person) : null;
                                 }
 
                                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();

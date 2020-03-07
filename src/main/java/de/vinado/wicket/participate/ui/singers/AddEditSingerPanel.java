@@ -75,7 +75,7 @@ public class AddEditSingerPanel extends BootstrapModalPanel<SingerDTO> {
                     return false;
                 }
 
-                return personService.singerExist(value);
+                return personService.hasSinger(value);
             }
         });
         inner.add(emailTf);
@@ -118,16 +118,16 @@ public class AddEditSingerPanel extends BootstrapModalPanel<SingerDTO> {
     protected void onSaveSubmit(final IModel<SingerDTO> model, final AjaxRequestTarget target) {
         if (edit) {
             if (remove) {
-                personService.delete(model.getObject().getSinger());
+                personService.removeSinger(model.getObject().getSinger());
                 send(getWebPage(), Broadcast.BREADTH, new SingerUpdateEvent(target));
                 Snackbar.show(target, new ResourceModel("singer.remove.success", "The singer has been removed"));
                 return;
             }
-            personService.save(model.getObject());
+            personService.saveSinger(model.getObject());
             send(getWebPage(), Broadcast.BREADTH, new SingerUpdateEvent(target));
         } else {
-            final Singer singer = personService.create(model.getObject());
-            eventService.listEvents().forEach(event -> eventService.create(event, singer));
+            final Singer singer = personService.createSinger(model.getObject());
+            eventService.getUpcomingEvents().forEach(event -> eventService.createParticipant(event, singer));
         }
         send(getWebPage(), Broadcast.BREADTH, new SingerUpdateEvent(target));
     }

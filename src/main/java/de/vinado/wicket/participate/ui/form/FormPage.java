@@ -4,28 +4,21 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.AbstractNavbarCom
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
 import de.vinado.wicket.participate.components.panels.Footer;
-import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.EventPanel;
 import de.vinado.wicket.participate.ui.pages.BasePage;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.Component;
-import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import javax.persistence.NoResultException;
-
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-@Slf4j
 public class FormPage extends BasePage {
 
     @SuppressWarnings("unused")
@@ -56,14 +49,10 @@ public class FormPage extends BasePage {
         setOutputMarkupId(true);
 
         final String token = parameters.get("token").to(String.class);
-        if (null == model.getObject()) {
-            try {
-                model.setObject(eventService.retrieveParticipant(token));
-                this.model = model;
-                setDefaultModel(this.model);
-            } catch (NoResultException e) {
-                throw new WicketRuntimeException(String.format("Could not find participant w/ invitation token=%s", token), e);
-            }
+        if (null == model.getObject() && eventService.hasToken(token)) {
+            model.setObject(eventService.getParticipant(token));
+            this.model = model;
+            setDefaultModel(this.model);
         } else {
             onConfigure();
         }
@@ -91,14 +80,9 @@ public class FormPage extends BasePage {
         breadcrumb.setVisible(false);
         add(breadcrumb);
 
-        try {
-            EventDetails details = eventService.detailsOf(model.getObject().getEvent());
-            final EventPanel eventPanel = new EventPanel("eventPanel", breadcrumb, new CompoundPropertyModel<>(details), false);
-            add(eventPanel);
-        } catch (NoResultException e) {
-            log.warn("Could not find event details for event /w name={}", model.getObject().getEvent().getName());
-            add(new EmptyPanel("eventPanel"));
-        }
+        final EventPanel eventPanel = new EventPanel("eventPanel", breadcrumb,
+            new CompoundPropertyModel<>(eventService.getEventDetails(model.getObject().getEvent())), false);
+        add(eventPanel);
 
         final FormPanel formPanel = new FormPanel("formPanel", breadcrumb,
             new CompoundPropertyModel<>(null == FormPage.this.model.getObject() ?

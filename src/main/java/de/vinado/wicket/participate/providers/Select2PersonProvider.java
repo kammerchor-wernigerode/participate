@@ -40,7 +40,7 @@ public class Select2PersonProvider extends ChoiceProvider<Person> {
     public Collection<Person> toChoices(Collection<String> ids) {
         return ids.stream()
             .map(Long::parseLong)
-            .map(personService::retrievePerson)
+            .map(personService::getPerson)
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
     }
