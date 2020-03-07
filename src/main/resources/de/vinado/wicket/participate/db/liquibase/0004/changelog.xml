@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="0004-drop_views" author="Vincent Nadoll" runOnChange="true">
+        <sql>
+            DROP VIEW IF EXISTS v_event_member_accepted;
+            DROP VIEW IF EXISTS v_event_member_declined;
+            DROP VIEW IF EXISTS v_event_member_pending;
+            DROP VIEW IF EXISTS v_event_member_soprano;
+            DROP VIEW IF EXISTS v_event_member_alto;
+            DROP VIEW IF EXISTS v_event_member_tenor;
+            DROP VIEW IF EXISTS v_event_member_bass;
+            DROP VIEW IF EXISTS v_events;
+            DROP VIEW IF EXISTS v_event_details;
+        </sql>
+    </changeSet>
+
+    <changeSet id="0004-v_event_details" author="Vincent Nadoll" runOnChange="true">
+        <sql>
+            DROP VIEW IF EXISTS v_event_details;
+        </sql>
+        <sqlFile path="de/vinado/wicket/participate/db/liquibase/0003/v_event_details.sql"/>
+    </changeSet>
+</databaseChangeLog>
