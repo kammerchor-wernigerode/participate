@@ -110,7 +110,7 @@ public class SingersPanel extends Panel {
         if (payload instanceof SingerUpdateEvent) {
             final SingerUpdateEvent updateEvent = (SingerUpdateEvent) payload;
             final AjaxRequestTarget target = updateEvent.getTarget();
-            model.setObject(personService.list());
+            model.setObject(personService.getSingers());
             dataProvider.set(model.getObject());
             target.add(dataTable);
         }

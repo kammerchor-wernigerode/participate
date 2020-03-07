@@ -53,15 +53,15 @@ public class RemindOverdueCronjobTest {
         var event3Participants = Collections.singletonList(participant31);
 
 
-        when(eventService.listEvents()).thenReturn(Arrays.asList(event1, event2, event3));
-        when(eventService.listInvitedParticipants(event1)).thenReturn(event1Participants);
-        when(eventService.listInvitedParticipants(event2)).thenReturn(event2Participants);
-        when(eventService.listInvitedParticipants(event3)).thenReturn(event3Participants);
+        when(eventService.getUpcomingEvents()).thenReturn(Arrays.asList(event1, event2, event3));
+        when(eventService.getInvitedParticipants(event1)).thenReturn(event1Participants);
+        when(eventService.getInvitedParticipants(event2)).thenReturn(event2Participants);
+        when(eventService.getInvitedParticipants(event3)).thenReturn(event3Participants);
 
         feature.run();
 
-        verify(eventService, never()).invite(event1Participants, null);
-        verify(eventService, times(1)).invite(event2Participants, null);
-        verify(eventService, never()).invite(event3Participants, null);
+        verify(eventService, never()).inviteParticipants(event1Participants, null);
+        verify(eventService, times(1)).inviteParticipants(event2Participants, null);
+        verify(eventService, never()).inviteParticipants(event3Participants, null);
     }
 }

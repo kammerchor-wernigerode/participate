@@ -25,7 +25,6 @@ import org.springframework.util.MimeType;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.persistence.NoResultException;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import java.io.ByteArrayOutputStream;
@@ -77,11 +76,17 @@ public class ScoresManagerNotificationCronjob {
             final String scoresManagerEmail = configuration.getScoresManagerEmail();
             requireNonEmpty(scoresManagerEmail, "Score's manager email must not be null when NOTIFY_SCORES_MANAGER is enabled");
 
-            final InternetAddress recipient = getScoresManagerName(scoresManagerEmail)
+            final Optional<Person> scoresManager = Optional.ofNullable(personService.getPerson(scoresManagerEmail));
+            if (!scoresManager.isPresent()) {
+                log.info("Score's manager's name could not be determined");
+            }
+
+            final InternetAddress recipient = scoresManager
+                .map(Person::getDisplayName)
                 .map(sneaky(name -> new InternetAddress(scoresManagerEmail, name)))
                 .orElse(new InternetAddress(scoresManagerEmail));
 
-            final Stream<Email> emails = eventService.listEvents()
+            final Stream<Email> emails = eventService.getUpcomingEvents()
                 .stream()
                 .filter(this::filter)
                 .map(event -> prepare(event, recipient))
@@ -91,22 +96,6 @@ public class ScoresManagerNotificationCronjob {
             log.info("Ran score's manager reminder job");
         } catch (AddressException e) {
             log.error("Malformed email address encountered", e);
-        }
-    }
-
-    /**
-     * Retrieves the score's manager name.
-     *
-     * @param email the email address of the score's manager
-     * @return optional of score's manager name
-     */
-    private Optional<String> getScoresManagerName(String email) {
-        try {
-            return Optional.ofNullable(personService.retrievePerson(email))
-                .map(Person::getDisplayName);
-        } catch (NoResultException e) {
-            log.debug("Score's manager's name could not be determined");
-            return Optional.empty();
         }
     }
 
@@ -131,7 +120,7 @@ public class ScoresManagerNotificationCronjob {
      */
     private Email prepare(Event event, InternetAddress recipient) {
         try {
-            final List<Singer> attendees = eventService.listInvitedParticipants(event)
+            final List<Singer> attendees = eventService.getInvitedParticipants(event)
                 .stream()
                 .filter(Participant::isAccepted)
                 .map(Participant::getSinger)

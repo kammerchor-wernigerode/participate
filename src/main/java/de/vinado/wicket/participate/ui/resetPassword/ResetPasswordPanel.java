@@ -2,10 +2,7 @@ package de.vinado.wicket.participate.ui.resetPassword;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.vinado.wicket.participate.ParticipateApplication;
-import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.services.UserService;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.StatelessForm;
@@ -15,12 +12,9 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.StringValidator;
 
-import javax.persistence.NoResultException;
-
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-@Slf4j
 public class ResetPasswordPanel extends Panel {
 
     private static final String RESET_PASSWORD_FORM = "resetPasswordForm";
@@ -64,6 +58,10 @@ public class ResetPasswordPanel extends Panel {
         this.confirmPassword = confirmPassword;
     }
 
+    private boolean resetPassword(final String recoveryToken, final String password) {
+        return userService.finishPasswordReset(recoveryToken, password);
+    }
+
     private class ResetPasswordForm extends StatelessForm<ResetPasswordPanel> {
 
         public ResetPasswordForm(final String id) {
@@ -85,16 +83,11 @@ public class ResetPasswordPanel extends Panel {
 
         @Override
         protected void onSubmit() {
-            try {
-                IAuthenticationStrategy strategy = getApplication().getSecuritySettings().getAuthenticationStrategy();
-                userService.finishPasswordReset(getRecoveryToken(), getPassword(),
-                    getLocalizer().getString("account.reset.success", this, "Your password reset succeeded"));
+            final IAuthenticationStrategy strategy = getApplication().getSecuritySettings().getAuthenticationStrategy();
+
+            if (resetPassword(getRecoveryToken(), getPassword())) {
                 strategy.remove();
                 getRequestCycle().setResponsePage(ParticipateApplication.get().getHomePage());
-            } catch (NoResultException e) {
-                log.warn("Failed to finish password recovery for user recovery token={}", getRecoveryToken());
-                AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
-                Snackbar.show(target, "Your recovery token is invalid");
             }
         }
     }

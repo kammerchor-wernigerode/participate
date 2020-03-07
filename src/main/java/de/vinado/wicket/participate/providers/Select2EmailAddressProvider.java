@@ -46,7 +46,7 @@ public class Select2EmailAddressProvider extends ChoiceProvider<InternetAddress>
     @Override
     public Collection<InternetAddress> toChoices(Collection<String> addresses) {
         return addresses.stream()
-            .map(personService::retrievePerson)
+            .map(personService::getPerson)
             .filter(Objects::nonNull)
             .map(sneaky(person -> new InternetAddress(person.getEmail(), person.getDisplayName(), UTF_8)))
             .collect(Collectors.toList());

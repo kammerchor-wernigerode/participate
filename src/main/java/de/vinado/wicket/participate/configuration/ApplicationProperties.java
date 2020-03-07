@@ -3,7 +3,6 @@ package de.vinado.wicket.participate.configuration;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.info.BuildProperties;
@@ -11,8 +10,6 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Reads the properties from "classpath:/application.properties"
@@ -24,7 +21,7 @@ import java.net.URL;
 @Getter
 @Setter
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ApplicationProperties implements InitializingBean {
+public class ApplicationProperties {
 
     private final BuildProperties buildProperties;
 
@@ -41,15 +38,6 @@ public class ApplicationProperties implements InitializingBean {
 
     public String getVersion() {
         return buildProperties.getVersion();
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        checkBaseUrl();
-    }
-
-    private void checkBaseUrl() throws MalformedURLException {
-        new URL(this.baseUrl);
     }
 
     @Getter

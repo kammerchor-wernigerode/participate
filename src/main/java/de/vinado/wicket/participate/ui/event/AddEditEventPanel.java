@@ -97,7 +97,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         inner.add(isSeveralDaysCb);
 
         final Select2Choice<String> eventTypeS2c = new Select2Choice<>("eventType",
-            new Select2StringProvider(eventService::listEventTypes));
+            new Select2StringProvider(eventService::getEventTypes));
         eventTypeS2c.add(new AjaxFocusBehavior());
         eventTypeS2c.setLabel(new ResourceModel("event", "Event"));
         eventTypeS2c.add(BootstrapHorizontalFormDecorator.decorate());
@@ -149,7 +149,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         inner.add(endDateTf);
 
         final Select2Choice<String> locationS2c = new Select2Choice<>("location",
-            new Select2StringProvider(eventService::listEventLocations));
+            new Select2StringProvider(eventService::getLocationList));
         locationS2c.setLabel(new ResourceModel("location", "Location"));
         locationS2c.add(BootstrapHorizontalFormDecorator.decorate());
         locationS2c.getSettings().setLanguage(getLocale().getLanguage());
@@ -212,15 +212,15 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
 
         if (edit) {
             if (remove) {
-                eventService.delete(model.getObject().getEvent());
+                eventService.removeEvent(model.getObject().getEvent());
                 send(getPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
                 send(getWebPage(), Broadcast.BREADTH, new RemoveEventUpdateEvent(target));
                 Snackbar.show(target, new ResourceModel("event.remove.success", "The event has been removed"));
                 return;
             }
-            onUpdate(eventService.save(model.getObject()), target);
+            onUpdate(eventService.saveEvent(model.getObject()), target);
         } else {
-            onUpdate(eventService.create(model.getObject()), target);
+            onUpdate(eventService.createEvent(model.getObject()), target);
         }
     }
 

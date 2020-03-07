@@ -1,24 +1,55 @@
 package de.vinado.wicket.participate.model;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import java.util.Date;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
 @Entity
 @Table(name = "v_event_details")
-@Data
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@Getter
 @NoArgsConstructor
-public class EventDetails extends Event {
+@ToString
+@EqualsAndHashCode
+public class EventDetails implements Identifiable<Long>, Terminable {
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private Event event;
+
+    @Column
+    private String name;
+
+    @Column(name = "type")
+    private String eventType;
+
+    @Column(length = 65535, columnDefinition = "LONGTEXT")
+    private String description;
+
+    @Column
+    @Temporal(TemporalType.DATE)
+    private Date startDate;
+
+    @Column
+    @Temporal(TemporalType.DATE)
+    private Date endDate;
+
+    @Column
+    private String location;
 
     @Column(name = "count_accepted_declined_pending")
     private String countAcceptedDeclinedPending;
@@ -67,4 +98,17 @@ public class EventDetails extends Event {
 
     @Column(name = "count_invitations")
     private Long totalInvitationCount;
+
+    @Override
+    public Long getId() {
+        return event.getId();
+    }
+
+    public boolean isSeveralDays() {
+        return event.isSeveralDays();
+    }
+
+    public String getDisplayDate() {
+        return event.getDisplayDate();
+    }
 }

@@ -63,11 +63,11 @@ public abstract class ParticipantFilterPanel extends AbstractTableFilterPanel<Pa
 
     @Override
     public List<Participant> getFilteredData(final ParticipantFilter filter) {
-        return eventService.listParticipants(event.getObject(), filter);
+        return eventService.getFilteredParticipants(event.getObject(), filter);
     }
 
     @Override
     public List<Participant> getDefaultData() {
-        return eventService.listParticipants(event.getObject());
+        return eventService.getParticipants(event.getObject());
     }
 }

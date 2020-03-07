@@ -49,16 +49,16 @@ public class RemindOverdueCronjob {
         log.info("Enter overdue invitation job");
 
         final Set<Long> eventIds = new HashSet<>();
-        final List<Participant> participants = eventService.listEvents()
+        final List<Participant> participants = eventService.getUpcomingEvents()
             .stream()
             .filter(this::filter)
             .peek(event -> eventIds.add(event.getId()))
-            .map(eventService::listInvitedParticipants)
+            .map(eventService::getInvitedParticipants)
             .flatMap(List::stream)
             .filter(Participant::isPending)
             .collect(Collectors.toList());
 
-        eventService.invite(participants, null);
+        eventService.inviteParticipants(participants, null);
 
         final int eventAmount = eventIds.size();
         log.info("Ran overdue job for {} event{} /w ids=[{}]", eventAmount, 1 == eventAmount ? "" : "s", StringUtils.join(eventIds, ", "));
