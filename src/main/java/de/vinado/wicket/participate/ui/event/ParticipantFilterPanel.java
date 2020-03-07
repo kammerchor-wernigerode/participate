@@ -28,12 +28,12 @@ public abstract class ParticipantFilterPanel extends AbstractTableFilterPanel<Pa
     @SpringBean
     private EventService eventService;
 
-    private IModel<? extends Event> event;
+    private IModel<Event> event;
 
     private TextField searchTermTf;
 
     public ParticipantFilterPanel(final String id, final IModel<List<Participant>> model,
-                                  final IModel<ParticipantFilter> filterModel, final IModel<? extends Event> event,
+                                  final IModel<ParticipantFilter> filterModel, final IModel<Event> event,
                                   final boolean editable) {
         super(id, model, filterModel);
 

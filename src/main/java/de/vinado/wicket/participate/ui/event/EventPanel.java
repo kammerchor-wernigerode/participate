@@ -100,7 +100,7 @@ public class EventPanel extends BreadCrumbPanel {
                     return eventService.getParticipants(model.getObject().getEvent());
                 }
             },
-            new CompoundPropertyModel<>(new ParticipantFilter()), model, editable) {
+            new CompoundPropertyModel<>(new ParticipantFilter()), new PropertyModel<>(model, "event"), editable) {
             @Override
             public SimpleDataProvider<Participant, ?> getDataProvider() {
                 return dataProvider;
