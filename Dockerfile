@@ -18,7 +18,7 @@ FROM openjdk:8-jre-alpine
 RUN mkdir -p /app
 WORKDIR      /app
 
-ARG JAR_FILE=participate-2.5.2.jar
+ARG JAR_FILE=participate-2.6.0.jar
 COPY --from=maven /usr/src/app/target/$JAR_FILE /app/application.jar
 COPY scripts/docker-entrypoint.sh /usr/local/bin/
 
