@@ -14,16 +14,15 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2MultiChoice;
 
 import javax.mail.internet.InternetAddress;
-import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
+import java.util.Collections;
 
+import static com.pivovarit.function.ThrowingFunction.sneaky;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -65,21 +64,23 @@ public class SendEmailPanel extends BootstrapModalPanel<MailData> {
 
     @Override
     protected void onSaveSubmit(final IModel<MailData> model, final AjaxRequestTarget target) {
-        final MailData mailData = model.getObject();
-        final Email email = new Email();
-        try {
-            email.setFrom(mailData.getFrom().getAddress(), mailData.getFrom().getPersonal());
+        MailData mailData = model.getObject();
+        String subject = mailData.getSubject();
+        String message = mailData.getMessage();
 
-            email.setTo(new HashSet<>(mailData.getTo()));
-            email.setSubject(mailData.getSubject());
-            email.setMessage(mailData.getMessage());
+        mailData.getTo().stream()
+            .map(sneaky(recipient -> {
+                Email email = new Email();
+                email.setTo(Collections.singleton(recipient));
+                email.setFrom(mailData.getFrom().getAddress(), mailData.getFrom().getPersonal());
+                email.setSubject(subject);
+                email.setMessage(message);
 
-            emailService.send(email);
-            Snackbar.show(target, new ResourceModel("email.send.success", "Email sent"));
-        } catch (UnsupportedEncodingException e) {
-            log.error("Encoding is not supported", e);
-            Snackbar.show(target, Model.of("The application encountered an unsupported encoding"));
-        }
+                return email;
+            }))
+            .forEach(emailService::send);
+
+        Snackbar.show(target, new ResourceModel("email.send.success", "Email sent"));
     }
 
     @Override
