@@ -3,8 +3,10 @@ package de.vinado.wicket.participate.ui.singers;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
+import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.dtos.SingerDTO;
+import de.vinado.wicket.participate.model.email.MailData;
 import de.vinado.wicket.participate.services.PersonService;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -13,12 +15,17 @@ import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import javax.mail.internet.InternetAddress;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.pivovarit.function.ThrowingFunction.sneaky;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -52,6 +59,29 @@ public class SingersMasterPanel extends BreadCrumbPanel {
                         modal.show(target);
                     }
                 };
+            }
+
+            @Override
+            protected RepeatingView newDropDownMenu(String id, IModel<List<Singer>> model) {
+                RepeatingView dropDownMenu = super.newDropDownMenu(id, model);
+                dropDownMenu.add(new DropDownItem(dropDownMenu.newChildId(), new ResourceModel("email.send", "Send Email"),
+                    FontAwesomeIconType.envelope) {
+                    @Override
+                    protected void onClick(final AjaxRequestTarget target) {
+                        final List<InternetAddress> recipients = model.getObject().stream()
+                            .map(sneaky(singer -> new InternetAddress(singer.getEmail(), singer.getDisplayName())))
+                            .collect(Collectors.toList());
+
+                        final MailData mailData = new MailData();
+                        mailData.setTo(recipients);
+
+                        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+                        modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
+                        modal.show(target);
+                    }
+                });
+
+                return dropDownMenu;
             }
         };
 
