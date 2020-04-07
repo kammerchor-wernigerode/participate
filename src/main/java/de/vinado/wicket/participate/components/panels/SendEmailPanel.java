@@ -39,7 +39,7 @@ public class SendEmailPanel extends BootstrapModalPanel<MailData> {
     public SendEmailPanel(final BootstrapModal modal, final IModel<MailData> model) {
         super(modal, new ResourceModel("email.new", "New Email"), model);
         setModalSize(ModalSize.Large);
-        model.getObject().setFrom(ParticipateApplication.get().getApplicationProperties().getMail().getSender(), ParticipateApplication.get().getApplicationName());
+        model.getObject().setFrom(ParticipateApplication.get().getApplicationProperties().getMail().getSender(), ParticipateApplication.get().getApplicationProperties().getCustomer());
 
         final TextField<String> fromTf = new TextField<>("from");
         fromTf.setEnabled(false);
