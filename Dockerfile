@@ -26,6 +26,8 @@ ENV LOG_PATH /app/logs
 RUN mkdir -p $LOG_PATH
 VOLUME ["${LOG_PATH}"]
 
+ENV SPRING_PROFILES_ACTIVE="docker"
+
 EXPOSE 8080
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["/usr/bin/java", "-Djava.security.egd=file:/dev/./urandom", "-jar" ,"/app/application.jar"]
