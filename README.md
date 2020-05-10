@@ -1,8 +1,8 @@
 # Wicket Participate
 
 At the end of 2016 I have heard of the Apache Wicket Framework and started to write a closed-source (now open-source)
-web application for one of my project choirs Kammerchor Wernigerode. We had trouble to plan our weekends because some of
-the singers did not answer to invitations of the board members. 
+web application for one of my project choirs Kammerchor Wernigerode. We had trouble to plan our weekends because some
+singers did not answer to invitations of the board members.
 
 This repository exists only for legacy support. If you are interested in using this for your own club I would recommend
 you to checkout the [kammerchor-wernigerode/kch-engine](https://github.com/kammerchor-wernigerode/kch-engine) and
@@ -11,6 +11,7 @@ you to checkout the [kammerchor-wernigerode/kch-engine](https://github.com/kamme
 ## Setup
 
 Copy or move the sample files in the rest and configure your properties.
+
 ```bash
 cp src/main/resources/application.sample.properties src/main/resources/application.properties
 
@@ -18,21 +19,25 @@ cp src/main/resources/liquibase.sample.properties src/main/resources/liquibase.p
 ```
 
 Install the maven dependencies.
+
 ```bash
 mvn install
 ```
 
 ---
 
-You'll need a MySQL database or a running docker container with MySQL.  
-After you configured your database and your property files run Liquibase to create the database tables. You can either
+You'll need a MySQL database or a running Docker Container with MySQL.
+After you configured your database and property files run Liquibase to create the database tables. You can either
 run Liquibase manually with
+
 ```bash
 mvn resources:resources liquibase:update
+
 ```
-or let Spring Boot do the job for you. 
+or let Spring Boot do the job for you.
 
 Start the application.
+
 ```bash
 mvn spring-boot:run
 ```
@@ -70,10 +75,12 @@ make sure you are running a database container too.
 ---
 
 Navigate to `tools/` and run
+
 ```bash
 docker-compose up -d
 ```
-to start a development database as well as [FakeSMTP](https://github.com/Nilhcem/FakeSMTP).  
+
+to start a development database as well as [FakeSMTP](https://github.com/Nilhcem/FakeSMTP).
 Received emails will be stored in `$HOME/received-emails`.
 
 ## Deployment
@@ -82,10 +89,12 @@ Received emails will be stored in `$HOME/received-emails`.
 mvn clean package
 ```
 creates an executable jar file. Start the application with
+
 ```bash
-java -jar target/particpate.jar
+java -jar target/participate-2.6.2.jar
 ```
-on your machine. Don't forget to configure the properties files to fit your environment or follow the 
+
+on your machine. Don't forget to configure the properties files to fit your environment or follow the
 [Docker instructions](#docker) above to deploy the application with Docker.
 
 ## Features
@@ -95,7 +104,7 @@ file.
 
 ### Remind overdue singers
 
-If the feature is activated, all participants who have not yet registered for the next event will receive another 
+If the feature is active, all participants who have not yet registered for the next event will receive another
 invitation by email. By default, all events are considered that are up to 14 days in the future.
 
 The cron expression and the offset are configurable. However, the email address of the manager must be configured.
