@@ -1,0 +1,5 @@
+org.springframework.boot.env.EnvironmentPostProcessor=\
+  de.vinado.wicket.participate.configuration.factories.DatabaseUsernamePostProcessor,\
+  de.vinado.wicket.participate.configuration.factories.DatabasePasswordPostProcessor,\
+  de.vinado.wicket.participate.configuration.factories.SmtpUsernamePostProcessor,\
+  de.vinado.wicket.participate.configuration.factories.SmtpPasswordPostProcessor
