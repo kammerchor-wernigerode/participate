@@ -6,7 +6,7 @@ COPY pom.xml /usr/src/app
 RUN mvn -B -q dependency:go-offline
 
 COPY src     /usr/src/app/src
-COPY src/main/resources/application-docker.yml /usr/src/app/src/main/resources/application.yml
+COPY src/main/resources/application-docker_secret.yml /usr/src/app/src/main/resources/application.yml
 RUN ( \
     echo 'changeLogFile=de/vinado/wicket/participate/db/liquibase/changelog.xml'; \
     ) > /usr/src/app/src/main/resources/liquibase.properties
