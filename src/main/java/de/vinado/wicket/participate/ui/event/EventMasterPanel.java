@@ -241,7 +241,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
                 ParticipateSession.get().setEvent(null);
             } else {
                 ParticipateSession.get().setEvent(eventService.getLatestEvent());
-                setDefaultModelObject(eventService.getLatestEventDetails());
+                setDefaultModel(new CompoundPropertyModel<>(eventService.getLatestEventDetails()));
             }
 
             target.add(eventListPanel);
