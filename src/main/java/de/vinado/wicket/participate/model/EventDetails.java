@@ -24,7 +24,7 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class EventDetails implements Identifiable<Long>, Terminable {
+public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
 
     @Id
     @ManyToOne
@@ -98,6 +98,9 @@ public class EventDetails implements Identifiable<Long>, Terminable {
 
     @Column(name = "count_invitations")
     private Long totalInvitationCount;
+
+    @Column(name = "is_active", nullable = false)
+    private boolean active;
 
     @Override
     public Long getId() {
