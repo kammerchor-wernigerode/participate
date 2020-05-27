@@ -275,7 +275,7 @@ public class EventServiceImpl extends DataService implements EventService {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
         final Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
-        criteriaQuery.where(forUpcomingDate(criteriaBuilder, root));
+        criteriaQuery.where(forUpcomingDate(criteriaBuilder, root), forActive(criteriaBuilder, root));
         try {
             return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
         } catch (NoResultException e) {
@@ -292,7 +292,7 @@ public class EventServiceImpl extends DataService implements EventService {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Event> criteriaQuery = criteriaBuilder.createQuery(Event.class);
         final Root<Event> root = criteriaQuery.from(Event.class);
-        criteriaQuery.where(forUpcomingDate(criteriaBuilder, root));
+        criteriaQuery.where(forUpcomingDate(criteriaBuilder, root), forActive(criteriaBuilder, root));
         criteriaQuery.orderBy(criteriaBuilder.asc(root.get("startDate")));
         try {
             return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
