@@ -884,7 +884,7 @@ public class EventServiceImpl extends DataService implements EventService {
         return applicationProperties.getDeadlineOffset() >= DAYS.between(now, convert(startDate));
     }
 
-    private Predicate forUpcomingDate(final CriteriaBuilder criteriaBuilder, final Path<? extends Terminable> eventPath) {
+    private static Predicate forUpcomingDate(final CriteriaBuilder criteriaBuilder, final Path<? extends Terminable> eventPath) {
         return criteriaBuilder.greaterThanOrEqualTo(eventPath.get("endDate"), new Date());
     }
 }

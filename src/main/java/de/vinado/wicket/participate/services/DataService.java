@@ -111,7 +111,7 @@ public abstract class DataService {
      * @param path            {@link Path} to {@link Hideable}
      * @return {@link Predicate}
      */
-    protected Predicate forActive(final CriteriaBuilder criteriaBuilder, final Path<? extends Hideable> path) {
+    protected static Predicate forActive(final CriteriaBuilder criteriaBuilder, final Path<? extends Hideable> path) {
         return criteriaBuilder.equal(path.get("active"), true);
     }
 }
