@@ -95,7 +95,7 @@ public class Event implements Identifiable<Long>, Hideable, Terminable {
     }
 
     public String getDisplayDate() {
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.YYYY");
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         if (isSeveralDays()) {
             return dateFormat.format(startDate) + " - " + dateFormat.format(endDate);
         } else {

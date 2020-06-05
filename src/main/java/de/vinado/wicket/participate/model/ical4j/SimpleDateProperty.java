@@ -29,7 +29,7 @@ public class SimpleDateProperty extends Property {
     @Override
     public void setValue(final String aValue) throws ParseException {
 
-        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYYMMdd");
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         this.date = simpleDateFormat.parse(aValue);
     }
 
@@ -40,7 +40,7 @@ public class SimpleDateProperty extends Property {
 
     @Override
     public String getValue() {
-        return new SimpleDateFormat("YYYYMMdd").format(date);
+        return new SimpleDateFormat("yyyMMdd").format(date);
     }
 
     public enum Type {
