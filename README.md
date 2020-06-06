@@ -118,7 +118,6 @@ The cron expression and the offset are configurable.
 
 ## Tests / CI
 
-- Liquibase integration tests
 - Travis CI
 
 ## Licence
