@@ -91,7 +91,7 @@ mvn clean package
 creates an executable jar file. Start the application with
 
 ```bash
-java -jar target/participate-2.7.1.jar
+java -jar target/participate-2.8.0.jar
 ```
 
 on your machine. Don't forget to configure the properties files to fit your environment or follow the
