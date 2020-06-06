@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import org.springframework.lang.Nullable;
 
 import javax.mail.internet.AddressException;
@@ -57,9 +58,9 @@ public class Email {
      *
      * @param address  the senders email address
      * @param personal the senders name
-     * @throws UnsupportedEncodingException if the encoding is not supported
      */
-    public void setFrom(final String address, final String personal) throws UnsupportedEncodingException {
+    @SneakyThrows
+    public void setFrom(final String address, final String personal) {
         this.from = new InternetAddress(address, personal, UTF_8);
     }
 
@@ -78,9 +79,9 @@ public class Email {
      *
      * @param address  the email address to add
      * @param personal the name to add
-     * @throws UnsupportedEncodingException if the encoding is not supported
      */
-    public void addTo(final String address, final String personal) throws UnsupportedEncodingException {
+    @SneakyThrows
+    public void addTo(final String address, final String personal) {
         this.to.add(new InternetAddress(address, personal, UTF_8));
     }
 
@@ -99,9 +100,9 @@ public class Email {
      *
      * @param address  the email address to add
      * @param personal the name to add
-     * @throws UnsupportedEncodingException if the encoding is not supported
      */
-    public void addCc(final String address, final String personal) throws UnsupportedEncodingException {
+    @SneakyThrows
+    public void addCc(final String address, final String personal) {
         this.cc.add(new InternetAddress(address, personal, UTF_8));
     }
 
@@ -120,9 +121,9 @@ public class Email {
      *
      * @param address  the email address to add
      * @param personal the name to add
-     * @throws UnsupportedEncodingException if the encoding is not supported
      */
-    public void addBcc(final String address, final String personal) throws UnsupportedEncodingException {
+    @SneakyThrows
+    public void addBcc(final String address, final String personal) {
         this.bcc.add(new InternetAddress(address, personal, UTF_8));
     }
 

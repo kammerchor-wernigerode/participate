@@ -18,7 +18,6 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import javax.mail.internet.AddressException;
-import java.io.UnsupportedEncodingException;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -56,8 +55,6 @@ public class SendFeedbackPanel extends BootstrapModalPanel<SendFeedbackDTO> {
 
             emailService.send(mailData);
             Snackbar.show(target, new ResourceModel("send.feedback.success", "Thanks for your feedback"));
-        } catch (UnsupportedEncodingException e) {
-            log.error("Encoding is not supported", e);
         } catch (AddressException e) {
             log.error("Encountered malformed email address", e);
             Snackbar.show(target, Model.of("The application encountered a malformed email address. Abort."));

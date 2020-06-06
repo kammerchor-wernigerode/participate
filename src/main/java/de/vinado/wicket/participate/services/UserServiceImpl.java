@@ -31,7 +31,6 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -323,8 +322,6 @@ public class UserServiceImpl extends DataService implements UserService {
             return true;
         } catch (NoResultException e) {
             log.warn("Password recovery for unknown login: {}.", usernameOrEmail);
-        } catch (UnsupportedEncodingException e) {
-            log.error("Encoding is not supported", e);
         }
 
         return false;
@@ -371,8 +368,6 @@ public class UserServiceImpl extends DataService implements UserService {
             return true;
         } catch (NoResultException e) {
             log.error("Invalid password recovery token for: {}.", recoveryToken);
-        } catch (UnsupportedEncodingException e) {
-            log.error("Encoding is not supported", e);
         }
 
         return false;
