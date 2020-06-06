@@ -16,13 +16,12 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static de.vinado.wicket.participate.common.DateUtils.convert;
+import static de.vinado.wicket.participate.common.DateUtils.toLocalDate;
 import static de.vinado.wicket.participate.features.RemindOverdueCronjob.Configuration.CRON_EXPRESSION;
 import static de.vinado.wicket.participate.features.RemindOverdueCronjob.Configuration.FEATURE_ENABLED;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -70,9 +69,9 @@ public class RemindOverdueCronjob {
      */
     private boolean filter(Event event) {
         LocalDate now = LocalDate.now();
-        Date startDate = event.getStartDate();
-        boolean future = new Date().before(startDate);
-        boolean inScope = configuration.getOffset() >= DAYS.between(now, convert(startDate));
+        LocalDate startDate = toLocalDate(event.getStartDate());
+        boolean future = LocalDate.now().isBefore(startDate);
+        boolean inScope = configuration.getOffset() >= DAYS.between(now, startDate);
         return future && inScope;
     }
 

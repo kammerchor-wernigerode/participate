@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.time.LocalDate;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -40,7 +39,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.pivovarit.function.ThrowingFunction.sneaky;
-import static de.vinado.wicket.participate.common.DateUtils.convert;
+import static de.vinado.wicket.participate.common.DateUtils.toLocalDate;
 import static de.vinado.wicket.participate.features.ScoresManagerNotificationCronjob.Configuration.CRON_EXPRESSION;
 import static de.vinado.wicket.participate.features.ScoresManagerNotificationCronjob.Configuration.FEATURE_ENABLED;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -105,9 +104,9 @@ public class ScoresManagerNotificationCronjob {
      */
     private boolean filter(Event event) {
         LocalDate now = LocalDate.now();
-        Date startDate = event.getStartDate();
-        boolean future = new Date().before(startDate);
-        boolean inScope = configuration.getOffset() >= DAYS.between(now, convert(startDate));
+        LocalDate startDate = toLocalDate(event.getStartDate());
+        boolean future = LocalDate.now().isBefore(startDate);
+        boolean inScope = configuration.getOffset() >= DAYS.between(now, startDate);
         return future && inScope;
     }
 

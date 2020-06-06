@@ -68,7 +68,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static com.pivovarit.function.ThrowingFunction.sneaky;
-import static de.vinado.wicket.participate.common.DateUtils.convert;
+import static de.vinado.wicket.participate.common.DateUtils.toLocalDate;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -880,8 +880,8 @@ public class EventServiceImpl extends DataService implements EventService {
         }
 
         LocalDate now = LocalDate.now();
-        Date startDate = participant.getEvent().getStartDate();
-        return applicationProperties.getDeadlineOffset() >= DAYS.between(now, convert(startDate));
+        LocalDate startDate = toLocalDate(participant.getEvent().getStartDate());
+        return applicationProperties.getDeadlineOffset() >= DAYS.between(now, startDate);
     }
 
     private static Predicate forUpcomingDate(final CriteriaBuilder criteriaBuilder, final Path<? extends Terminable> eventPath) {
