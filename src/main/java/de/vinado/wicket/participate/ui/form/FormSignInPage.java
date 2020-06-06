@@ -104,12 +104,12 @@ public class FormSignInPage extends BasePage {
         add(form);
 
         final List<ITab> tabs = new ArrayList<>();
-        tabs.add(new AbstractTab(new ResourceModel("usage", "Usage")) {
+        /*tabs.add(new AbstractTab(new ResourceModel("usage", "Usage")) {
             @Override
             public Panel getPanel(final String panelId) {
                 return new TextPanel(panelId, new ResourceModel("formUsageDescription", ""));
             }
-        });
+        });*/
 
         add(new Collapsible("collapsible", tabs) {
             @Override
