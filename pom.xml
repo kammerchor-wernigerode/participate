@@ -237,32 +237,22 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>nl.geodienstencentrum.maven</groupId>
-                <artifactId>sass-maven-plugin</artifactId>
-                <version>3.7.1</version>
-                <configuration>
-                    <resources>
-                        <resource>
-                            <source>
-                                <directory>${project.basedir}/src/main/resources/scss</directory>
-                                <includes>
-                                    <include>**/*.scss</include>
-                                </includes>
-                            </source>
-                            <destination>
-                                ${project.build.directory}/generated-sources/src/main/java/de/vinado/wicket/participate/resources/css
-                            </destination>
-                        </resource>
-                    </resources>
-                </configuration>
+                <groupId>com.github.warmuuh</groupId>
+                <artifactId>libsass-maven-plugin</artifactId>
+                <version>0.2.10-libsass_3.5.3</version>
                 <executions>
                     <execution>
-                        <id>generate-css-using-sass</id>
+                        <phase>generate-resources</phase>
                         <goals>
-                            <goal>update-stylesheets</goal>
+                            <goal>compile</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <inputPath>${project.basedir}/src/main/resources/scss</inputPath>
+                    <outputPath>${project.build.directory}/generated-sources/src/main/java/de/vinado/wicket/participate/resources/css</outputPath>
+                    <generateSourceMap>false</generateSourceMap>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.liquibase</groupId>
