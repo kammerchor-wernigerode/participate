@@ -16,6 +16,7 @@ import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.basic.Label;
@@ -28,6 +29,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -166,9 +168,12 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
         inviteSingerBtn.setSize(Buttons.Size.Mini);
         inner.add(inviteSingerBtn);
 
-        inner.add(new Label("token", ParticipateUtils.generateInvitationLink(
+        URL href = ParticipateUtils.generateInvitationLink(
             ParticipateApplication.get().getApplicationProperties().getBaseUrl(),
-            model.getObject().getToken())
-        ));
+            model.getObject().getToken());
+        Label link = new Label("token", href);
+        link.add(AttributeModifier.append("href", href));
+        link.add(AttributeModifier.append("target", "_blank"));
+        inner.add(link);
     }
 }
