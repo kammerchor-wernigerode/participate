@@ -11,6 +11,7 @@ import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.components.tables.columns.BootstrapAjaxLinkColumn;
 import de.vinado.wicket.participate.components.tables.columns.EnumColumn;
+import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventSummaryUpdateEvent;
 import de.vinado.wicket.participate.events.ShowHidePropertiesEvent;
@@ -21,7 +22,6 @@ import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
-import de.vinado.wicket.participate.model.email.MailData;
 import de.vinado.wicket.participate.model.filters.DetailedParticipantFilter;
 import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import de.vinado.wicket.participate.services.EventService;
@@ -192,7 +192,7 @@ public class EventSummaryListPanel extends Panel {
                 @Override
                 public void onClick(final AjaxRequestTarget target, final IModel<Participant> rowModel) {
                     final Person person = rowModel.getObject().getSinger();
-                    final MailData mailData = new MailData();
+                    final Email mailData = new Email();
                     mailData.addTo(person.getEmail(), person.getDisplayName());
 
                     final BootstrapModal modal = ((BasePage) getWebPage()).getModal();

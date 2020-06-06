@@ -4,9 +4,9 @@ import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
+import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.service.EmailService;
-import de.vinado.wicket.participate.model.email.MailData;
 import de.vinado.wicket.participate.providers.Select2EmailAddressProvider;
 import de.vinado.wicket.participate.services.PersonService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,15 +20,12 @@ import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2MultiChoice;
 
 import javax.mail.internet.InternetAddress;
-import java.util.Collections;
-
-import static com.pivovarit.function.ThrowingFunction.sneaky;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
 @Slf4j
-public class SendEmailPanel extends BootstrapModalPanel<MailData> {
+public class SendEmailPanel extends BootstrapModalPanel<Email> {
 
     @SpringBean
     private PersonService personService;
@@ -36,10 +33,12 @@ public class SendEmailPanel extends BootstrapModalPanel<MailData> {
     @SpringBean
     private EmailService emailService;
 
-    public SendEmailPanel(final BootstrapModal modal, final IModel<MailData> model) {
+    public SendEmailPanel(final BootstrapModal modal, final IModel<Email> model) {
         super(modal, new ResourceModel("email.new", "New Email"), model);
         setModalSize(ModalSize.Large);
-        model.getObject().setFrom(ParticipateApplication.get().getApplicationProperties().getMail().getSender(), ParticipateApplication.get().getApplicationProperties().getCustomer());
+
+        ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
+        model.getObject().setFrom(properties.getMail().getSender(), properties.getCustomer());
 
         final TextField<String> fromTf = new TextField<>("from");
         fromTf.setEnabled(false);
@@ -63,21 +62,9 @@ public class SendEmailPanel extends BootstrapModalPanel<MailData> {
     }
 
     @Override
-    protected void onSaveSubmit(final IModel<MailData> model, final AjaxRequestTarget target) {
-        MailData mailData = model.getObject();
-        String subject = mailData.getSubject();
-        String message = mailData.getMessage();
-
-        mailData.getTo().stream()
-            .map(sneaky(recipient -> {
-                Email email = new Email();
-                email.setTo(Collections.singleton(recipient));
-                email.setFrom(mailData.getFrom().getAddress(), mailData.getFrom().getPersonal());
-                email.setSubject(subject);
-                email.setMessage(message);
-
-                return email;
-            }))
+    protected void onSaveSubmit(final IModel<Email> model, final AjaxRequestTarget target) {
+        model.getObject()
+            .toSingleRecipient()
             .forEach(emailService::send);
 
         Snackbar.show(target, new ResourceModel("email.send.success", "Email sent"));

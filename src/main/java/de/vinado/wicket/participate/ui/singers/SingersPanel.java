@@ -6,12 +6,12 @@ import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.components.tables.columns.BootstrapAjaxLinkColumn;
 import de.vinado.wicket.participate.components.tables.columns.EnumColumn;
+import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.events.SingerUpdateEvent;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.SingerDTO;
-import de.vinado.wicket.participate.model.email.MailData;
 import de.vinado.wicket.participate.model.filters.SingerFilter;
 import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import de.vinado.wicket.participate.services.PersonService;
@@ -87,7 +87,7 @@ public class SingersPanel extends Panel {
             @Override
             public void onClick(final AjaxRequestTarget target, final IModel<Singer> rowModel) {
                 final Person person = rowModel.getObject();
-                final MailData mailData = new MailData();
+                final Email mailData = new Email();
                 mailData.addTo(person.getEmail(), person.getDisplayName());
 
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();

@@ -82,7 +82,7 @@ public class ScoresManagerNotificationCronjob {
 
             final InternetAddress recipient = scoresManager
                 .map(Person::getDisplayName)
-                .map(sneaky(name -> new InternetAddress(scoresManagerEmail, name)))
+                .map(sneaky(name -> new InternetAddress(scoresManagerEmail, name, UTF_8.name())))
                 .orElse(new InternetAddress(scoresManagerEmail));
 
             final Stream<Email> emails = eventService.getUpcomingEvents()

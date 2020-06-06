@@ -8,6 +8,7 @@ import de.vinado.wicket.participate.components.modals.BootstrapModalConfirmation
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
+import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventUpdateEvent;
 import de.vinado.wicket.participate.events.RemoveEventUpdateEvent;
@@ -17,7 +18,6 @@ import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
-import de.vinado.wicket.participate.model.email.MailData;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
 import de.vinado.wicket.participate.ui.event.details.EventSummaryPanel;
@@ -39,12 +39,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import javax.mail.internet.InternetAddress;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.pivovarit.function.ThrowingFunction.sneaky;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -189,13 +185,9 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     FontAwesomeIconType.envelope) {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
-                        final List<InternetAddress> recipients = personService.getSingers(model.getObject().getEvent())
-                            .stream()
-                            .map(sneaky(singer -> new InternetAddress(singer.getEmail(), singer.getDisplayName())))
-                            .collect(Collectors.toList());
-
-                        final MailData mailData = new MailData();
-                        mailData.setTo(recipients);
+                        final Email mailData = new Email();
+                        personService.getSingers(model.getObject().getEvent())
+                            .forEach(singer -> mailData.addTo(singer.getEmail(), singer.getDisplayName()));
 
                         final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                         modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
