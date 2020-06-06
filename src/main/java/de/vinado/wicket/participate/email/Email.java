@@ -1,6 +1,8 @@
 package de.vinado.wicket.participate.email;
 
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -10,14 +12,17 @@ import org.springframework.lang.Nullable;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import java.io.UnsupportedEncodingException;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static lombok.AccessLevel.NONE;
+import static lombok.AccessLevel.PROTECTED;
 
 /**
  * Mail data wrapper object
@@ -26,20 +31,22 @@ import static lombok.AccessLevel.NONE;
  */
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
-public class Email {
+@AllArgsConstructor(access = PROTECTED)
+public class Email implements Serializable {
 
     private static final String UTF_8 = StandardCharsets.UTF_8.name();
 
     // @formatter:off
     private @NonNull InternetAddress from;
-    private Set<InternetAddress> to = new HashSet<>();
-    private Set<InternetAddress> cc = new HashSet<>();
-    private Set<InternetAddress> bcc = new HashSet<>();
+    private @Builder.Default Set<InternetAddress> to = new HashSet<>();
+    private @Builder.Default Set<InternetAddress> cc = new HashSet<>();
+    private @Builder.Default Set<InternetAddress> bcc = new HashSet<>();
     private InternetAddress replyTo;
     private @NonNull String subject;
-    private @Nullable String message;
-    private Set<EmailAttachment> attachments = new HashSet<>();
+    private @Getter(onMethod = @__(@Nullable)) @Setter(onParam = @__(@Nullable)) String message;
+    private @Builder.Default Set<EmailAttachment> attachments = new HashSet<>();
     private @Getter(NONE) Map<String, Object> data;
     // @formatter:on
 
@@ -142,5 +149,25 @@ public class Email {
         data.put("footer", properties.getMail().getFooter());
 
         return data;
+    }
+
+    /**
+     * Maps each recipient to its own email.
+     *
+     * @return stream of single recipient emails
+     */
+    public Stream<Email> toSingleRecipient() {
+        return this.to.stream()
+            .map(address -> Email.builder()
+                .from(this.from)
+                .to(Collections.singleton(address))
+                .cc(this.cc)
+                .bcc(this.bcc)
+                .replyTo(this.replyTo)
+                .subject(this.subject)
+                .message(this.message)
+                .attachments(this.attachments)
+                .data(this.data)
+                .build());
     }
 }
