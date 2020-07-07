@@ -4,10 +4,6 @@ At the end of 2016 I have heard of the Apache Wicket Framework and started to wr
 web application for one of my project choirs Kammerchor Wernigerode. We had trouble to plan our weekends because some
 singers did not answer to invitations of the board members.
 
-This repository exists only for legacy support. If you are interested in using this for your own club I would recommend
-you to checkout the [kammerchor-wernigerode/kch-engine](https://github.com/kammerchor-wernigerode/kch-engine) and
-[kammerchor-wernigerode/eva](https://github.com/kammerchor-wernigerode/eva) repositories.
-
 ## Setup
 
 Copy or move the sample files in the rest and configure your properties.
