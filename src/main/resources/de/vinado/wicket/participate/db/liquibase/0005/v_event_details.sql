@@ -116,7 +116,8 @@ SELECT ev.id                                      AS id,
        (COALESCE(accepted.count_accepted, 0) +
         COALESCE(declined.count_declined, 0) +
         COALESCE(pending.count_pending, 0))       AS count_invitations,
-       CAST_TO_BIT(ev.is_active) AS is_active
+       CAST_TO_BIT(ev.is_active)                  AS is_active,
+       ev.creation_date                           AS creation_date
 FROM events ev
          LEFT JOIN participants participant ON ev.id = participant.event_id
          LEFT JOIN v_participants_accepted accepted ON ev.id = accepted.event_id
@@ -133,5 +134,6 @@ GROUP BY ev.id,
          ev.end_date,
          ev.description,
          ev.location,
-         CAST_TO_BIT(ev.is_active)
+         CAST_TO_BIT(ev.is_active),
+         ev.creation_date
 ORDER BY ev.start_date;

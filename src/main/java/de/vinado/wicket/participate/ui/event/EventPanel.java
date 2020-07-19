@@ -43,6 +43,7 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 
@@ -82,9 +83,16 @@ public class EventPanel extends BreadCrumbPanel {
         wmc.setOutputMarkupId(true);
         form.add(wmc);
 
+        PropertyModel<EventDetails> creationDateDay = new PropertyModel<>(model, "creationDateDay");
+        PropertyModel<EventDetails> offset = new PropertyModel<>(model, "offset");
+        StringResourceModel creationDateText = new StringResourceModel("creationDate.text.${offset}", model)
+            .setParameters(offset, creationDateDay)
+            .setDefaultValue(new StringResourceModel("creationDate.text.default").setParameters(offset, creationDateDay));
+
         wmc.add(new Label("name"));
         wmc.add(new Label("eventType"));
         wmc.add(new Label("displayDate"));
+        wmc.add(new Label("creationDate", creationDateText));
         wmc.add(new Label("location"));
         wmc.add(new MultiLineLabel("description") {
             @Override

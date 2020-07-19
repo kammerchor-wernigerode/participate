@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.apache.commons.lang3.time.DateUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +14,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -102,6 +107,10 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
     @Column(name = "is_active", nullable = false)
     private boolean active;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "creation_date")
+    private Date creationDate;
+
     @Override
     public Long getId() {
         return event.getId();
@@ -113,5 +122,19 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
 
     public String getDisplayDate() {
         return event.getDisplayDate();
+    }
+
+    public Date getCreationDate() {
+        return DateUtils.truncate(creationDate, Calendar.DATE);
+    }
+
+    public String getCreationDateDay() {
+        return new SimpleDateFormat("dd.MM.yyyy").format(getCreationDate());
+    }
+
+    @Transient
+    public long getOffset() {
+        long diff = new Date().getTime() - getCreationDate().getTime();
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
 }
