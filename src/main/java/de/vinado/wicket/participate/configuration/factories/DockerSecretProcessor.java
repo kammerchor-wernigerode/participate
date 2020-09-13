@@ -6,6 +6,7 @@ import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
@@ -25,35 +26,68 @@ public abstract class DockerSecretProcessor implements EnvironmentPostProcessor 
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        Optional<FileSystemResource> resource = Optional.ofNullable(environment.getProperty(getEnvironmentVariable()))
-            .map(StringUtils::trim)
-            .map(FileSystemResource::new)
-            .filter(FileSystemResource::exists);
-
+        Optional<FileSystemResource> resource = getDockerSecretResource(environment);
         if (!resource.isPresent()) {
             return;
         }
 
         System.out.printf("[Docker Secret] Using %s from injected Docker secret file%n", getName());
 
-        try (InputStream secretInputStream = resource.get().getInputStream()) {
-            String secret = StreamUtils.copyToString(secretInputStream, Charset.defaultCharset()).trim();
-            Properties properties = new Properties();
-            properties.put(getSpringProperty(), secret);
+        String secret = extractSecretValue(resource.get());
+        Properties properties = configureProperties(secret);
 
-            PropertiesPropertySource propertySource = new PropertiesPropertySource(PROPERTY_SOURCE, properties);
-            environment.getPropertySources().addLast(propertySource);
+        configure(environment, properties);
+    }
+
+    private Optional<FileSystemResource> getDockerSecretResource(ConfigurableEnvironment environment) {
+        return getEnvironmentProperty(environment)
+            .map(FileSystemResource::new)
+            .filter(FileSystemResource::exists);
+    }
+
+    private Optional<String> getEnvironmentProperty(ConfigurableEnvironment environment) {
+        return Optional.ofNullable(environment.getProperty(getEnvironmentVariable()))
+            .map(StringUtils::trim);
+    }
+
+    protected abstract String getEnvironmentVariable();
+
+    protected abstract String getName();
+
+    private String extractSecretValue(Resource resource) {
+        InputStream secretInputStream = getInputStream(resource);
+        return getSecretValue(secretInputStream);
+    }
+
+    private InputStream getInputStream(Resource resource) {
+        try {
+            return resource.getInputStream();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-
-    protected abstract String getName();
-
+    private String getSecretValue(InputStream secretInputStream) {
+        try {
+            return StreamUtils.copyToString(secretInputStream, Charset.defaultCharset()).trim();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    protected abstract String getEnvironmentVariable();
+    private Properties configureProperties(String secret) {
+        String springPropertyName = getSpringProperty();
+        Properties properties = new Properties();
+
+        properties.put(springPropertyName, secret);
+        return properties;
+    }
 
     protected abstract String getSpringProperty();
+
+    private void configure(ConfigurableEnvironment environment, Properties properties) {
+        PropertiesPropertySource propertySource = new PropertiesPropertySource(PROPERTY_SOURCE, properties);
+
+        environment.getPropertySources().addLast(propertySource);
+    }
 }
