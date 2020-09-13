@@ -6,11 +6,6 @@ package de.vinado.wicket.participate.configuration.factories;
 class SmtpPasswordPostProcessor extends DockerSecretProcessor {
 
     @Override
-    protected String getName() {
-        return "SMTP password";
-    }
-
-    @Override
     protected String getEnvironmentVariable() {
         return "SMTP_PASSWORD_FILE";
     }

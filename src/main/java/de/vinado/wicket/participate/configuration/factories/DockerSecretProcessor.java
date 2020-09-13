@@ -31,8 +31,6 @@ public abstract class DockerSecretProcessor implements EnvironmentPostProcessor 
             return;
         }
 
-        System.out.printf("[Docker Secret] Using %s from injected Docker secret file%n", getName());
-
         String secret = extractSecretValue(resource.get());
         Properties properties = configureProperties(secret);
 
@@ -51,8 +49,6 @@ public abstract class DockerSecretProcessor implements EnvironmentPostProcessor 
     }
 
     protected abstract String getEnvironmentVariable();
-
-    protected abstract String getName();
 
     private String extractSecretValue(Resource resource) {
         InputStream secretInputStream = getInputStream(resource);

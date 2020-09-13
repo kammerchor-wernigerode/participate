@@ -6,11 +6,6 @@ package de.vinado.wicket.participate.configuration.factories;
 class SmtpUsernamePostProcessor extends DockerSecretProcessor {
 
     @Override
-    protected String getName() {
-        return "SMTP username";
-    }
-
-    @Override
     protected String getEnvironmentVariable() {
         return "SMTP_USER_FILE";
     }

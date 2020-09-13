@@ -6,11 +6,6 @@ package de.vinado.wicket.participate.configuration.factories;
 class DatabasePasswordPostProcessor extends DockerSecretProcessor {
 
     @Override
-    protected String getName() {
-        return "Database password";
-    }
-
-    @Override
     protected String getEnvironmentVariable() {
         return "DATABASE_PASSWORD_FILE";
     }
