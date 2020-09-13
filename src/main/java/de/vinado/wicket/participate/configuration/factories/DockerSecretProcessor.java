@@ -34,7 +34,7 @@ public abstract class DockerSecretProcessor implements EnvironmentPostProcessor 
             return;
         }
 
-        System.out.println(String.format("[Docker Secret] Using %s from injected Docker secret file", getName()));
+        System.out.printf("[Docker Secret] Using %s from injected Docker secret file%n", getName());
 
         try (InputStream secretInputStream = resource.get().getInputStream()) {
             String secret = StreamUtils.copyToString(secretInputStream, Charset.defaultCharset()).trim();
