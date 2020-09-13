@@ -21,6 +21,8 @@ import java.util.Properties;
  */
 public abstract class DockerSecretProcessor implements EnvironmentPostProcessor {
 
+    public static final String PROPERTY_SOURCE = "dockerSecrets";
+
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
         Optional<FileSystemResource> resource = Optional.ofNullable(environment.getProperty(getEnvironmentVariable()))
@@ -39,21 +41,19 @@ public abstract class DockerSecretProcessor implements EnvironmentPostProcessor 
             Properties properties = new Properties();
             properties.put(getSpringProperty(), secret);
 
-            String source = getSource().getClass().getSimpleName();
-            PropertiesPropertySource propertySource = new PropertiesPropertySource(source, properties);
+            PropertiesPropertySource propertySource = new PropertiesPropertySource(PROPERTY_SOURCE, properties);
             environment.getPropertySources().addLast(propertySource);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    protected String getName() {
-        return String.valueOf(getSource());
+
+    protected abstract String getName();
+
     }
 
     protected abstract String getEnvironmentVariable();
 
     protected abstract String getSpringProperty();
-
-    protected abstract Object getSource();
 }

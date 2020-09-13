@@ -19,9 +19,4 @@ class SmtpUsernamePostProcessor extends DockerSecretProcessor {
     protected String getSpringProperty() {
         return "spring.mail.username";
     }
-
-    @Override
-    protected String getSource() {
-        return getClass().getSimpleName();
-    }
 }

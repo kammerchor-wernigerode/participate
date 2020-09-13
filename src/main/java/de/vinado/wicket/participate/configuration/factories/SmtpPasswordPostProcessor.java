@@ -19,9 +19,4 @@ class SmtpPasswordPostProcessor extends DockerSecretProcessor {
     protected String getSpringProperty() {
         return "spring.mail.password";
     }
-
-    @Override
-    protected String getSource() {
-        return getClass().getSimpleName();
-    }
 }

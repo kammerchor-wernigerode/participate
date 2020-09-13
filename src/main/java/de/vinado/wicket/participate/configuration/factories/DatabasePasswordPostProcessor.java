@@ -19,9 +19,4 @@ class DatabasePasswordPostProcessor extends DockerSecretProcessor {
     protected String getSpringProperty() {
         return "spring.datasource.password";
     }
-
-    @Override
-    protected Object getSource() {
-        return this;
-    }
 }

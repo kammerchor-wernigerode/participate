@@ -19,9 +19,4 @@ class DatabaseUsernamePostProcessor extends DockerSecretProcessor {
     protected String getSpringProperty() {
         return "spring.datasource.username";
     }
-
-    @Override
-    protected String getSource() {
-        return getClass().getSimpleName();
-    }
 }
