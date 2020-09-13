@@ -12,7 +12,7 @@ class DatabasePasswordPostProcessor extends DockerSecretProcessor {
 
     @Override
     protected String getEnvironmentVariable() {
-        return "DATABASE_PASSWORD__FILE";
+        return "DATABASE_PASSWORD_FILE";
     }
 
     @Override

@@ -12,7 +12,7 @@ class SmtpPasswordPostProcessor extends DockerSecretProcessor {
 
     @Override
     protected String getEnvironmentVariable() {
-        return "SMTP_PASSWORD__FILE";
+        return "SMTP_PASSWORD_FILE";
     }
 
     @Override

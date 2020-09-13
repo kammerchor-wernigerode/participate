@@ -12,7 +12,7 @@ class SmtpUsernamePostProcessor extends DockerSecretProcessor {
 
     @Override
     protected String getEnvironmentVariable() {
-        return "SMTP_USER__FILE";
+        return "SMTP_USER_FILE";
     }
 
     @Override
