@@ -7,7 +7,6 @@ import org.springframework.boot.logging.DeferredLog;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
@@ -29,8 +28,7 @@ import java.util.Optional;
  * @author Vincent Nadoll
  */
 @Component
-@Order(Ordered.LOWEST_PRECEDENCE)
-public class DockerSecretProcessor implements EnvironmentPostProcessor, ApplicationListener<ApplicationEvent> {
+public class DockerSecretProcessor implements EnvironmentPostProcessor, ApplicationListener<ApplicationEvent>, Ordered {
 
     public static final String PROPERTY_SOURCE = "dockerSecrets";
 
@@ -104,5 +102,10 @@ public class DockerSecretProcessor implements EnvironmentPostProcessor, Applicat
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
         log.replayTo(DockerSecretProcessor.class);
+    }
+
+    @Override
+    public int getOrder() {
+        return Ordered.LOWEST_PRECEDENCE;
     }
 }
