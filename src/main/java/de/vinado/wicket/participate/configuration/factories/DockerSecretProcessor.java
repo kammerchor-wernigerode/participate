@@ -44,19 +44,30 @@ public class DockerSecretProcessor implements EnvironmentPostProcessor, Applicat
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+        log.trace("Examine for Docker Secret related environment variables");
         Map<String, Object> source = new LinkedHashMap<>();
 
         for (Map.Entry<String, String> entry : properties.entrySet()) {
             String environmentVariable = entry.getValue();
+            log.trace(String.format("Resolving %s", environmentVariable));
 
-            Optional<FileSystemResource> dockerSecret = getDockerSecretResource(environmentVariable, environment);
+            String dockerSecretPath = getEnvironmentProperty(environmentVariable, environment)
+                .orElse(null);
 
-            if (!dockerSecret.isPresent()) {
-                log.warn("Docker Secret file could not be found");
+            if (null == dockerSecretPath) {
+                log.debug(String.format("Environment variable %s is not set. Using value from configuration file instead.", environmentVariable));
                 continue;
             }
 
-            log.info(String.format("Setting %s from Docker Secret value", entry.getKey()));
+            log.trace(String.format("Reading Docker Secret from %s", dockerSecretPath));
+            Optional<FileSystemResource> dockerSecret = getDockerSecretResource(dockerSecretPath);
+
+            if (!dockerSecret.isPresent()) {
+                log.warn(String.format("Docker Secret file %s not found or not readable.", dockerSecretPath));
+                continue;
+            }
+
+            log.info(String.format("Use Docker Secret value to set %s", entry.getKey()));
 
             source.put(entry.getKey(), extractSecretValue(dockerSecret.get()));
         }
@@ -66,8 +77,8 @@ public class DockerSecretProcessor implements EnvironmentPostProcessor, Applicat
                 new MapPropertySource(PROPERTY_SOURCE, source));
     }
 
-    private Optional<FileSystemResource> getDockerSecretResource(String environmentVariable, ConfigurableEnvironment environment) {
-        return getEnvironmentProperty(environmentVariable, environment)
+    private Optional<FileSystemResource> getDockerSecretResource(String dockerSecretPath) {
+        return Optional.of(dockerSecretPath)
             .map(FileSystemResource::new)
             .filter(FileSystemResource::exists)
             .filter(FileSystemResource::isReadable);
