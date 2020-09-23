@@ -1,10 +1,14 @@
 package de.vinado.wicket.participate.configuration.factories;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.PropertiesPropertySource;
+import org.springframework.core.env.MapPropertySource;
+import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
@@ -12,43 +16,65 @@ import org.springframework.util.StreamUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 
 /**
  * Reads Docker Secret files from the local system an passes their values to the configured Spring properties.
  *
  * @author Vincent Nadoll
  */
-public abstract class DockerSecretProcessor implements EnvironmentPostProcessor {
+@Slf4j
+@Order(Ordered.LOWEST_PRECEDENCE)
+public class DockerSecretProcessor implements EnvironmentPostProcessor {
 
     public static final String PROPERTY_SOURCE = "dockerSecrets";
 
+    private static final Map<String, String> properties = new LinkedHashMap<>();
+
+    static {
+        properties.put("spring.datasource.username", "DATABASE_USER_FILE");
+        properties.put("spring.datasource.password", "DATABASE_PASSWORD_FILE");
+        properties.put("spring.mail.username", "SMTP_USER_FILE");
+        properties.put("spring.mail.password", "SMTP_PASSWORD_FILE");
+    }
+
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        Optional<FileSystemResource> resource = getDockerSecretResource(environment);
-        if (!resource.isPresent()) {
-            return;
+        Map<String, Object> source = new LinkedHashMap<>();
+
+        for (Map.Entry<String, String> entry : properties.entrySet()) {
+            String environmentVariable = entry.getValue();
+
+            Optional<FileSystemResource> dockerSecret = getDockerSecretResource(environmentVariable, environment);
+
+            if (!dockerSecret.isPresent()) {
+                log.warn("Docker Secret file could not be found");
+                continue;
+            }
+
+            log.info("Setting {} from Docker Secret value", entry.getKey());
+
+            source.put(entry.getKey(), extractSecretValue(dockerSecret.get()));
         }
 
-        String secret = extractSecretValue(resource.get());
-        Properties properties = configureProperties(secret);
-
-        configure(environment, properties);
+        environment.getPropertySources()
+            .addAfter(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME,
+                new MapPropertySource(PROPERTY_SOURCE, source));
     }
 
-    private Optional<FileSystemResource> getDockerSecretResource(ConfigurableEnvironment environment) {
-        return getEnvironmentProperty(environment)
+    private Optional<FileSystemResource> getDockerSecretResource(String environmentVariable, ConfigurableEnvironment environment) {
+        return getEnvironmentProperty(environmentVariable, environment)
             .map(FileSystemResource::new)
-            .filter(FileSystemResource::exists);
+            .filter(FileSystemResource::exists)
+            .filter(FileSystemResource::isReadable);
     }
 
-    private Optional<String> getEnvironmentProperty(ConfigurableEnvironment environment) {
-        return Optional.ofNullable(environment.getProperty(getEnvironmentVariable()))
+    private Optional<String> getEnvironmentProperty(String environmentVariable, ConfigurableEnvironment environment) {
+        return Optional.ofNullable(environment.getProperty(environmentVariable))
             .map(StringUtils::trim);
     }
-
-    protected abstract String getEnvironmentVariable();
 
     private String extractSecretValue(Resource resource) {
         InputStream secretInputStream = getInputStream(resource);
@@ -69,21 +95,5 @@ public abstract class DockerSecretProcessor implements EnvironmentPostProcessor 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private Properties configureProperties(String secret) {
-        String springPropertyName = getSpringProperty();
-        Properties properties = new Properties();
-
-        properties.put(springPropertyName, secret);
-        return properties;
-    }
-
-    protected abstract String getSpringProperty();
-
-    private void configure(ConfigurableEnvironment environment, Properties properties) {
-        PropertiesPropertySource propertySource = new PropertiesPropertySource(PROPERTY_SOURCE, properties);
-
-        environment.getPropertySources().addLast(propertySource);
     }
 }
