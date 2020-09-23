@@ -1,9 +1,9 @@
 package de.vinado.wicket.participate.configuration.factories;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;
+import org.springframework.boot.logging.DeferredLog;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -25,12 +25,12 @@ import java.util.Optional;
  *
  * @author Vincent Nadoll
  */
-@Slf4j
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class DockerSecretProcessor implements EnvironmentPostProcessor {
 
     public static final String PROPERTY_SOURCE = "dockerSecrets";
 
+    private static final DeferredLog log = new DeferredLog();
     private static final Map<String, String> properties = new LinkedHashMap<>();
 
     static {
@@ -54,7 +54,7 @@ public class DockerSecretProcessor implements EnvironmentPostProcessor {
                 continue;
             }
 
-            log.info("Setting {} from Docker Secret value", entry.getKey());
+            log.info(String.format("Setting %s from Docker Secret value", entry.getKey()));
 
             source.put(entry.getKey(), extractSecretValue(dockerSecret.get()));
         }
