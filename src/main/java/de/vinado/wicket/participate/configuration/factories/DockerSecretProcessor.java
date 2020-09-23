@@ -4,6 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.boot.logging.DeferredLog;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -11,6 +13,7 @@ import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
@@ -25,8 +28,9 @@ import java.util.Optional;
  *
  * @author Vincent Nadoll
  */
+@Component
 @Order(Ordered.LOWEST_PRECEDENCE)
-public class DockerSecretProcessor implements EnvironmentPostProcessor {
+public class DockerSecretProcessor implements EnvironmentPostProcessor, ApplicationListener<ApplicationEvent> {
 
     public static final String PROPERTY_SOURCE = "dockerSecrets";
 
@@ -95,5 +99,10 @@ public class DockerSecretProcessor implements EnvironmentPostProcessor {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void onApplicationEvent(ApplicationEvent event) {
+        log.replayTo(DockerSecretProcessor.class);
     }
 }
