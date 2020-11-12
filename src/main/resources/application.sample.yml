@@ -34,6 +34,12 @@ spring:
       mail.smtp.starttls.enable: true
       mail.smtp.from: ${MAIL_FROM}
 
+#dkim:
+#  # default._domainkey.domain.tld
+#  selector: default
+#  signing-domain: domain.tld
+#  private-key: /path/to/your/private.key.der
+
 app:
   base-url: ${BASE_URL:http://localhost:8080}
   customer: ${APPLICATION_CUSTOMER}
