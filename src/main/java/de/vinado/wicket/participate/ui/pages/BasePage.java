@@ -3,24 +3,13 @@ package de.vinado.wicket.participate.ui.pages;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.HtmlTag;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.IeEdgeMetaTag;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.MetaTag;
-import de.agilecoders.wicket.core.markup.html.references.BootlintHeaderItem;
-import de.agilecoders.wicket.core.markup.html.references.RespondJavaScriptReference;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
 import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
-import de.vinado.wicket.participate.resources.FaviconResourceReference;
-import de.vinado.wicket.participate.resources.css.ParticipateCssResourceReference;
 import de.vinado.wicket.participate.resources.css.SnackbarCssResourceReference;
-import de.vinado.wicket.participate.resources.js.BusyIndicatorJsResourceReference;
-import de.vinado.wicket.participate.resources.js.ParticipateJsResourceReference;
 import de.vinado.wicket.participate.resources.js.SnackbarJsResourceReference;
-import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.CssReferenceHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
-import org.apache.wicket.markup.head.MetaDataHeaderItem;
-import org.apache.wicket.markup.head.filter.FilteredHeaderItem;
 import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -97,34 +86,8 @@ public abstract class BasePage extends WebPage {
      */
     @Override
     public void renderHead(final IHeaderResponse response) {
-        response.render(MetaDataHeaderItem.forMetaTag("viewport", "width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"));
-        response.render(MetaDataHeaderItem.forMetaTag("robots", "noindex, nofollow"));
-        response.render(forLinkTag("shortcut icon", "image/x-icon", urlFor(FaviconResourceReference.INSTANCE, null).toString()));
-        response.render(new FilteredHeaderItem(JavaScriptHeaderItem.forReference(ParticipateJsResourceReference.INSTANCE), "footer-container"));
-        response.render(RespondJavaScriptReference.headerItem());
-        if (!getRequest().getRequestParameters().getParameterValue("bootlint").isNull()) {
-            response.render(BootlintHeaderItem.INSTANCE);
-        }
-        response.render(CssHeaderItem.forReference(FontAwesomeCssReference.instance()));
-        response.render(CssReferenceHeaderItem.forReference(ParticipateCssResourceReference.INSTANCE));
+        Resources.render(response, this);
         response.render(CssReferenceHeaderItem.forReference(SnackbarCssResourceReference.INSTANCE));
         response.render(JavaScriptReferenceHeaderItem.forReference(SnackbarJsResourceReference.INSTANCE));
-        response.render(JavaScriptReferenceHeaderItem.forReference(BusyIndicatorJsResourceReference.INSTANCE));
-    }
-
-    /**
-     * Factory method to create &lt;link&gt; tag.
-     *
-     * @param rel  the 'rel' attribute of the tag
-     * @param type the 'type' attribute of the tag
-     * @param href the 'href' attribute of the tag
-     * @return A new {@link MetaDataHeaderItem}
-     */
-    private static MetaDataHeaderItem forLinkTag(String rel, String type, String href) {
-        MetaDataHeaderItem headerItem = new MetaDataHeaderItem("link");
-        headerItem.addTagAttribute("rel", rel);
-        headerItem.addTagAttribute("type", type);
-        headerItem.addTagAttribute("href", href);
-        return headerItem;
     }
 }
