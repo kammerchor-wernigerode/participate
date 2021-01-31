@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.apache.commons.lang3.time.DateUtils;
+import org.joda.time.format.ISODateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +16,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -128,8 +128,9 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
         return DateUtils.truncate(creationDate, Calendar.DATE);
     }
 
-    public String getCreationDateDay() {
-        return new SimpleDateFormat("dd.MM.yyyy").format(getCreationDate());
+    @Transient
+    public String getCreationDateTimeIso() {
+        return ISODateTimeFormat.dateTime().print(creationDate.getTime());
     }
 
     @Transient
