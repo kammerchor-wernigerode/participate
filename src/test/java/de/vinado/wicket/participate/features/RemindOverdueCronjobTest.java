@@ -3,10 +3,9 @@ package de.vinado.wicket.participate.features;
 import de.vinado.wicket.participate.model.MockedEvent;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.services.EventService;
-import lombok.var;
 import org.apache.commons.lang3.time.DateUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,7 +27,7 @@ public class RemindOverdueCronjobTest {
     private EventService eventService;
     private RemindOverdueCronjob feature;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         eventService = mock(EventService.class);
         feature = new RemindOverdueCronjob(new RemindOverdueCronjob.Configuration(), eventService);
