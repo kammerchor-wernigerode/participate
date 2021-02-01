@@ -21,7 +21,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 
 /**
@@ -76,22 +75,19 @@ public abstract class BootstrapModalPanel<T> extends Panel {
         // save button
         final BootstrapAjaxButton saveBtn = new BootstrapAjaxButton(SAVE_BUTTON_ID, inner, Buttons.Type.Primary) {
             @Override
-            protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-                onSaveSubmit((IModel<T>) form.getModel(), target);
+            protected void onSubmit(final AjaxRequestTarget target) {
+                onSaveSubmit((IModel<T>) getForm().getModel(), target);
                 modal.close(target);
                 onAfterClose(model, modal, target);
             }
 
             @Override
-            protected void onError(final AjaxRequestTarget target, final Form<?> form) {
+            protected void onError(final AjaxRequestTarget target) {
                 target.add(feedback);
 
-                form.visitFormComponents(new IVisitor<FormComponent<?>, Object>() {
-                    @Override
-                    public void component(final FormComponent<?> components, final IVisit<Object> iVisit) {
-                        if (!components.getRenderBodyOnly()) {
-                            target.add(components);
-                        }
+                getForm().visitFormComponents((components, iVisit) -> {
+                    if (!components.getRenderBodyOnly()) {
+                        target.add(components);
                     }
                 });
             }
@@ -103,7 +99,7 @@ public abstract class BootstrapModalPanel<T> extends Panel {
         // cancel button
         final AjaxButton cancelBtn = new AjaxButton(CANCEL_BUTTON_ID) {
             @Override
-            protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+            protected void onSubmit(final AjaxRequestTarget target) {
                 onCancelSubmit(target);
                 modal.close(target);
             }
@@ -229,7 +225,8 @@ public abstract class BootstrapModalPanel<T> extends Panel {
      * Sets the modal size initially only.
      * Note that the css class is set but the markup container is not updated.
      * To set the size and update the markup container dynamically use the
-     * {@link #setModalSize(de.vinado.wicket.participate.components.modals.BootstrapModalPanel.ModalSize, org.apache.wicket.ajax.AjaxRequestTarget)}
+     * {@link #setModalSize(de.vinado.wicket.participate.components.modals.BootstrapModalPanel.ModalSize,
+     * org.apache.wicket.ajax.AjaxRequestTarget)}
      */
     protected void setModalSize(final ModalSize modalSize) {
         dialogWmc.add(new AttributeModifier("class", "modal-dialog " + modalSize.cssClassName()));

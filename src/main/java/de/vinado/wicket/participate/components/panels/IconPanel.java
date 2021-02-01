@@ -79,7 +79,7 @@ public class IconPanel extends Panel {
 
         cssClassNameModel = Model.of(type.cssClassName());
         final Label label = new Label("label", Model.of(""));
-        label.add(new CssClassNameAppender(Model.of(cssClassNameModel)));
+        label.add(new CssClassNameAppender(cssClassNameModel));
         label.setOutputMarkupId(true);
         add(label);
     }

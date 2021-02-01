@@ -203,7 +203,7 @@ public class EventSummaryListPanel extends Panel {
         }
 
         dataTable = new BootstrapAjaxDataTable<>("dataTable", columns, dataProvider, 30);
-        dataTable.hover().condensed();
+        dataTable.hover();
         dataTable.setOutputMarkupId(true);
         add(dataTable);
     }

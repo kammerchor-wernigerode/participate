@@ -60,7 +60,7 @@ public class EventPanel extends BreadCrumbPanel {
 
     private IModel<EventDetails> model;
 
-    private Form form;
+    private Form<EventDetails> form;
 
     private SimpleDataProvider<Participant, String> dataProvider;
     private BootstrapAjaxDataTable<Participant, String> dataTable;
@@ -70,9 +70,10 @@ public class EventPanel extends BreadCrumbPanel {
         this.model = model;
         setOutputMarkupPlaceholderTag(true);
 
-        form = new Form("form") {
+        form = new Form<>("form") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 dataProvider.set(eventService.getParticipants(model.getObject().getEvent()));
             }
         };
@@ -90,6 +91,7 @@ public class EventPanel extends BreadCrumbPanel {
         wmc.add(new MultiLineLabel("description") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setVisible(!Strings.isEmpty(model.getObject().getDescription()));
             }
         });
@@ -187,7 +189,7 @@ public class EventPanel extends BreadCrumbPanel {
 
         dataTable = new BootstrapAjaxDataTable<>("dataTable", columns, dataProvider, 15);
         dataTable.setOutputMarkupId(true);
-        dataTable.hover().condensed();
+        dataTable.hover();
         wmc.add(dataTable);
     }
 

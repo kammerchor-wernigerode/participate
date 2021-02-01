@@ -164,10 +164,10 @@ public class UserPanel extends Panel {
 
         dataTable = new BootstrapAjaxDataTable<>("dataTable", columns, dataProvider, 30);
         dataTable.setOutputMarkupId(true);
-        dataTable.hover().condensed();
+        dataTable.hover();
         add(dataTable);
 
-        final BootstrapAjaxLink createUserBtn = new BootstrapAjaxLink("createUserBtn", Buttons.Type.Default) {
+        final BootstrapAjaxLink<Void> createUserBtn = new BootstrapAjaxLink<>("createUserBtn", Buttons.Type.Default) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
@@ -184,7 +184,7 @@ public class UserPanel extends Panel {
         };
         createUserBtn.add(new CssClassNameAppender(Model.of("pull-right")));
         createUserBtn.setLabel(new ResourceModel("user.add", "Add User"));
-        createUserBtn.setSize(Buttons.Size.Mini);
+        createUserBtn.setSize(Buttons.Size.Small);
         createUserBtn.setIconType(FontAwesomeIconType.plus);
         add(createUserBtn);
     }

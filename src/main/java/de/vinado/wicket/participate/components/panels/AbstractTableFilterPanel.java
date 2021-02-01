@@ -1,13 +1,13 @@
 package de.vinado.wicket.participate.components.panels;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.agilecoders.wicket.jquery.util.Strings2;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapInlineFormDecorator;
+import de.vinado.wicket.participate.components.links.BootstrapAjaxButton;
 import de.vinado.wicket.participate.model.filters.IFilterPanel;
 import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import org.apache.wicket.AttributeModifier;
@@ -36,7 +36,7 @@ public abstract class AbstractTableFilterPanel<T, F> extends Panel implements IF
 
     private IModel<List<T>> model;
 
-    private BootstrapAjaxLink showButton;
+    private BootstrapAjaxLink<Void> showButton;
     private boolean visible = false;
 
     public AbstractTableFilterPanel(final String id, final IModel<List<T>> model, final IModel<F> filterModel) {
@@ -49,6 +49,7 @@ public abstract class AbstractTableFilterPanel<T, F> extends Panel implements IF
         inner = new WebMarkupContainer("wmc") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 if (visible) {
                     add(new CssClassNameAppender("in"));
                 }
@@ -56,7 +57,7 @@ public abstract class AbstractTableFilterPanel<T, F> extends Panel implements IF
         };
         inner.setOutputMarkupPlaceholderTag(true);
 
-        showButton = new BootstrapAjaxLink("showBtn", Buttons.Type.Default) {
+        showButton = new BootstrapAjaxLink<>("showBtn", Buttons.Type.Default) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 visible = !visible;
@@ -75,14 +76,14 @@ public abstract class AbstractTableFilterPanel<T, F> extends Panel implements IF
         showButton.setOutputMarkupId(true);
         showButton.add(new AttributeModifier("data-parent", "#" + Strings2.getMarkupId(AbstractTableFilterPanel.this)));
         showButton.add(new AttributeModifier("href", "#" + inner.getMarkupId(true)));
-        showButton.setSize(Buttons.Size.Mini);
+        showButton.setSize(Buttons.Size.Small);
         showButton.setIconType(FontAwesomeIconType.filter);
         showButton.setLabel(new ResourceModel("filter.enable", "Show Filter"));
         form.add(showButton);
 
         final BootstrapAjaxButton filterBtn = new BootstrapAjaxButton("filterBtn", Model.of(""), form, Buttons.Type.Primary) {
             @Override
-            protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+            protected void onSubmit(final AjaxRequestTarget target) {
                 onSearch(target, filterModel.getObject());
                 target.focusComponent(getFocusableFormComponent());
             }
@@ -93,7 +94,7 @@ public abstract class AbstractTableFilterPanel<T, F> extends Panel implements IF
 
         final BootstrapAjaxButton resetBtn = new BootstrapAjaxButton("resetBtn", Model.of(""), form, Buttons.Type.Default) {
             @Override
-            protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+            protected void onSubmit(final AjaxRequestTarget target) {
                 filterModel.setObject(newFilter((Class<F>) filterModel.getObject().getClass()));
                 target.add(form);
                 onReset(target);

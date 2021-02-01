@@ -10,7 +10,6 @@ import de.vinado.wicket.participate.resources.js.SnackbarJsResourceReference;
 import org.apache.wicket.markup.head.CssReferenceHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
-import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -48,8 +47,6 @@ public abstract class BasePage extends WebPage {
         add(new HtmlTag("html", Locale.getDefault()));
         add(new IeEdgeMetaTag("xUaCompatible"));
         add(new MetaTag("author", Model.of("author"), Model.of("Vincent Nadoll, Julius Felchow")));
-
-        add(new HeaderResponseContainer("footer-container", "footer-container"));
     }
 
     /**

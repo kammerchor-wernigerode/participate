@@ -98,7 +98,7 @@ public class ToolPanel extends Panel {
             final BootstrapAjaxButton submitBtn = new BootstrapAjaxButton("submitBtn", new ResourceModel("import", "Import"),
                 Buttons.Type.Primary) {
                 @Override
-                protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+                protected void onSubmit(final AjaxRequestTarget target) {
                     if (null != file) {
                         personService.importPersons(file);
                     }
@@ -124,7 +124,7 @@ public class ToolPanel extends Panel {
 
             final BootstrapAjaxButton exportBtn = new BootstrapAjaxButton("exportBtn", new ResourceModel("export", "Export"), Buttons.Type.Primary) {
                 @Override
-                protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+                protected void onSubmit(final AjaxRequestTarget target) {
                     export.go(target, personService.exportSingers(), "singer-export.csv");
                     target.add(exportForm);
                 }

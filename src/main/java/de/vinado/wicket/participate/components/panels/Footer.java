@@ -32,10 +32,11 @@ public class Footer extends Panel {
         add(new Label("developmentMode", "Development Mode") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setVisible(developmentMode);
             }
         });
-        add(new AjaxLink("feedback") {
+        add(new AjaxLink<Void>("feedback") {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
@@ -45,6 +46,7 @@ public class Footer extends Panel {
 
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setVisible(!developmentMode);
             }
         });

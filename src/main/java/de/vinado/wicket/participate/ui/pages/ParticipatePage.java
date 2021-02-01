@@ -69,8 +69,7 @@ public class ParticipatePage extends BasePage {
 
         navbar = new Navbar("navbar");
         navbar.setOutputMarkupId(true);
-        navbar.setPosition(Navbar.Position.STATIC_TOP);
-        navbar.fluid();
+        navbar.setPosition(Navbar.Position.DEFAULT);
         navbar.setBrandName(Model.of(ParticipateApplication.get().getApplicationName()));
         navbar.addComponents(NavbarComponents.transform(
                 Navbar.ComponentPosition.LEFT,
@@ -84,7 +83,7 @@ public class ParticipatePage extends BasePage {
                     @Override
                     protected List<AbstractLink> newSubMenuButtons(final String buttonMarkupId) {
                         final List<AbstractLink> menuButtons = new ArrayList<>();
-                        menuButtons.add(new AjaxLink(buttonMarkupId) {
+                        menuButtons.add(new AjaxLink<Void>(buttonMarkupId) {
                             @Override
                             public void onClick(final AjaxRequestTarget target) {
                                 final User user = ParticipateSession.get().getUser();
@@ -99,6 +98,7 @@ public class ParticipatePage extends BasePage {
                                     new EditAccountDTO(user, user.getPerson(), singer))) {
                                     @Override
                                     protected void onConfirm(final User user, final AjaxRequestTarget target) {
+                                        super.onConfigure();
                                         ParticipateSession.get().setUser(user);
                                         ParticipateApplication.get().getSecuritySettings().getAuthenticationStrategy().remove();
                                         userLabel = ParticipateSession.get().getUser().getPerson().getDisplayName();
@@ -114,7 +114,7 @@ public class ParticipatePage extends BasePage {
                                     .setBody(new ResourceModel("administration", "Administration")));
                         }
                         menuButtons.add(new MenuDivider());
-                        menuButtons.add(new AjaxLink(buttonMarkupId) {
+                        menuButtons.add(new AjaxLink<Void>(buttonMarkupId) {
                             @Override
                             public void onClick(final AjaxRequestTarget target) {
                                 ParticipateSession.get().invalidate();
@@ -139,6 +139,7 @@ public class ParticipatePage extends BasePage {
 
     @Override
     protected void onConfigure() {
+        super.onConfigure();
         if (!ParticipateSession.get().isSignedIn()) {
             ParticipateApplication.get().restartResponseAtSignInPage();
         } else {

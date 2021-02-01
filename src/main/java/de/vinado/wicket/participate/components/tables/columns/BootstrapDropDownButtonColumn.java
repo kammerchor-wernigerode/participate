@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.components.tables.columns;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.AlignmentBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.dropdown.DropDownAlignmentBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.dropdown.DropDownButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -32,9 +32,9 @@ public abstract class BootstrapDropDownButtonColumn<T, S> extends AbstractColumn
                 return BootstrapDropDownButtonColumn.this.newSubMenuButtons(buttonMarkupId, rowModel);
             }
         };
-        dropDownButton.setSize(Buttons.Size.Mini);
+        dropDownButton.setSize(Buttons.Size.Small);
         dropDownButton.setType(Buttons.Type.Link);
-        dropDownButton.setAlignment(AlignmentBehavior.Alignment.RIGHT);
+        dropDownButton.setAlignment(DropDownAlignmentBehavior.Alignment.RIGHT);
         //dropDownButton.add(new TooltipBehavior(new ResourceModel("more", "More")));
         cellItem.add(dropDownButton);
     }

@@ -59,8 +59,7 @@ public class FormPage extends BasePage {
 
         final Navbar navbar = new Navbar("navbar");
         navbar.setOutputMarkupId(true);
-        navbar.setPosition(Navbar.Position.STATIC_TOP);
-        navbar.fluid();
+        navbar.setPosition(Navbar.Position.DEFAULT);
         navbar.setBrandName(Model.of(""));
         navbar.addComponents(new AbstractNavbarComponent(Navbar.ComponentPosition.RIGHT) {
             @Override
@@ -94,6 +93,7 @@ public class FormPage extends BasePage {
 
     @Override
     protected void onConfigure() {
+        super.onConfigure();
         if (!signedIn) {
             setResponsePage(new FormSignInPage(new CompoundPropertyModel<>(null == FormPage.this.model.getObject() ?
                 new ParticipantDTO() : new ParticipantDTO(FormPage.this.model.getObject()))));

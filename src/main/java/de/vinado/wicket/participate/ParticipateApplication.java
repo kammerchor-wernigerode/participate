@@ -2,13 +2,11 @@ package de.vinado.wicket.participate;
 
 import com.google.javascript.jscomp.CompilationLevel;
 import de.agilecoders.wicket.core.Bootstrap;
-import de.agilecoders.wicket.core.markup.html.RenderJavaScriptToFooterHeaderResponseDecorator;
 import de.agilecoders.wicket.core.request.resource.caching.version.Adler32ResourceVersion;
 import de.agilecoders.wicket.core.settings.BootstrapSettings;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
 import de.agilecoders.wicket.extensions.javascript.GoogleClosureJavaScriptCompressor;
 import de.agilecoders.wicket.extensions.javascript.YuiCssCompressor;
-import de.agilecoders.wicket.less.BootstrapLess;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.ui.administration.AdminPage;
 import de.vinado.wicket.participate.ui.event.EventsPage;
@@ -37,7 +35,7 @@ import org.apache.wicket.protocol.https.HttpsMapper;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
-import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
+import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
@@ -51,6 +49,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -109,6 +109,8 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
     public void init() {
         super.init();
 
+        getCspSettings().blocking().disabled();
+
         getApplicationSettings().setUploadProgressUpdatesEnabled(true);
         getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
         getSecuritySettings().setAuthorizationStrategy(new AnnotationsRoleAuthorizationStrategy(
@@ -144,10 +146,11 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
         }
 
         // spring injector for @SpringBean annotations
-        getComponentInstantiationListeners().add(new SpringComponentInjector(this));
+        WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        getComponentInstantiationListeners().add(new SpringComponentInjector(this, ctx));
 
         // Error Page
-        getRequestCycleListeners().add(new AbstractRequestCycleListener() {
+        getRequestCycleListeners().add(new IRequestCycleListener() {
             @Override
             public IRequestHandler onException(final RequestCycle cycle, final Exception ex) {
                 return new RenderPageRequestHandler(new PageProvider(new ErrorPage(ex)));
@@ -163,10 +166,7 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
     private void configureBootstrap() {
         final IBootstrapSettings settings = new BootstrapSettings();
         Bootstrap.builder().withBootstrapSettings(settings).install(this);
-
-        settings.setJsResourceFilterName("footer-container");
-
-        BootstrapLess.install(this);
+        Bootstrap.install(this);
     }
 
     private void optimizeForWebPerformance() {
@@ -184,7 +184,6 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
             getResourceSettings().setCachingStrategy(new NoOpResourceCachingStrategy());
         }
 
-        setHeaderResponseDecorator(new RenderJavaScriptToFooterHeaderResponseDecorator());
         getRequestCycleSettings().setRenderStrategy(RequestCycleSettings.RenderStrategy.ONE_PASS_RENDER);
     }
 

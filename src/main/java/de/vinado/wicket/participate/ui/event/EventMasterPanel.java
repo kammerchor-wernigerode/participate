@@ -73,7 +73,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
             protected AbstractLink newDefaultBtn(final String id, final IModel<List<EventDetails>> model) {
                 setDefaultBtnLabelModel(new ResourceModel("event.add", "Add Event"));
                 setDefaultBtnIcon(FontAwesomeIconType.plus);
-                return new AjaxLink(id) {
+                return new AjaxLink<Void>(id) {
                     @Override
                     public void onClick(final AjaxRequestTarget target) {
                         final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
@@ -110,6 +110,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
             new ResourceModel("event", "Event")) {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setVisible(eventService.hasUpcomingEvents());
             }
 

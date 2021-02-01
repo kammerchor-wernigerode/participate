@@ -115,6 +115,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         final DateTextField endDateTf = new DateTextField("endDate", endDateConfig) {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setVisible(severalDays.getObject());
             }
         };
@@ -122,6 +123,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         final DateTextField startDateTf = new DateTextField("startDate", startDateConfig) {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setLabel(severalDays.getObject()
                     ? new ResourceModel("from", "From")
                     : new ResourceModel("on", "On"));
@@ -172,7 +174,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         });
         inner.add(descriptionTa);
 
-        final BootstrapAjaxLink removeBtn = new BootstrapAjaxLink("removeBtn", Buttons.Type.Link) {
+        final BootstrapAjaxLink<Void> removeBtn = new BootstrapAjaxLink<>("removeBtn", Buttons.Type.Link) {
             @Override
             protected void onInitialize() {
                 super.onInitialize();
@@ -194,7 +196,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         };
         removeBtn.setLabel(new ResourceModel("event.remove", "Remove Event"));
         removeBtn.setIconType(FontAwesomeIconType.trash);
-        removeBtn.setSize(Buttons.Size.Mini);
+        removeBtn.setSize(Buttons.Size.Small);
         removeBtn.setOutputMarkupId(true);
         inner.add(removeBtn);
     }

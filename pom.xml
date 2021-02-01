@@ -24,8 +24,8 @@
     <properties>
         <skipTests>false</skipTests>
         <java.version>11</java.version>
-        <wicket.version>7.16.0</wicket.version>
-        <wicket.bootstrap.version>0.10.18</wicket.bootstrap.version>
+        <wicket.version>9.2.0</wicket.version>
+        <wicket.bootstrap.version>5.0.3</wicket.bootstrap.version>
     </properties>
 
     <dependencies>
@@ -68,19 +68,9 @@
             <version>${wicket.bootstrap.version}</version>
         </dependency>
         <dependency>
-            <groupId>de.agilecoders.wicket</groupId>
-            <artifactId>wicket-bootstrap-themes</artifactId>
-            <version>${wicket.bootstrap.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.wicketstuff</groupId>
             <artifactId>wicketstuff-select2</artifactId>
             <version>${wicket.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.agilecoders.wicket</groupId>
-            <artifactId>wicket-bootstrap-less</artifactId>
-            <version>${wicket.bootstrap.version}</version>
         </dependency>
 
         <!-- SPRING BOOT -->
@@ -197,11 +187,31 @@
                 </excludes>
             </resource>
         </resources>
+        <testResources>
+            <testResource>
+                <filtering>false</filtering>
+                <directory>src/test/resources</directory>
+            </testResource>
+            <testResource>
+                <filtering>false</filtering>
+                <directory>src/test/java</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
+                <inherited>true</inherited>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
                 </configuration>

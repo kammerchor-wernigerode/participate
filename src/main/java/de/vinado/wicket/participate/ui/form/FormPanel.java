@@ -121,7 +121,7 @@ public class FormPanel extends BreadCrumbPanel {
 
         final BootstrapAjaxButton submitBtn = new BootstrapAjaxButton("submit", Buttons.Type.Success) {
             @Override
-            protected void onSubmit(final AjaxRequestTarget target, final Form<?> inner) {
+            protected void onSubmit(final AjaxRequestTarget target) {
                 send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(
                     eventService.acceptEvent(model.getObject()).getEvent(),
                     target));
@@ -135,7 +135,7 @@ public class FormPanel extends BreadCrumbPanel {
 
         final BootstrapAjaxButton declineBtn = new BootstrapAjaxButton("decline", Buttons.Type.Default) {
             @Override
-            protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+            protected void onSubmit(final AjaxRequestTarget target) {
                 final Participant savedParticipant = eventService.declineEvent(model.getObject());
                 send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(savedParticipant.getEvent(), target));
                 Snackbar.show(target, new ResourceModel("invitation.decline.success", "Your cancellation has been saved. You can leave this page now."));

@@ -5,7 +5,6 @@ import de.vinado.wicket.participate.email.service.TemplateService;
 import freemarker.template.TemplateException;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.injection.Injector;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -18,7 +17,7 @@ import java.util.Map;
  *
  * @author Vincent Nadoll
  */
-public class TemplateModel extends AbstractReadOnlyModel<String> {
+public class TemplateModel implements IModel<String> {
 
     @SpringBean
     private TemplateService templateService;

@@ -66,7 +66,7 @@ public class SignInPage extends BasePage {
 
             final AjaxSubmitLink submitBtn = new AjaxSubmitLink("submit") {
                 @Override
-                protected void onSubmit(final AjaxRequestTarget target, final Form<?> inner) {
+                protected void onSubmit(final AjaxRequestTarget target) {
                     if (Strings.isEmpty(model.getObject().getEmail())) {
                         Snackbar.show(target, new ResourceModel("password.reset.email", "Enter your email address"));
                         return;

@@ -107,6 +107,7 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
         final CheckBox cateringCb = new CheckBox("catering") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setEnabled(InvitationStatus.ACCEPTED.equals(model.getObject().getInvitationStatus()));
             }
         };
@@ -122,6 +123,7 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
         final CheckBox accommodationCb = new CheckBox("accommodation") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setEnabled(InvitationStatus.ACCEPTED.equals(model.getObject().getInvitationStatus()));
             }
         };
@@ -134,9 +136,10 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
         });
         inner.add(accommodationCb);
 
-        final TextArea commentTa = new TextArea("comment") {
+        final TextArea<ParticipantDTO> commentTa = new TextArea<>("comment") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setEnabled(InvitationStatus.ACCEPTED.equals(model.getObject().getInvitationStatus()));
             }
         };
@@ -165,7 +168,7 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
                 }
             }
         };
-        inviteSingerBtn.setSize(Buttons.Size.Mini);
+        inviteSingerBtn.setSize(Buttons.Size.Small);
         inner.add(inviteSingerBtn);
 
         URL href = ParticipateUtils.generateInvitationLink(

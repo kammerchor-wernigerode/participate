@@ -60,7 +60,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         wmc.add(new Label("eventName", new PropertyModel<>(model, "name")));
 
         // TODO Stylen
-        final BootstrapAjaxLink previousEventBtn = new BootstrapAjaxLink("previousEventBtn", Buttons.Type.Link) {
+        final BootstrapAjaxLink<Void> previousEventBtn = new BootstrapAjaxLink<>("previousEventBtn", Buttons.Type.Link) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 final EventDetails previousEvent =
@@ -78,7 +78,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         previousEventBtn.setIconType(FontAwesomeIconType.caret_left);
         wmc.add(previousEventBtn);
 
-        final BootstrapAjaxLink backBtn = new BootstrapAjaxLink("backBtn", Buttons.Type.Default) {
+        final BootstrapAjaxLink<Void> backBtn = new BootstrapAjaxLink<>("backBtn", Buttons.Type.Default) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 setResponsePage(EventsPage.class);
@@ -89,7 +89,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         backBtn.setIconType(FontAwesomeIconType.calendar);
         wmc.add(backBtn);
 
-        final BootstrapAjaxLink nextEventBtn = new BootstrapAjaxLink("nextEventBtn", Buttons.Type.Link) {
+        final BootstrapAjaxLink<Void> nextEventBtn = new BootstrapAjaxLink<>("nextEventBtn", Buttons.Type.Link) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 final EventDetails nextEvent = eventService.getSuccessor(model.getObject());
@@ -140,7 +140,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
             protected AbstractLink newDefaultBtn(final String id, final IModel<List<Participant>> model) {
                 setDefaultBtnLabelModel(new ResourceModel("show.all.properties", "Show all Properties"));
                 setDefaultBtnIcon(FontAwesomeIconType.refresh);
-                return new AjaxLink(id) {
+                return new AjaxLink<Void>(id) {
                     @Override
                     public void onClick(final AjaxRequestTarget target) {
                         send(getWebPage(), Broadcast.BREADTH, new ShowHidePropertiesEvent(target));

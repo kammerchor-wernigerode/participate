@@ -14,7 +14,7 @@ import org.apache.wicket.model.IModel;
  */
 public abstract class AjaxLinkPanel extends Panel {
 
-    private AjaxLink ajaxLink;
+    private AjaxLink<Void> ajaxLink;
 
     /**
      * Construct.
@@ -25,7 +25,7 @@ public abstract class AjaxLinkPanel extends Panel {
     public AjaxLinkPanel(final String id, final IModel<String> labelModel) {
         super(id, labelModel);
 
-        ajaxLink = new AjaxLink("link") {
+        ajaxLink = new AjaxLink<>("link") {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 AjaxLinkPanel.this.onClick(target);
@@ -36,7 +36,7 @@ public abstract class AjaxLinkPanel extends Panel {
         ajaxLink.add(new Label("label", labelModel.getObject()));
     }
 
-    public AjaxLink getAjaxLink() {
+    public AjaxLink<Void> getAjaxLink() {
         return ajaxLink;
     }
 

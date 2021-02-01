@@ -99,7 +99,6 @@ public class SingersPanel extends Panel {
         dataTable = new BootstrapAjaxDataTable<>("dataTable", columns, dataProvider, 20);
         dataTable.setOutputMarkupId(true);
         dataTable.hover();
-        dataTable.condensed();
         add(dataTable);
     }
 

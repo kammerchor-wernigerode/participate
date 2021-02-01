@@ -85,7 +85,7 @@ public class AddEditSingerPanel extends BootstrapModalPanel<SingerDTO> {
         voiceDd.setLabel(new ResourceModel("voice", "Voice"));
         inner.add(voiceDd);
 
-        final BootstrapAjaxLink removeBtn = new BootstrapAjaxLink("removeBtn", Buttons.Type.Link) {
+        final BootstrapAjaxLink<Void> removeBtn = new BootstrapAjaxLink<>("removeBtn", Buttons.Type.Link) {
             @Override
             protected void onInitialize() {
                 super.onInitialize();
@@ -107,7 +107,7 @@ public class AddEditSingerPanel extends BootstrapModalPanel<SingerDTO> {
         };
         removeBtn.setLabel(new ResourceModel("singer.remove", "Remove Singer"));
         removeBtn.setIconType(FontAwesomeIconType.trash);
-        removeBtn.setSize(Buttons.Size.Mini);
+        removeBtn.setSize(Buttons.Size.Small);
         removeBtn.setOutputMarkupId(true);
         inner.add(removeBtn);
 

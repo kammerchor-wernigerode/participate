@@ -28,8 +28,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.time.Duration;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +52,7 @@ public class EventsPanel extends Panel {
         this.model = model;
 
         final TooltipConfig tooltipConfig = new TooltipConfig();
-        tooltipConfig.withDelay(Duration.milliseconds(300L));
+        tooltipConfig.withDelay(Duration.ofMillis(300L));
         tooltipConfig.withHtml(true);
 
         final EventFilter eventFilter = ParticipateSession.get().getEventFilter();
@@ -139,7 +139,7 @@ public class EventsPanel extends Panel {
             }
         };
         dataTable.setOutputMarkupId(true);
-        dataTable.hover().condensed();
+        dataTable.hover();
         add(dataTable);
     }
 

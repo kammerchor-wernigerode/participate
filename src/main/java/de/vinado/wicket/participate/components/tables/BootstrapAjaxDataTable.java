@@ -56,16 +56,6 @@ public class BootstrapAjaxDataTable<T, S> extends DataTable<T, S> {
     }
 
     /**
-     * adds the "condensed" style to table
-     *
-     * @return this instance for chaining
-     */
-    public BootstrapAjaxDataTable condensed() {
-        tableBehavior.condensed();
-        return this;
-    }
-
-    /**
      * adds the "bordered" style to table
      *
      * @return this instance for chaining

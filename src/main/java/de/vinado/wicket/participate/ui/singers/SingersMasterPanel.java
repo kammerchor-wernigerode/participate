@@ -46,7 +46,7 @@ public class SingersMasterPanel extends BreadCrumbPanel {
             protected AbstractLink newDefaultBtn(final String id, final IModel<List<Singer>> model) {
                 setDefaultBtnLabelModel(new ResourceModel("singer.add", "Add Singer"));
                 setDefaultBtnIcon(FontAwesomeIconType.plus);
-                return new AjaxLink(id) {
+                return new AjaxLink<Void>(id) {
                     @Override
                     public void onClick(final AjaxRequestTarget target) {
                         final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
