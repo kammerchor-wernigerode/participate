@@ -13,6 +13,7 @@ import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -47,7 +48,6 @@ public abstract class BasePage extends WebPage {
         add(new HtmlTag("html", Locale.GERMAN));
         add(new IeEdgeMetaTag("xUaCompatible"));
         add(new MetaTag("author", Model.of("author"), Model.of("Vincent Nadoll, Julius Felchow")));
-        add(new Label("title", ParticipateApplication.get().getApplicationName()));
 
         add(new HeaderResponseContainer("footer-container", "footer-container"));
     }
@@ -67,15 +67,14 @@ public abstract class BasePage extends WebPage {
         add(modal);
     }
 
-    /**
-     * I have no clue, what this does.
-     * {@inheritDoc}
-     *
-     * @return false
-     */
     @Override
-    public boolean isVersioned() {
-        return false;
+    protected void onBeforeRender() {
+        addOrReplace(new Label("title", getTitle()));
+        super.onBeforeRender();
+    }
+
+    protected IModel<String> getTitle() {
+        return Model.of(ParticipateApplication.get().getApplicationName());
     }
 
     /**
