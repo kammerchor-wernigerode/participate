@@ -45,7 +45,7 @@ public abstract class BasePage extends WebPage {
 
         addModal(ParticipatePage.MODAL_ID);
 
-        add(new HtmlTag("html", Locale.GERMAN));
+        add(new HtmlTag("html", Locale.getDefault()));
         add(new IeEdgeMetaTag("xUaCompatible"));
         add(new MetaTag("author", Model.of("author"), Model.of("Vincent Nadoll, Julius Felchow")));
 
