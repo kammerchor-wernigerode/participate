@@ -4,8 +4,8 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig;
 import de.vinado.wicket.participate.ParticipateSession;
-import de.vinado.wicket.participate.components.panels.AjaxLinkPanel;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
+import de.vinado.wicket.participate.components.tables.columns.AjaxLinkColumn;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventUpdateEvent;
 import de.vinado.wicket.participate.model.EventDetails;
@@ -25,7 +25,6 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -79,19 +78,12 @@ public class EventsPanel extends Panel {
         };
 
         final List<IColumn<EventDetails, String>> columns = new ArrayList<>();
-        columns.add(new PropertyColumn<EventDetails, String>(new ResourceModel("name", "Name"), "name", "name") {
+        columns.add(new AjaxLinkColumn<>(new ResourceModel("name", "Name"), "name", "name") {
             @Override
-            public void populateItem(Item<ICellPopulator<EventDetails>> item, String componentId, IModel<EventDetails> rowModel) {
-                final AjaxLinkPanel selectEventLink = new AjaxLinkPanel(componentId, new PropertyModel<>(rowModel, getPropertyExpression())) {
-                    @Override
-                    public void onClick(final AjaxRequestTarget target) {
-                        ParticipateSession.get().setEvent(rowModel.getObject().getEvent());
-                        send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(rowModel.getObject().getEvent(), target));
-                        target.add(dataTable);
-                    }
-                };
-                selectEventLink.getAjaxLink().add(new TooltipBehavior(Model.of(rowModel.getObject().getName()), tooltipConfig));
-                item.add(selectEventLink);
+            protected void onClick(AjaxRequestTarget target, IModel<EventDetails> rowModel) {
+                ParticipateSession.get().setEvent(rowModel.getObject().getEvent());
+                send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(rowModel.getObject().getEvent(), target));
+                target.add(dataTable);
             }
 
             @Override
