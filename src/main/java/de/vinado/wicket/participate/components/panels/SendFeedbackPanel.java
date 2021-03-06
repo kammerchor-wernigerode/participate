@@ -10,7 +10,8 @@ import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalForm
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.service.EmailService;
-import de.vinado.wicket.participate.model.dtos.SendFeedbackDTO;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Button;
@@ -26,20 +27,21 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.visit.IVisitor;
 
 import javax.mail.internet.AddressException;
+import java.io.Serializable;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
 @Slf4j
-public class SendFeedbackPanel extends Modal<SendFeedbackDTO> {
+public class SendFeedbackPanel extends Modal<SendFeedbackPanel.FormData> {
 
     @SpringBean
     private EmailService emailService;
 
     public SendFeedbackPanel(String id) {
-        super(id, new CompoundPropertyModel<>(new SendFeedbackDTO()));
+        super(id, new CompoundPropertyModel<>(new FormData()));
 
-        BootstrapForm<SendFeedbackDTO> form = new BootstrapForm<>("form", getModel())
+        BootstrapForm<FormData> form = new BootstrapForm<>("form", getModel())
             .type(FormType.Default);
 
         NotificationPanel feedback = new NotificationPanel("feedback");
@@ -82,8 +84,8 @@ public class SendFeedbackPanel extends Modal<SendFeedbackDTO> {
         setFooterVisible(true);
     }
 
-    protected void onSaveSubmit(final AjaxRequestTarget target) {
-        SendFeedbackDTO dto = getModelObject();
+    protected void onSaveSubmit(AjaxRequestTarget target) {
+        FormData dto = getModelObject();
         Email mailData = new Email();
 
         try {
@@ -98,5 +100,14 @@ public class SendFeedbackPanel extends Modal<SendFeedbackDTO> {
             log.error("Encountered malformed email address", e);
             Snackbar.show(target, Model.of("The application encountered a malformed email address. Abort."));
         }
+    }
+
+    @Getter
+    @Setter
+    static class FormData implements Serializable {
+        private String name;
+        private String email;
+        private String subject;
+        private String message;
     }
 }
