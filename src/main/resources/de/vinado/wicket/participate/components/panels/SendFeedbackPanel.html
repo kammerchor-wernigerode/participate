@@ -6,10 +6,13 @@
 <body>
 <wicket:panel>
     <wicket:extend>
-        <input wicket:id="name">
-        <input type="email" wicket:id="email">
-        <input wicket:id="subject">
-        <textarea wicket:id="message"></textarea>
+        <form wicket:id="form">
+            <input wicket:id="name">
+            <input type="email" wicket:id="email">
+            <input wicket:id="subject">
+            <textarea wicket:id="message"></textarea>
+            <div wicket:id="feedback"></div>
+        </form>
     </wicket:extend>
 </wicket:panel>
 </body>
