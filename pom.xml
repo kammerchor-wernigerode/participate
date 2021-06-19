@@ -110,6 +110,11 @@
             <artifactId>spring-boot-starter-dkim-javamail</artifactId>
             <version>1.2.1</version>
         </dependency>
+        <dependency>
+            <groupId>de.vinado.boot</groupId>
+            <artifactId>spring-boot-secrets-api</artifactId>
+            <version>1.1.0</version>
+        </dependency>
 
         <!-- WICKET SPRING DEPENDENCIES-->
         <dependency>
