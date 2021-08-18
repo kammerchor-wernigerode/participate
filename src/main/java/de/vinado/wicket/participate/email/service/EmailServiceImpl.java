@@ -21,6 +21,9 @@ import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.vinado.wicket.participate.email.service.MultipartType.HTML;
@@ -67,13 +70,10 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void send(final Stream<Email> emails) {
         final MimeMessagePreparator[] preparedMessages = emails.map(email ->
-            (MimeMessagePreparator) mimeMessage ->
-                prepareMimeMessage(mimeMessage, email))
+                (MimeMessagePreparator) mimeMessage ->
+                    prepareMimeMessage(mimeMessage, email))
             .toArray(MimeMessagePreparator[]::new);
-        log.debug("{} email(s) prepared and ready to ship", preparedMessages.length);
-
-        sender.send(preparedMessages);
-        logSuccess(preparedMessages.length);
+        send(preparedMessages);
     }
 
     /**
@@ -102,13 +102,32 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void send(final Stream<Email> emails, final String plaintextTemplateFileName, final String htmlTemplateFileName) {
         final MimeMessagePreparator[] preparedMessages = emails.map(email ->
-            (MimeMessagePreparator) mimeMessage ->
-                prepareMimeMessage(mimeMessage, email, plaintextTemplateFileName, htmlTemplateFileName))
+                (MimeMessagePreparator) mimeMessage ->
+                    prepareMimeMessage(mimeMessage, email, plaintextTemplateFileName, htmlTemplateFileName))
             .toArray(MimeMessagePreparator[]::new);
-        log.debug("{} email(s) prepared and ready to ship", preparedMessages.length);
+        send(preparedMessages);
+    }
 
-        sender.send(preparedMessages);
-        logSuccess(preparedMessages.length);
+    private void send(MimeMessagePreparator[] preparedMessages) {
+        try {
+            log.debug("{} email(s) prepared and ready to ship", preparedMessages.length);
+
+            MimeMessagePreparator[][] splitted = split(preparedMessages, 20).toArray(MimeMessagePreparator[][]::new);
+            for (MimeMessagePreparator[] preparators : splitted) {
+                sender.send(preparators);
+                TimeUnit.SECONDS.sleep(20);
+            }
+
+            logSuccess(preparedMessages.length);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Stream<MimeMessagePreparator[]> split(MimeMessagePreparator[] preparedMessages, int chunkSize) {
+        return IntStream.iterate(0, i -> i + chunkSize)
+            .limit((int) Math.ceil(preparedMessages.length / chunkSize))
+            .mapToObj(j -> Arrays.copyOfRange(preparedMessages, j, Math.min(preparedMessages.length, j + chunkSize)));
     }
 
     /**
