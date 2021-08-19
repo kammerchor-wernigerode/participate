@@ -615,7 +615,7 @@ public class EventServiceImpl extends DataService implements EventService {
     public int inviteParticipants(final List<Participant> participants, final User organizer) {
         final Stream<Email> invitations = participants
             .stream()
-            .map(sneaky(participant -> {
+            .map(participant -> {
                 final Singer singer = participant.getSinger();
                 int offset = 1 - applicationProperties.getDeadlineOffset();
                 Date deadline = DateUtils.addDays(participant.getEvent().getStartDate(), offset);
@@ -648,7 +648,7 @@ public class EventServiceImpl extends DataService implements EventService {
                 }
 
                 return email;
-            }));
+            });
 
         // TODO Create notification template
         emailService.send(invitations, "inviteSinger-txt.ftl", "inviteSinger-html.ftl");
