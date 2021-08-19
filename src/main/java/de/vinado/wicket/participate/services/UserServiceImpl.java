@@ -386,7 +386,6 @@ public class UserServiceImpl extends DataService implements UserService {
      * exists the function calls itself .
      *
      * @return Password reset token
-     *
      * @see #hasUserRecoveryToken(String)
      */
     private String generateRecoveryToken() {
