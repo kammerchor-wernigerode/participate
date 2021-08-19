@@ -176,7 +176,7 @@ public class EventPanel extends BreadCrumbPanel {
                 public void onClick(final AjaxRequestTarget target, final IModel<Participant> rowModel) {
                     final Person person = rowModel.getObject().getSinger();
                     final Email mailData = new Email();
-                    mailData.addTo(person.getEmail(), person.getDisplayName());
+                    mailData.addTo(person);
 
                     final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                     modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));

@@ -310,7 +310,7 @@ public class UserServiceImpl extends DataService implements UserService {
                 }
             };
             email.setFrom(properties.getMail().getSender(), applicationName);
-            email.addTo(person.getEmail(), person.getDisplayName());
+            email.addTo(person);
             email.setSubject(initial ? "Konto aktivieren" : "Passwort zurücksetzen");
 
             if (initial) {
@@ -360,7 +360,7 @@ public class UserServiceImpl extends DataService implements UserService {
                 }
             };
             email.setFrom(properties.getMail().getSender(), applicationName);
-            email.addTo(person.getEmail(), person.getDisplayName());
+            email.addTo(person);
             email.setSubject("Dein Passwort wurde aktualisiert");
 
             emailService.send(email, "passwordResetSuccess-txt.ftl", "passwordResetSuccess-html.ftl");

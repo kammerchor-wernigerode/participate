@@ -637,7 +637,7 @@ public class EventServiceImpl extends DataService implements EventService {
                 };
 
                 email.setFrom(applicationProperties.getMail().getSender(), applicationProperties.getCustomer());
-                email.addTo(singer.getEmail(), singer.getDisplayName());
+                email.addTo(singer);
                 email.setSubject(participant.getEvent().getName());
                 email.setAttachments(Collections.singleton(newEventAttachment(participant.getEvent(), organizer)));
 

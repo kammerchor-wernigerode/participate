@@ -88,7 +88,7 @@ public class SingersPanel extends Panel {
             public void onClick(final AjaxRequestTarget target, final IModel<Singer> rowModel) {
                 final Person person = rowModel.getObject();
                 final Email mailData = new Email();
-                mailData.addTo(person.getEmail(), person.getDisplayName());
+                mailData.addTo(person);
 
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                 modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));

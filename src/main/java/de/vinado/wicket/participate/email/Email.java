@@ -1,18 +1,19 @@
 package de.vinado.wicket.participate.email;
 
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
+import de.vinado.wicket.participate.model.Person;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
-import lombok.SneakyThrows;
 import org.springframework.lang.Nullable;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
@@ -66,9 +67,8 @@ public class Email implements Serializable {
      * @param address  the senders email address
      * @param personal the senders name
      */
-    @SneakyThrows
     public void setFrom(final String address, final String personal) {
-        this.from = new InternetAddress(address, personal, UTF_8);
+        this.from = createFrom(address, personal);
     }
 
     /**
@@ -84,12 +84,10 @@ public class Email implements Serializable {
     /**
      * Adds a recipient with name and email address like <em>Vincent Nadoll &lt;me@vinado.de&gt;</em>.
      *
-     * @param address  the email address to add
-     * @param personal the name to add
+     * @param person the person to add
      */
-    @SneakyThrows
-    public void addTo(final String address, final String personal) {
-        this.to.add(new InternetAddress(address, personal, UTF_8));
+    public void addTo(Person person) {
+        this.to.add(createFrom(person));
     }
 
     /**
@@ -105,12 +103,10 @@ public class Email implements Serializable {
     /**
      * Adds a CC recipient with name and email address like <em>Vincent Nadoll &lt;me@vinado.de&gt;</em>.
      *
-     * @param address  the email address to add
-     * @param personal the name to add
+     * @param person the person to add
      */
-    @SneakyThrows
-    public void addCc(final String address, final String personal) {
-        this.cc.add(new InternetAddress(address, personal, UTF_8));
+    public void addCc(Person person) {
+        this.cc.add(createFrom(person));
     }
 
     /**
@@ -126,12 +122,10 @@ public class Email implements Serializable {
     /**
      * Adds a BCC recipient with name and email address like <em>Vincent Nadoll &lt;me@vinado.de&gt;</em>.
      *
-     * @param address  the email address to add
-     * @param personal the name to add
+     * @param person the person to add
      */
-    @SneakyThrows
-    public void addBcc(final String address, final String personal) {
-        this.bcc.add(new InternetAddress(address, personal, UTF_8));
+    public void addBcc(Person person) {
+        this.bcc.add(createFrom(person));
     }
 
     /**
@@ -169,5 +163,21 @@ public class Email implements Serializable {
                 .attachments(this.attachments)
                 .data(this.data)
                 .build());
+    }
+
+    private static InternetAddress createFrom(Person person) {
+        try {
+            return new InternetAddress(person.getEmail(), person.getDisplayName(), UTF_8);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static InternetAddress createFrom(String email, String name) {
+        try {
+            return new InternetAddress(email, name, UTF_8);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

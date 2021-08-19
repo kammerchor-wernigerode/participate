@@ -65,7 +65,7 @@ public class SingersMasterPanel extends BreadCrumbPanel {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
                         final Email mailData = new Email();
-                        model.getObject().forEach(singer -> mailData.addTo(singer.getEmail(), singer.getDisplayName()));
+                        model.getObject().forEach(mailData::addTo);
 
                         final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                         modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
