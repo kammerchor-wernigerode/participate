@@ -38,6 +38,7 @@ public class WebInitializer implements ServletContextInitializer {
         filter.setInitParameter(WicketFilter.APP_FACT_PARAM, SpringWebApplicationFactory.class.getName());
         filter.setInitParameter("applicationClassName", "de.vinado.wicket.participate.ParticipateApplication");
         filter.setInitParameter("applicationBean", "participateApplication");
+        filter.setInitParameter(WicketFilter.IGNORE_PATHS_PARAM, "/static");
         filter.setInitParameter(WicketFilter.FILTER_MAPPING_PARAM, "/*");
         filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR), false, Stream.concat(Stream.of("/wicket/*"), PageRegistry.getInstance().stream().map(PageRegistrar::getPath)).toArray(String[]::new));
         if (properties.isDevelopmentMode()) {

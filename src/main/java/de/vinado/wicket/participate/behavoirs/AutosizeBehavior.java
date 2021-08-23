@@ -1,7 +1,6 @@
 package de.vinado.wicket.participate.behavoirs;
 
 import de.agilecoders.wicket.core.util.Components;
-import de.vinado.wicket.participate.resources.js.AutoHeightJsResourceReference;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
@@ -38,7 +37,7 @@ public class AutosizeBehavior extends Behavior {
      */
     @Override
     public void renderHead(final Component component, final IHeaderResponse response) {
-        response.render(JavaScriptHeaderItem.forReference(AutoHeightJsResourceReference.INSTANCE));
+        response.render(JavaScriptHeaderItem.forUrl("js/autosize.min.js"));
 
         if (component instanceof TextArea) {
             response.render(new OnDomReadyHeaderItem("autosize(document.getElementById('" + component.getMarkupId() + "'))"));

@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.ui.event;
 
-import de.vinado.wicket.participate.resources.js.RelativeTimePipeJsResourceReference;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
@@ -18,7 +17,7 @@ public class RelativeTimePipe extends Behavior {
 
     @Override
     public void renderHead(final Component component, final IHeaderResponse response) {
-        response.render(JavaScriptHeaderItem.forReference(RelativeTimePipeJsResourceReference.INSTANCE));
+        response.render(JavaScriptHeaderItem.forUrl("js/relative-time.pipe.js"));
 
         if (component instanceof Label) {
             response.render(new OnDomReadyHeaderItem("rtfTransform(document.getElementById('" + component.getMarkupId() + "'))"));

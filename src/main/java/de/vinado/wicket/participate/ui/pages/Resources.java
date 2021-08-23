@@ -3,7 +3,6 @@ package de.vinado.wicket.participate.ui.pages;
 import de.agilecoders.wicket.core.markup.html.references.BootlintHeaderItem;
 import de.agilecoders.wicket.core.markup.html.references.RespondJavaScriptReference;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
-import de.vinado.wicket.participate.resources.FaviconResourceReference;
 import de.vinado.wicket.participate.resources.css.ParticipateCssResourceReference;
 import de.vinado.wicket.participate.resources.js.BusyIndicatorJsResourceReference;
 import de.vinado.wicket.participate.resources.js.ParticipateJsResourceReference;
@@ -25,7 +24,7 @@ public final class Resources {
     public static void render(IHeaderResponse response, Component host) {
         response.render(MetaDataHeaderItem.forMetaTag("viewport", "width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"));
         response.render(MetaDataHeaderItem.forMetaTag("robots", "noindex, nofollow"));
-        response.render(forLinkTag("shortcut icon", host.urlFor(FaviconResourceReference.INSTANCE, null).toString(), "image/x-icon"));
+        response.render(forLinkTag("shortcut icon", "favicon.ico", "image/x-icon"));
         response.render(new FilteredHeaderItem(JavaScriptHeaderItem.forReference(ParticipateJsResourceReference.INSTANCE), "footer-container"));
         response.render(RespondJavaScriptReference.headerItem());
         if (!host.getRequest().getRequestParameters().getParameterValue("bootlint").isNull()) {
