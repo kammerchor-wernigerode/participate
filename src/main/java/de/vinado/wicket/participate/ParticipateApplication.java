@@ -18,6 +18,7 @@ import de.vinado.wicket.participate.ui.login.SignInPage;
 import de.vinado.wicket.participate.ui.pages.ErrorPage;
 import de.vinado.wicket.participate.ui.pages.ExpiredPage;
 import de.vinado.wicket.participate.ui.pages.PageNotFoundPage;
+import de.vinado.wicket.participate.ui.pages.PageRegistry;
 import de.vinado.wicket.participate.ui.resetPassword.ResetPasswordPage;
 import de.vinado.wicket.participate.ui.singers.SingersPage;
 import lombok.Getter;
@@ -117,16 +118,8 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
         setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), new HttpsConfig(80, 443)));
         getMarkupSettings().setStripWicketTags(true);
 
-        mountPage("/login", SignInPage.class);
-        mountPage("/events", EventsPage.class);
-        mountPage("/error/500", ErrorPage.class);
-        mountPage("/error/418", ExpiredPage.class);
-        mountPage("/error/404", PageNotFoundPage.class);
-        mountPage("/singers", SingersPage.class);
-        mountPage("/administration", AdminPage.class);
-        mountPage("/participate", FormPage.class);
-        mountPage("/participate/login", FormSignInPage.class);
-        mountPage("/resetPassword", ResetPasswordPage.class);
+        PageRegistry.getInstance()
+            .forEach(registration -> mountPage(registration.getPath(), registration.getPageClass()));
 
         // Install Bootstrap
         configureBootstrap();

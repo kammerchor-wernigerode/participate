@@ -1,5 +1,7 @@
 package de.vinado.wicket.participate.configuration;
 
+import de.vinado.wicket.participate.ui.pages.PageRegistrar;
+import de.vinado.wicket.participate.ui.pages.PageRegistry;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.spring.SpringWebApplicationFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import java.util.EnumSet;
+import java.util.stream.Stream;
 
 /**
  * Wicket request handling configuration for Servlet 3.0+ and replacement for web.xml.
@@ -36,7 +39,7 @@ public class WebInitializer implements ServletContextInitializer {
         filter.setInitParameter("applicationClassName", "de.vinado.wicket.participate.ParticipateApplication");
         filter.setInitParameter("applicationBean", "participateApplication");
         filter.setInitParameter(WicketFilter.FILTER_MAPPING_PARAM, "/*");
-        filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR), false, "/*");
+        filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR), false, Stream.concat(Stream.of("/wicket/*"), PageRegistry.getInstance().stream().map(PageRegistrar::getPath)).toArray(String[]::new));
         if (properties.isDevelopmentMode()) {
             filter.setInitParameter("configuration", "development");
         } else {
