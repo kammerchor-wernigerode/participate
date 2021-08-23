@@ -36,7 +36,7 @@ public abstract class AbstractTableFilterPanel<T, F> extends Panel implements IF
 
     private IModel<List<T>> model;
 
-    private BootstrapAjaxLink showButton;
+    private BootstrapAjaxLink<Void> showButton;
     private boolean visible = false;
 
     public AbstractTableFilterPanel(final String id, final IModel<List<T>> model, final IModel<F> filterModel) {
@@ -56,7 +56,7 @@ public abstract class AbstractTableFilterPanel<T, F> extends Panel implements IF
         };
         inner.setOutputMarkupPlaceholderTag(true);
 
-        showButton = new BootstrapAjaxLink("showBtn", Buttons.Type.Default) {
+        showButton = new BootstrapAjaxLink<Void>("showBtn", Buttons.Type.Default) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 visible = !visible;
@@ -93,6 +93,7 @@ public abstract class AbstractTableFilterPanel<T, F> extends Panel implements IF
 
         final BootstrapAjaxButton resetBtn = new BootstrapAjaxButton("resetBtn", Model.of(""), form, Buttons.Type.Default) {
             @Override
+            @SuppressWarnings("unchecked")
             protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
                 filterModel.setObject(newFilter((Class<F>) filterModel.getObject().getClass()));
                 target.add(form);
@@ -116,7 +117,7 @@ public abstract class AbstractTableFilterPanel<T, F> extends Panel implements IF
 
     public void addBootstrapFormDecorator(final Form<T> form) {
         form.add(new AttributeModifier("class", "form-inline clearfix"));
-        form.visitChildren(FormComponent.class, (IVisitor<FormComponent, Void>) (component, voidIVisit) -> {
+        form.visitChildren(FormComponent.class, (IVisitor<FormComponent<?>, Void>) (component, voidIVisit) -> {
             if (!(component instanceof Button)) {
                 component.add(BootstrapInlineFormDecorator.decorate());
             }
