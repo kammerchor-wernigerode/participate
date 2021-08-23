@@ -25,7 +25,7 @@ public final class Resources {
     public static void render(IHeaderResponse response, Component host) {
         response.render(MetaDataHeaderItem.forMetaTag("viewport", "width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"));
         response.render(MetaDataHeaderItem.forMetaTag("robots", "noindex, nofollow"));
-        response.render(forLinkTag("shortcut icon", "image/x-icon", host.urlFor(FaviconResourceReference.INSTANCE, null).toString()));
+        response.render(forLinkTag("shortcut icon", host.urlFor(FaviconResourceReference.INSTANCE, null).toString(), "image/x-icon"));
         response.render(new FilteredHeaderItem(JavaScriptHeaderItem.forReference(ParticipateJsResourceReference.INSTANCE), "footer-container"));
         response.render(RespondJavaScriptReference.headerItem());
         if (!host.getRequest().getRequestParameters().getParameterValue("bootlint").isNull()) {
