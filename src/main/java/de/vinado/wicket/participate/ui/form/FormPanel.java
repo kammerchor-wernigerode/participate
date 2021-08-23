@@ -68,7 +68,7 @@ public class FormPanel extends BreadCrumbPanel {
             toConfig.withMaxDate(model.getObject().getEvent().getEndDate());
         }
 
-        final Form form = new Form("form");
+        final Form<?> form = new Form<>("form");
         add(form);
 
         final WebMarkupContainer wmc = new WebMarkupContainer("wmc");
@@ -113,7 +113,7 @@ public class FormPanel extends BreadCrumbPanel {
         accommodationCb.add(BootstrapHorizontalFormDecorator.decorate());
         wmc.add(accommodationCb);
 
-        final TextArea commentTa = new TextArea("comment");
+        final TextArea<?> commentTa = new TextArea<>("comment");
         commentTa.setLabel(new ResourceModel("comments", "More comments"));
         commentTa.add(BootstrapHorizontalFormDecorator.decorate());
         commentTa.add(new AutosizeBehavior());

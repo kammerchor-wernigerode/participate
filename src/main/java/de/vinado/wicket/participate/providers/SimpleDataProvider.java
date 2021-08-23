@@ -124,6 +124,7 @@ public abstract class SimpleDataProvider<T, S> extends SortableDataProvider<T, S
          * @param o2 {@link T}
          * @return Result
          */
+        @SuppressWarnings("rawtypes,unchecked")
         public int compare(final T o1, final T o2) {
             PropertyModel<Comparable> model1 = new PropertyModel<Comparable>(o1, getSort().getProperty().toString());
             PropertyModel<Comparable> model2 = new PropertyModel<Comparable>(o2, getSort().getProperty().toString());

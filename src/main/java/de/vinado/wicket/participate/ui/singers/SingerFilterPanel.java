@@ -26,12 +26,12 @@ public abstract class SingerFilterPanel extends AbstractTableFilterPanel<Singer,
     @SpringBean
     private PersonService personService;
 
-    private TextField searchTermTf;
+    private TextField<?> searchTermTf;
 
     public SingerFilterPanel(final String id, final IModel<List<Singer>> model, final IModel<SingerFilter> filterModel) {
         super(id, model, filterModel);
 
-        searchTermTf = new TextField("searchTerm");
+        searchTermTf = new TextField<>("searchTerm");
         searchTermTf.setLabel(new ResourceModel("search", "Search"));
         inner.add(searchTermTf);
 

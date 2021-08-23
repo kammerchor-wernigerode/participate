@@ -28,7 +28,7 @@ public abstract class EventFilterPanel extends AbstractTableFilterPanel<EventDet
     @SuppressWarnings("unused")
     private EventService eventService;
 
-    private TextField searchTermTf;
+    private TextField<?> searchTermTf;
 
     public EventFilterPanel(final String id, final IModel<List<EventDetails>> model, final IModel<EventFilter> filterIModel) {
         super(id, model, filterIModel);
@@ -43,7 +43,7 @@ public abstract class EventFilterPanel extends AbstractTableFilterPanel<EventDet
         endDateConfig.withFormat("dd.MM.yyyy");
         endDateConfig.autoClose(true);
 
-        searchTermTf = new TextField("searchTerm");
+        searchTermTf = new TextField<>("searchTerm");
         searchTermTf.setLabel(new ResourceModel("search", "Search"));
         inner.add(searchTermTf);
 
