@@ -4,11 +4,9 @@ import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailAttachment;
 import freemarker.template.TemplateException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -39,14 +37,19 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 @Slf4j
 @Primary
 @Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class EmailServiceImpl implements EmailService {
 
     private static final String UTF_8 = StandardCharsets.UTF_8.name();
 
     private final JavaMailSender sender;
     private final TemplateService templateService;
-    private final ApplicationProperties applicationProperties;
+    private final ApplicationProperties.Mail mailProperties;
+
+    public EmailServiceImpl(JavaMailSender sender, TemplateService templateService, ApplicationProperties applicationProperties) {
+        this.sender = sender;
+        this.templateService = templateService;
+        this.mailProperties = applicationProperties.getMail();
+    }
 
     /**
      * Sends an email.
@@ -162,7 +165,7 @@ public class EmailServiceImpl implements EmailService {
             || html && isNotEmpty(email.getMessage());
         final MimeMessageHelper helper = newMimeMessageHelper(email, mimeMessage, multipart);
 
-        final String text = templateService.processTemplate(templateFileName, email.getData(applicationProperties), html ? HTML : PLAIN);
+        final String text = templateService.processTemplate(templateFileName, email.getData(), html ? HTML : PLAIN);
         log.debug("Processed {} text email templates.", (html ? HTML : PLAIN).toString().toLowerCase());
 
         if (html) {
@@ -198,8 +201,8 @@ public class EmailServiceImpl implements EmailService {
         } else if (StringUtils.isNotBlank(plaintextTemplateFileName) && StringUtils.isNotBlank(htmlTemplateFileName)) {
             final MimeMessageHelper helper = newMimeMessageHelper(email, mimeMessage, true);
 
-            final String htmlText = templateService.processTemplate(htmlTemplateFileName, email.getData(applicationProperties), HTML);
-            final String plainText = templateService.processTemplate(plaintextTemplateFileName, email.getData(applicationProperties), PLAIN);
+            final String htmlText = templateService.processTemplate(htmlTemplateFileName, email.getData(), HTML);
+            final String plainText = templateService.processTemplate(plaintextTemplateFileName, email.getData(), PLAIN);
             log.debug("Processed HTML and plain text email templates.");
 
             helper.setText(plainText, htmlText);
@@ -233,8 +236,8 @@ public class EmailServiceImpl implements EmailService {
 
         if (null != email.getReplyTo()) {
             helper.setReplyTo(email.getReplyTo());
-        } else if (Strings.isNotBlank(applicationProperties.getMail().getReplyTo())) {
-            helper.setReplyTo(new InternetAddress(applicationProperties.getMail().getReplyTo()));
+        } else if (Strings.isNotBlank(mailProperties.getReplyTo())) {
+            helper.setReplyTo(new InternetAddress(mailProperties.getReplyTo()));
         }
 
         if (multipart) {

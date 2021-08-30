@@ -1,10 +1,8 @@
 package de.vinado.wicket.participate.components.panels;
 
-import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
-import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.service.EmailService;
 import de.vinado.wicket.participate.providers.Select2EmailAddressProvider;
@@ -37,9 +35,6 @@ public class SendEmailPanel extends BootstrapModalPanel<Email> {
         super(modal, new ResourceModel("email.new", "New Email"), model);
         setModalSize(ModalSize.Large);
 
-        ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
-        model.getObject().setFrom(properties.getMail().getSender(), properties.getCustomer());
-
         final TextField<String> fromTf = new TextField<>("from");
         fromTf.setEnabled(false);
         inner.add(fromTf);
@@ -63,8 +58,8 @@ public class SendEmailPanel extends BootstrapModalPanel<Email> {
 
     @Override
     protected void onSaveSubmit(final IModel<Email> model, final AjaxRequestTarget target) {
-        model.getObject()
-            .toSingleRecipient()
+        Email mail = model.getObject();
+        mail.toSingleRecipient()
             .forEach(emailService::send);
 
         Snackbar.show(target, new ResourceModel("email.send.success", "Email sent"));

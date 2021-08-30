@@ -4,6 +4,7 @@ import de.vinado.wicket.participate.common.ParticipateUtils;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailAttachment;
+import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.email.service.EmailService;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
@@ -62,12 +63,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static com.pivovarit.function.ThrowingFunction.sneaky;
 import static de.vinado.wicket.participate.common.DateUtils.toLocalDate;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -88,6 +87,7 @@ public class EventServiceImpl extends DataService implements EventService {
     private final PersonService personService;
     private final EmailService emailService;
     private final ApplicationProperties applicationProperties;
+    private final EmailBuilderFactory emailBuilderFactory;
 
     @Value("${spring.application.name:KCH Paritcipate}")
     private String applicationName;
@@ -620,26 +620,15 @@ public class EventServiceImpl extends DataService implements EventService {
                 int offset = 1 - applicationProperties.getDeadlineOffset();
                 Date deadline = DateUtils.addDays(participant.getEvent().getStartDate(), offset);
 
-                final Email email = new Email() {
-                    @Override
-                    public Map<String, Object> getData(final ApplicationProperties properties) {
-                        final Map<String, Object> data = super.getData(properties);
-                        data.put("event", participant.getEvent());
-                        data.put("singer", singer);
-                        data.put("acceptLink", ParticipateUtils.generateInvitationLink(
-                            properties.getBaseUrl(),
-                            participant.getToken())
-                        );
-                        data.put("deadline", offset > 1 ? null : deadline);
-
-                        return data;
-                    }
-                };
-
-                email.setFrom(applicationProperties.getMail().getSender(), applicationProperties.getCustomer());
-                email.addTo(singer);
-                email.setSubject(participant.getEvent().getName());
-                email.setAttachments(Collections.singleton(newEventAttachment(participant.getEvent(), organizer)));
+                Email email = emailBuilderFactory.create()
+                    .to(singer)
+                    .subject(participant.getEvent().getName())
+                    .attachments(newEventAttachment(participant.getEvent(), organizer))
+                    .data("event", participant.getEvent())
+                    .data("singer", singer)
+                    .data("acceptLink", ParticipateUtils.generateInvitationLink(applicationProperties.getBaseUrl(), participant.getToken()))
+                    .data("deadline", offset > 1 ? null : deadline)
+                    .build();
 
                 if (InvitationStatus.UNINVITED.equals(participant.getInvitationStatus())) {
                     final Participant loadedParticipant = load(Participant.class, participant.getId());

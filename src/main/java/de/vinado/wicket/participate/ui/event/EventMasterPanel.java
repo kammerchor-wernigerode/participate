@@ -9,6 +9,7 @@ import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.email.Email;
+import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventUpdateEvent;
 import de.vinado.wicket.participate.events.RemoveEventUpdateEvent;
@@ -54,6 +55,9 @@ public class EventMasterPanel extends BreadCrumbPanel {
     @SpringBean
     @SuppressWarnings("unused")
     private PersonService personService;
+
+    @SpringBean
+    private EmailBuilderFactory emailBuilderFactory;
 
     private BootstrapPanel<List<EventDetails>> eventListPanel;
     private BootstrapPanel<EventDetails> eventPanel;
@@ -185,9 +189,9 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     FontAwesomeIconType.envelope) {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
-                        final Email mailData = new Email();
-                        personService.getSingers(model.getObject().getEvent())
-                            .forEach(mailData::addTo);
+                        Email mailData = emailBuilderFactory.create()
+                            .toPeople(personService.getSingers(model.getObject().getEvent()))
+                            .build();
 
                         final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                         modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));

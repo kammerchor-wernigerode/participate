@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate.services;
 
 import de.vinado.wicket.participate.ParticipateApplication;
-import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.email.Email;
+import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.email.service.EmailService;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.User;
@@ -34,7 +34,6 @@ import javax.persistence.criteria.Root;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Provides interaction with the database. This service takes care of {@link User} and user related objects.
@@ -50,6 +49,7 @@ public class UserServiceImpl extends DataService implements UserService {
 
     private final PersonService personService;
     private final EmailService emailService;
+    private final EmailBuilderFactory emailBuilderFactory;
 
     @Override
     @PersistenceContext
@@ -283,8 +283,6 @@ public class UserServiceImpl extends DataService implements UserService {
 
             final Person person = user.getPerson();
 
-            final ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
-            final String applicationName = ParticipateApplication.get().getApplicationName();
             final int validDuration = initial ? 30 : 7;
             final UserRecoveryToken token = createUserRecoveryToken(user, validDuration);
 
@@ -299,20 +297,13 @@ public class UserServiceImpl extends DataService implements UserService {
             passwordRecoveryLink.concatSegments(urlSegments);
             passwordRecoveryLink.setQueryParameter("token", token.getToken());
 
-            final Email email = new Email() {
-                @Override
-                public Map<String, Object> getData(final ApplicationProperties properties) {
-                    final Map<String, Object> data = super.getData(properties);
-                    data.put("firstName", person.getFirstName());
-                    data.put("passwordRecoveryLink", passwordRecoveryLink.toString(Url.StringMode.FULL, StandardCharsets.UTF_8));
-                    data.put("validDuration", validDuration);
-                    return data;
-                }
-            };
-            email.setFrom(properties.getMail().getSender(), applicationName);
-            email.addTo(person);
-            email.setSubject(initial ? "Konto aktivieren" : "Passwort zurücksetzen");
-
+            Email email = emailBuilderFactory.create()
+                .to(person)
+                .data("firstName", person.getFirstName())
+                .data("passwordRecoveryLink", passwordRecoveryLink.toString(Url.StringMode.FULL, StandardCharsets.UTF_8))
+                .data("validDuration", validDuration)
+                .subject(initial ? "Konto aktivieren" : "Passwort zurücksetzen")
+                .build();
             if (initial) {
                 emailService.send(email, "newUser-txt.ftl", "newUser-html.ftl");
             } else {
@@ -346,22 +337,13 @@ public class UserServiceImpl extends DataService implements UserService {
 
             remove(token);
 
-            final ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
-            final String applicationName = ParticipateApplication.get().getApplicationName();
-
             final Person person = user.getPerson();
 
-            final Email email = new Email() {
-                @Override
-                public Map<String, Object> getData(final ApplicationProperties applicationProperties) {
-                    final Map<String, Object> data = super.getData(applicationProperties);
-                    data.put("firstName", person.getFirstName());
-                    return data;
-                }
-            };
-            email.setFrom(properties.getMail().getSender(), applicationName);
-            email.addTo(person);
-            email.setSubject("Dein Passwort wurde aktualisiert");
+            Email email = emailBuilderFactory.create()
+                .to(person)
+                .subject("Dein Passwort wurde aktualisiert")
+                .data("firstName", person.getFirstName())
+                .build();
 
             emailService.send(email, "passwordResetSuccess-txt.ftl", "passwordResetSuccess-html.ftl");
 

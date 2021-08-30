@@ -1,6 +1,8 @@
 package de.vinado.wicket.participate.services;
 
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
+import de.vinado.wicket.participate.email.EmailBuilderFactory;
+import de.vinado.wicket.participate.email.PreconfiguredEmailBuilderFactory;
 import de.vinado.wicket.participate.email.service.EmailService;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
@@ -31,8 +33,9 @@ public class EventServiceTest {
         PersonService personService = mock(PersonService.class);
         EmailService emailService = mock(EmailService.class);
         ApplicationProperties applicationProperties = mock(ApplicationProperties.class);
+        EmailBuilderFactory emailBuilderFactory = new PreconfiguredEmailBuilderFactory(applicationProperties);
 
-        service = new EventServiceImpl(personService, emailService, applicationProperties);
+        service = new EventServiceImpl(personService, emailService, applicationProperties, emailBuilderFactory);
 
         doReturn(13).when(applicationProperties).getDeadlineOffset();
     }

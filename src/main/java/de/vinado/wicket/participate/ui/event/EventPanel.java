@@ -10,6 +10,7 @@ import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.components.tables.columns.BootstrapAjaxLinkColumn;
 import de.vinado.wicket.participate.components.tables.columns.EnumColumn;
 import de.vinado.wicket.participate.email.Email;
+import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventUpdateEvent;
 import de.vinado.wicket.participate.model.Event;
@@ -57,6 +58,9 @@ public class EventPanel extends BreadCrumbPanel {
     @SpringBean
     @SuppressWarnings("unused")
     private EventService eventService;
+
+    @SpringBean
+    private EmailBuilderFactory emailBuilderFactory;
 
     private IModel<EventDetails> model;
 
@@ -175,8 +179,9 @@ public class EventPanel extends BreadCrumbPanel {
                 @Override
                 public void onClick(final AjaxRequestTarget target, final IModel<Participant> rowModel) {
                     final Person person = rowModel.getObject().getSinger();
-                    final Email mailData = new Email();
-                    mailData.addTo(person);
+                    Email mailData = emailBuilderFactory.create()
+                        .to(person)
+                        .build();
 
                     final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                     modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));

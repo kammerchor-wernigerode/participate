@@ -7,6 +7,7 @@ import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.components.tables.columns.BootstrapAjaxLinkColumn;
 import de.vinado.wicket.participate.components.tables.columns.EnumColumn;
 import de.vinado.wicket.participate.email.Email;
+import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.events.SingerUpdateEvent;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
@@ -38,6 +39,9 @@ public class SingersPanel extends Panel {
     @SuppressWarnings("unused")
     @SpringBean
     private PersonService personService;
+
+    @SpringBean
+    private EmailBuilderFactory emailBuilderFactory;
 
     private IModel<List<Singer>> model;
 
@@ -87,8 +91,10 @@ public class SingersPanel extends Panel {
             @Override
             public void onClick(final AjaxRequestTarget target, final IModel<Singer> rowModel) {
                 final Person person = rowModel.getObject();
-                final Email mailData = new Email();
-                mailData.addTo(person);
+
+                Email mailData = emailBuilderFactory.create()
+                    .to(person)
+                    .build();
 
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                 modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));

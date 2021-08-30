@@ -4,6 +4,7 @@ import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.email.Email;
+import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.email.service.EmailService;
 import de.vinado.wicket.participate.model.dtos.SendFeedbackDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -13,11 +14,8 @@ import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-
-import javax.mail.internet.AddressException;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -27,6 +25,9 @@ public class SendFeedbackPanel extends BootstrapModalPanel<SendFeedbackDTO> {
 
     @SpringBean
     private EmailService emailService;
+
+    @SpringBean
+    private EmailBuilderFactory emailBuilderFactory;
 
     /**
      * @param modal {@link de.vinado.wicket.participate.components.modals.BootstrapModal}
@@ -45,19 +46,14 @@ public class SendFeedbackPanel extends BootstrapModalPanel<SendFeedbackDTO> {
 
     @Override
     protected void onSaveSubmit(final IModel<SendFeedbackDTO> model, final AjaxRequestTarget target) {
-        final Email mailData = new Email();
+        SendFeedbackDTO dto = model.getObject();
+        Email mailData = Email.builder("no-reply@vinado.de", dto.getName())
+            .to("vincent.nadoll@gmail.com")
+            .subject(dto.getSubject())
+            .message(dto.getMessage())
+            .build();
 
-        try {
-            mailData.setFrom("no-reply@vinado.de", model.getObject().getName());
-            mailData.addTo("me@vinado.de");
-            mailData.setSubject(model.getObject().getSubject());
-            mailData.setMessage(model.getObject().getMessage());
-
-            emailService.send(mailData);
-            Snackbar.show(target, new ResourceModel("send.feedback.success", "Thanks for your feedback"));
-        } catch (AddressException e) {
-            log.error("Encountered malformed email address", e);
-            Snackbar.show(target, Model.of("The application encountered a malformed email address. Abort."));
-        }
+        emailService.send(mailData);
+        Snackbar.show(target, new ResourceModel("send.feedback.success", "Thanks for your feedback"));
     }
 }

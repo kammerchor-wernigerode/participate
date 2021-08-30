@@ -4,6 +4,7 @@ import com.opencsv.CSVWriter;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailAttachment;
+import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.email.service.EmailService;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
@@ -15,6 +16,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -44,7 +46,6 @@ import static de.vinado.wicket.participate.features.ScoresManagerNotificationCro
 import static de.vinado.wicket.participate.features.ScoresManagerNotificationCronjob.Configuration.FEATURE_ENABLED;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.temporal.ChronoUnit.DAYS;
-import static java.util.Collections.singleton;
 
 /**
  * Sets up a Cronjob which sends an email to the club's score's manager about accepted invitations.
@@ -56,6 +57,9 @@ import static java.util.Collections.singleton;
 @ConditionalOnExpression(FEATURE_ENABLED)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ScoresManagerNotificationCronjob {
+
+    @SpringBean
+    private EmailBuilderFactory emailBuilderFactory;
 
     private final ApplicationProperties applicationProperties;
     private final Configuration configuration;
@@ -126,18 +130,13 @@ public class ScoresManagerNotificationCronjob {
                 .sorted(Comparator.comparing(Person::getLastName))
                 .collect(Collectors.toList());
 
-            final Email email = new Email();
-            email.setFrom(applicationProperties.getMail().getSender());
-            email.setTo(singleton(recipient));
-            email.setSubject(String.format("Participant list for event: %s", event.getName()));
-            email.setMessage("Attached you will find the list of participants.\n");
-            email.setAttachments(singleton(
-                new EmailAttachment("attendee-list.csv", MimeType.valueOf("text/csv"), getAttendeeByteArray(attendees))
-            ));
-
-            return email;
-        } catch (AddressException e) {
-            log.error("Malformed email address encountered", e);
+            return emailBuilderFactory.create()
+                .to(recipient)
+                .subject("Participant list for event: " + event.getName())
+                .message("Attached you will find the list of participants.\n")
+                .attachments(new EmailAttachment("attendee-list.csv", MimeType.valueOf("text/csv"), getAttendeeByteArray(attendees)))
+                .build()
+                ;
         } catch (IOException e) {
             log.error("Unable to write stream to CSV attachment", e);
         }

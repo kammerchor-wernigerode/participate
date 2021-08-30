@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.providers;
 
+import de.vinado.wicket.participate.email.InternetAddressFactory;
 import de.vinado.wicket.participate.services.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.wicketstuff.select2.ChoiceProvider;
@@ -10,8 +11,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static com.pivovarit.function.ThrowingFunction.sneaky;
 
 /**
  * Provides a list of persons for a substring of their {@code email} address.
@@ -38,7 +37,7 @@ public class Select2EmailAddressProvider extends ChoiceProvider<InternetAddress>
     @Override
     public void query(String term, int page, Response<InternetAddress> response) {
         personService.findPersons(term).stream()
-            .map(sneaky(person -> new InternetAddress(person.getEmail(), person.getDisplayName(), UTF_8)))
+            .map(InternetAddressFactory::create)
             .forEach(response::add);
         response.setHasMore(false);
     }
@@ -48,7 +47,7 @@ public class Select2EmailAddressProvider extends ChoiceProvider<InternetAddress>
         return addresses.stream()
             .map(personService::getPerson)
             .filter(Objects::nonNull)
-            .map(sneaky(person -> new InternetAddress(person.getEmail(), person.getDisplayName(), UTF_8)))
+            .map(InternetAddressFactory::create)
             .collect(Collectors.toList());
     }
 }

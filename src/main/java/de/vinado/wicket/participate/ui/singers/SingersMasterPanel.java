@@ -5,6 +5,7 @@ import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.email.Email;
+import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.dtos.SingerDTO;
 import de.vinado.wicket.participate.services.PersonService;
@@ -31,6 +32,9 @@ public class SingersMasterPanel extends BreadCrumbPanel {
     @SpringBean
     @SuppressWarnings("unused")
     private PersonService personService;
+
+    @SpringBean
+    private EmailBuilderFactory emailBuilderFactory;
 
     public SingersMasterPanel(final String id, final IBreadCrumbModel breadCrumbModel) {
         super(id, breadCrumbModel);
@@ -64,8 +68,9 @@ public class SingersMasterPanel extends BreadCrumbPanel {
                     FontAwesomeIconType.envelope) {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
-                        final Email mailData = new Email();
-                        model.getObject().forEach(mailData::addTo);
+                        Email mailData = emailBuilderFactory.create()
+                            .toPeople(model.getObject())
+                            .build();
 
                         final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
                         modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
