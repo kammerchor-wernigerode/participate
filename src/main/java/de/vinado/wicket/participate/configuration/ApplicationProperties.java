@@ -6,7 +6,6 @@ import lombok.Setter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Configuration;
 
 import javax.validation.constraints.NotBlank;
@@ -26,10 +25,9 @@ import java.net.URL;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ApplicationProperties implements InitializingBean {
 
-    private final BuildProperties buildProperties;
-
     private static final String EMAIL_PATTERN = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,6}$";
 
+    private String version;
     private @NotBlank String baseUrl;
     private boolean developmentMode = false;
     private String customer = "";
@@ -38,10 +36,6 @@ public class ApplicationProperties implements InitializingBean {
     private int deadlineOffset = -1;
     private String organizationResponsible;
     private String sleepingPlaceResponsible;
-
-    public String getVersion() {
-        return buildProperties.getVersion();
-    }
 
     @Override
     public void afterPropertiesSet() throws Exception {

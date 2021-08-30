@@ -41,6 +41,7 @@ spring:
 #  private-key: /path/to/your/private.key.der
 
 app:
+  version: "^project.version^"
   base-url: ${BASE_URL:http://localhost:8080}
   customer: ${APPLICATION_CUSTOMER}
   participate-password: ${APPLICATION_PASSWORD}

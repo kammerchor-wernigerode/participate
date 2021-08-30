@@ -40,6 +40,7 @@ dkim:
   private-key: ${DKIM_KEY_LOCATION}
 
 app:
+  version: "^project.version^"
   base-url: ${BASE_URL}
   customer: ${APPLICATION_CUSTOMER}
   participate-password: ${APPLICATION_PASSWORD}
