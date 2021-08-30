@@ -150,7 +150,6 @@ public class ScoresManagerNotificationCronjob {
      *
      * @param singers the singers to be written to the byte array
      * @return byte array of CSV data
-     *
      * @throws IOException if an error occurs during stream processing
      */
     private byte[] getAttendeeByteArray(final List<Singer> singers) throws IOException {
@@ -172,7 +171,6 @@ public class ScoresManagerNotificationCronjob {
      * @param string  the string to check for emptiness
      * @param message detail message to be used in the event that a {@code IllegalArgumentException} is thrown
      * @return {@code string} if not empty
-     *
      * @throws IllegalArgumentException if {@code string} is empty
      */
     private static String requireNonEmpty(final String string, final String message) throws IllegalArgumentException {

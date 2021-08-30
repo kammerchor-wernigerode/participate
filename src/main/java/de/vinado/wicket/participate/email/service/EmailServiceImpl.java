@@ -219,7 +219,6 @@ public class EmailServiceImpl implements EmailService {
      * @param mimeMessage the object to map on
      * @param multipart   whether the email will contains multiple parts like HTML part and alternative plaintext part.
      * @return new and configured helper object
-     *
      * @throws MessagingException if multipart creation failed
      */
     private MimeMessageHelper newMimeMessageHelper(final Email email, final MimeMessage mimeMessage,
