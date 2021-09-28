@@ -31,6 +31,6 @@ deploy:
 notifications:
   email:
     recipients:
-      - me@vinado.de
+      - vincent.nadoll@gmail.com
     on_success: never
     on_failure: always
