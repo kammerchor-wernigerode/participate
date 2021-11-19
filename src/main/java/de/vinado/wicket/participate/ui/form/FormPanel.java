@@ -122,10 +122,13 @@ public class FormPanel extends BreadCrumbPanel {
         final BootstrapAjaxButton submitBtn = new BootstrapAjaxButton("submit", Buttons.Type.Success) {
             @Override
             protected void onSubmit(final AjaxRequestTarget target, final Form<?> inner) {
-                send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(
-                    eventService.acceptEvent(model.getObject()).getEvent(),
-                    target));
+                ParticipantDTO dto = model.getObject();
+                Participant updatedParticipant = eventService.acceptEvent(dto);
+                EventUpdateEvent intent = new EventUpdateEvent(updatedParticipant.getEvent(), target);
+                send(getPage(), Broadcast.BREADTH, intent);
+
                 displaySuccessionModal(target, model);
+
                 target.add(form);
             }
         };
