@@ -17,6 +17,7 @@ import de.vinado.wicket.participate.model.TemplateModel;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.pages.BasePage;
+import lombok.RequiredArgsConstructor;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.event.Broadcast;
@@ -127,7 +128,7 @@ public class FormPanel extends BreadCrumbPanel {
                 EventUpdateEvent intent = new EventUpdateEvent(updatedParticipant.getEvent(), target);
                 send(getPage(), Broadcast.BREADTH, intent);
 
-                displaySuccessionModal(target, model);
+                displayConfirmation(dto.getParticipant(), target);
 
                 target.add(form);
             }
@@ -150,26 +151,39 @@ public class FormPanel extends BreadCrumbPanel {
         wmc.add(declineBtn);
     }
 
-    private void displaySuccessionModal(AjaxRequestTarget target, IModel<ParticipantDTO> model) {
+    private void displayConfirmation(Participant participant, AjaxRequestTarget target) {
         ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
-        BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-        ResourceModel titleModel = new ResourceModel("invitation.accept.success", "Thanks you for your registration!");
-        TemplateModel messageModel;
+        boolean hasOrganizationResponsible = !Strings.isEmpty(properties.getOrganizationResponsible());
+        boolean hasSleepingPlaceResponsible = !Strings.isEmpty(properties.getSleepingPlaceResponsible());
+        Map<String, Object> templateData = mapSuccessionTemplateData(properties);
+
+        if (eventService.hasDeadlineExpired(participant)) {
+            if (hasOrganizationResponsible && hasSleepingPlaceResponsible) {
+                prepareAndDisplaySuccessionModal(SuccessionMode.AFTER, templateData, target);
+            }
+        } else {
+            if (hasOrganizationResponsible) {
+                prepareAndDisplaySuccessionModal(SuccessionMode.BEFORE, templateData, target);
+            }
+        }
+    }
+
+    private void prepareAndDisplaySuccessionModal(SuccessionMode mode, Map<String, Object> templateData,
+                                                  AjaxRequestTarget target) {
+        IModel<String> messageModel = mode.getTemplateModel(templateData);
+        displaySuccessionModal(messageModel, target);
+    }
+
+    private static Map<String, Object> mapSuccessionTemplateData(ApplicationProperties properties) {
         Map<String, Object> data = new HashMap<>();
         data.put("sleepingPlaceResponsible", properties.getSleepingPlaceResponsible());
         data.put("organizer", properties.getOrganizationResponsible());
+        return data;
+    }
 
-        if (eventService.hasDeadlineExpired(model.getObject().getParticipant())) {
-            messageModel = new TemplateModel("registrationSuccess.afterDeadline-txt.ftl", ""
-                + "Please contact the responsible person, as the deadline has already expired. So you can be sure that we have you on the screen.\n\n"
-                + "Please note that you have to organize a sleeping place for yourself.\n\n"
-                + "If you have general questions about the event, feel free to contact the person in charge.",
-                data);
-        } else {
-            messageModel = new TemplateModel("registrationSuccess.beforeDeadline-txt.ftl",
-                "If you have questions about the event, feel free to contact the responsible person.",
-                data);
-        }
+    private void displaySuccessionModal(IModel<String> messageModel, AjaxRequestTarget target) {
+        BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        ResourceModel titleModel = new ResourceModel("invitation.accept.success", "Thanks you for your registration!");
 
         DismissableBootstrapModalPanel<String> confirmation = new DismissableBootstrapModalPanel<>(modal,
             titleModel, messageModel);
@@ -180,5 +194,22 @@ public class FormPanel extends BreadCrumbPanel {
     @Override
     public IModel<String> getTitle() {
         return new ResourceModel("form", "Form");
+    }
+
+    @RequiredArgsConstructor
+    private enum SuccessionMode {
+        AFTER("registrationSuccess.afterDeadline-txt.ftl", ""
+            + "Please contact the responsible person, as the deadline has already expired. So you can be sure that we have you on the screen.\n\n"
+            + "Please note that you have to organize a sleeping place for yourself.\n\n"
+            + "If you have general questions about the event, feel free to contact the person in charge."),
+        BEFORE("registrationSuccess.beforeDeadline-txt.ftl", "If you have questions about the event, feel free to contact the responsible person."),
+        ;
+
+        private final String templateName;
+        private final String defaultMessage;
+
+        private TemplateModel getTemplateModel(Map<String, Object> data) {
+            return new TemplateModel(templateName, defaultMessage, data);
+        }
     }
 }
