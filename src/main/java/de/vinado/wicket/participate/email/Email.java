@@ -60,8 +60,8 @@ public class Email implements Serializable {
     }
 
     protected void setSubject(String subject) {
-        this.subject = subject;
         this.data.put("subject", subject);
+        this.subject = subject;
     }
 
     protected void setMessage(String message) {
@@ -77,7 +77,7 @@ public class Email implements Serializable {
         return this.to.stream()
             .map(address ->
                 mutate()
-                    .to(address)
+                    .setTo(address)
                     .build()
             );
     }
@@ -137,6 +137,19 @@ public class Email implements Serializable {
 
         public Builder toAddresses(Collection<InternetAddress> addresses) {
             this.to.addAll(addresses);
+            return this;
+        }
+
+        public Builder setTo(String email, String personal) {
+            return setTo(InternetAddressFactory.create(email, personal));
+        }
+
+        public Builder setTo(InternetAddress... addresses) {
+            return setToAddresses(Arrays.asList(addresses));
+        }
+
+        public Builder setToAddresses(Collection<InternetAddress> addresses) {
+            this.to = new HashSet<>(addresses);
             return this;
         }
 
