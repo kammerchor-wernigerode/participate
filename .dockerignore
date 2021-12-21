@@ -18,6 +18,8 @@ docker-compose.yml
 # IntelliJ IDEA
 .idea
 *.iml
+.jpb
+.github
 
 # Dotenv
 .env
