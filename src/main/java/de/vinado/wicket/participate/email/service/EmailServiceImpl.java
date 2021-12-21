@@ -205,7 +205,7 @@ public class EmailServiceImpl implements EmailService {
     private MimeMessageHelper newMimeMessageHelper(final Email email, final MimeMessage mimeMessage,
                                                    final boolean multipart) throws MessagingException {
         final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, multipart, UTF_8);
-        log.debug("A new email helper object is created. Start to map" + (multipart ? " multipart " : "") + "email information to helper.");
+        log.debug("A new email helper object is created. Start to map" + (multipart ? " multipart " : " ") + "email information to helper.");
 
         helper.setFrom(email.getFrom());
         helper.setTo(email.getTo().toArray(new InternetAddress[0]));
