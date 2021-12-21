@@ -2,11 +2,10 @@ name: Publish Docker Image and Deploy
 
 on:
   push:
-    branches: [ main ]
     tags:
       - 'v*'
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   deploy:
@@ -42,6 +41,7 @@ jobs:
           cache-from: type=registry,ref=kchwr/participate:latest
           cache-to: type=inline
       - name: Call deployment Webhook
+        if: github.event_name != 'pull_request'
         uses: wei/curl@v1
         with:
           args: -X POST ${{ secrets.DEPLOYMENT_CALLBACK_URL }}
