@@ -1,7 +1,10 @@
-# IDE
-.idea/
+### IntelliJ IDEA ###
+.idea/*
+!.idea/codeStyles
+!.idea/inspectionProfiles
+*.iws
 *.iml
-.jpb/
+*.ipr
 
 # Compiled Files
 target/
