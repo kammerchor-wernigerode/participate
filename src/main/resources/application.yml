@@ -34,6 +34,7 @@ spring:
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
+      mail.smtp.localhost: ${SMTP_HELO:localhost}
       mail.from: ${MAIL_FROM:smtp@example.com}
       mail.reply-to: ${MAIL_REPLY_TO:no-reply@example.com}
 
