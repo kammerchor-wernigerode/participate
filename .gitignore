@@ -7,7 +7,7 @@
 target/
 
 # Project Files
-src/main/resources/application.yml
+/application.yml
 
 tools/*.sql
 

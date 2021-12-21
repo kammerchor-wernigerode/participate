@@ -11,7 +11,7 @@ target
 .travis.yml
 *.md
 docker-compose.yml
-src/main/resources/application.yml
+/application.yml
 
 # Log files
 *.log

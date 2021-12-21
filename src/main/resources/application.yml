@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME:Participate}
 
   jpa:
     database: MYSQL
@@ -9,7 +9,7 @@ spring:
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
       ddl-auto: validate
-    show-sql: true
+    show-sql: false
     open-in-view: true
     properties:
       hibernate.format_sql: true
@@ -26,33 +26,45 @@ spring:
     change-log: 'classpath:/de/vinado/wicket/participate/db/liquibase/changelog.xml'
 
   mail:
-    host: ${SMTP_HOST}
+    host: ${SMTP_HOST:localhost}
     port: ${SMTP_PORT:587}
-    username: ${SMTP_USER}
-    password: ${SMTP_PASSWORD}
+    username: ${SMTP_USER:smtp@example.com}
+    password: ${SMTP_PASSWORD:d3v}
+    test-connection: true
     properties:
+      mail.smtp.auth: true
       mail.smtp.starttls.enable: true
-      mail.smtp.from: ${MAIL_FROM}
+      mail.from: ${MAIL_FROM:smtp@example.com}
+      mail.reply-to: ${MAIL_REPLY_TO:no-reply@example.com}
 
-#dkim:
-#  # default._domainkey.domain.tld
-#  selector: default
-#  signing-domain: domain.tld
-#  private-key: /path/to/your/private.key.der
+javamail:
+  dkim:
+    # ${JAVAMAIL_DKIM_SELECTOR}._domainkey.${JAVAMAIL_DKIM_DOMAIN}
+    signing-domain: ${MAIL_DKIM_SIGNING_DOMAIN:}
+    selector: ${MAIL_DKIM_SELECTOR:}
+    private-key: ${MAIL_DKIM_PRIVATE_KEY_URI:}
+    signer:
+      identity: ${MAIL_DKIM_SIGNER_IDENTITY:}
+      header-canonicalization: ${MAIL_DKIM_SIGNER_HEADER_CANONICALIZATION:SIMPLE}
+      body-canonicalization: ${MAIL_DKIM_SIGNER_BODY_CANONICALIZATION:RELAXED}
+      check-domain-key: ${MAIL_DKIM_SIGNER_CHECK_DOMAIN:true}
+      signing-algorithm: ${MAIL_DKIM_SIGNER_SIGNING_ALGORITHM:SHA256_WITH_RSA}
+      length-param: ${MAIL_DKIM_SIGNER_LENGTH_PARAM:true}
+      copy-header-fields: ${MAIL_DKIM_SIGNER_COPY_HEADER_FIELDS:false}
 
 app:
   version: "^project.version^"
   base-url: ${BASE_URL:http://localhost:8080}
-  customer: ${APPLICATION_CUSTOMER}
-  participate-password: ${APPLICATION_PASSWORD}
-  development-mode: true
+  customer: ${APPLICATION_CUSTOMER:Default Customer}
+  participate-password: ${APPLICATION_PASSWORD:f0rmp4ss}
+  development-mode: false
   deadline-offset: ${DEADLINE_OFFSET:-1}
   organization-responsible: ${RESPONSIBLE_ORGANIZATION}
   sleeping-place-responsible: ${RESPONSIBLE_SLEEPING_PLACE}
   mail:
     footer: ${spring.application.name}
-    sender: ${spring.mail.properties.mail.smtp.from}
-    reply-to: ${MAIL_REPLY_TO}
+    sender: ${spring.mail.properties.mail.from}
+    reply-to: ${spring.mail.properties.mail.reply-to}
 
   features:
     remind-overdue:
@@ -64,6 +76,3 @@ app:
       cron-expression: ${SCORES_MANAGER_CRON:0 0 9 ? * SUN}
       offset: ${SCORES_MANAGER_OFFSET:7}
       scores-manager-email: ${SCORES_MANAGER_EMAIL}
-
-#logging:
-#  path: ${LOG_PATH:/tmp}
