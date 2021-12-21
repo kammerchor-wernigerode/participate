@@ -20,19 +20,7 @@ Install the maven dependencies.
 mvn install
 ```
 
----
-
-You'll need a MySQL database or a running Docker Container with MySQL.
-After you configured your database and property files run Liquibase to create the database tables. You can either
-run Liquibase manually with
-
-```bash
-mvn resources:resources liquibase:update
-
-```
-or let Spring Boot do the job for you.
-
-Start the application.
+You'll need a MySQL database or a running Docker Container with MySQL. Start the application with
 
 ```bash
 mvn spring-boot:run

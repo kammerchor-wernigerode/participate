@@ -7,7 +7,6 @@
 target/
 
 # Project Files
-src/main/resources/liquibase.properties
 src/main/resources/application.yml
 
 tools/*.sql
