@@ -18,6 +18,7 @@ import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2MultiChoice;
 
 import javax.mail.internet.InternetAddress;
+import java.util.stream.Stream;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -59,8 +60,8 @@ public class SendEmailPanel extends BootstrapModalPanel<Email> {
     @Override
     protected void onSaveSubmit(final IModel<Email> model, final AjaxRequestTarget target) {
         Email mail = model.getObject();
-        mail.toSingleRecipient()
-            .forEach(emailService::send);
+        Stream<Email> mails = mail.toSingleRecipient();
+        emailService.send(mails);
 
         Snackbar.show(target, new ResourceModel("email.send.success", "Email sent"));
     }
