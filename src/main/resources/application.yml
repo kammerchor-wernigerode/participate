@@ -51,6 +51,10 @@ javamail:
       signing-algorithm: ${MAIL_DKIM_SIGNER_SIGNING_ALGORITHM:SHA256_WITH_RSA}
       length-param: ${MAIL_DKIM_SIGNER_LENGTH_PARAM:true}
       copy-header-fields: ${MAIL_DKIM_SIGNER_COPY_HEADER_FIELDS:false}
+  concurrent:
+    enabled: ${MAIL_CONCURRENT_ENABLED:true}
+    batch-size: ${MAIL_CONCURRENT_BATCH_SIZE:20}
+    cooldown-millis: ${MAIL_CONCURRENT_COOLDOWN_MILLIS:20000}
 
 app:
   version: "^project.version^"
