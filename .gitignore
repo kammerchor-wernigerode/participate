@@ -1,3 +1,18 @@
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+tools/
+!tools/docker-compose.yml
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
 ### IntelliJ IDEA ###
 .idea/*
 !.idea/codeStyles
@@ -6,12 +21,21 @@
 *.iml
 *.ipr
 
-# Compiled Files
-target/
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-# Project Files
-/application.yml
+### VS Code ###
+.vscode/
 
-tools/*.sql
-
+### MacOS ###
 .DS_Store
+
+### App Config ###
+/application.yml
