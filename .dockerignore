@@ -8,7 +8,6 @@ src/test
 # Project files
 scripts/docker-push.sh
 target
-.travis.yml
 *.md
 docker-compose.yml
 /application.yml

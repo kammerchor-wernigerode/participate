@@ -100,9 +100,5 @@ all events are considered that are up to 7 days in the future.
 
 The cron expression and the offset are configurable.
 
-## Tests / CI
-
-- Travis CI
-
 ## Licence
 Apache License 2.0 - [Vinado](https://vinado.de) - Built with :heart: in Dresden
