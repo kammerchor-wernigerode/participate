@@ -10,4 +10,9 @@
     <include file="de/vinado/wicket/participate/db/liquibase/0003/changelog.xml"/>
     <include file="de/vinado/wicket/participate/db/liquibase/0004/changelog.xml"/>
     <include file="de/vinado/wicket/participate/db/liquibase/0005/changelog.xml"/>
+
+    <changeSet id="v2.11.0-tag" author="Vincent Nadoll">
+        <tagDatabase tag="2.11.0"/>
+    </changeSet>
+
 </databaseChangeLog>
