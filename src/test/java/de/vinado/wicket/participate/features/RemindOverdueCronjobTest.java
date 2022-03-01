@@ -5,8 +5,8 @@ import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.services.EventService;
 import lombok.var;
 import org.apache.commons.lang3.time.DateUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,21 +21,21 @@ import static org.mockito.Mockito.when;
 /**
  * @author Vincent Nadoll
  */
-public class RemindOverdueCronjobTest {
+class RemindOverdueCronjobTest {
 
     private static final Date NOW = new Date();
 
     private EventService eventService;
     private RemindOverdueCronjob feature;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() {
         eventService = mock(EventService.class);
         feature = new RemindOverdueCronjob(new RemindOverdueCronjob.Configuration(), eventService);
     }
 
     @Test
-    public void run() {
+    void run() {
         var event1 = MockedEvent.mockEvent(1L);
         var event2 = MockedEvent.mockEvent(2L, DateUtils.addDays(NOW, 14));
         var event3 = MockedEvent.mockEvent(3L, DateUtils.addDays(NOW, 30));
