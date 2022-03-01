@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.tasks;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.scheduling.TriggerContext;
 import org.springframework.scheduling.support.CronTrigger;
 
@@ -14,10 +14,10 @@ import java.util.Date;
  * @author Vincent Nadoll
  */
 @Slf4j
-public class SchedulerUnitTest {
+class SchedulerUnitTest {
 
     @Test
-    public void testScheduler() {
+    void testScheduler() {
         val trigger = new CronTrigger("0 0 9 ? * SUN");
         val today = Calendar.getInstance();
         today.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
