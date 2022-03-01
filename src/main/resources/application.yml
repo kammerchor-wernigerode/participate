@@ -28,12 +28,8 @@ spring:
   mail:
     host: ${SMTP_HOST:localhost}
     port: ${SMTP_PORT:587}
-    username: ${SMTP_USER:smtp@example.com}
-    password: ${SMTP_PASSWORD:d3v}
     test-connection: true
     properties:
-      mail.smtp.auth: true
-      mail.smtp.starttls.enable: true
       mail.smtp.localhost: ${SMTP_HELO:localhost}
       mail.from: ${MAIL_FROM:smtp@example.com}
       mail.reply-to: ${MAIL_REPLY_TO:no-reply@example.com}
@@ -53,7 +49,7 @@ javamail:
       length-param: ${MAIL_DKIM_SIGNER_LENGTH_PARAM:true}
       copy-header-fields: ${MAIL_DKIM_SIGNER_COPY_HEADER_FIELDS:false}
   concurrent:
-    enabled: ${MAIL_CONCURRENT_ENABLED:true}
+    enabled: ${MAIL_CONCURRENT_ENABLED:false}
     batch-size: ${MAIL_CONCURRENT_BATCH_SIZE:20}
     cooldown-millis: ${MAIL_CONCURRENT_COOLDOWN_MILLIS:20000}
 
