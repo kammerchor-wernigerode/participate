@@ -53,7 +53,7 @@ javamail:
       length-param: ${MAIL_DKIM_SIGNER_LENGTH_PARAM:true}
       copy-header-fields: ${MAIL_DKIM_SIGNER_COPY_HEADER_FIELDS:false}
   concurrent:
-    enabled: ${MAIL_CONCURRENT_ENABLED:true}
+    enabled: ${MAIL_CONCURRENT_ENABLED:false}
     batch-size: ${MAIL_CONCURRENT_BATCH_SIZE:20}
     cooldown-millis: ${MAIL_CONCURRENT_COOLDOWN_MILLIS:20000}
 
