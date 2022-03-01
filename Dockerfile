@@ -18,6 +18,8 @@ ARG JAR_FILE=participate-2.11.0-SNAPSHOT.jar
 COPY --from=maven /usr/src/app/target/$JAR_FILE /app/application.jar
 COPY scripts/docker-entrypoint.sh /usr/local/bin/
 
+ENV SPRING_PROFILES_ACTIVE=smtp_auth,smtp_tls
+
 EXPOSE 8080
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["/usr/bin/java", "-Djava.security.egd=file:/dev/./urandom", "-jar" ,"/app/application.jar"]
