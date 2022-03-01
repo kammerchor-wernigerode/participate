@@ -73,6 +73,9 @@ public class Participant implements Identifiable<Long> {
     @Column(name = "need_accommodation")
     private boolean accommodation;
 
+    @Column(name = "car_seat_count")
+    private Short carSeatCount;
+
     @Column(length = 65535, columnDefinition = "TEXT")
     private String comment;
 
@@ -87,7 +90,8 @@ public class Participant implements Identifiable<Long> {
      */
     public Participant(final Event event, final Singer singer, final String token,
                        final InvitationStatus invitationStatus, final Date fromDate, final Date toDate,
-                       final boolean catering, final boolean accommodation, final String comment) {
+                       final boolean catering, final boolean accommodation, short carSeatCount,
+                       final String comment) {
         this.event = event;
         this.singer = singer;
         this.token = token;
@@ -96,12 +100,13 @@ public class Participant implements Identifiable<Long> {
         this.invitationStatus = invitationStatus;
         this.catering = catering;
         this.accommodation = accommodation;
+        this.carSeatCount = carSeatCount;
         this.comment = comment;
     }
 
     public Participant(final Event event, final Singer singer, final String token,
                        final InvitationStatus invitationStatus) {
-        this(event, singer, token, invitationStatus, null, null, false, false, null);
+        this(event, singer, token, invitationStatus, null, null, false, false, (short) -1, null);
     }
 
     public boolean isUninvited() {
