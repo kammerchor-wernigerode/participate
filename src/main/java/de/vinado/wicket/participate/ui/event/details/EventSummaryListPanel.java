@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.ui.event.details;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.components.TextAlign;
@@ -158,7 +159,9 @@ public class EventSummaryListPanel extends Panel {
         columns.add(new PropertyColumn<Participant, String>(new ResourceModel("comments", "Comments"), "comment") {
             @Override
             public void populateItem(final Item<ICellPopulator<Participant>> item, final String componentId, final IModel<Participant> rowModel) {
-                item.add(new MultiLineLabel(componentId, getDataModel(rowModel)));
+                MultiLineLabel commentLabel = new MultiLineLabel(componentId, getDataModel(rowModel));
+                commentLabel.add(new CssClassNameAppender("m-0"));
+                item.add(commentLabel);
             }
 
             @Override

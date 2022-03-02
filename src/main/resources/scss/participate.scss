@@ -57,3 +57,7 @@ body {
 .badge.text-muted {
     color: #777;
 }
+
+.table .m-0 > p:last-child {
+    margin: 0;
+}
