@@ -16,12 +16,16 @@ import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
+import de.vinado.wicket.participate.ui.form.FormPanel;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
+import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -38,7 +42,7 @@ import java.util.Collections;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class EditInvitationPanel extends BootstrapModalPanel<ParticipantDTO> {
+public abstract class EditInvitationPanel extends BootstrapModalPanel<ParticipantDTO> implements IGenericComponent<ParticipantDTO> {
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -134,6 +138,28 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
         });
         inner.add(accommodationCb);
 
+        NumberTextField<Integer> carSeatCountTf = new NumberTextField<Integer>("carSeatCount") {
+            @Override
+            protected void onConfigure() {
+                if (!EditInvitationPanel.this.getModelObject().isCar()) {
+                    EditInvitationPanel.this.getModelObject().setCarSeatCount((short) 0);
+                }
+                setEnabled(EditInvitationPanel.this.getModelObject().isCar());
+            }
+        };
+        carSeatCountTf.setOutputMarkupId(true);
+        carSeatCountTf.setMinimum(0);
+        carSeatCountTf.setMaximum(127); // 1 Byte maximum signed integer
+        inner.add(carSeatCountTf);
+
+        AjaxCheckBox carCb = new AjaxCheckBox("car") {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                target.add(carSeatCountTf);
+            }
+        };
+        inner.add(carCb);
+
         final TextArea commentTa = new TextArea("comment") {
             @Override
             protected void onConfigure() {
@@ -175,5 +201,27 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
         link.add(AttributeModifier.append("href", href));
         link.add(AttributeModifier.append("target", "_blank"));
         inner.add(link);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public IModel<ParticipantDTO> getModel() {
+        return (IModel<ParticipantDTO>) getDefaultModel();
+    }
+
+    @Override
+    public void setModel(IModel<ParticipantDTO> model) {
+        setDefaultModel(model);
+    }
+
+    @Override
+    public void setModelObject(ParticipantDTO object) {
+        setDefaultModelObject(object);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public ParticipantDTO getModelObject() {
+        return (ParticipantDTO) getDefaultModelObject();
     }
 }

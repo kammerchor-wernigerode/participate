@@ -18,8 +18,10 @@ import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import lombok.RequiredArgsConstructor;
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
@@ -27,6 +29,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
@@ -41,7 +44,7 @@ import java.util.Map;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class FormPanel extends BreadCrumbPanel {
+public class FormPanel extends BreadCrumbPanel implements IGenericComponent<ParticipantDTO> {
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -113,6 +116,28 @@ public class FormPanel extends BreadCrumbPanel {
         final CheckBox accommodationCb = new CheckBox("accommodation");
         accommodationCb.add(BootstrapHorizontalFormDecorator.decorate());
         wmc.add(accommodationCb);
+
+        NumberTextField<Integer> carSeatCountTf = new NumberTextField<Integer>("carSeatCount") {
+            @Override
+            protected void onConfigure() {
+                if (!FormPanel.this.getModelObject().isCar()) {
+                    FormPanel.this.getModelObject().setCarSeatCount((short) 0);
+                }
+                setEnabled(FormPanel.this.getModelObject().isCar());
+            }
+        };
+        carSeatCountTf.setOutputMarkupId(true);
+        carSeatCountTf.setMinimum(0);
+        carSeatCountTf.setMaximum(127); // 1 Byte maximum signed integer
+        wmc.add(carSeatCountTf);
+
+        AjaxCheckBox carCb = new AjaxCheckBox("car") {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                target.add(carSeatCountTf);
+            }
+        };
+        wmc.add(carCb);
 
         final TextArea<?> commentTa = new TextArea<>("comment");
         commentTa.setLabel(new ResourceModel("comments", "More comments"));
@@ -194,6 +219,28 @@ public class FormPanel extends BreadCrumbPanel {
     @Override
     public IModel<String> getTitle() {
         return new ResourceModel("form", "Form");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public IModel<ParticipantDTO> getModel() {
+        return (IModel<ParticipantDTO>) getDefaultModel();
+    }
+
+    @Override
+    public void setModel(IModel<ParticipantDTO> model) {
+        setDefaultModel(model);
+    }
+
+    @Override
+    public void setModelObject(ParticipantDTO object) {
+        setDefaultModelObject(object);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public ParticipantDTO getModelObject() {
+        return (ParticipantDTO) getDefaultModelObject();
     }
 
     @RequiredArgsConstructor

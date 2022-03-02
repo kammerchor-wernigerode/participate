@@ -1,7 +1,6 @@
 package de.vinado.wicket.participate.model;
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,7 +31,6 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode
 public class Event implements Identifiable<Long>, Hideable, Terminable {
 
     @Id
@@ -101,5 +99,18 @@ public class Event implements Identifiable<Long>, Hideable, Terminable {
         } else {
             return dateFormat.format(startDate);
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Event that = (Event) obj;
+        return id != null && id.equals(that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return 13;
     }
 }

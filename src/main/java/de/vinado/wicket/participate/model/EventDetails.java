@@ -1,12 +1,15 @@
 package de.vinado.wicket.participate.model;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.format.ISODateTimeFormat;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -16,9 +19,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -28,7 +28,6 @@ import java.util.concurrent.TimeUnit;
 @Getter
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode
 public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
 
     @Id
@@ -64,6 +63,12 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
 
     @Column(name = "count_accommodation", length = 23, columnDefinition = "DECIMAL")
     private Long accommodationCount;
+
+    @Column(name = "count_car", length = 21, columnDefinition = "DECIMAL")
+    private Long carCount;
+
+    @Column(name = "count_car_seat", length = 21, columnDefinition = "DECIMAL")
+    private Long carSeatCount;
 
     @Column(name = "count_accepted")
     private Long acceptedCount;
@@ -137,5 +142,18 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
     public long getOffset() {
         long diff = new Date().getTime() - getCreationDate().getTime();
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        EventDetails that = (EventDetails) obj;
+        return event.equals(that.event);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(event.getId());
     }
 }

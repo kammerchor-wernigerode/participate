@@ -144,6 +144,7 @@
                                             </tbody>
                                         </table>
                                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Du kannst deine Angabe jederzeit ändern, indem du erneut auf den Button klickst.</p>
+                                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">From now on you can tell us whether you are arriving by car and how many seats your car has.</p>
                                     </td>
                                 </tr>
                             </table>

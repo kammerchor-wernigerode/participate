@@ -174,6 +174,7 @@
                                             You are able to change your data at any time. Simply click on the link
                                             again.
                                         </p>
+                                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Ab sofort kannst du uns mitteilen, ob du mit dem Auto anreist und wie viele Sitzplätze dein Auto hat.</p>
                                     </td>
                                 </tr>
                             </table>

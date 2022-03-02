@@ -28,6 +28,8 @@ public class ParticipantDTO implements Serializable {
     private InvitationStatus invitationStatus;
     private boolean catering;
     private boolean accommodation;
+    private boolean car;
+    private short carSeatCount = 0;
     private String comment;
 
     public ParticipantDTO(final Participant participant) {
@@ -40,6 +42,8 @@ public class ParticipantDTO implements Serializable {
         this.invitationStatus = participant.getInvitationStatus();
         this.catering = participant.isCatering();
         this.accommodation = participant.isAccommodation();
+        this.car = participant.getCarSeatCount() >= 0;
+        this.carSeatCount = participant.getCarSeatCount() < 0 ? 0 : participant.getCarSeatCount();
         this.comment = participant.getComment();
     }
 }
