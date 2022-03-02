@@ -172,8 +172,7 @@
                                         </table>
                                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
                                             You are able to change your data at any time. Simply click on the link
-                                            again.<#if deadline??> Please note that a commitment after ${deadline?date}
-                                            can no longer be considered.</#if>
+                                            again.
                                         </p>
                                     </td>
                                 </tr>

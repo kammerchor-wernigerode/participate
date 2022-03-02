@@ -16,7 +16,6 @@ A location has not be announced yet.
 </#if>
 
 Please fill the form behind the link.
-<#if deadline??>Please note that a commitment after ${deadline?date} can no longer be considered.</#if>
 
 ${acceptLink}
 
