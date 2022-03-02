@@ -16,4 +16,5 @@
     </changeSet>
 
     <include relativeToChangelogFile="true" file="v2.12.0/event/participant.xml"/>
+    <include relativeToChangelogFile="true" file="v2.12.0/event/detail.xml"/>
 </databaseChangeLog>

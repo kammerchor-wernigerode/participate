@@ -63,6 +63,12 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
     @Column(name = "count_accommodation", length = 23, columnDefinition = "DECIMAL")
     private Long accommodationCount;
 
+    @Column(name = "count_car", length = 21, columnDefinition = "DECIMAL")
+    private Long carCount;
+
+    @Column(name = "count_car_seat", length = 21, columnDefinition = "DECIMAL")
+    private Long carSeatCount;
+
     @Column(name = "count_accepted")
     private Long acceptedCount;
 
