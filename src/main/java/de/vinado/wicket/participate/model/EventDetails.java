@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.model;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -28,7 +27,6 @@ import java.util.concurrent.TimeUnit;
 @Getter
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode
 public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
 
     @Id
@@ -137,5 +135,18 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
     public long getOffset() {
         long diff = new Date().getTime() - getCreationDate().getTime();
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        EventDetails that = (EventDetails) obj;
+        return event.equals(that.event);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(event.getId());
     }
 }
