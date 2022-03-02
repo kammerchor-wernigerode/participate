@@ -18,6 +18,8 @@ A location has not be announced yet.
 Please fill the form behind the link.
 <#if deadline??>Please note that a commitment after ${deadline?date} can no longer be considered.</#if>
 
+From now on you can tell us whether you are arriving by car and how many seats your car has.
+
 ${acceptLink}
 
 You are able to change your data at any time. Simply click on the link again.

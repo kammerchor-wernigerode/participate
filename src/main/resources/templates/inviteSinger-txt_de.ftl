@@ -19,6 +19,8 @@ Ein Ort wurde noch nicht festgelegt.
 Sag uns bitte, ob und wie viel Zeit du hast, ob du einen Schlafplatz brauchst oder ob du Schlafplätze anbieten kannst.
 <#if deadline??>Beachte bitte, dass eine Zusage nach dem ${deadline?date} nicht mehr bearbeitet wird.</#if>
 
+Ab sofort kannst du uns mitteilen, ob du mit dem Auto anreist und wie viele Sitzplätze dein Auto hat.
+
 ${acceptLink}
 
 Du kannst deine Angabe jederzeit ändern, indem du erneut auf den Link klickst.
