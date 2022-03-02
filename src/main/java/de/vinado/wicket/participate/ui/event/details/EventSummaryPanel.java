@@ -8,8 +8,8 @@ import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventSummaryUpdateEvent;
 import de.vinado.wicket.participate.events.ShowHidePropertiesEvent;
+import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
-import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.EventsPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -24,12 +24,11 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import java.util.List;
+import static de.vinado.wicket.participate.components.Models.map;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -127,20 +126,15 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         wmc.add(new Label("carSingerCount", new PropertyModel<>(model.getObject(), "acceptedCount")));
 
         // Unterer Bereich
-        final BootstrapPanel<List<Participant>> listPanel = new BootstrapPanel<List<Participant>>("listPanel",
-            new LoadableDetachableModel<List<Participant>>() {
-                @Override
-                protected List<Participant> load() {
-                    return eventService.getParticipants(model.getObject().getEvent());
-                }
-            }, new PropertyModel<>(model, "name")) {
+        final BootstrapPanel<Event> listPanel = new BootstrapPanel<Event>("listPanel",
+            map(model, EventDetails::getEvent), new PropertyModel<>(model, "name")) {
             @Override
-            protected Panel newBodyPanel(final String id, final IModel<List<Participant>> model) {
+            protected Panel newBodyPanel(final String id, final IModel<Event> model) {
                 return new EventSummaryListPanel(id, model, editable);
             }
 
             @Override
-            protected AbstractLink newDefaultBtn(final String id, final IModel<List<Participant>> model) {
+            protected AbstractLink newDefaultBtn(final String id, final IModel<Event> model) {
                 setDefaultBtnLabelModel(new ResourceModel("show.all.properties", "Show all Properties"));
                 setDefaultBtnIcon(FontAwesomeIconType.refresh);
                 return new AjaxLink(id) {

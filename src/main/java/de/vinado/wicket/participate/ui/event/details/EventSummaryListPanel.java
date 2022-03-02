@@ -39,6 +39,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -52,10 +53,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.vinado.wicket.participate.components.Models.map;
+
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class EventSummaryListPanel extends Panel {
+public class EventSummaryListPanel extends GenericPanel<Event> {
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -71,7 +74,7 @@ public class EventSummaryListPanel extends Panel {
 
     private final Event event = ParticipateSession.get().getEvent();
 
-    public EventSummaryListPanel(final String id, final IModel<List<Participant>> model, final boolean editable) {
+    public EventSummaryListPanel(final String id, final IModel<Event> model, final boolean editable) {
         super(id, model);
 
         final DetailedParticipantFilterPanel filterPanel = new DetailedParticipantFilterPanel("filterPanel",
@@ -93,7 +96,7 @@ public class EventSummaryListPanel extends Panel {
         };
         add(filterPanel);
 
-        dataProvider = new SimpleDataProvider<Participant, String>(model.getObject()) {
+        dataProvider = new SimpleDataProvider<Participant, String>(map(model, eventService::getParticipants).getObject()) {
             @Override
             public String getDefaultSort() {
                 return "invitationStatus";
