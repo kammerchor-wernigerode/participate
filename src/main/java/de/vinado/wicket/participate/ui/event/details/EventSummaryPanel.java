@@ -4,15 +4,16 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.vinado.wicket.participate.ParticipateSession;
+import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventSummaryUpdateEvent;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
+import de.vinado.wicket.participate.model.filters.DetailedParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.EventsPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
@@ -20,8 +21,8 @@ import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
@@ -125,11 +126,15 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         wmc.add(new Label("carSingerCount", new PropertyModel<>(model.getObject(), "acceptedCount")));
 
         // Unterer Bereich
+        IModel<DetailedParticipantFilter> filterModel = new CompoundPropertyModel<>(new DetailedParticipantFilter());
         final BootstrapPanel<Event> listPanel = new BootstrapPanel<Event>("listPanel",
             map(model, EventDetails::getEvent), new PropertyModel<>(model, "name")) {
             @Override
             protected Panel newBodyPanel(final String id, final IModel<Event> model) {
-                return new EventSummaryListPanel(id, model, editable);
+                EventSummaryListPanel panel = new EventSummaryListPanel(id, model, filterModel, editable);
+                panel.add(new UpdateOnEventBehavior<>(ParticipantFilterIntent.class));
+                panel.add(new UpdateOnEventBehavior<>(ParticipantTableUpdateIntent.class));
+                return panel;
             }
         };
         listPanel.setOutputMarkupId(true);

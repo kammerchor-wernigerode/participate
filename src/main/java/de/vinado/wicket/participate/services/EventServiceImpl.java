@@ -17,7 +17,6 @@ import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
-import de.vinado.wicket.participate.model.filters.DetailedParticipantFilter;
 import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.model.ical4j.SimpleDateProperty;
@@ -798,69 +797,6 @@ public class EventServiceImpl extends DataService implements EventService {
         }
 
         criteriaQuery.where(predicates.toArray(new Predicate[0]));
-        criteriaQuery.orderBy(criteriaBuilder.asc(singerJoin.get("lastName")));
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Participant> getDetailedFilteredParticipants(final Event event, final DetailedParticipantFilter filter) {
-        if (null == filter) {
-            return getParticipants(event);
-        }
-
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Join<Participant, Singer> singerJoin = root.join("singer");
-
-        final List<Predicate> orPredicates = new ArrayList<>();
-        final List<Predicate> andPredicates = new ArrayList<>();
-        andPredicates.add(criteriaBuilder.equal(root.<Event>get("event"), event));
-
-        final String name = filter.getName();
-        if (!Strings.isEmpty(name))
-            andPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(singerJoin.get("searchName")), "%" + name + "%"));
-
-        final String comment = filter.getComment();
-        if (!Strings.isEmpty(comment)) {
-            orPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("comment")), "%" + comment + "%"));
-        }
-
-        final Voice voice = filter.getVoice();
-        if (null != voice)
-            andPredicates.add(criteriaBuilder.equal(singerJoin.get("voice"), voice));
-
-        final InvitationStatus invitationStatus = filter.getInvitationStatus();
-        if (null != invitationStatus)
-            andPredicates.add(criteriaBuilder.equal(root.get("invitationStatus"), invitationStatus));
-
-        final Date fromDate = filter.getFromDate();
-        if (null != fromDate)
-            andPredicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("fromDate"), fromDate));
-
-        final Date toDate = filter.getToDate();
-        if (null != toDate)
-            andPredicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("toDate"), toDate));
-
-        if (filter.isAccommodation())
-            andPredicates.add(criteriaBuilder.equal(root.get("accommodation"), true));
-
-        if (filter.isCatering())
-            andPredicates.add(criteriaBuilder.equal(root.get("catering"), true));
-
-        if (!andPredicates.isEmpty() && orPredicates.isEmpty()) {
-            criteriaQuery.where(andPredicates.toArray(new Predicate[0]));
-        } else if (andPredicates.isEmpty() && !orPredicates.isEmpty()) {
-            criteriaQuery.where(criteriaBuilder.or(orPredicates.toArray(new Predicate[0])));
-        } else {
-            final Predicate and = criteriaBuilder.and(andPredicates.toArray(new Predicate[0]));
-            final Predicate or = criteriaBuilder.or(orPredicates.toArray(new Predicate[0]));
-            criteriaQuery.where(and, or);
-        }
-
         criteriaQuery.orderBy(criteriaBuilder.asc(singerJoin.get("lastName")));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
