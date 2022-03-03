@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.ui.event.details;
 
 import de.vinado.wicket.participate.model.Event;
-import de.vinado.wicket.participate.model.filters.DetailedParticipantFilter;
+import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import org.apache.wicket.Component;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -11,12 +11,12 @@ import org.apache.wicket.model.IModel;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class DetailedParticipantFilterPanel extends GenericPanel<DetailedParticipantFilter> {
+public abstract class DetailedParticipantFilterPanel extends GenericPanel<ParticipantFilter> {
 
     private final IModel<Event> eventModel;
 
     public DetailedParticipantFilterPanel(String id,
-                                          IModel<DetailedParticipantFilter> model, IModel<Event> eventModel) {
+                                          IModel<ParticipantFilter> model, IModel<Event> eventModel) {
         super(id, model);
         this.eventModel = eventModel;
     }

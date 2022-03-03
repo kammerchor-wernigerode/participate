@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.ui.event.details;
 
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
-import de.vinado.wicket.participate.model.filters.DetailedParticipantFilter;
+import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class ParticipantDataProvider extends SortableDataProvider<Participant, S
     private final EventService eventService;
 
     @Getter
-    private final IModel<DetailedParticipantFilter> filterModel;
+    private final IModel<ParticipantFilter> filterModel;
 
     @Override
     public Iterator<? extends Participant> iterator(long first, long count) {

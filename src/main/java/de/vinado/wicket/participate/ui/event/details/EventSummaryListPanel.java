@@ -8,7 +8,7 @@ import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
-import de.vinado.wicket.participate.model.filters.DetailedParticipantFilter;
+import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.EditInvitationPanel;
 import de.vinado.wicket.participate.ui.pages.BasePage;
@@ -33,10 +33,10 @@ public class EventSummaryListPanel extends GenericPanel<Event> {
     @SpringBean
     private EmailBuilderFactory emailBuilderFactory;
 
-    private final IModel<DetailedParticipantFilter> filterModel;
+    private final IModel<ParticipantFilter> filterModel;
 
     public EventSummaryListPanel(String id, IModel<Event> model,
-                                 IModel<DetailedParticipantFilter> filterModel, boolean editable) {
+                                 IModel<ParticipantFilter> filterModel, boolean editable) {
         super(id, model);
 
         this.filterModel = filterModel;

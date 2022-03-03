@@ -780,7 +780,7 @@ public class EventServiceImpl extends DataService implements EventService {
         final List<Predicate> predicates = new ArrayList<>();
         predicates.add(criteriaBuilder.equal(root.<Event>get("event"), event));
 
-        final String searchTerm = filter.getSearchTerm();
+        final String searchTerm = filter.getName();
         if (!Strings.isEmpty(searchTerm))
             predicates.add(criteriaBuilder.like(criteriaBuilder.lower(singerJoin.get("displayName")), "%" + searchTerm + "%"));
 

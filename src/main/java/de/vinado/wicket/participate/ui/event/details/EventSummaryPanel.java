@@ -10,7 +10,7 @@ import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventSummaryUpdateEvent;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
-import de.vinado.wicket.participate.model.filters.DetailedParticipantFilter;
+import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.EventsPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -126,7 +126,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         wmc.add(new Label("carSingerCount", new PropertyModel<>(model.getObject(), "acceptedCount")));
 
         // Unterer Bereich
-        IModel<DetailedParticipantFilter> filterModel = new CompoundPropertyModel<>(new DetailedParticipantFilter());
+        IModel<ParticipantFilter> filterModel = new CompoundPropertyModel<>(new ParticipantFilter());
         final BootstrapPanel<Event> listPanel = new BootstrapPanel<Event>("listPanel",
             map(model, EventDetails::getEvent), new PropertyModel<>(model, "name")) {
             @Override

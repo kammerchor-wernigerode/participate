@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.ui.event.details;
 
-import de.vinado.wicket.participate.model.filters.DetailedParticipantFilter;
+import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import lombok.Value;
 
 /**
@@ -9,5 +9,5 @@ import lombok.Value;
 @Value
 public class ParticipantFilterIntent {
 
-    DetailedParticipantFilter filter;
+    ParticipantFilter filter;
 }

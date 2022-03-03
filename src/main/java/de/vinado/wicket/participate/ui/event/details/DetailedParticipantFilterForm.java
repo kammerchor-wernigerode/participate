@@ -13,7 +13,7 @@ import de.vinado.wicket.participate.behavoirs.decorators.BootstrapInlineFormDeco
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Voice;
-import de.vinado.wicket.participate.model.filters.DetailedParticipantFilter;
+import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -43,7 +43,7 @@ import java.util.Date;
 /**
  * @author Vincent Nadoll
  */
-public abstract class DetailedParticipantFilterForm extends Form<DetailedParticipantFilter> {
+public abstract class DetailedParticipantFilterForm extends Form<ParticipantFilter> {
 
     private static final String TAG_NAME = "detailedParticipantForm";
 
@@ -53,7 +53,7 @@ public abstract class DetailedParticipantFilterForm extends Form<DetailedPartici
 
     private final IModel<Event> eventModel;
 
-    public DetailedParticipantFilterForm(String id, IModel<DetailedParticipantFilter> model, IModel<Event> eventModel) {
+    public DetailedParticipantFilterForm(String id, IModel<ParticipantFilter> model, IModel<Event> eventModel) {
         super(id, model);
         this.eventModel = eventModel;
     }
@@ -178,7 +178,7 @@ public abstract class DetailedParticipantFilterForm extends Form<DetailedPartici
     }
 
     private void resetFilter() {
-        setModelObject(new DetailedParticipantFilter());
+        setModelObject(new ParticipantFilter());
     }
 
     private AbstractSubmitLink applyButton(String id) {
