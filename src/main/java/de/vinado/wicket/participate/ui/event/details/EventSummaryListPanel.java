@@ -16,7 +16,6 @@ import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventSummaryUpdateEvent;
-import de.vinado.wicket.participate.events.ShowHidePropertiesEvent;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.InvitationStatus;
@@ -40,7 +39,6 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColu
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
@@ -66,8 +64,6 @@ public class EventSummaryListPanel extends GenericPanel<Event> {
 
     @SpringBean
     private EmailBuilderFactory emailBuilderFactory;
-
-    private boolean showAllProperties = false;
 
     private SimpleDataProvider<Participant, String> dataProvider;
     private BootstrapAjaxDataTable<Participant, String> dataTable;
@@ -166,14 +162,6 @@ public class EventSummaryListPanel extends GenericPanel<Event> {
                 commentLabel.add(new CssClassNameAppender("m-0"));
                 item.add(commentLabel);
             }
-
-            @Override
-            public String getCssClass() {
-                if (showAllProperties) {
-                    return super.getCssClass();
-                }
-                return "sr-only";
-            }
         });
         if (editable) {
             columns.add(new BootstrapAjaxLinkColumn<Participant, String>(FontAwesomeIconType.pencil, new ResourceModel("invitation.edit", "Edit Invitation")) {
@@ -222,12 +210,6 @@ public class EventSummaryListPanel extends GenericPanel<Event> {
     @Override
     public void onEvent(final IEvent<?> event) {
         final Object payload = event.getPayload();
-        if (payload instanceof ShowHidePropertiesEvent) {
-            final AjaxRequestTarget target = ((ShowHidePropertiesEvent) payload).getTarget();
-            showAllProperties = !showAllProperties;
-            target.add(dataTable);
-        }
-
         if (payload instanceof AjaxUpdateEvent) {
             dataProvider.set(eventService.getParticipants(ParticipateSession.get().getEvent()));
             ((AjaxUpdateEvent) payload).getTarget().add(dataTable);

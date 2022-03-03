@@ -7,7 +7,6 @@ import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventSummaryUpdateEvent;
-import de.vinado.wicket.participate.events.ShowHidePropertiesEvent;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.services.EventService;
@@ -131,18 +130,6 @@ public class EventSummaryPanel extends BreadCrumbPanel {
             @Override
             protected Panel newBodyPanel(final String id, final IModel<Event> model) {
                 return new EventSummaryListPanel(id, model, editable);
-            }
-
-            @Override
-            protected AbstractLink newDefaultBtn(final String id, final IModel<Event> model) {
-                setDefaultBtnLabelModel(new ResourceModel("show.all.properties", "Show all Properties"));
-                setDefaultBtnIcon(FontAwesomeIconType.refresh);
-                return new AjaxLink(id) {
-                    @Override
-                    public void onClick(final AjaxRequestTarget target) {
-                        send(getWebPage(), Broadcast.BREADTH, new ShowHidePropertiesEvent(target));
-                    }
-                };
             }
         };
         listPanel.setOutputMarkupId(true);
