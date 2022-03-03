@@ -2,7 +2,6 @@ package de.vinado.wicket.participate.ui.event.details;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.components.TextAlign;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.panels.BnBIconPanel;
@@ -68,8 +67,6 @@ public class EventSummaryListPanel extends GenericPanel<Event> {
     private SimpleDataProvider<Participant, String> dataProvider;
     private BootstrapAjaxDataTable<Participant, String> dataTable;
 
-    private final Event event = ParticipateSession.get().getEvent();
-
     public EventSummaryListPanel(final String id, final IModel<Event> model, final boolean editable) {
         super(id, model);
 
@@ -77,7 +74,7 @@ public class EventSummaryListPanel extends GenericPanel<Event> {
             new LoadableDetachableModel<List<Participant>>() {
                 @Override
                 protected List<Participant> load() {
-                    return eventService.getParticipants(ParticipateSession.get().getEvent());
+                    return eventService.getParticipants(model.getObject());
                 }
             }, new CompoundPropertyModel<>(new DetailedParticipantFilter()), editable) {
             @Override
@@ -177,7 +174,7 @@ public class EventSummaryListPanel extends GenericPanel<Event> {
                             final EventDetails savedEventDetails = eventService.getEventDetails(savedParticipant.getEvent());
 
                             send(getWebPage(), Broadcast.BREADTH, new EventSummaryUpdateEvent(savedEventDetails, target));
-                            dataProvider.set(eventService.getParticipants(event));
+                            dataProvider.set(eventService.getParticipants(EventSummaryListPanel.this.getModelObject()));
                             target.add(dataTable);
                             Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
                         }
@@ -211,7 +208,7 @@ public class EventSummaryListPanel extends GenericPanel<Event> {
     public void onEvent(final IEvent<?> event) {
         final Object payload = event.getPayload();
         if (payload instanceof AjaxUpdateEvent) {
-            dataProvider.set(eventService.getParticipants(ParticipateSession.get().getEvent()));
+            dataProvider.set(eventService.getParticipants(getModelObject()));
             ((AjaxUpdateEvent) payload).getTarget().add(dataTable);
         }
     }
