@@ -12,6 +12,7 @@ import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.Voice;
+import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
@@ -170,6 +171,16 @@ public class ParticipantTable
     private static IColumn<Participant, SerializableFunction<Participant, ?>> commentColumn() {
         return new AbstractColumn<Participant, SerializableFunction<Participant, ?>>(
             new ResourceModel("comments", "Comments")) {
+            @Override
+            public Component getHeader(String componentId) {
+                return new CommentColumnHeader(componentId, getDisplayModel()) {
+                    @Override
+                    protected Component getCommentToggleScope() {
+                        return findParent(ParticipantTable.class);
+                    }
+                };
+            }
+
             @Override
             public void populateItem(Item<ICellPopulator<Participant>> item,
                                      String componentId, IModel<Participant> rowModel) {

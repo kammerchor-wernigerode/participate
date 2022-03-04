@@ -78,6 +78,10 @@ public class ShortenedMultilineLabel extends GenericPanel<String> {
         static Intent toggle() {
             return State::toggle;
         }
+
+        static Intent ensure(State state) {
+            return current -> state;
+        }
     }
 
 
