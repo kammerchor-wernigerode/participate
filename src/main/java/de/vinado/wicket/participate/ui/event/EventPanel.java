@@ -24,7 +24,6 @@ import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
-import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.details.ParticipantDataProvider;
 import de.vinado.wicket.participate.ui.event.details.ParticipantFilterIntent;
@@ -79,8 +78,6 @@ public class EventPanel extends BreadCrumbPanel implements IGenericComponent<Eve
 
     private final Form form;
 
-    private final SimpleDataProvider<Participant, String> dataProvider;
-
     public EventPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<EventDetails> model, final boolean editable, PersonContext personContext, IModel<ParticipantFilter> filterModel) {
         super(id, breadCrumbModel, model);
         setOutputMarkupPlaceholderTag(true);
@@ -88,12 +85,7 @@ public class EventPanel extends BreadCrumbPanel implements IGenericComponent<Eve
         this.personContext = personContext;
         this.filterModel = filterModel;
 
-        form = new Form("form") {
-            @Override
-            protected void onConfigure() {
-                dataProvider.set(eventService.getParticipants(model.getObject().getEvent()));
-            }
-        };
+        form = new Form("form");
         add(form);
 
         final WebMarkupContainer wmc = new WebMarkupContainer("wmc");
@@ -121,13 +113,6 @@ public class EventPanel extends BreadCrumbPanel implements IGenericComponent<Eve
             }
         };
         wmc.add(filterPanel);
-
-        dataProvider = new SimpleDataProvider<Participant, String>() {
-            @Override
-            public String getDefaultSort() {
-                return "invitationStatus";
-            }
-        };
 
         final List<IColumn<Participant, SerializableFunction<Participant, ?>>> columns = new ArrayList<>();
         columns.add(new AbstractColumn<Participant, SerializableFunction<Participant, ?>>(Model.of(""),
