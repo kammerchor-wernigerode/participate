@@ -13,6 +13,7 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -33,7 +34,7 @@ public class ParticipantDataProvider extends SortableDataProvider<Participant, S
             .iterator();
     }
 
-    private SerializableFunction<Participant, String> keyExtractor() {
+    private Function<Participant, String> keyExtractor() {
         return getSort().getProperty().andThen(Object::toString);
     }
 
