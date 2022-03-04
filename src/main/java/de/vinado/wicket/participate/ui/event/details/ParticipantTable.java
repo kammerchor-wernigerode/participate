@@ -78,7 +78,8 @@ public class ParticipantTable
     }
 
     private static IColumn<Participant, SerializableFunction<Participant, ?>> invitationStatusColumn() {
-        return new AbstractColumn<Participant, SerializableFunction<Participant, ?>>(Model.of("")) {
+        return new AbstractColumn<Participant, SerializableFunction<Participant, ?>>(Model.of(""),
+            with(Participant::getInvitationStatus).andThen(InvitationStatus::ordinal)) {
             @Override
             public void populateItem(Item<ICellPopulator<Participant>> item,
                                      String componentId, IModel<Participant> rowModel) {
@@ -125,13 +126,17 @@ public class ParticipantTable
     private static IColumn<Participant, SerializableFunction<Participant, ?>> voiceColumn() {
         return new EnumColumn<Participant, SerializableFunction<Participant, ?>, Voice>(
             new ResourceModel("voice", "voice"),
-            with(Participant::getSinger).andThen(Singer::getVoice),
+            with(Participant::getSinger).andThen(Singer::getVoice).andThen(nullSafe(Voice::ordinal)),
             "singer.voice") {
             @Override
             public String getCssClass() {
                 return "voice";
             }
         };
+    }
+
+    private static <T, R, S extends R> SerializableFunction<T, R> nullSafe(SerializableFunction<T, S> mapper) {
+        return nullable -> null == nullable ? null : mapper.apply(nullable);
     }
 
     private static IColumn<Participant, SerializableFunction<Participant, ?>> attributesColumn() {
