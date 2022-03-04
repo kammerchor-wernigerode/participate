@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<wicket:participantFilterForm>
+    <input wicket:id="name">
+    <select wicket:id="invitationStatus"></select>
+    <select wicket:id="voice"></select>
+    <wicket:child/>
+    <div class="form-group form-group-sm pull-right">
+        <div class="btn-group btn-group-sm" role="group" aria-label="Filter navigation">
+            <a wicket:id="reset"></a>
+            <a wicket:id="apply">
+                <i wicket:id="icon"></i>
+            </a>
+        </div>
+    </div>
+</wicket:participantFilterForm>
+</body>
+</html>
