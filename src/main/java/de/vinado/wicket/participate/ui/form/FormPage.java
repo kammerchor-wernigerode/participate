@@ -83,7 +83,7 @@ public class FormPage extends BasePage {
 
         IModel<ParticipantFilter> participantFilter = new CompoundPropertyModel<>(new ParticipantFilter());
         final EventPanel eventPanel = new EventPanel("eventPanel", breadcrumb,
-            new CompoundPropertyModel<>(eventService.getEventDetails(model.getObject().getEvent())), false, () -> null, participantFilter);
+            new CompoundPropertyModel<>(eventService.getEventDetails(model.getObject().getEvent())), false, () -> model.getObject().getSinger(), participantFilter);
         add(eventPanel);
 
         final FormPanel formPanel = new FormPanel("formPanel", breadcrumb,
