@@ -15,8 +15,7 @@ public abstract class DetailedParticipantFilterPanel extends GenericPanel<Partic
 
     private final IModel<Event> eventModel;
 
-    public DetailedParticipantFilterPanel(String id,
-                                          IModel<ParticipantFilter> model, IModel<Event> eventModel) {
+    public DetailedParticipantFilterPanel(String id, IModel<ParticipantFilter> model, IModel<Event> eventModel) {
         super(id, model);
         this.eventModel = eventModel;
     }
