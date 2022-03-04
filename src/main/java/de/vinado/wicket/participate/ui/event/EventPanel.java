@@ -1,6 +1,7 @@
 package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.vinado.wicket.participate.components.Models;
 import de.vinado.wicket.participate.components.TextAlign;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.panels.IconPanel;
@@ -25,6 +26,7 @@ import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.Component;
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
@@ -52,7 +54,7 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class EventPanel extends BreadCrumbPanel {
+public class EventPanel extends BreadCrumbPanel implements IGenericComponent<EventDetails> {
 
     @SpringBean
     @SuppressWarnings("unused")
@@ -61,15 +63,12 @@ public class EventPanel extends BreadCrumbPanel {
     @SpringBean
     private EmailBuilderFactory emailBuilderFactory;
 
-    private final IModel<EventDetails> model;
-
     private final Form form;
 
     private final SimpleDataProvider<Participant, String> dataProvider;
 
     public EventPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<EventDetails> model, final boolean editable) {
         super(id, breadCrumbModel, model);
-        this.model = model;
         setOutputMarkupPlaceholderTag(true);
 
         form = new Form("form") {
@@ -191,7 +190,7 @@ public class EventPanel extends BreadCrumbPanel {
             final EventUpdateEvent updateEvent = (EventUpdateEvent) payload;
             final AjaxRequestTarget target = updateEvent.getTarget();
             final Event event = updateEvent.getEvent();
-            model.setObject(eventService.getEventDetails(event));
+            setModelObject(eventService.getEventDetails(event));
             target.add(form);
         }
 
@@ -204,6 +203,28 @@ public class EventPanel extends BreadCrumbPanel {
 
     @Override
     public IModel<String> getTitle() {
-        return new PropertyModel<>(model, "name");
+        return new PropertyModel<>(getModel(), "name");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public IModel<EventDetails> getModel() {
+        return (IModel<EventDetails>) getDefaultModel();
+    }
+
+    @Override
+    public void setModel(IModel<EventDetails> model) {
+        setDefaultModel(model);
+    }
+
+    @Override
+    public void setModelObject(EventDetails object) {
+        setDefaultModelObject(object);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public EventDetails getModelObject() {
+        return (EventDetails) getDefaultModelObject();
     }
 }
