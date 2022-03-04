@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.model;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,6 +7,7 @@ import lombok.ToString;
 import org.hibernate.annotations.Polymorphism;
 import org.hibernate.annotations.PolymorphismType;
 
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -26,7 +26,6 @@ import javax.persistence.Table;
 @Setter
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode(callSuper = true)
 public class Singer extends Person implements Hideable {
 
     @Enumerated
@@ -46,5 +45,18 @@ public class Singer extends Person implements Hideable {
         super(firstName, lastName, email);
         this.voice = voice;
         this.active = true;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Singer that = (Singer) obj;
+        return Objects.equals(this.getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return 11;
     }
 }
