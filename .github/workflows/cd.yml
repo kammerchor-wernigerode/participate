@@ -2,9 +2,6 @@ name: Publish Docker Image and Deploy
 
 on:
   push:
-    tags:
-      - 'v*'
-  pull_request:
     branches: [ main ]
 
 jobs:
@@ -19,16 +16,9 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: kchwr/participate
-          flavor: |
-            latest=false
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{major}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{version}}
+            latest
       - name: Login to DockerHub
-        if: github.event_name != 'pull_request'
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -37,8 +27,11 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=registry,ref=kchwr/participate:latest
           cache-to: type=inline
+      - name: Call deployment Webhook
+        uses: wei/curl@v1
+        with:
+          args: -X POST ${{ secrets.DEPLOYMENT_CALLBACK_URL }}
