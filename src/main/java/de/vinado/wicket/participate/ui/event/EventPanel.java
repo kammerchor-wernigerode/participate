@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.ui.event;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.components.PersonContext;
@@ -187,7 +188,15 @@ public class EventPanel extends BreadCrumbPanel implements IGenericComponent<Eve
             });
         }
 
-        BootstrapAjaxDataTable<Participant, SerializableFunction<Participant, ?>> dataTable = new BootstrapAjaxDataTable<>("dataTable", columns, dataProvider(), 15);
+        BootstrapAjaxDataTable<Participant, SerializableFunction<Participant, ?>> dataTable = new BootstrapAjaxDataTable<Participant, SerializableFunction<Participant, ?>>("dataTable", columns, dataProvider(), 15) {
+            @Override
+            protected Item<Participant> newRowItem(String id, int index, IModel<Participant> model) {
+                Item<Participant> item = super.newRowItem(id, index, model);
+                Person person = model.getObject().getSinger();
+                if (person.equals(personContext.get())) item.add(new CssClassNameAppender("bg-info"));
+                return item;
+            }
+        };
         dataTable.setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
         dataTable.setOutputMarkupId(true);
         dataTable.hover().condensed();
