@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.ui.event.details;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.vinado.wicket.participate.components.ShortenedMultilineLabel;
 import de.vinado.wicket.participate.components.TextAlign;
 import de.vinado.wicket.participate.components.panels.BnBIconPanel;
 import de.vinado.wicket.participate.components.panels.IconPanel;
@@ -18,7 +18,6 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColu
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import org.apache.wicket.model.IModel;
@@ -31,6 +30,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import static de.vinado.wicket.participate.components.Models.map;
+import static de.vinado.wicket.participate.components.ShortenedMultilineLabel.Limit;
 
 /**
  * @author Vincent Nadoll
@@ -166,19 +168,17 @@ public class ParticipantTable
     }
 
     private static IColumn<Participant, SerializableFunction<Participant, ?>> commentColumn() {
-        return new PropertyColumn<Participant, SerializableFunction<Participant, ?>>(
-            new ResourceModel("comments", "Comments"), "comment") {
+        return new AbstractColumn<Participant, SerializableFunction<Participant, ?>>(
+            new ResourceModel("comments", "Comments")) {
             @Override
             public void populateItem(Item<ICellPopulator<Participant>> item,
                                      String componentId, IModel<Participant> rowModel) {
-                MultiLineLabel commentLabel = new MultiLineLabel(componentId, getDataModel(rowModel));
-                commentLabel.add(new CssClassNameAppender("m-0"));
-                item.add(commentLabel);
+                item.add(new ShortenedMultilineLabel(componentId, map(rowModel, Participant::getComment), new Limit(100)));
             }
 
             @Override
             public String getCssClass() {
-                return "comment";
+                return "comment m-0";
             }
         };
     }
