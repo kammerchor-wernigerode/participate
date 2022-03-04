@@ -3,6 +3,7 @@ package de.vinado.wicket.participate.ui.event;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.vinado.wicket.participate.ParticipateSession;
+import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalConfirmationPanel;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
@@ -19,6 +20,7 @@ import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
+import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
 import de.vinado.wicket.participate.ui.event.details.EventSummaryPanel;
@@ -58,6 +60,9 @@ public class EventMasterPanel extends BreadCrumbPanel {
 
     @SpringBean
     private EmailBuilderFactory emailBuilderFactory;
+
+    @SpringBean
+    private PersonContext personContext;
 
     private BootstrapPanel<List<EventDetails>> eventListPanel;
     private BootstrapPanel<EventDetails> eventPanel;
@@ -110,6 +115,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
             eventView = eventService.getEventDetails(ParticipateSession.get().getEvent());
         }
 
+        IModel<ParticipantFilter> participantFilter = new CompoundPropertyModel<>(new ParticipantFilter());
         eventPanel = new BootstrapPanel<EventDetails>("event", new CompoundPropertyModel<>(eventView),
             new ResourceModel("event", "Event")) {
             @Override
@@ -119,7 +125,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
 
             @Override
             protected Panel newBodyPanel(final String id, final IModel<EventDetails> model) {
-                return new EventPanel(id, breadCrumbModel, model, true);
+                return new EventPanel(id, breadCrumbModel, model, true, personContext, participantFilter);
             }
 
             @Override
