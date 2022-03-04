@@ -21,22 +21,22 @@ import java.util.List;
  */
 public abstract class ParticipantFilterPanel extends AbstractTableFilterPanel<Participant, ParticipantFilter> {
 
-    private TextField searchTermTf;
+    private final TextField<String> searchTermTf;
 
-    public ParticipantFilterPanel(final String id, final IModel<List<Participant>> model,
-                                  final IModel<ParticipantFilter> filterModel) {
+    public ParticipantFilterPanel(String id, IModel<List<Participant>> model,
+                                  IModel<ParticipantFilter> filterModel) {
         super(id, model, filterModel);
 
-        searchTermTf = new TextField("name");
+        searchTermTf = new TextField<>("name");
         searchTermTf.setLabel(new ResourceModel("search", "Search"));
         inner.add(searchTermTf);
 
-        final DropDownChoice<InvitationStatus> invitationStatusDdc = new DropDownChoice<>("invitationStatus",
+        DropDownChoice<InvitationStatus> invitationStatusDdc = new DropDownChoice<>("invitationStatus",
             Collections.unmodifiableList(Arrays.asList(InvitationStatus.values())), new EnumChoiceRenderer<>());
         invitationStatusDdc.setLabel(new ResourceModel("invitationStatus", "Invitation Status"));
         inner.add(invitationStatusDdc);
 
-        final DropDownChoice<Voice> voiceDdc = new DropDownChoice<>("voice",
+        DropDownChoice<Voice> voiceDdc = new DropDownChoice<>("voice",
             Collections.unmodifiableList(Arrays.asList(Voice.values())), new EnumChoiceRenderer<>());
         voiceDdc.setLabel(new ResourceModel("voice", "Voice"));
         inner.add(voiceDdc);
