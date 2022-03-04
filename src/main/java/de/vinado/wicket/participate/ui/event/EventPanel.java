@@ -61,12 +61,11 @@ public class EventPanel extends BreadCrumbPanel {
     @SpringBean
     private EmailBuilderFactory emailBuilderFactory;
 
-    private IModel<EventDetails> model;
+    private final IModel<EventDetails> model;
 
-    private Form form;
+    private final Form form;
 
-    private SimpleDataProvider<Participant, String> dataProvider;
-    private BootstrapAjaxDataTable<Participant, String> dataTable;
+    private final SimpleDataProvider<Participant, String> dataProvider;
 
     public EventPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<EventDetails> model, final boolean editable) {
         super(id, breadCrumbModel, model);
@@ -178,7 +177,7 @@ public class EventPanel extends BreadCrumbPanel {
             });
         }
 
-        dataTable = new BootstrapAjaxDataTable<>("dataTable", columns, dataProvider, 15);
+        BootstrapAjaxDataTable<Participant, String> dataTable = new BootstrapAjaxDataTable<>("dataTable", columns, dataProvider, 15);
         dataTable.setOutputMarkupId(true);
         dataTable.hover().condensed();
         wmc.add(dataTable);
