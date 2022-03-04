@@ -1,19 +1,16 @@
 package de.vinado.wicket.participate.ui.event;
 
 import de.vinado.wicket.participate.components.panels.AbstractTableFilterPanel;
-import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
-import de.vinado.wicket.participate.services.EventService;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,20 +21,11 @@ import java.util.List;
  */
 public abstract class ParticipantFilterPanel extends AbstractTableFilterPanel<Participant, ParticipantFilter> {
 
-    @SuppressWarnings("unused")
-    @SpringBean
-    private EventService eventService;
-
-    private IModel<Event> event;
-
     private TextField searchTermTf;
 
     public ParticipantFilterPanel(final String id, final IModel<List<Participant>> model,
-                                  final IModel<ParticipantFilter> filterModel, final IModel<Event> event,
-                                  final boolean editable) {
+                                  final IModel<ParticipantFilter> filterModel) {
         super(id, model, filterModel);
-
-        this.event = event;
 
         searchTermTf = new TextField("name");
         searchTermTf.setLabel(new ResourceModel("search", "Search"));
@@ -59,15 +47,5 @@ public abstract class ParticipantFilterPanel extends AbstractTableFilterPanel<Pa
     @Override
     protected Component getFocusableFormComponent() {
         return searchTermTf;
-    }
-
-    @Override
-    public List<Participant> getFilteredData(final ParticipantFilter filter) {
-        return eventService.getFilteredParticipants(event.getObject(), filter);
-    }
-
-    @Override
-    public List<Participant> getDefaultData() {
-        return eventService.getParticipants(event.getObject());
     }
 }
