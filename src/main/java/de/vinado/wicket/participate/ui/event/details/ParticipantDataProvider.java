@@ -39,9 +39,9 @@ public class ParticipantDataProvider extends SortableDataProvider<Participant, S
     public Iterator<? extends Participant> iterator(long first, long count) {
         Person self = selfSupplier.get();
         return streamFilteredParticipants()
-            .skip(first).limit(count)
             .sorted(Comparator.comparing(keyExtractor(), Comparator.nullsFirst(comparator())))
             .sorted(Comparator.comparing(people(person -> Objects.equals(person, self)), Comparator.reverseOrder()))
+            .skip(first).limit(count)
             .iterator();
     }
 
