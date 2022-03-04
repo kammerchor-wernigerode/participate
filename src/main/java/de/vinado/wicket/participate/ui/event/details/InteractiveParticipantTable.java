@@ -45,6 +45,11 @@ public class InteractiveParticipantTable extends ParticipantTable {
             public void onClick(AjaxRequestTarget target, IModel<Participant> rowModel) {
                 onClick.accept(target, rowModel);
             }
+
+            @Override
+            public String getCssClass() {
+                return "edit";
+            }
         };
     }
 
@@ -55,6 +60,11 @@ public class InteractiveParticipantTable extends ParticipantTable {
             @Override
             public void onClick(AjaxRequestTarget target, IModel<Participant> rowModel) {
                 onClick.accept(target, rowModel);
+            }
+
+            @Override
+            public String getCssClass() {
+                return "notify";
             }
         };
     }

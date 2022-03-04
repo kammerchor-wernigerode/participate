@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.ui.event.details;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.vinado.wicket.participate.components.ShortenedMultilineLabel;
 import de.vinado.wicket.participate.components.TextAlign;
@@ -54,6 +55,13 @@ public class ParticipantTable
         setOutputMarkupId(true);
 
         setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        add(new CssClassNameAppender("participants"));
     }
 
     private static List<IColumn<Participant, SerializableFunction<Participant, ?>>> columns(
