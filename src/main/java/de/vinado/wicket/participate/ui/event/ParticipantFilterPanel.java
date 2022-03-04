@@ -39,7 +39,7 @@ public abstract class ParticipantFilterPanel extends AbstractTableFilterPanel<Pa
 
         this.event = event;
 
-        searchTermTf = new TextField("searchTerm");
+        searchTermTf = new TextField("name");
         searchTermTf.setLabel(new ResourceModel("search", "Search"));
         inner.add(searchTermTf);
 

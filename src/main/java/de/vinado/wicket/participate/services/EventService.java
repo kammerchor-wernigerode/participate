@@ -9,7 +9,6 @@ import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
-import de.vinado.wicket.participate.model.filters.DetailedParticipantFilter;
 import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 
@@ -330,16 +329,6 @@ public interface EventService {
      * @return An filtered and ordered list of {@link Participant}.
      */
     List<Participant> getFilteredParticipants(Event event, ParticipantFilter filter);
-
-    /**
-     * A more in detail filter that fetches all {@link Participant} where the {@link Event} is present. The result
-     * is filtered by {@link DetailedParticipantFilter} and ordered by {@link Person#lastName}.
-     *
-     * @param event  The {@link Event} to filter for.
-     * @param filter The filter criteria.
-     * @return An filtered and ordered list of {@link Participant}.
-     */
-    List<Participant> getDetailedFilteredParticipants(Event event, DetailedParticipantFilter filter);
 
     /**
      * @param participant the participant on which to determine whether the deadline has passed
