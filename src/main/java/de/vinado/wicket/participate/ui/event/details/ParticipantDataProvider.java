@@ -1,7 +1,9 @@
 package de.vinado.wicket.participate.ui.event.details;
 
+import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
+import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +27,26 @@ public class ParticipantDataProvider extends SortableDataProvider<Participant, S
     private final IModel<Event> event;
     private final EventService eventService;
     private final IModel<ParticipantFilter> filterModel;
+    private final PersonContext selfSupplier;
+
+    public ParticipantDataProvider(IModel<Event> event,
+                                   EventService eventService,
+                                   IModel<ParticipantFilter> filterModel) {
+        this(event, eventService, filterModel, () -> null);
+    }
 
     @Override
     public Iterator<? extends Participant> iterator(long first, long count) {
+        Person self = selfSupplier.get();
         return streamFilteredParticipants()
             .skip(first).limit(count)
             .sorted(Comparator.comparing(keyExtractor(), comparator()))
+            .sorted(Comparator.comparing(people(person -> Objects.equals(person, self)), Comparator.reverseOrder()))
             .iterator();
+    }
+
+    private static Function<Participant, Boolean> people(Function<Person, Boolean> keyExtractor) {
+        return keyExtractor.compose(Participant::getSinger);
     }
 
     private Function<Participant, String> keyExtractor() {
