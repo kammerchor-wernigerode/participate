@@ -6,15 +6,20 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
 import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.Response;
+import org.apache.wicket.util.string.Strings;
 
 import java.io.Serializable;
 
@@ -46,13 +51,26 @@ public class ShortenedMultilineLabel extends GenericPanel<String> {
         setOutputMarkupId(true);
 
         add(text());
-        add(button());
+        add(button().add(new Behavior() {
+            @Override
+            public void afterRender(Component component) {
+                Response r = component.getResponse();
+                r.write("</p>");
+            }
+        }));
 
         add(new UpdateOnEventBehavior<>(Intent.class, this::updateState));
     }
 
     private MultiLineLabel text() {
-        MultiLineLabel label = new MultiLineLabel("text", textModel());
+        MultiLineLabel label = new MultiLineLabel("text", textModel()) {
+            @Override
+            public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag) {
+                CharSequence body = Strings.toMultilineMarkup(getDefaultModelObjectAsString());
+                body = body.subSequence(0, body.length() - 4);
+                replaceComponentTagBody(markupStream, openTag, body);
+            }
+        };
         label.setRenderBodyOnly(true);
         return label;
     }
