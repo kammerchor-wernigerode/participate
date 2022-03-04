@@ -49,7 +49,7 @@ public class ParticipantTable
     public ParticipantTable(String id, ParticipantDataProvider dataProvider,
                             Collection<IColumn<Participant, SerializableFunction<Participant, ?>>> additionalColumns) {
         super(id, columns(additionalColumns), dataProvider, Integer.MAX_VALUE);
-        dataProvider.setSort(with(Participant::getInvitationStatus), SortOrder.ASCENDING);
+        dataProvider.setSort(with(Participant::getInvitationStatus).andThen(Enum::ordinal), SortOrder.ASCENDING);
         hover();
         condensed();
         setOutputMarkupId(true);
