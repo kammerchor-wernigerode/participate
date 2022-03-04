@@ -4,7 +4,6 @@ import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.model.IModel;
@@ -24,8 +23,6 @@ public class ParticipantDataProvider extends SortableDataProvider<Participant, S
 
     private final IModel<Event> event;
     private final EventService eventService;
-
-    @Getter
     private final IModel<ParticipantFilter> filterModel;
 
     @Override
