@@ -40,7 +40,7 @@ public class ParticipantDataProvider extends SortableDataProvider<Participant, S
         Person self = selfSupplier.get();
         return streamFilteredParticipants()
             .skip(first).limit(count)
-            .sorted(Comparator.comparing(keyExtractor(), comparator()))
+            .sorted(Comparator.comparing(keyExtractor(), Comparator.nullsFirst(comparator())))
             .sorted(Comparator.comparing(people(person -> Objects.equals(person, self)), Comparator.reverseOrder()))
             .iterator();
     }
@@ -50,7 +50,11 @@ public class ParticipantDataProvider extends SortableDataProvider<Participant, S
     }
 
     private Function<Participant, String> keyExtractor() {
-        return getSort().getProperty().andThen(Object::toString);
+        return getSort().getProperty().andThen(ParticipantDataProvider::toString);
+    }
+
+    private static String toString(Object property) {
+        return null == property ? null : property.toString();
     }
 
     private Comparator<String> comparator() {
