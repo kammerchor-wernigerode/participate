@@ -24,13 +24,13 @@ import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.pages.BasePage;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -40,7 +40,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
@@ -99,31 +98,10 @@ public class EventPanel extends BreadCrumbPanel {
         });
 
         final ParticipantFilterPanel filterPanel = new ParticipantFilterPanel("filterPanel",
-            new LoadableDetachableModel<List<Participant>>() {
-                @Override
-                protected List<Participant> load() {
-                    return eventService.getParticipants(model.getObject().getEvent());
-                }
-            },
             new CompoundPropertyModel<>(new ParticipantFilter())) {
             @Override
-            public List<Participant> getFilteredData(ParticipantFilter filter) {
-                return eventService.getFilteredParticipants(model.getObject().getEvent(), filter);
-            }
-
-            @Override
-            public List<Participant> getDefaultData() {
-                return eventService.getParticipants(model.getObject().getEvent());
-            }
-
-            @Override
-            public SimpleDataProvider<Participant, ?> getDataProvider() {
-                return dataProvider;
-            }
-
-            @Override
-            public DataTable<Participant, ?> getDataTable() {
-                return dataTable;
+            protected Component getScope() {
+                return wmc;
             }
         };
         wmc.add(filterPanel);
