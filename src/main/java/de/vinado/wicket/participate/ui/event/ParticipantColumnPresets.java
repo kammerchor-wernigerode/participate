@@ -1,80 +1,87 @@
-package de.vinado.wicket.participate.ui.event.details;
+package de.vinado.wicket.participate.ui.event;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.vinado.wicket.participate.components.ShortenedMultilineLabel;
 import de.vinado.wicket.participate.components.TextAlign;
 import de.vinado.wicket.participate.components.panels.BnBIconPanel;
 import de.vinado.wicket.participate.components.panels.IconPanel;
-import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
+import de.vinado.wicket.participate.components.tables.columns.BootstrapAjaxLinkColumn;
 import de.vinado.wicket.participate.components.tables.columns.EnumColumn;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.Voice;
+import de.vinado.wicket.participate.ui.event.details.CommentColumnHeader;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import static de.vinado.wicket.participate.components.Models.map;
-import static de.vinado.wicket.participate.components.ShortenedMultilineLabel.Limit;
 
 /**
  * @author Vincent Nadoll
  */
-public class ParticipantTable
-    extends BootstrapAjaxDataTable<Participant, SerializableFunction<Participant, ?>> {
+public final class ParticipantColumnPresets {
 
-    public ParticipantTable(String id, ParticipantDataProvider dataProvider) {
-        this(id, dataProvider, Collections.emptyList());
+    private ParticipantColumnPresets() {
+        throw new UnsupportedOperationException();
     }
 
-    public ParticipantTable(String id, ParticipantDataProvider dataProvider,
-                            Collection<IColumn<Participant, SerializableFunction<Participant, ?>>> additionalColumns) {
-        super(id, columns(additionalColumns), dataProvider, Integer.MAX_VALUE);
-        dataProvider.setSort(with(Participant::getInvitationStatus).andThen(Enum::ordinal), SortOrder.ASCENDING);
-        hover();
-        condensed();
-        setOutputMarkupId(true);
-
-        setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
-    }
-
-    @Override
-    protected void onInitialize() {
-        super.onInitialize();
-
-        add(new CssClassNameAppender("participants"));
-    }
-
-    private static List<IColumn<Participant, SerializableFunction<Participant, ?>>> columns(
-        Collection<IColumn<Participant, SerializableFunction<Participant, ?>>> additionalColumns) {
+    public static List<IColumn<Participant, SerializableFunction<Participant, ?>>> basicReadOnly() {
         List<IColumn<Participant, SerializableFunction<Participant, ?>>> columns = new ArrayList<>();
         columns.add(invitationStatusColumn());
         columns.add(nameColumn());
         columns.add(voiceColumn());
+        return columns;
+    }
+
+    public static List<IColumn<Participant, SerializableFunction<Participant, ?>>> basicInteractive(
+        SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onEdit,
+        SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onNotify) {
+        List<IColumn<Participant, SerializableFunction<Participant, ?>>> columns = basicReadOnly();
+        columns.addAll(interactive(onEdit, onNotify));
+        return columns;
+    }
+
+    public static List<IColumn<Participant, SerializableFunction<Participant, ?>>> detailedReadOnly() {
+        List<IColumn<Participant, SerializableFunction<Participant, ?>>> columns = basicReadOnly();
         columns.add(attributesColumn());
         columns.add(periodColumn());
         columns.add(commentColumn());
-        columns.addAll(additionalColumns);
         return columns;
+    }
+
+    public static List<IColumn<Participant, SerializableFunction<Participant, ?>>> detailedInteractive(
+        SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onEdit,
+        SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onNotify) {
+        List<IColumn<Participant, SerializableFunction<Participant, ?>>> columns = detailedReadOnly();
+        columns.addAll(interactive(onEdit, onNotify));
+        return columns;
+    }
+
+    private static List<IColumn<Participant, SerializableFunction<Participant, ?>>> interactive(
+        SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onEdit,
+        SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onNotify) {
+        return Arrays.asList(
+            editColumn(onEdit),
+            notifyColumn(onNotify)
+        );
     }
 
     private static IColumn<Participant, SerializableFunction<Participant, ?>> invitationStatusColumn() {
@@ -192,12 +199,44 @@ public class ParticipantTable
             @Override
             public void populateItem(Item<ICellPopulator<Participant>> item,
                                      String componentId, IModel<Participant> rowModel) {
-                item.add(new ShortenedMultilineLabel(componentId, map(rowModel, Participant::getComment), new Limit(100)));
+                item.add(new ShortenedMultilineLabel(componentId, map(rowModel, Participant::getComment), new ShortenedMultilineLabel.Limit(100)));
             }
 
             @Override
             public String getCssClass() {
                 return "comment m-0";
+            }
+        };
+    }
+
+    private static IColumn<Participant, SerializableFunction<Participant, ?>> editColumn(
+        SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onClick) {
+        return new BootstrapAjaxLinkColumn<Participant, SerializableFunction<Participant, ?>>(
+            FontAwesomeIconType.pencil, new ResourceModel("invitation.edit", "Edit Invitation")) {
+            @Override
+            public void onClick(AjaxRequestTarget target, IModel<Participant> rowModel) {
+                onClick.accept(target, rowModel);
+            }
+
+            @Override
+            public String getCssClass() {
+                return "edit";
+            }
+        };
+    }
+
+    private static IColumn<Participant, SerializableFunction<Participant, ?>> notifyColumn(
+        SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onClick) {
+        return new BootstrapAjaxLinkColumn<Participant, SerializableFunction<Participant, ?>>(
+            FontAwesomeIconType.envelope, new ResourceModel("email.send", "Send Email")) {
+            @Override
+            public void onClick(AjaxRequestTarget target, IModel<Participant> rowModel) {
+                onClick.accept(target, rowModel);
+            }
+
+            @Override
+            public String getCssClass() {
+                return "notify";
             }
         };
     }

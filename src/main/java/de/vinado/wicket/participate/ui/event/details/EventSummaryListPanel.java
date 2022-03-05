@@ -6,11 +6,15 @@ import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.model.Event;
+import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.EditInvitationPanel;
+import de.vinado.wicket.participate.ui.event.ParticipantColumnPresets;
+import de.vinado.wicket.participate.ui.event.ParticipantColumnsFactory;
+import de.vinado.wicket.participate.ui.event.ParticipantTable;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -50,18 +54,22 @@ public class EventSummaryListPanel extends GenericPanel<Event> {
         };
         add(filterPanel);
 
-        InteractiveParticipantTable.Builder tableBuilder = InteractiveParticipantTable.builder("dataTable",
-            dataProvider());
-        if (editable) {
-            tableBuilder.onEdit(this::edit);
-            tableBuilder.onNotify(this::email);
-        }
-
+        ParticipantTable.Builder tableBuilder = ParticipantTable.builder("dataTable", dataProvider())
+            .columnsFactory(columnsFactory(editable));
         add(tableBuilder.build());
     }
 
     private ParticipantDataProvider dataProvider() {
         return new ParticipantDataProvider(getModel(), eventService, filterModel);
+    }
+
+    private ParticipantColumnsFactory columnsFactory(boolean editable) {
+        return !editable
+            ? ParticipantColumnPresets::detailedReadOnly
+            : () -> ParticipantColumnPresets.detailedInteractive(
+            EventSummaryListPanel.this::edit,
+            EventSummaryListPanel.this::email
+        );
     }
 
     private void edit(AjaxRequestTarget target, IModel<Participant> rowModel) {

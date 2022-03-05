@@ -1,28 +1,18 @@
 package de.vinado.wicket.participate.ui.event;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.components.PersonContext;
-import de.vinado.wicket.participate.components.TextAlign;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
-import de.vinado.wicket.participate.components.panels.IconPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
-import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
-import de.vinado.wicket.participate.components.tables.columns.BootstrapAjaxLinkColumn;
-import de.vinado.wicket.participate.components.tables.columns.EnumColumn;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventUpdateEvent;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
-import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
-import de.vinado.wicket.participate.model.Singer;
-import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
@@ -37,28 +27,16 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
-import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
-import org.danekja.java.util.function.serializable.SerializableFunction;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static de.vinado.wicket.participate.components.Models.map;
 
@@ -115,90 +93,25 @@ public class EventPanel extends BreadCrumbPanel implements IGenericComponent<Eve
         };
         wmc.add(filterPanel);
 
-        final List<IColumn<Participant, SerializableFunction<Participant, ?>>> columns = new ArrayList<>();
-        columns.add(new AbstractColumn<Participant, SerializableFunction<Participant, ?>>(Model.of(""),
-            with(Participant::getInvitationStatus).andThen(InvitationStatus::ordinal)) {
-            @Override
-            public void populateItem(final Item<ICellPopulator<Participant>> item, final String componentId, final IModel<Participant> rowModel) {
-                final IconPanel icon = new IconPanel(componentId);
-                final Participant participant = rowModel.getObject();
-                final InvitationStatus invitationStatus = participant.getInvitationStatus();
-
-                icon.setTextAlign(TextAlign.CENTER);
-                if (InvitationStatus.ACCEPTED.equals(invitationStatus)) {
-                    icon.setType(FontAwesomeIconType.check);
-                    icon.setColor(IconPanel.Color.SUCCESS);
-                } else if (InvitationStatus.DECLINED.equals(invitationStatus)) {
-                    icon.setType(FontAwesomeIconType.times);
-                    icon.setColor(IconPanel.Color.DANGER);
-                } else if (InvitationStatus.UNINVITED.equals(invitationStatus)) {
-                    icon.setType(FontAwesomeIconType.circle_thin);
-                    icon.setColor(IconPanel.Color.MUTED);
-                } else {
-                    icon.setType(FontAwesomeIconType.circle);
-                    icon.setColor(IconPanel.Color.WARNING);
-                }
-
-                item.add(icon);
-            }
-
-            @Override
-            public String getCssClass() {
-                return "td-with-btn-xs";
-            }
-        });
-        columns.add(new PropertyColumn<Participant, SerializableFunction<Participant, ?>>(
-            new ResourceModel("name", "Name"),
-            with(Participant::getSinger).andThen(Person::getSortName),
-            "singer.sortName"));
-        columns.add(new EnumColumn<Participant, SerializableFunction<Participant, ?>, Voice>(
-            new ResourceModel("voice", "voice"),
-            with(Participant::getSinger).andThen(Singer::getVoice).andThen(nullSafe(Voice::ordinal)),
-            "singer.voice"));
-        if (editable) {
-            columns.add(new BootstrapAjaxLinkColumn<Participant, SerializableFunction<Participant, ?>>(
-                FontAwesomeIconType.pencil, new ResourceModel("invitation.edit", "Edit Invitation")) {
-                @Override
-                public void onClick(final AjaxRequestTarget target, final IModel<Participant> rowModel) {
-                    edit(target, rowModel);
-                }
-            });
-            columns.add(new BootstrapAjaxLinkColumn<Participant, SerializableFunction<Participant, ?>>(
-                FontAwesomeIconType.envelope, new ResourceModel("email.send", "Send Email")) {
-                @Override
-                public void onClick(final AjaxRequestTarget target, final IModel<Participant> rowModel) {
-                    email(target, rowModel);
-                }
-            });
-        }
-
-        BootstrapAjaxDataTable<Participant, SerializableFunction<Participant, ?>> dataTable = new BootstrapAjaxDataTable<Participant, SerializableFunction<Participant, ?>>("dataTable", columns, dataProvider(), 15) {
-            @Override
-            protected Item<Participant> newRowItem(String id, int index, IModel<Participant> model) {
-                Item<Participant> item = super.newRowItem(id, index, model);
-                Person person = model.getObject().getSinger();
-                if (person.equals(personContext.get())) item.add(new CssClassNameAppender("bg-info"));
-                return item;
-            }
-        };
-        dataTable.setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
-        dataTable.setOutputMarkupId(true);
-        dataTable.hover().condensed();
+        ParticipantTable dataTable = ParticipantTable.builder("dataTable", dataProvider())
+            .personContext(personContext)
+            .rowsPerPage(15)
+            .columnsFactory(columnsFactory(editable))
+            .build();
         wmc.add(dataTable);
     }
 
     private ParticipantDataProvider dataProvider() {
-        ParticipantDataProvider dataProvider = new ParticipantDataProvider(map(getModel(), EventDetails::getEvent), eventService, filterModel, personContext);
-        dataProvider.setSort(with(Participant::getInvitationStatus).andThen(Enum::ordinal), SortOrder.ASCENDING);
-        return dataProvider;
+        return new ParticipantDataProvider(map(getModel(), EventDetails::getEvent), eventService, filterModel, personContext);
     }
 
-    private static <T, R> SerializableFunction<T, R> with(SerializableFunction<T, R> function) {
-        return function;
-    }
-
-    private static <T, R, S extends R> SerializableFunction<T, R> nullSafe(SerializableFunction<T, S> mapper) {
-        return nullable -> null == nullable ? null : mapper.apply(nullable);
+    private ParticipantColumnsFactory columnsFactory(boolean editable) {
+        return !editable
+            ? ParticipantColumnPresets::basicReadOnly
+            : () -> ParticipantColumnPresets.basicInteractive(
+            EventPanel.this::edit,
+            EventPanel.this::email
+        );
     }
 
     private void edit(AjaxRequestTarget target, IModel<Participant> rowModel) {
