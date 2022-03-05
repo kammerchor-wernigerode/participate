@@ -20,7 +20,7 @@ FROM openjdk:8-jre-alpine
 RUN mkdir -p /app
 WORKDIR      /app
 
-ARG JAR_FILE=participate-2.12.0-SNAPSHOT.jar
+ARG JAR_FILE=participate-2.12.0.jar
 COPY --from=maven /usr/src/app/target/$JAR_FILE /app/application.jar
 COPY --from=healthcheck-builder /usr/src/healthcheck/Healthcheck.class /usr/local/bin/
 COPY scripts/docker-entrypoint.sh /usr/local/bin/
