@@ -23,7 +23,7 @@ import de.vinado.wicket.participate.model.ical4j.SimpleDateProperty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Cn;
 import net.fortuna.ical4j.model.property.CalScale;
@@ -693,9 +693,10 @@ public class EventServiceImpl extends DataService implements EventService {
             .map(User::getPerson)
             .map(Person::getEmail)
             .orElse(applicationProperties.getMail().getSender());
-        Organizer vOrganizer = new Organizer(URI.create("mailto:" + orgaEmail));
+        ParameterList organizerParameters = new ParameterList();
+        organizerParameters.add(new Cn(applicationProperties.getCustomer()));
+        Organizer vOrganizer = new Organizer(organizerParameters, URI.create("mailto:" + orgaEmail));
         vEvent.getProperties().add(vOrganizer);
-        vEvent.getProperties().getProperty(Property.ORGANIZER).getParameters().add(new Cn(applicationProperties.getCustomer()));
 
         cal.getComponents().add(vEvent);
 
