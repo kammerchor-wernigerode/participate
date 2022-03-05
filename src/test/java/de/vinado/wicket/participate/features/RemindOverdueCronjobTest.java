@@ -1,9 +1,9 @@
 package de.vinado.wicket.participate.features;
 
+import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.MockedEvent;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.services.EventService;
-import lombok.var;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -36,21 +37,21 @@ class RemindOverdueCronjobTest {
 
     @Test
     void run() {
-        var event1 = MockedEvent.mockEvent(1L);
-        var event2 = MockedEvent.mockEvent(2L, DateUtils.addDays(NOW, 14));
-        var event3 = MockedEvent.mockEvent(3L, DateUtils.addDays(NOW, 30));
+        Event event1 = MockedEvent.mockEvent(1L);
+        Event event2 = MockedEvent.mockEvent(2L, DateUtils.addDays(NOW, 14));
+        Event event3 = MockedEvent.mockEvent(3L, DateUtils.addDays(NOW, 30));
 
-        var participant11 = mock(Participant.class);
+        Participant participant11 = mock(Participant.class);
         when(participant11.isPending()).thenReturn(false);
-        var event1Participants = Collections.singletonList(participant11);
+        List<Participant> event1Participants = Collections.singletonList(participant11);
 
-        var participant21 = mock(Participant.class);
+        Participant participant21 = mock(Participant.class);
         when(participant21.isPending()).thenReturn(true);
-        var event2Participants = Collections.singletonList(participant21);
+        List<Participant> event2Participants = Collections.singletonList(participant21);
 
-        var participant31 = mock(Participant.class);
+        Participant participant31 = mock(Participant.class);
         when(participant31.isPending()).thenReturn(true);
-        var event3Participants = Collections.singletonList(participant31);
+        List<Participant> event3Participants = Collections.singletonList(participant31);
 
 
         when(eventService.getUpcomingEvents()).thenReturn(Arrays.asList(event1, event2, event3));
