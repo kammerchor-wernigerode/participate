@@ -53,31 +53,8 @@ public class EventSummaryListPanel extends GenericPanel<Event> {
         InteractiveParticipantTable.Builder tableBuilder = InteractiveParticipantTable.builder("dataTable",
             dataProvider());
         if (editable) {
-            tableBuilder.onEdit((target, rowModel) -> {
-                BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                ParticipantDTO participantDTO = new ParticipantDTO(rowModel.getObject());
-
-                modal.setContent(new EditInvitationPanel(modal, new CompoundPropertyModel<>(participantDTO)) {
-                    @Override
-                    protected void onSaveSubmit(IModel<ParticipantDTO> savedModel,
-                                                AjaxRequestTarget target) {
-                        eventService.saveParticipant(savedModel.getObject());
-                        send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
-                        Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
-                    }
-                });
-                modal.show(target);
-            });
-            tableBuilder.onNotify((target, rowModel) -> {
-                Person person = rowModel.getObject().getSinger();
-                Email mailData = emailBuilderFactory.create()
-                    .to(person)
-                    .build();
-
-                BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
-                modal.show(target);
-            });
+            tableBuilder.onEdit(this::edit);
+            tableBuilder.onNotify(this::email);
         }
 
         add(tableBuilder.build());
@@ -85,6 +62,33 @@ public class EventSummaryListPanel extends GenericPanel<Event> {
 
     private ParticipantDataProvider dataProvider() {
         return new ParticipantDataProvider(getModel(), eventService, filterModel);
+    }
+
+    private void edit(AjaxRequestTarget target, IModel<Participant> rowModel) {
+        BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        ParticipantDTO participantDTO = new ParticipantDTO(rowModel.getObject());
+
+        modal.setContent(new EditInvitationPanel(modal, new CompoundPropertyModel<>(participantDTO)) {
+            @Override
+            protected void onSaveSubmit(IModel<ParticipantDTO> savedModel,
+                                        AjaxRequestTarget target) {
+                eventService.saveParticipant(savedModel.getObject());
+                send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
+                Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
+            }
+        });
+        modal.show(target);
+    }
+
+    private void email(AjaxRequestTarget target, IModel<Participant> rowModel) {
+        Person person = rowModel.getObject().getSinger();
+        Email mailData = emailBuilderFactory.create()
+            .to(person)
+            .build();
+
+        BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
+        modal.show(target);
     }
 
     @Override

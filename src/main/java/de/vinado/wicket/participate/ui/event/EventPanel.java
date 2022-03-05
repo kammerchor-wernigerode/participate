@@ -160,30 +160,14 @@ public class EventPanel extends BreadCrumbPanel implements IGenericComponent<Eve
                 FontAwesomeIconType.pencil, new ResourceModel("invitation.edit", "Edit Invitation")) {
                 @Override
                 public void onClick(final AjaxRequestTarget target, final IModel<Participant> rowModel) {
-                    final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                    modal.setContent(new EditInvitationPanel(modal, new CompoundPropertyModel<>(new ParticipantDTO(rowModel.getObject()))) {
-                        @Override
-                        protected void onSaveSubmit(final IModel<ParticipantDTO> savedModel, final AjaxRequestTarget target) {
-                            eventService.saveParticipant(savedModel.getObject());
-                            Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
-                            send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
-                        }
-                    });
-                    modal.show(target);
+                    edit(target, rowModel);
                 }
             });
             columns.add(new BootstrapAjaxLinkColumn<Participant, SerializableFunction<Participant, ?>>(
                 FontAwesomeIconType.envelope, new ResourceModel("email.send", "Send Email")) {
                 @Override
                 public void onClick(final AjaxRequestTarget target, final IModel<Participant> rowModel) {
-                    final Person person = rowModel.getObject().getSinger();
-                    Email mailData = emailBuilderFactory.create()
-                        .to(person)
-                        .build();
-
-                    final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                    modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
-                    modal.show(target);
+                    email(target, rowModel);
                 }
             });
         }
@@ -215,6 +199,30 @@ public class EventPanel extends BreadCrumbPanel implements IGenericComponent<Eve
 
     private static <T, R, S extends R> SerializableFunction<T, R> nullSafe(SerializableFunction<T, S> mapper) {
         return nullable -> null == nullable ? null : mapper.apply(nullable);
+    }
+
+    private void edit(AjaxRequestTarget target, IModel<Participant> rowModel) {
+        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        modal.setContent(new EditInvitationPanel(modal, new CompoundPropertyModel<>(new ParticipantDTO(rowModel.getObject()))) {
+            @Override
+            protected void onSaveSubmit(final IModel<ParticipantDTO> savedModel, final AjaxRequestTarget target) {
+                eventService.saveParticipant(savedModel.getObject());
+                Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
+                send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
+            }
+        });
+        modal.show(target);
+    }
+
+    private void email(AjaxRequestTarget target, IModel<Participant> rowModel) {
+        final Person person = rowModel.getObject().getSinger();
+        Email mailData = emailBuilderFactory.create()
+            .to(person)
+            .build();
+
+        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
+        modal.show(target);
     }
 
     @Override
