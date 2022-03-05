@@ -93,25 +93,23 @@ public class EventPanel extends BreadCrumbPanel implements IGenericComponent<Eve
         };
         wmc.add(filterPanel);
 
+        BasicParticipantColumnPreset columns = new BasicParticipantColumnPreset();
+        InteractiveColumnPresetDecoratorFactory decoratorFactory = InteractiveColumnPresetDecoratorFactory.builder()
+            .visible(editable)
+            .onEdit(EventPanel.this::edit)
+            .onEmail(EventPanel.this::email)
+            .build();
+
         ParticipantTable dataTable = ParticipantTable.builder("dataTable", dataProvider())
             .personContext(personContext)
             .rowsPerPage(15)
-            .columnsFactory(columnsFactory(editable))
+            .columns(decoratorFactory.decorate(columns))
             .build();
         wmc.add(dataTable);
     }
 
     private ParticipantDataProvider dataProvider() {
         return new ParticipantDataProvider(map(getModel(), EventDetails::getEvent), eventService, filterModel, personContext);
-    }
-
-    private ParticipantColumnsFactory columnsFactory(boolean editable) {
-        return !editable
-            ? ParticipantColumnPresets::basicReadOnly
-            : () -> ParticipantColumnPresets.basicInteractive(
-            EventPanel.this::edit,
-            EventPanel.this::email
-        );
     }
 
     private void edit(AjaxRequestTarget target, IModel<Participant> rowModel) {

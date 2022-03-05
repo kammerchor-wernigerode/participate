@@ -13,8 +13,6 @@ import org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import org.apache.wicket.model.IModel;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 
-import java.util.Collections;
-
 /**
  * @author Vincent Nadoll
  */
@@ -23,11 +21,11 @@ public class ParticipantTable extends BootstrapAjaxDataTable<Participant, Serial
     private final PersonContext personContext;
 
     private ParticipantTable(String id,
-                             ParticipantColumnsFactory columnsFactory,
+                             ParticipantColumnList columns,
                              ParticipantDataProvider dataProvider,
                              int rowsPerPage,
                              PersonContext personContext) {
-        super(id, columnsFactory.create(), dataProvider, rowsPerPage);
+        super(id, columns, dataProvider, rowsPerPage);
         this.personContext = personContext;
 
         dataProvider.setSort(with(Participant::getInvitationStatus).andThen(Enum::ordinal), SortOrder.ASCENDING);
@@ -66,12 +64,12 @@ public class ParticipantTable extends BootstrapAjaxDataTable<Participant, Serial
         private final String id;
         private final ParticipantDataProvider dataProvider;
 
-        private ParticipantColumnsFactory columnsFactory = Collections::emptyList;
+        private ParticipantColumnList columns = ParticipantColumnList.emptyList();
         private int rowsPerPage = Integer.MAX_VALUE;
         private PersonContext personContext = () -> null;
 
-        public Builder columnsFactory(ParticipantColumnsFactory columnsFactory) {
-            this.columnsFactory = columnsFactory;
+        public Builder columns(ParticipantColumnList columns) {
+            this.columns = columns;
             return this;
         }
 
@@ -86,7 +84,7 @@ public class ParticipantTable extends BootstrapAjaxDataTable<Participant, Serial
         }
 
         public ParticipantTable build() {
-            return new ParticipantTable(id, columnsFactory, dataProvider, rowsPerPage, personContext);
+            return new ParticipantTable(id, columns, dataProvider, rowsPerPage, personContext);
         }
     }
 }
