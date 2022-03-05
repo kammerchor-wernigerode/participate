@@ -1,7 +1,6 @@
 package de.vinado.wicket.participate.model;
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +9,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,7 +19,6 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
-import java.util.Date;
 
 /**
  * Person
@@ -32,7 +32,6 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode
 public class Person implements Identifiable<Long> {
 
     @Id
@@ -78,5 +77,18 @@ public class Person implements Identifiable<Long> {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Person that = (Person) obj;
+        return Objects.equals(this.id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 37;
     }
 }

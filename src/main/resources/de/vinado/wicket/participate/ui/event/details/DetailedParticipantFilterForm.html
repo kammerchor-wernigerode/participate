@@ -4,24 +4,13 @@
     <meta charset="utf-8"/>
 </head>
 <body>
-<wicket:detailedParticipantForm>
-    <input wicket:id="name">
+<wicket:extend>
     <input wicket:id="comment">
-    <select wicket:id="invitationStatus"></select>
-    <select wicket:id="voice"></select>
     <input wicket:id="fromDate">
     <input wicket:id="toDate">
     <input type="checkbox" wicket:id="catering">
     <input type="checkbox" wicket:id="accommodation">
-    <div class="form-group form-group-sm pull-right">
-        <div class="btn-group btn-group-sm" role="group" aria-label="Filter navigation">
-            <a wicket:id="reset"></a>
-            <a wicket:id="apply">
-                <i wicket:id="icon"></i>
-            </a>
-        </div>
-    </div>
     <wicket:child/>
-</wicket:detailedParticipantForm>
+</wicket:extend>
 </body>
 </html>

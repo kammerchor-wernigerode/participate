@@ -1,10 +1,11 @@
 package de.vinado.wicket.participate.ui.event.details;
 
+import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
+import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.model.IModel;
@@ -14,6 +15,7 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -24,20 +26,35 @@ public class ParticipantDataProvider extends SortableDataProvider<Participant, S
 
     private final IModel<Event> event;
     private final EventService eventService;
-
-    @Getter
     private final IModel<ParticipantFilter> filterModel;
+    private final PersonContext selfSupplier;
+
+    public ParticipantDataProvider(IModel<Event> event,
+                                   EventService eventService,
+                                   IModel<ParticipantFilter> filterModel) {
+        this(event, eventService, filterModel, () -> null);
+    }
 
     @Override
     public Iterator<? extends Participant> iterator(long first, long count) {
+        Person self = selfSupplier.get();
         return streamFilteredParticipants()
+            .sorted(Comparator.comparing(keyExtractor(), Comparator.nullsFirst(comparator())))
+            .sorted(Comparator.comparing(people(person -> Objects.equals(person, self)), Comparator.reverseOrder()))
             .skip(first).limit(count)
-            .sorted(Comparator.comparing(keyExtractor(), comparator()))
             .iterator();
     }
 
-    private SerializableFunction<Participant, String> keyExtractor() {
-        return getSort().getProperty().andThen(Object::toString);
+    private static Function<Participant, Boolean> people(Function<Person, Boolean> keyExtractor) {
+        return keyExtractor.compose(Participant::getSinger);
+    }
+
+    private Function<Participant, String> keyExtractor() {
+        return getSort().getProperty().andThen(ParticipantDataProvider::toString);
+    }
+
+    private static String toString(Object property) {
+        return null == property ? null : property.toString();
     }
 
     private Comparator<String> comparator() {

@@ -6,6 +6,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
 import de.vinado.wicket.participate.components.panels.Footer;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
+import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.EventPanel;
 import de.vinado.wicket.participate.ui.pages.BasePage;
@@ -80,8 +81,9 @@ public class FormPage extends BasePage {
         breadcrumb.setVisible(false);
         add(breadcrumb);
 
+        IModel<ParticipantFilter> participantFilter = new CompoundPropertyModel<>(new ParticipantFilter());
         final EventPanel eventPanel = new EventPanel("eventPanel", breadcrumb,
-            new CompoundPropertyModel<>(eventService.getEventDetails(model.getObject().getEvent())), false);
+            new CompoundPropertyModel<>(eventService.getEventDetails(model.getObject().getEvent())), false, () -> model.getObject().getSinger(), participantFilter);
         add(eventPanel);
 
         final FormPanel formPanel = new FormPanel("formPanel", breadcrumb,

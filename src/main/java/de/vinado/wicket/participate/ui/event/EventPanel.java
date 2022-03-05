@@ -1,59 +1,49 @@
 package de.vinado.wicket.participate.ui.event;
 
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.vinado.wicket.participate.components.TextAlign;
+import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
+import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
-import de.vinado.wicket.participate.components.panels.IconPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
-import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
-import de.vinado.wicket.participate.components.tables.columns.BootstrapAjaxLinkColumn;
-import de.vinado.wicket.participate.components.tables.columns.EnumColumn;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventUpdateEvent;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
-import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
-import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
-import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import de.vinado.wicket.participate.services.EventService;
+import de.vinado.wicket.participate.ui.event.details.ParticipantDataProvider;
+import de.vinado.wicket.participate.ui.event.details.ParticipantFilterIntent;
+import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateIntent;
 import de.vinado.wicket.participate.ui.pages.BasePage;
+import org.apache.wicket.Component;
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
-import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 
-import java.util.ArrayList;
-import java.util.List;
+import static de.vinado.wicket.participate.components.Models.map;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class EventPanel extends BreadCrumbPanel {
+public class EventPanel extends BreadCrumbPanel implements IGenericComponent<EventDetails> {
 
     @SpringBean
     @SuppressWarnings("unused")
@@ -62,28 +52,25 @@ public class EventPanel extends BreadCrumbPanel {
     @SpringBean
     private EmailBuilderFactory emailBuilderFactory;
 
-    private IModel<EventDetails> model;
+    private final PersonContext personContext;
+    private final IModel<ParticipantFilter> filterModel;
 
-    private Form form;
+    private final Form form;
 
-    private SimpleDataProvider<Participant, String> dataProvider;
-    private BootstrapAjaxDataTable<Participant, String> dataTable;
-
-    public EventPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<EventDetails> model, final boolean editable) {
+    public EventPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<EventDetails> model, final boolean editable, PersonContext personContext, IModel<ParticipantFilter> filterModel) {
         super(id, breadCrumbModel, model);
-        this.model = model;
         setOutputMarkupPlaceholderTag(true);
 
-        form = new Form("form") {
-            @Override
-            protected void onConfigure() {
-                dataProvider.set(eventService.getParticipants(model.getObject().getEvent()));
-            }
-        };
+        this.personContext = personContext;
+        this.filterModel = filterModel;
+
+        form = new Form("form");
         add(form);
 
         final WebMarkupContainer wmc = new WebMarkupContainer("wmc");
         wmc.setOutputMarkupId(true);
+        wmc.add(new UpdateOnEventBehavior<>(ParticipantFilterIntent.class));
+        wmc.add(new UpdateOnEventBehavior<>(ParticipantTableUpdateIntent.class));
         form.add(wmc);
 
         wmc.add(new Label("name"));
@@ -98,102 +85,55 @@ public class EventPanel extends BreadCrumbPanel {
             }
         });
 
-        final ParticipantFilterPanel filterPanel = new ParticipantFilterPanel("filterPanel",
-            new LoadableDetachableModel<List<Participant>>() {
-                @Override
-                protected List<Participant> load() {
-                    return eventService.getParticipants(model.getObject().getEvent());
-                }
-            },
-            new CompoundPropertyModel<>(new ParticipantFilter()), new PropertyModel<>(model, "event"), editable) {
+        final ParticipantFilterPanel filterPanel = new ParticipantFilterPanel("filterPanel", filterModel) {
             @Override
-            public SimpleDataProvider<Participant, ?> getDataProvider() {
-                return dataProvider;
-            }
-
-            @Override
-            public DataTable<Participant, ?> getDataTable() {
-                return dataTable;
+            protected Component getScope() {
+                return wmc;
             }
         };
         wmc.add(filterPanel);
 
-        dataProvider = new SimpleDataProvider<Participant, String>() {
+        BasicParticipantColumnPreset columns = new BasicParticipantColumnPreset();
+        InteractiveColumnPresetDecoratorFactory decoratorFactory = InteractiveColumnPresetDecoratorFactory.builder()
+            .visible(editable)
+            .onEdit(EventPanel.this::edit)
+            .onEmail(EventPanel.this::email)
+            .build();
+
+        ParticipantTable dataTable = ParticipantTable.builder("dataTable", dataProvider())
+            .personContext(personContext)
+            .rowsPerPage(15)
+            .columns(decoratorFactory.decorate(columns))
+            .build();
+        wmc.add(dataTable);
+    }
+
+    private ParticipantDataProvider dataProvider() {
+        return new ParticipantDataProvider(map(getModel(), EventDetails::getEvent), eventService, filterModel, personContext);
+    }
+
+    private void edit(AjaxRequestTarget target, IModel<Participant> rowModel) {
+        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        modal.setContent(new EditInvitationPanel(modal, new CompoundPropertyModel<>(new ParticipantDTO(rowModel.getObject()))) {
             @Override
-            public String getDefaultSort() {
-                return "invitationStatus";
-            }
-        };
-
-        final List<IColumn<Participant, String>> columns = new ArrayList<>();
-        columns.add(new AbstractColumn<Participant, String>(Model.of(""), "invitationStatus") {
-            @Override
-            public void populateItem(final Item<ICellPopulator<Participant>> item, final String componentId, final IModel<Participant> rowModel) {
-                final IconPanel icon = new IconPanel(componentId);
-                final Participant participant = rowModel.getObject();
-                final InvitationStatus invitationStatus = participant.getInvitationStatus();
-
-                icon.setTextAlign(TextAlign.CENTER);
-                if (InvitationStatus.ACCEPTED.equals(invitationStatus)) {
-                    icon.setType(FontAwesomeIconType.check);
-                    icon.setColor(IconPanel.Color.SUCCESS);
-                } else if (InvitationStatus.DECLINED.equals(invitationStatus)) {
-                    icon.setType(FontAwesomeIconType.times);
-                    icon.setColor(IconPanel.Color.DANGER);
-                } else if (InvitationStatus.UNINVITED.equals(invitationStatus)) {
-                    icon.setType(FontAwesomeIconType.circle_thin);
-                    icon.setColor(IconPanel.Color.MUTED);
-                } else {
-                    icon.setType(FontAwesomeIconType.circle);
-                    icon.setColor(IconPanel.Color.WARNING);
-                }
-
-                item.add(icon);
-            }
-
-            @Override
-            public String getCssClass() {
-                return "td-with-btn-xs";
+            protected void onSaveSubmit(final IModel<ParticipantDTO> savedModel, final AjaxRequestTarget target) {
+                eventService.saveParticipant(savedModel.getObject());
+                Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
+                send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
             }
         });
-        columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "singer.sortName", "singer.sortName"));
-        columns.add(new EnumColumn<Participant, String, Voice>(new ResourceModel("voice", "voice"), "singer.voice", "singer.voice"));
-        if (editable) {
-            columns.add(new BootstrapAjaxLinkColumn<Participant, String>(FontAwesomeIconType.pencil, new ResourceModel("invitation.edit", "Edit Invitation")) {
-                @Override
-                public void onClick(final AjaxRequestTarget target, final IModel<Participant> rowModel) {
-                    final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                    modal.setContent(new EditInvitationPanel(modal, new CompoundPropertyModel<>(new ParticipantDTO(rowModel.getObject()))) {
-                        @Override
-                        protected void onSaveSubmit(final IModel<ParticipantDTO> savedModel, final AjaxRequestTarget target) {
-                            model.setObject(eventService.getEventDetails(eventService.saveParticipant(savedModel.getObject()).getEvent()));
-                            dataProvider.set(eventService.getParticipants(model.getObject().getEvent()));
-                            Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
-                            target.add(form);
-                        }
-                    });
-                    modal.show(target);
-                }
-            });
-            columns.add(new BootstrapAjaxLinkColumn<Participant, String>(FontAwesomeIconType.envelope, new ResourceModel("email.send", "Send Email")) {
-                @Override
-                public void onClick(final AjaxRequestTarget target, final IModel<Participant> rowModel) {
-                    final Person person = rowModel.getObject().getSinger();
-                    Email mailData = emailBuilderFactory.create()
-                        .to(person)
-                        .build();
+        modal.show(target);
+    }
 
-                    final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
-                    modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
-                    modal.show(target);
-                }
-            });
-        }
+    private void email(AjaxRequestTarget target, IModel<Participant> rowModel) {
+        final Person person = rowModel.getObject().getSinger();
+        Email mailData = emailBuilderFactory.create()
+            .to(person)
+            .build();
 
-        dataTable = new BootstrapAjaxDataTable<>("dataTable", columns, dataProvider, 15);
-        dataTable.setOutputMarkupId(true);
-        dataTable.hover().condensed();
-        wmc.add(dataTable);
+        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
+        modal.show(target);
     }
 
     @Override
@@ -204,7 +144,7 @@ public class EventPanel extends BreadCrumbPanel {
             final EventUpdateEvent updateEvent = (EventUpdateEvent) payload;
             final AjaxRequestTarget target = updateEvent.getTarget();
             final Event event = updateEvent.getEvent();
-            model.setObject(eventService.getEventDetails(event));
+            setModelObject(eventService.getEventDetails(event));
             target.add(form);
         }
 
@@ -217,6 +157,34 @@ public class EventPanel extends BreadCrumbPanel {
 
     @Override
     public IModel<String> getTitle() {
-        return new PropertyModel<>(model, "name");
+        return new PropertyModel<>(getModel(), "name");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public IModel<EventDetails> getModel() {
+        return (IModel<EventDetails>) getDefaultModel();
+    }
+
+    @Override
+    public void setModel(IModel<EventDetails> model) {
+        setDefaultModel(model);
+    }
+
+    @Override
+    public void setModelObject(EventDetails object) {
+        setDefaultModelObject(object);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public EventDetails getModelObject() {
+        return (EventDetails) getDefaultModelObject();
+    }
+
+    @Override
+    protected void onDetach() {
+        filterModel.detach();
+        super.onDetach();
     }
 }

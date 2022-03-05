@@ -62,45 +62,55 @@ body {
     margin: 0;
 }
 
-.participants td {
+.participants {
     --cell-width-invitationStatus: 34px;
-    --cell-width-name: 200px;
-    --cell-width-voice: 80px;
-    --cell-width-attribute: 180px;
-    --cell-width-period: 140px;
-    --cell-width-comment: calc(100% - var(--cell-width-invitationStatus) - var(--cell-width-name) - var(--cell-width-voice) - var(--cell-width-attribute) - var(--cell-width-period) - var(--cell-width-edit) - var(--cell-width-notify));
     --cell-width-edit: 30px;
     --cell-width-notify: 30px;
 
-    &.invitationStatus {
-        width: var(--cell-width-invitationStatus);
+    &.participants-basic {
+        --cell-width-name: 300px;
+        --cell-width-voice: calc(100% - var(--cell-width-invitationStatus) - var(--cell-width-name) - var(--cell-width-edit) - var(--cell-width-notify));
     }
 
-    &.name {
-        width: var(--cell-width-name);
+    &.participants-detailed {
+        --cell-width-name: 200px;
+        --cell-width-voice: 100px;
+        --cell-width-attribute: 180px;
+        --cell-width-period: 140px;
+        --cell-width-comment: calc(100% - var(--cell-width-invitationStatus) - var(--cell-width-name) - var(--cell-width-voice) - var(--cell-width-attribute) - var(--cell-width-period) - var(--cell-width-edit) - var(--cell-width-notify));
     }
 
-    &.voice {
-        width: var(--cell-width-voice);
-    }
+    td {
+        &.invitationStatus {
+            width: var(--cell-width-invitationStatus);
+        }
 
-    &.attribute {
-        width: var(--cell-width-attribute);
-    }
+        &.name {
+            width: var(--cell-width-name);
+        }
 
-    &.period {
-        width: var(--cell-width-period);
-    }
+        &.voice {
+            width: var(--cell-width-voice);
+        }
 
-    &.comment {
-        width: var(--cell-width-comment);
-    }
+        &.attribute {
+            width: var(--cell-width-attribute);
+        }
 
-    &.edit {
-        width: var(--cell-width-edit);
-    }
+        &.period {
+            width: var(--cell-width-period);
+        }
 
-    &.notify {
-        width: var(--cell-width-notify);
+        &.comment {
+            width: var(--cell-width-comment);
+        }
+
+        &.edit {
+            width: var(--cell-width-edit);
+        }
+
+        &.notify {
+            width: var(--cell-width-notify);
+        }
     }
 }
