@@ -21,7 +21,7 @@ import java.io.InputStream;
 import static com.pivovarit.function.ThrowingSupplier.sneaky;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
-import static org.apache.tika.metadata.TikaMetadataKeys.RESOURCE_NAME_KEY;
+import static org.apache.tika.metadata.TikaCoreProperties.RESOURCE_NAME_KEY;
 
 /**
  * Email attachment wrapper object
