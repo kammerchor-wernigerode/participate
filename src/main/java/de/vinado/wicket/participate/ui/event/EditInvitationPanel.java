@@ -43,7 +43,7 @@ import java.util.Collections;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class EditInvitationPanel extends BootstrapModalPanel<ParticipantDTO> implements IGenericComponent<ParticipantDTO> {
+public abstract class EditInvitationPanel extends BootstrapModalPanel<ParticipantDTO> implements IGenericComponent<ParticipantDTO, EditInvitationPanel> {
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -167,7 +167,7 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
         };
         inner.add(carCb);
 
-        final TextArea commentTa = new TextArea("comment") {
+        final TextArea commentTa = new TextArea<>("comment") {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
@@ -199,7 +199,7 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
                 }
             }
         };
-        inviteSingerBtn.setSize(Buttons.Size.Mini);
+        inviteSingerBtn.setSize(Buttons.Size.Small);
         inner.add(inviteSingerBtn);
 
         URL href = ParticipateUtils.generateInvitationLink(
@@ -209,27 +209,5 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
         link.add(AttributeModifier.append("href", href));
         link.add(AttributeModifier.append("target", "_blank"));
         inner.add(link);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public IModel<ParticipantDTO> getModel() {
-        return (IModel<ParticipantDTO>) getDefaultModel();
-    }
-
-    @Override
-    public void setModel(IModel<ParticipantDTO> model) {
-        setDefaultModel(model);
-    }
-
-    @Override
-    public void setModelObject(ParticipantDTO object) {
-        setDefaultModelObject(object);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public ParticipantDTO getModelObject() {
-        return (ParticipantDTO) getDefaultModelObject();
     }
 }

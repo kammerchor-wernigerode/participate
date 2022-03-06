@@ -97,7 +97,7 @@ public class ErrorPage extends AbstractErrorPage {
 
         form.add(new BootstrapAjaxButton("showStackTrace", new ResourceModel("show.stacktrace", "Show Stacktrace"), Buttons.Type.Primary) {
             @Override
-            protected void onSubmit(final AjaxRequestTarget target, final Form<?> inner) {
+            protected void onSubmit(final AjaxRequestTarget target) {
                 showStacktrace = !showStacktrace;
                 target.add(stacktraceLabel);
                 target.add(markupWmc);

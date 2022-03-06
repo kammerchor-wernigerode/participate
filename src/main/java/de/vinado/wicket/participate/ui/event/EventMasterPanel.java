@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
@@ -81,8 +81,8 @@ public class EventMasterPanel extends BreadCrumbPanel {
             @Override
             protected AbstractLink newDefaultBtn(final String id, final IModel<List<EventDetails>> model) {
                 setDefaultBtnLabelModel(new ResourceModel("event.add", "Add Event"));
-                setDefaultBtnIcon(FontAwesomeIconType.plus);
-                return new AjaxLink(id) {
+                setDefaultBtnIcon(FontAwesome5IconType.plus_s);
+                return new AjaxLink<>(id) {
                     @Override
                     public void onClick(final AjaxRequestTarget target) {
                         final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
@@ -131,7 +131,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
 
             @Override
             protected AbstractLink newDefaultBtn(final String id, final IModel<EventDetails> model) {
-                setDefaultBtnIcon(FontAwesomeIconType.check);
+                setDefaultBtnIcon(FontAwesome5IconType.check_s);
                 setDefaultBtnLabelModel(new ResourceModel("show.event.summary", "Show Event Summary"));
                 return new BreadCrumbPanelLink(id, breadCrumbModel, (IBreadCrumbPanelFactory) (componentId, breadCrumbModel1)
                     -> new EventSummaryPanel(componentId, breadCrumbModel1,
@@ -149,7 +149,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
                 final User organizer = ParticipateSession.get().getUser();
                 final RepeatingView dropDownMenu = super.newDropDownMenu(id, model);
                 dropDownMenu.add(new DropDownItem(dropDownMenu.newChildId(), new ResourceModel("email.send.invitation", "Send Invitation"),
-                    FontAwesomeIconType.envelope_square) {
+                    FontAwesome5IconType.envelope_square_s) {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
                         final List<Participant> participants = eventService.getParticipants(model.getObject().getEvent(), false);
@@ -164,7 +164,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     }
                 });
                 dropDownMenu.add(new DropDownItem(dropDownMenu.newChildId(), new ResourceModel("email.send.reminder", "Send Reminder"),
-                    FontAwesomeIconType.exclamation) {
+                    FontAwesome5IconType.exclamation_s) {
                     @Override
                     protected void onClick(AjaxRequestTarget target) {
                         final Event event = model.getObject().getEvent();
@@ -193,7 +193,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     }
                 });
                 dropDownMenu.add(new DropDownItem(dropDownMenu.newChildId(), new ResourceModel("email.send", "Send Email"),
-                    FontAwesomeIconType.envelope) {
+                    FontAwesome5IconType.exclamation_s) {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
                         Email mailData = emailBuilderFactory.create()
@@ -206,7 +206,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
                     }
                 });
                 dropDownMenu.add(new DropDownItem(dropDownMenu.newChildId(), new ResourceModel("event.edit", "Edit Event"),
-                    FontAwesomeIconType.pencil) {
+                    FontAwesome5IconType.pencil_alt_s) {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
                         final BootstrapModal modal = ((BasePage) getWebPage()).getModal();

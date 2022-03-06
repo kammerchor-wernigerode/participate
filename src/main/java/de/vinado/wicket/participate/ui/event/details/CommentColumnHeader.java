@@ -14,8 +14,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 
-import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType.angle_double_down;
-import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType.angle_double_up;
+import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.angle_double_down_s;
+import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.angle_double_up_s;
 import static de.vinado.wicket.participate.components.ShortenedMultilineLabel.Intent;
 import static de.vinado.wicket.participate.components.ShortenedMultilineLabel.State;
 import static de.vinado.wicket.participate.components.ShortenedMultilineLabel.State.COLLAPSED;
@@ -62,11 +62,11 @@ public abstract class CommentColumnHeader extends GenericPanel<String> {
         }
 
         private Component expandButton(String id) {
-            return button(id, EXPANDED, COLLAPSED, angle_double_down);
+            return button(id, EXPANDED, COLLAPSED, angle_double_down_s);
         }
 
         private Component collapseButton(String id) {
-            return button(id, COLLAPSED, EXPANDED, angle_double_up);
+            return button(id, COLLAPSED, EXPANDED, angle_double_up_s);
         }
 
         private WebMarkupContainer button(String id, State targetState, State represented, IconType icon) {
@@ -77,7 +77,7 @@ public abstract class CommentColumnHeader extends GenericPanel<String> {
                 }
             }
                 .setIconType(icon)
-                .setSize(Buttons.Size.Mini);
+                .setSize(Buttons.Size.Small);
             button.add(new TooltipBehavior(getTooltipResourceKey(represented)));
             return button;
         }

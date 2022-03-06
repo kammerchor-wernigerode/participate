@@ -43,7 +43,7 @@ import static de.vinado.wicket.participate.components.Models.map;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class EventPanel extends BreadCrumbPanel implements IGenericComponent<EventDetails> {
+public class EventPanel extends BreadCrumbPanel implements IGenericComponent<EventDetails, EventPanel> {
 
     @SpringBean
     @SuppressWarnings("unused")
@@ -159,28 +159,6 @@ public class EventPanel extends BreadCrumbPanel implements IGenericComponent<Eve
     @Override
     public IModel<String> getTitle() {
         return new PropertyModel<>(getModel(), "name");
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public IModel<EventDetails> getModel() {
-        return (IModel<EventDetails>) getDefaultModel();
-    }
-
-    @Override
-    public void setModel(IModel<EventDetails> model) {
-        setDefaultModel(model);
-    }
-
-    @Override
-    public void setModelObject(EventDetails object) {
-        setDefaultModelObject(object);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public EventDetails getModelObject() {
-        return (EventDetails) getDefaultModelObject();
     }
 
     @Override

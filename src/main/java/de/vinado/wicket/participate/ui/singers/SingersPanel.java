@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.ui.singers;
 
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
@@ -77,7 +77,7 @@ public class SingersPanel extends Panel {
         columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "sortName", "sortName"));
         columns.add(new PropertyColumn<>(new ResourceModel("email", "Email"), "email", "email"));
         columns.add(new EnumColumn<Singer, String, Voice>(new ResourceModel("voice", "voice"), "voice", "voice"));
-        columns.add(new BootstrapAjaxLinkColumn<Singer, String>(FontAwesomeIconType.pencil, new ResourceModel("singer.edit", "Edit Singer")) {
+        columns.add(new BootstrapAjaxLinkColumn<Singer, String>(FontAwesome5IconType.pencil_alt_s, new ResourceModel("singer.edit", "Edit Singer")) {
             @Override
             public void onClick(final AjaxRequestTarget target, final IModel<Singer> rowModel) {
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
@@ -87,7 +87,7 @@ public class SingersPanel extends Panel {
                 modal.show(target);
             }
         });
-        columns.add(new BootstrapAjaxLinkColumn<Singer, String>(FontAwesomeIconType.envelope, new ResourceModel("email.send", "Send Email")) {
+        columns.add(new BootstrapAjaxLinkColumn<Singer, String>(FontAwesome5IconType.envelope_s, new ResourceModel("email.send", "Send Email")) {
             @Override
             public void onClick(final AjaxRequestTarget target, final IModel<Singer> rowModel) {
                 final Person person = rowModel.getObject();

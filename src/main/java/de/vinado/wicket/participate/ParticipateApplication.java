@@ -28,7 +28,7 @@ import org.apache.wicket.protocol.https.HttpsMapper;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
-import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
+import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
@@ -41,6 +41,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 @SpringBootApplication
 @EnableScheduling
@@ -111,7 +113,7 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
         getComponentInstantiationListeners().add(new SpringComponentInjector(this));
 
         // Error Page
-        getRequestCycleListeners().add(new AbstractRequestCycleListener() {
+        getRequestCycleListeners().add(new IRequestCycleListener() {
             @Override
             public IRequestHandler onException(final RequestCycle cycle, final Exception ex) {
                 return new RenderPageRequestHandler(new PageProvider(new ErrorPage(ex)));

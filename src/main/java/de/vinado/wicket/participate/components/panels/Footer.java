@@ -41,7 +41,7 @@ public class Footer extends Panel {
                 setVisible(developmentMode);
             }
         });
-        add(new AjaxLink("feedback") {
+        add(new AjaxLink<Void>("feedback") {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();

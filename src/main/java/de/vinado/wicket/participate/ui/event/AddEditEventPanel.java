@@ -4,7 +4,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.behavoirs.AjaxFocusBehavior;
 import de.vinado.wicket.participate.behavoirs.AutosizeBehavior;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalFormDecorator;
@@ -174,7 +174,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         });
         inner.add(descriptionTa);
 
-        final BootstrapAjaxLink removeBtn = new BootstrapAjaxLink("removeBtn", Buttons.Type.Link) {
+        final BootstrapAjaxLink<Void> removeBtn = new BootstrapAjaxLink<>("removeBtn", Buttons.Type.Link) {
             @Override
             protected void onInitialize() {
                 super.onInitialize();
@@ -186,17 +186,17 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
                 remove = !remove;
                 if (remove) {
                     setLabel(new ResourceModel("event.remove.hint", "Event will be removed"));
-                    setIconType(FontAwesomeIconType.exclamation_circle);
+                    setIconType(FontAwesome5IconType.exclamation_circle_s);
                 } else {
                     setLabel(new ResourceModel("event.remove", "Remove event"));
-                    setIconType(FontAwesomeIconType.trash);
+                    setIconType(FontAwesome5IconType.trash_s);
                 }
                 target.add(this);
             }
         };
         removeBtn.setLabel(new ResourceModel("event.remove", "Remove Event"));
-        removeBtn.setIconType(FontAwesomeIconType.trash);
-        removeBtn.setSize(Buttons.Size.Mini);
+        removeBtn.setIconType(FontAwesome5IconType.trash_s);
+        removeBtn.setSize(Buttons.Size.Small);
         removeBtn.setOutputMarkupId(true);
         inner.add(removeBtn);
     }

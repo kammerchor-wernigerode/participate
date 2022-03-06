@@ -6,7 +6,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.ButtonBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapInlineFormDecorator;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Voice;
@@ -90,7 +90,7 @@ public abstract class ParticipantFilterForm extends Form<ParticipantFilter> {
     }
 
     protected AbstractLink resetButton(String id) {
-        BootstrapAjaxLink button = new BootstrapAjaxLink(id, Buttons.Type.Default) {
+        BootstrapAjaxLink<Void> button = new BootstrapAjaxLink<>(id, Buttons.Type.Default) {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 resetFilter();
@@ -98,7 +98,7 @@ public abstract class ParticipantFilterForm extends Form<ParticipantFilter> {
                 onReset();
             }
         };
-        button.setIconType(FontAwesomeIconType.refresh);
+        button.setIconType(FontAwesome5IconType.undo_s);
         button.add(new TooltipBehavior(new ResourceModel("reset", "Reset")));
         return button;
     }
@@ -110,13 +110,13 @@ public abstract class ParticipantFilterForm extends Form<ParticipantFilter> {
     private AbstractSubmitLink applyButton(String id) {
         AjaxSubmitLink button = new AjaxSubmitLink(id) {
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+            protected void onSubmit(AjaxRequestTarget target) {
                 target.add(ParticipantFilterForm.this);
                 onApply();
             }
         };
         button.add(new ButtonBehavior(Buttons.Type.Primary));
-        button.add(new Icon("icon", FontAwesomeIconType.filter));
+        button.add(new Icon("icon", FontAwesome5IconType.filter_s));
         button.add(new TooltipBehavior(new ResourceModel("filter", "Filter")));
         return button;
     }

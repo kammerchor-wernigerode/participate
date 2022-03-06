@@ -28,13 +28,13 @@ public class BootstrapAjaxButton extends de.agilecoders.wicket.core.markup.html.
     }
 
     @Override
-    protected void onError(final AjaxRequestTarget target, final Form<?> form) {
+    protected void onError(final AjaxRequestTarget target) {
         if (null == getFeedbackPanel()) {
             return;
         }
 
         target.add(getFeedbackPanel());
-        form.visitFormComponents((components, iVisit) -> {
+        getForm().visitFormComponents((components, iVisit) -> {
             if (!components.getRenderBodyOnly()) {
                 target.add(components);
             }

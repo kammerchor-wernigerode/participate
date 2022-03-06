@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.ui.administration.tool;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.behavoirs.AjaxDownload;
 import de.vinado.wicket.participate.components.links.BootstrapAjaxButton;
@@ -100,7 +100,7 @@ public class ToolPanel extends Panel {
             final BootstrapAjaxButton submitBtn = new BootstrapAjaxButton("submitBtn", new ResourceModel("import", "Import"),
                 Buttons.Type.Primary) {
                 @Override
-                protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+                protected void onSubmit(final AjaxRequestTarget target) {
                     if (null != file) {
                         personService.importPersons(file);
                     }
@@ -111,7 +111,7 @@ public class ToolPanel extends Panel {
                     return feedback;
                 }
             };
-            submitBtn.setIconType(FontAwesomeIconType.database);
+            submitBtn.setIconType(FontAwesome5IconType.database_s);
             submitBtn.setSize(Buttons.Size.Small);
             importWmc.add(submitBtn);
 
@@ -126,7 +126,7 @@ public class ToolPanel extends Panel {
 
             final BootstrapAjaxButton exportBtn = new BootstrapAjaxButton("exportBtn", new ResourceModel("export", "Export"), Buttons.Type.Primary) {
                 @Override
-                protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+                protected void onSubmit(final AjaxRequestTarget target) {
                     export.go(target, personService.exportSingers(), "singer-export.csv");
                     target.add(exportForm);
                 }
@@ -136,7 +136,7 @@ public class ToolPanel extends Panel {
                     return feedback;
                 }
             };
-            exportBtn.setIconType(FontAwesomeIconType.save);
+            exportBtn.setIconType(FontAwesome5IconType.save_s);
             exportBtn.setSize(Buttons.Size.Small);
             exportBtn.add(export);
             exportWmc.add(exportBtn);

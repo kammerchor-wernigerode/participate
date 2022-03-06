@@ -8,7 +8,9 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.util.time.Duration;
+
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 
 /**
  * Bootstrap Ajax Button Panel. Use it in {@link org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable
@@ -18,7 +20,7 @@ import org.apache.wicket.util.time.Duration;
  */
 public abstract class BootstrapAjaxLinkPanel extends Panel {
 
-    private BootstrapAjaxLink ajaxLink;
+    private BootstrapAjaxLink<Void> ajaxLink;
 
     private Buttons.Type type;
     private Buttons.Size size;
@@ -69,7 +71,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
      * @param icon {@link IconType}
      */
     public BootstrapAjaxLinkPanel(final String id, final Buttons.Type type, final IconType icon) {
-        this(id, type, Buttons.Size.Mini, null, icon, null);
+        this(id, type, Buttons.Size.Small, null, icon, null);
     }
 
     /**
@@ -81,7 +83,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
      * @param titleModel Label
      */
     public BootstrapAjaxLinkPanel(final String id, final Buttons.Type type, final IconType icon, final IModel<String> titleModel) {
-        this(id, type, Buttons.Size.Mini, null, icon, titleModel);
+        this(id, type, Buttons.Size.Small, null, icon, titleModel);
     }
 
     /**
@@ -102,7 +104,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
         this.icon = icon;
         this.titleModel = titleModel;
 
-        ajaxLink = new BootstrapAjaxLink("link", type) {
+        ajaxLink = new BootstrapAjaxLink<>("link", type) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 BootstrapAjaxLinkPanel.this.onClick(target);
@@ -113,7 +115,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
         if (null != icon) ajaxLink.setIconType(icon);
         if (null != labelModel) ajaxLink.setLabel(labelModel);
         if (null != titleModel) {
-            ajaxLink.add(new TooltipBehavior(titleModel, new TooltipConfig().withDelay(Duration.milliseconds(300L))));
+            ajaxLink.add(new TooltipBehavior(titleModel, new TooltipConfig().withDelay(Duration.of(300L, ChronoUnit.MILLIS))));
         }
 
         add(ajaxLink);

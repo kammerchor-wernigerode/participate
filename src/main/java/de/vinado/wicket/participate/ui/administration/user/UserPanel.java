@@ -4,7 +4,7 @@ package de.vinado.wicket.participate.ui.administration.user;
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.components.TextAlign;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalConfirmationPanel;
@@ -66,7 +66,7 @@ public class UserPanel extends Panel {
             public void populateItem(final Item<ICellPopulator<User>> item, final String componentId, final IModel<User> rowModel) {
                 item.add(new IconPanel(
                     componentId,
-                    rowModel.getObject().isAdmin() ? FontAwesomeIconType.check : FontAwesomeIconType.times,
+                    rowModel.getObject().isAdmin() ? FontAwesome5IconType.check_s : FontAwesome5IconType.times_s,
                     IconPanel.Color.DEFAULT, TextAlign.CENTER));
             }
 
@@ -80,7 +80,7 @@ public class UserPanel extends Panel {
             public void populateItem(final Item<ICellPopulator<User>> item, final String componentId, final IModel<User> rowModel) {
                 item.add(new IconPanel(
                     componentId,
-                    rowModel.getObject().isEnabled() ? FontAwesomeIconType.check : FontAwesomeIconType.times,
+                    rowModel.getObject().isEnabled() ? FontAwesome5IconType.check_s : FontAwesome5IconType.times_s,
                     IconPanel.Color.DEFAULT, TextAlign.CENTER));
             }
 
@@ -94,7 +94,7 @@ public class UserPanel extends Panel {
             public void populateItem(final Item<ICellPopulator<User>> item, final String componentId, final IModel<User> rowModel) {
                 final boolean person = null != rowModel.getObject().getPerson();
                 final BootstrapAjaxLinkPanel button = new BootstrapAjaxLinkPanel(
-                    componentId, Buttons.Type.Link, person ? FontAwesomeIconType.trash : FontAwesomeIconType.plus) {
+                    componentId, Buttons.Type.Link, person ? FontAwesome5IconType.trash_alt_s : FontAwesome5IconType.plus_s) {
                     @Override
                     public void onClick(final AjaxRequestTarget target) {
                         final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
@@ -140,7 +140,7 @@ public class UserPanel extends Panel {
             public void populateItem(final Item<ICellPopulator<User>> item, final String componentId, final IModel<User> rowModel) {
                 final Person person = rowModel.getObject().getPerson();
                 if (null != person) {
-                    item.add(new BootstrapAjaxLinkPanel(componentId, Buttons.Type.Link, FontAwesomeIconType.edit) {
+                    item.add(new BootstrapAjaxLinkPanel(componentId, Buttons.Type.Link, FontAwesome5IconType.edit_s) {
                         @Override
                         public void onClick(final AjaxRequestTarget target) {
                             final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
@@ -167,7 +167,7 @@ public class UserPanel extends Panel {
         dataTable.hover().condensed();
         add(dataTable);
 
-        final BootstrapAjaxLink createUserBtn = new BootstrapAjaxLink("createUserBtn", Buttons.Type.Default) {
+        final BootstrapAjaxLink<Void> createUserBtn = new BootstrapAjaxLink<>("createUserBtn", Buttons.Type.Default) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
@@ -184,8 +184,8 @@ public class UserPanel extends Panel {
         };
         createUserBtn.add(new CssClassNameAppender(Model.of("pull-right")));
         createUserBtn.setLabel(new ResourceModel("user.add", "Add User"));
-        createUserBtn.setSize(Buttons.Size.Mini);
-        createUserBtn.setIconType(FontAwesomeIconType.plus);
+        createUserBtn.setSize(Buttons.Size.Small);
+        createUserBtn.setIconType(FontAwesome5IconType.plus_s);
         add(createUserBtn);
     }
 }

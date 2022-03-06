@@ -5,7 +5,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarComponents;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarDropDownButton;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
@@ -69,22 +69,21 @@ public class ParticipatePage extends BasePage {
 
         navbar = new Navbar("navbar");
         navbar.setOutputMarkupId(true);
-        navbar.setPosition(Navbar.Position.STATIC_TOP);
-        navbar.fluid();
+        navbar.setPosition(Navbar.Position.TOP);
         navbar.setBrandName(Model.of(ParticipateApplication.get().getApplicationName()));
         navbar.addComponents(NavbarComponents.transform(
                 Navbar.ComponentPosition.LEFT,
-            new NavbarButton(EventsPage.class, new ResourceModel("events", "Events")).setIconType(FontAwesomeIconType.calendar)));
+            new NavbarButton(EventsPage.class, new ResourceModel("events", "Events")).setIconType(FontAwesome5IconType.calendar_s)));
         navbar.addComponents(NavbarComponents.transform(
                 Navbar.ComponentPosition.LEFT,
-            new NavbarButton(SingersPage.class, new ResourceModel("singers", "Singers")).setIconType(FontAwesomeIconType.group)));
+            new NavbarButton(SingersPage.class, new ResourceModel("singers", "Singers")).setIconType(FontAwesome5IconType.users_s)));
         navbar.addComponents(NavbarComponents.transform(
                 Navbar.ComponentPosition.RIGHT,
-                new NavbarDropDownButton(new PropertyModel<>(this, "userLabel"), Model.of(FontAwesomeIconType.user)) {
+                new NavbarDropDownButton(new PropertyModel<>(this, "userLabel"), Model.of(FontAwesome5IconType.user_s)) {
                     @Override
                     protected List<AbstractLink> newSubMenuButtons(final String buttonMarkupId) {
                         final List<AbstractLink> menuButtons = new ArrayList<>();
-                        menuButtons.add(new AjaxLink(buttonMarkupId) {
+                        menuButtons.add(new AjaxLink<Void>(buttonMarkupId) {
                             @Override
                             public void onClick(final AjaxRequestTarget target) {
                                 final User user = ParticipateSession.get().getUser();
@@ -114,7 +113,7 @@ public class ParticipatePage extends BasePage {
                                     .setBody(new ResourceModel("administration", "Administration")));
                         }
                         menuButtons.add(new MenuDivider());
-                        menuButtons.add(new AjaxLink(buttonMarkupId) {
+                        menuButtons.add(new AjaxLink<Void>(buttonMarkupId) {
                             @Override
                             public void onClick(final AjaxRequestTarget target) {
                                 ParticipateSession.get().invalidate();

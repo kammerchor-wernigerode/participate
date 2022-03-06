@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.ui.singers;
 
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
@@ -49,7 +49,7 @@ public class SingersMasterPanel extends BreadCrumbPanel {
             @Override
             protected AbstractLink newDefaultBtn(final String id, final IModel<List<Singer>> model) {
                 setDefaultBtnLabelModel(new ResourceModel("singer.add", "Add Singer"));
-                setDefaultBtnIcon(FontAwesomeIconType.plus);
+                setDefaultBtnIcon(FontAwesome5IconType.plus_s);
                 return new AjaxLink(id) {
                     @Override
                     public void onClick(final AjaxRequestTarget target) {
@@ -65,7 +65,7 @@ public class SingersMasterPanel extends BreadCrumbPanel {
             protected RepeatingView newDropDownMenu(String id, IModel<List<Singer>> model) {
                 RepeatingView dropDownMenu = super.newDropDownMenu(id, model);
                 dropDownMenu.add(new DropDownItem(dropDownMenu.newChildId(), new ResourceModel("email.send", "Send Email"),
-                    FontAwesomeIconType.envelope) {
+                    FontAwesome5IconType.envelope_s) {
                     @Override
                     protected void onClick(final AjaxRequestTarget target) {
                         Email mailData = emailBuilderFactory.create()

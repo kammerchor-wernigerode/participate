@@ -40,9 +40,6 @@ public class UpdateOnEventBehavior<T> extends OnEventBehavior<T> {
     }
 
     private static void update(Consumer<AjaxRequestTarget> callback) {
-        AjaxRequestTarget target = RequestCycle.get().find(AjaxRequestTarget.class);
-        if (null != target) {
-            callback.accept(target);
-        }
+        RequestCycle.get().find(AjaxRequestTarget.class).ifPresent(callback);
     }
 }

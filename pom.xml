@@ -25,8 +25,8 @@
         <skipTests>false</skipTests>
         <resource.delimiter>^</resource.delimiter>
         <java.version>11</java.version>
-        <wicket.version>7.16.0</wicket.version>
-        <wicket.bootstrap.version>0.10.18</wicket.bootstrap.version>
+        <wicket.version>9.7.0</wicket.version>
+        <wicket.bootstrap.version>6.0.0-M6</wicket.bootstrap.version>
         <liquibase.version>4.3.5</liquibase.version>
     </properties>
 
@@ -157,11 +157,6 @@
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>5.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.danekja</groupId>
-            <artifactId>jdk-serializable-functional</artifactId>
-            <version>1.8.6</version>
         </dependency>
 
         <dependency>

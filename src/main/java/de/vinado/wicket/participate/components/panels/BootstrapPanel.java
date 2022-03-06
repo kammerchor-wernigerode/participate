@@ -1,8 +1,6 @@
 package de.vinado.wicket.participate.components.panels;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
-import de.agilecoders.wicket.core.markup.html.bootstrap.panel.PanelBehavior;
-import de.agilecoders.wicket.core.markup.html.bootstrap.panel.PanelType;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -33,7 +31,6 @@ public class BootstrapPanel<T> extends GenericPanel<T> {
     private static final String _DROP_DOWN_MENU_ID = "dropDownMenu";
     private static final String _DEFAULT_BUTTON_ICON_ID = "icon";
 
-    private PanelBehavior panelBehavior;
     private final IModel<String> titleModel;
 
     private final Panel panelBody;
@@ -50,8 +47,6 @@ public class BootstrapPanel<T> extends GenericPanel<T> {
         super(id, model);
 
         this.titleModel = titleModel;
-
-        add(this.panelBehavior = new PanelBehavior(PanelType.Default));
 
         final Label panelTitle = newTitleLabel(_PANEL_TITLE_ID, getModel(), getTitleModel());
         final WebMarkupContainer btnGroup = newBtnGroup(_BUTTON_GROUP_ID, getModel());
@@ -85,15 +80,6 @@ public class BootstrapPanel<T> extends GenericPanel<T> {
         btnGroup.add(dropDownMenu);
         add(panelBody);
         add(panelFooter);
-    }
-
-    public PanelType getPanelType() {
-        return this.panelBehavior.getType();
-    }
-
-    public BootstrapPanel<T> setPanelType(final PanelType panelType) {
-        this.panelBehavior.setType(panelType);
-        return this;
     }
 
     public IModel<String> getTitleModel() {
@@ -173,7 +159,7 @@ public class BootstrapPanel<T> extends GenericPanel<T> {
         public DropDownItem(final String id, final IModel<String> labelModel, final IconType icon) {
             super(id);
 
-            add(new AjaxLink(_LINK_ID) {
+            add(new AjaxLink<Void>(_LINK_ID) {
                 @Override
                 public void onClick(final AjaxRequestTarget target) {
                     DropDownItem.this.onClick(target);

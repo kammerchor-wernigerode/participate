@@ -44,7 +44,7 @@ import java.util.Map;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class FormPanel extends BreadCrumbPanel implements IGenericComponent<ParticipantDTO> {
+public class FormPanel extends BreadCrumbPanel implements IGenericComponent<ParticipantDTO, FormPanel> {
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -151,7 +151,7 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
 
         final BootstrapAjaxButton submitBtn = new BootstrapAjaxButton("submit", Buttons.Type.Success) {
             @Override
-            protected void onSubmit(final AjaxRequestTarget target, final Form<?> inner) {
+            protected void onSubmit(final AjaxRequestTarget target) {
                 ParticipantDTO dto = model.getObject();
                 Participant updatedParticipant = eventService.acceptEvent(dto);
                 EventUpdateEvent intent = new EventUpdateEvent(updatedParticipant.getEvent(), target);
@@ -168,7 +168,7 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
 
         final BootstrapAjaxButton declineBtn = new BootstrapAjaxButton("decline", Buttons.Type.Default) {
             @Override
-            protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+            protected void onSubmit(final AjaxRequestTarget target) {
                 final Participant savedParticipant = eventService.declineEvent(model.getObject());
                 send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(savedParticipant.getEvent(), target));
                 Snackbar.show(target, new ResourceModel("invitation.decline.success", "Your cancellation has been saved. You can leave this page now."));
@@ -222,28 +222,6 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
     @Override
     public IModel<String> getTitle() {
         return new ResourceModel("form", "Form");
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public IModel<ParticipantDTO> getModel() {
-        return (IModel<ParticipantDTO>) getDefaultModel();
-    }
-
-    @Override
-    public void setModel(IModel<ParticipantDTO> model) {
-        setDefaultModel(model);
-    }
-
-    @Override
-    public void setModelObject(ParticipantDTO object) {
-        setDefaultModelObject(object);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public ParticipantDTO getModelObject() {
-        return (ParticipantDTO) getDefaultModelObject();
     }
 
     @RequiredArgsConstructor
