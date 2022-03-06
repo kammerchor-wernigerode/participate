@@ -81,6 +81,7 @@ public class EventPanel extends BreadCrumbPanel implements IGenericComponent<Eve
         wmc.add(new MultiLineLabel("description") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setVisible(!Strings.isEmpty(model.getObject().getDescription()));
             }
         });

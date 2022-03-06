@@ -115,6 +115,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         final DateTextField endDateTf = new DateTextField("endDate", endDateConfig) {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setVisible(severalDays.getObject());
             }
         };
@@ -122,6 +123,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         final DateTextField startDateTf = new DateTextField("startDate", startDateConfig) {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setLabel(severalDays.getObject()
                     ? new ResourceModel("from", "From")
                     : new ResourceModel("on", "On"));

@@ -69,6 +69,7 @@ public class SignInPanel extends Panel {
      */
     @Override
     protected void onConfigure() {
+        super.onConfigure();
         if (!isSignedIn()) {
             final IAuthenticationStrategy strategy = getApplication().getSecuritySettings()
                     .getAuthenticationStrategy();

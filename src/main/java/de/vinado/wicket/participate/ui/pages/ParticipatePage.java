@@ -139,6 +139,7 @@ public class ParticipatePage extends BasePage {
 
     @Override
     protected void onConfigure() {
+        super.onConfigure();
         if (!ParticipateSession.get().isSignedIn()) {
             ParticipateApplication.get().restartResponseAtSignInPage();
         } else {

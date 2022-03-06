@@ -96,6 +96,7 @@ public class FormPage extends BasePage {
 
     @Override
     protected void onConfigure() {
+        super.onConfigure();
         if (!signedIn) {
             setResponsePage(new FormSignInPage(new CompoundPropertyModel<>(null == FormPage.this.model.getObject() ?
                 new ParticipantDTO() : new ParticipantDTO(FormPage.this.model.getObject()))));

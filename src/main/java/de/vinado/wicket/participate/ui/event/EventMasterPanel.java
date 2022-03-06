@@ -120,6 +120,7 @@ public class EventMasterPanel extends BreadCrumbPanel {
             new ResourceModel("event", "Event")) {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setVisible(eventService.hasUpcomingEvents());
             }
 

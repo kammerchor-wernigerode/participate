@@ -208,6 +208,7 @@ public abstract class EditAccountPanel extends BootstrapModalPanel<EditAccountDT
                 Collections.unmodifiableList(Arrays.asList(Voice.values())), new EnumChoiceRenderer<>()) {
                 @Override
                 protected void onConfigure() {
+                    super.onConfigure();
                     setVisible(null != model.getObject().getSinger());
                 }
             };

@@ -115,6 +115,7 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
         final CheckBox cateringCb = new CheckBox("catering") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setEnabled(InvitationStatus.ACCEPTED.equals(model.getObject().getInvitationStatus()));
             }
         };
@@ -130,6 +131,7 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
         final CheckBox accommodationCb = new CheckBox("accommodation") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setEnabled(InvitationStatus.ACCEPTED.equals(model.getObject().getInvitationStatus()));
             }
         };
@@ -145,6 +147,7 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
         NumberTextField<Integer> carSeatCountTf = new NumberTextField<Integer>("carSeatCount") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 if (!EditInvitationPanel.this.getModelObject().isCar()) {
                     EditInvitationPanel.this.getModelObject().setCarSeatCount((short) 0);
                 }
@@ -167,6 +170,7 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
         final TextArea commentTa = new TextArea("comment") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setEnabled(InvitationStatus.ACCEPTED.equals(model.getObject().getInvitationStatus()));
             }
         };

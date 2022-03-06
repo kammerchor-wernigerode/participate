@@ -49,6 +49,7 @@ public abstract class AbstractTableFilterPanel<T, F> extends Panel implements IF
         inner = new WebMarkupContainer("wmc") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 if (visible) {
                     add(new CssClassNameAppender("in"));
                 }

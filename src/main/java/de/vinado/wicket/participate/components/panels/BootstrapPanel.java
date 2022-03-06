@@ -135,6 +135,7 @@ public class BootstrapPanel<T> extends GenericPanel<T> {
         final RepeatingView dropDownMenu = new RepeatingView(id, model) {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 if (size() <= 0) {
                     defaultBtn.add(new AttributeModifier("style",
                             "border-bottom-right-radius: 3px; border-top-right-radius: 3px;"));

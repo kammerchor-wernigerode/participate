@@ -216,6 +216,7 @@ public class FormSignInPage extends BasePage {
 
     @Override
     protected void onConfigure() {
+        super.onConfigure();
         final String[] data = strategy.load();
         if ((null != data) && (data.length > 1)) {
             if (signIn(data[1])) {

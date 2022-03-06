@@ -123,6 +123,7 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
         NumberTextField<Integer> carSeatCountTf = new NumberTextField<Integer>("carSeatCount") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 if (!FormPanel.this.getModelObject().isCar()) {
                     FormPanel.this.getModelObject().setCarSeatCount((short) 0);
                 }

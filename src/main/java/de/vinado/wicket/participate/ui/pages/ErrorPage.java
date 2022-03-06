@@ -51,6 +51,7 @@ public class ErrorPage extends AbstractErrorPage {
         final WebMarkupContainer stacktraceWmc = new WebMarkupContainer("stacktraceWmc") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setVisible(showStacktrace);
             }
         };
@@ -80,6 +81,7 @@ public class ErrorPage extends AbstractErrorPage {
         final WebMarkupContainer markupWmc = new WebMarkupContainer("markupWmc") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setVisible(null != finalMarkupStream && showStacktrace);
             }
         };

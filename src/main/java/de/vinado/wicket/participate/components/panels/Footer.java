@@ -37,6 +37,7 @@ public class Footer extends Panel {
         add(new Label("developmentMode", "Development Mode") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setVisible(developmentMode);
             }
         });
@@ -50,6 +51,7 @@ public class Footer extends Panel {
 
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setVisible(!developmentMode);
             }
         });
