@@ -4,6 +4,7 @@ import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.behavoirs.FooterBehavior;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
+import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.dtos.SendFeedbackDTO;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -12,6 +13,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,12 +23,15 @@ import java.util.Date;
  */
 public class Footer extends Panel {
 
+    @SpringBean
+    private ApplicationProperties applicationProperties;
+
     public Footer(final String id) {
         super(id);
 
         add(new FooterBehavior());
 
-        final boolean developmentMode = ParticipateApplication.get().isInDevelopmentMode();
+        final boolean developmentMode = applicationProperties.isDevelopmentMode();
         final boolean signedIn = ParticipateSession.get().isSignedIn();
 
         add(new Label("developmentMode", "Development Mode") {
@@ -48,10 +53,10 @@ public class Footer extends Panel {
                 setVisible(!developmentMode);
             }
         });
-        add(new Label("customer", ParticipateApplication.get().getApplicationProperties().getCustomer()));
+        add(new Label("customer", applicationProperties.getCustomer()));
         add(new Label("year", new SimpleDateFormat("yyyy").format(new Date())));
         add(new Label("applicationName", ParticipateApplication.get().getApplicationName()));
-        add(new Label("version", ParticipateApplication.get().getApplicationProperties().getVersion()));
+        add(new Label("version", applicationProperties.getVersion()));
     }
 
     @Override

@@ -13,6 +13,7 @@ import de.vinado.wicket.participate.common.ParticipateUtils;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
+import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
@@ -47,6 +48,9 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
     @SuppressWarnings("unused")
     @SpringBean
     private EventService eventService;
+
+    @SpringBean
+    private ApplicationProperties applicationProperties;
 
     public EditInvitationPanel(final BootstrapModal modal, final IModel<ParticipantDTO> model) {
         super(modal, new ResourceModel("invitation.edit", "Edit Invitation"), model);
@@ -195,7 +199,7 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
         inner.add(inviteSingerBtn);
 
         URL href = ParticipateUtils.generateInvitationLink(
-            ParticipateApplication.get().getApplicationProperties().getBaseUrl(),
+            applicationProperties.getBaseUrl(),
             model.getObject().getToken());
         Label link = new Label("token", href);
         link.add(AttributeModifier.append("href", href));

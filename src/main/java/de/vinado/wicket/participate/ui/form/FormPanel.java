@@ -50,6 +50,9 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
     @SpringBean
     private EventService eventService;
 
+    @SpringBean
+    private ApplicationProperties applicationProperties;
+
     public FormPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<ParticipantDTO> model) {
         super(id, breadCrumbModel, model);
 
@@ -177,10 +180,9 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
     }
 
     private void displayConfirmation(Participant participant, AjaxRequestTarget target) {
-        ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
-        boolean hasOrganizationResponsible = !Strings.isEmpty(properties.getOrganizationResponsible());
-        boolean hasSleepingPlaceResponsible = !Strings.isEmpty(properties.getSleepingPlaceResponsible());
-        Map<String, Object> templateData = mapSuccessionTemplateData(properties);
+        boolean hasOrganizationResponsible = !Strings.isEmpty(applicationProperties.getOrganizationResponsible());
+        boolean hasSleepingPlaceResponsible = !Strings.isEmpty(applicationProperties.getSleepingPlaceResponsible());
+        Map<String, Object> templateData = mapSuccessionTemplateData(applicationProperties);
 
         if (eventService.hasDeadlineExpired(participant)) {
             if (hasOrganizationResponsible && hasSleepingPlaceResponsible) {

@@ -7,6 +7,7 @@ import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.behavoirs.AjaxDownload;
 import de.vinado.wicket.participate.components.links.BootstrapAjaxButton;
 import de.vinado.wicket.participate.components.panels.Collapsible;
+import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
 import de.vinado.wicket.participate.services.UserService;
@@ -44,10 +45,11 @@ public class ToolPanel extends Panel {
     @SpringBean
     private UserService userService;
 
+    @SpringBean
+    private ApplicationProperties applicationProperties;
+
     public ToolPanel(final String id) {
         super(id);
-
-        final boolean developmentMode = ParticipateApplication.get().isInDevelopmentMode();
 
         final List<ITab> tabs = new ArrayList<>();
         tabs.add(new AbstractTab(new ResourceModel("application-password", "Form Password")) {
@@ -71,7 +73,7 @@ public class ToolPanel extends Panel {
         private PasswordPanel(final String id) {
             super(id);
 
-            add(new Label("password", ParticipateApplication.get().getApplicationProperties().getParticipatePassword()));
+            add(new Label("password", applicationProperties.getParticipatePassword()));
         }
     }
 

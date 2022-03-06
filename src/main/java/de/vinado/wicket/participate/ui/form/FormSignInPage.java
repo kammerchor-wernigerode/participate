@@ -6,6 +6,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.tabs.TextPanel;
 import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.behavoirs.FocusBehavior;
 import de.vinado.wicket.participate.components.panels.Collapsible;
+import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Singer;
@@ -54,6 +55,9 @@ public class FormSignInPage extends BasePage {
     @SpringBean
     private UserService userService;
 
+    @SpringBean
+    private ApplicationProperties applicationProperties;
+
     private IModel<ParticipantDTO> model;
 
     private String username;
@@ -83,7 +87,7 @@ public class FormSignInPage extends BasePage {
     public FormSignInPage(final PageParameters parameters, final IModel<ParticipantDTO> model) {
         super(parameters);
         this.model = model;
-        this.participatePassword = ParticipateApplication.get().getApplicationProperties().getParticipatePassword();
+        this.participatePassword = applicationProperties.getParticipatePassword();
 
 
         if (null != model.getObject().getEvent()) {
