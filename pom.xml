@@ -79,11 +79,6 @@
             <artifactId>wicketstuff-select2</artifactId>
             <version>${wicket.version}</version>
         </dependency>
-        <dependency>
-            <groupId>de.agilecoders.wicket</groupId>
-            <artifactId>wicket-bootstrap-less</artifactId>
-            <version>${wicket.bootstrap.version}</version>
-        </dependency>
 
         <!-- SPRING BOOT -->
         <dependency>

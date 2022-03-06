@@ -8,7 +8,6 @@ import de.agilecoders.wicket.core.settings.BootstrapSettings;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
 import de.agilecoders.wicket.extensions.javascript.GoogleClosureJavaScriptCompressor;
 import de.agilecoders.wicket.extensions.javascript.YuiCssCompressor;
-import de.agilecoders.wicket.less.BootstrapLess;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.ui.event.EventsPage;
 import de.vinado.wicket.participate.ui.login.SignInPage;
@@ -149,11 +148,8 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
 
     private void configureBootstrap() {
         final IBootstrapSettings settings = new BootstrapSettings();
-        Bootstrap.builder().withBootstrapSettings(settings).install(this);
-
         settings.setJsResourceFilterName("footer-container");
-
-        BootstrapLess.install(this);
+        Bootstrap.builder().withBootstrapSettings(settings).install(this);
     }
 
     private void optimizeForWebPerformance() {
