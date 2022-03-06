@@ -83,6 +83,8 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
     public void init() {
         super.init();
 
+        getCspSettings().blocking().disabled();
+
         getApplicationSettings().setUploadProgressUpdatesEnabled(true);
         getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
         getSecuritySettings().setAuthorizationStrategy(new AnnotationsRoleAuthorizationStrategy(
