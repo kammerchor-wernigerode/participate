@@ -23,7 +23,6 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Ann
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;
 import org.apache.wicket.request.IRequestHandler;
@@ -42,8 +41,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.scheduling.annotation.EnableScheduling;
-
-import javax.servlet.http.HttpServletRequest;
 
 @SpringBootApplication
 @EnableScheduling
@@ -66,11 +63,6 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
 
     public static ParticipateApplication get() {
         return (ParticipateApplication) Application.get();
-    }
-
-    public String getBaseUrl() {
-        final HttpServletRequest req = (HttpServletRequest) (RequestCycle.get().getRequest()).getContainerRequest();
-        return RequestUtils.toAbsolutePath(req.getRequestURL().toString(), "");
     }
 
     public Url getRequestedUrl() {
@@ -125,11 +117,6 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
                 return new RenderPageRequestHandler(new PageProvider(new ErrorPage(ex)));
             }
         });
-    }
-
-    @Override
-    protected void validateInit() {
-        super.validateInit();
     }
 
     private void configureBootstrap() {
