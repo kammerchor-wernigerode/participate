@@ -110,7 +110,8 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
         }
 
         // spring injector for @SpringBean annotations
-        getComponentInstantiationListeners().add(new SpringComponentInjector(this));
+        WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        getComponentInstantiationListeners().add(new SpringComponentInjector(this, ctx));
 
         // Error Page
         getRequestCycleListeners().add(new IRequestCycleListener() {
