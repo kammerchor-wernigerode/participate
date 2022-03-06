@@ -9,7 +9,6 @@ import de.vinado.wicket.participate.model.dtos.SendFeedbackDTO;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -59,12 +58,5 @@ public class Footer extends Panel {
         add(new Label("year", new SimpleDateFormat("yyyy").format(new Date())));
         add(new Label("applicationName", ParticipateApplication.get().getApplicationName()));
         add(new Label("version", applicationProperties.getVersion()));
-    }
-
-    @Override
-    protected void onComponentTag(final ComponentTag tag) {
-        super.onComponentTag(tag);
-
-        tag.put("class", "footer");
     }
 }

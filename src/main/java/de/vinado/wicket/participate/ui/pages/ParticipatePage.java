@@ -70,12 +70,11 @@ public class ParticipatePage extends BasePage {
         navbar = new Navbar("navbar");
         navbar.setOutputMarkupId(true);
         navbar.setPosition(Navbar.Position.TOP);
+        navbar.setCollapseBreakdown(Navbar.CollapseBreakpoint.Medium);
         navbar.setBrandName(Model.of(ParticipateApplication.get().getApplicationName()));
         navbar.addComponents(NavbarComponents.transform(
                 Navbar.ComponentPosition.LEFT,
-            new NavbarButton(EventsPage.class, new ResourceModel("events", "Events")).setIconType(FontAwesome5IconType.calendar_s)));
-        navbar.addComponents(NavbarComponents.transform(
-                Navbar.ComponentPosition.LEFT,
+            new NavbarButton(EventsPage.class, new ResourceModel("events", "Events")).setIconType(FontAwesome5IconType.calendar_s),
             new NavbarButton(SingersPage.class, new ResourceModel("singers", "Singers")).setIconType(FontAwesome5IconType.users_s)));
         navbar.addComponents(NavbarComponents.transform(
                 Navbar.ComponentPosition.RIGHT,

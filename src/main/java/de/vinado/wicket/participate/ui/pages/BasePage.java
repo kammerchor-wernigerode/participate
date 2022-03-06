@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.ui.pages;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.HtmlTag;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.IeEdgeMetaTag;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.MetaTag;
@@ -7,6 +8,7 @@ import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.resources.css.SnackbarCssResourceReference;
 import de.vinado.wicket.participate.resources.js.SnackbarJsResourceReference;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.head.CssReferenceHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
@@ -45,11 +47,17 @@ public abstract class BasePage extends WebPage {
 
         addModal(ParticipatePage.MODAL_ID);
 
-        add(new HtmlTag("html", Locale.getDefault()));
+        add(html("html"));
         add(new IeEdgeMetaTag("xUaCompatible"));
         add(new MetaTag("author", Model.of("author"), Model.of("Vincent Nadoll, Julius Felchow")));
 
         add(new HeaderResponseContainer("footer-container", "footer-container"));
+    }
+
+    private Component html(String id) {
+        HtmlTag tag = new HtmlTag(id, Locale.getDefault());
+        tag.add(new CssClassNameAppender("h-100"));
+        return tag;
     }
 
     /**

@@ -5,11 +5,15 @@
 </head>
 <body>
 <wicket:extend>
-    <nav wicket:id="navbar"></nav>
+    <header>
+        <nav wicket:id="navbar"></nav>
+    </header>
 
-    <wicket:child/>
+    <main class="flex-shrink-0">
+        <wicket:child/>
+    </main>
 
-    <footer wicket:id="footer"></footer>
+    <footer class="mt-auto py-3 bg-light" wicket:id="footer"></footer>
 </wicket:extend>
 </body>
 </html>
