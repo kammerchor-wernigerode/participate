@@ -38,8 +38,6 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 
-import static de.vinado.wicket.participate.components.Models.map;
-
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
@@ -110,7 +108,7 @@ public class EventPanel extends BreadCrumbPanel implements IGenericComponent<Eve
     }
 
     private ParticipantDataProvider dataProvider() {
-        return new ParticipantDataProvider(map(getModel(), EventDetails::getEvent), eventService, filterModel, personContext);
+        return new ParticipantDataProvider(getModel().map(EventDetails::getEvent), eventService, filterModel, personContext);
     }
 
     private void edit(AjaxRequestTarget target, IModel<Participant> rowModel) {

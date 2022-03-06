@@ -28,8 +28,6 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import static de.vinado.wicket.participate.components.Models.map;
-
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
@@ -128,7 +126,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         // Unterer Bereich
         IModel<ParticipantFilter> filterModel = new CompoundPropertyModel<>(new ParticipantFilter());
         final BootstrapPanel<Event> listPanel = new BootstrapPanel<Event>("listPanel",
-            map(model, EventDetails::getEvent), new PropertyModel<>(model, "name")) {
+            model.map(EventDetails::getEvent), new PropertyModel<>(model, "name")) {
             @Override
             protected Panel newBodyPanel(final String id, final IModel<Event> model) {
                 EventSummaryListPanel panel = new EventSummaryListPanel(id, model, filterModel, editable);

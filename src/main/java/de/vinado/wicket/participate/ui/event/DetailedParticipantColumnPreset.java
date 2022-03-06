@@ -17,8 +17,6 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
 
 import java.text.SimpleDateFormat;
 
-import static de.vinado.wicket.participate.components.Models.map;
-
 /**
  * @author Vincent Nadoll
  */
@@ -88,7 +86,7 @@ public class DetailedParticipantColumnPreset extends BasicParticipantColumnPrese
             @Override
             public void populateItem(Item<ICellPopulator<Participant>> item,
                                      String componentId, IModel<Participant> rowModel) {
-                item.add(new ShortenedMultilineLabel(componentId, map(rowModel, Participant::getComment), new ShortenedMultilineLabel.Limit(100)));
+                item.add(new ShortenedMultilineLabel(componentId, rowModel.map(Participant::getComment), new ShortenedMultilineLabel.Limit(100)));
             }
 
             @Override

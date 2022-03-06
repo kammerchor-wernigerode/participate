@@ -74,7 +74,7 @@ public class ShortenedMultilineLabel extends GenericPanel<String> {
     }
 
     private IModel<String> textModel() {
-        return Models.map(getModel(), text -> state.render(text, limit));
+        return getModel().map(text -> state.render(text, limit));
     }
 
     private ToggleButton button() {
