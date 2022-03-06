@@ -39,7 +39,6 @@ import net.fortuna.ical4j.model.property.Version;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.util.string.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
@@ -80,7 +79,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @Service
 @Transactional
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class EventServiceImpl extends DataService implements EventService {
 
     private final PersonService personService;

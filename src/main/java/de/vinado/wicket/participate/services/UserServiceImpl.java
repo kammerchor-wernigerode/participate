@@ -16,7 +16,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.string.Strings;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +43,7 @@ import java.util.List;
 @Service
 @Transactional
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class UserServiceImpl extends DataService implements UserService {
 
     private final PersonService personService;

@@ -6,7 +6,6 @@ import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
@@ -26,7 +25,7 @@ import static java.util.Locale.getDefault;
 @Slf4j
 @Primary
 @Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class FreemarkerTemplateService implements TemplateService {
 
     private static final String UTF_8 = StandardCharsets.UTF_8.name();
