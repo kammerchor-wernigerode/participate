@@ -40,7 +40,8 @@ public class BasicParticipantColumnPreset extends ParticipantColumnListDecorator
     }
 
     private static IColumn<Participant, SerializableFunction<Participant, ?>> invitationStatusColumn() {
-        return new AbstractColumn<Participant, SerializableFunction<Participant, ?>>(Model.of("")) {
+        return new AbstractColumn<Participant, SerializableFunction<Participant, ?>>(Model.of(""),
+            with(Participant::getInvitationStatus).andThen(Enum::ordinal)) {
             @Override
             public void populateItem(Item<ICellPopulator<Participant>> item,
                                      String componentId, IModel<Participant> rowModel) {
