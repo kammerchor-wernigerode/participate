@@ -1,30 +1,62 @@
 <!DOCTYPE html>
-<html xmlns:wicket="http://wicket.apache.org">
+<html xmlns:wicket="http://wicket.apache.org" wicket:id="html">
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="UTF-8">
+    <meta wicket:id="author">
+    <meta wicket:id="xUaCompatible">
+
+    <title wicket:id="title"></title>
+
+    <wicket:header-items/>
 </head>
-<wicket:extend>
-    <div class="container">
-        <div class="clearfix" style="margin-top: 70px;"></div>
-        <div class="row">
-            <div class="col-md-offset-3 col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h1 class="panel-title">
-                            <i class="fa fa-user"></i>
-                            <wicket:message key="login.label">Login</wicket:message>
-                        </h1>
-                    </div>
-                    <div class="panel-body">
-                        <fieldset>
-                            <legend>Participate</legend>
-                            <div wicket:id="signInPanel"></div>
-                        </fieldset>
-                    </div>
+<body>
+<main class="container">
+    <div class="clearfix mt-5"></div>
+    <div class="row justify-content-md-center mb-3">
+        <div class="col-md-6 align-self-center">
+            <div class="card">
+                <h5 class="card-header">
+                    <i class="fa fa-sign-in-alt" aria-hidden="true"></i>
+                    <wicket:message key="login.label">Login</wicket:message>
+                </h5>
+                <div class="card-body">
+                    <fieldset>
+                        <legend wicket:id="customer"></legend>
+                    </fieldset>
+                    <div wicket:id="signInPanel"></div>
                 </div>
-                <div wicket:id="collapsible"></div>
             </div>
         </div>
     </div>
-</wicket:extend>
+
+    <div class="row justify-content-md-center">
+        <div class="col-md-6 align-self-center">
+            <div class="card">
+                <div class="card-header">
+                    <a data-bs-toggle="collapse" href="#collapseExample" role="button"
+                       aria-expanded="false"
+                       aria-controls="collapseExample">
+                        <wicket:message key="resetPasswordQ">Forgot Password?</wicket:message>
+                    </a>
+                </div>
+                <form class="collapse card-body" id="collapseExample" wicket:id="passwordResetForm">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="input-addon-email"><i class="fas fa-at"
+                                                                                 aria-hidden="true"></i></span>
+                        <input type="email" class="form-control" placeholder="E-mail Address"
+                               aria-label="E-mail Address" aria-describedby="input-addon-email"
+                               wicket:message="placeholder:email,aria-label:email"
+                               wicket:id="email">
+                    </div>
+                    <button type="submit" class="btn btn-secondary" wicket:id="submit">
+                        <wicket:message key="password.reset">Reset Password</wicket:message>
+                    </button>
+                    <div wicket:id="feedback"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+<wicket:container wicket:id="footer-container"/>
+</body>
 </html>
