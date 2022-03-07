@@ -1,174 +1,200 @@
 package de.vinado.wicket.participate.components.panels;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.AbstractLink;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.AbstractItem;
-import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.Response;
+import org.apache.wicket.model.Model;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
+import org.danekja.java.util.function.serializable.SerializableFunction;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
 public class BootstrapPanel<T> extends GenericPanel<T> {
 
-    private static final String _PANEL_TITLE_ID = "panelTitle";
-    private static final String _PANEL_BODY_ID = "panelBody";
-    private static final String _PANEL_FOOTER_ID = "panelFooter";
-    private static final String _DEFAULT_BUTTON_ID = "defaultBtn";
-    private static final String _BUTTON_GROUP_ID = "btnGroup";
-    private static final String _DROP_DOWN_MENU_ID = "dropDownMenu";
-    private static final String _DEFAULT_BUTTON_ICON_ID = "icon";
 
-    private final IModel<String> titleModel;
+    private int dropdownFallbackActions = 0;
+    private int dropdownActions = 0;
 
-    private final Panel panelBody;
-    private AbstractLink defaultBtn;
-    private IconType defaultBtnIcon;
-    private IModel<String> defaultBtnLabelModel;
+    private RepeatingView quickAccessActionMenu;
+    private RepeatingView dropdownActionMenu;
+    private RepeatingView dropdownFallbackActionMenu;
 
-
-    public BootstrapPanel(final String id) {
-        this(id, null, null);
+    public BootstrapPanel(String id) {
+        super(id);
     }
 
-    public BootstrapPanel(final String id, final IModel<T> model, final IModel<String> titleModel) {
+    public BootstrapPanel(String id, IModel<T> model) {
         super(id, model);
+    }
 
-        this.titleModel = titleModel;
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
-        final Label panelTitle = newTitleLabel(_PANEL_TITLE_ID, getModel(), getTitleModel());
-        final WebMarkupContainer btnGroup = newBtnGroup(_BUTTON_GROUP_ID, getModel());
-        defaultBtn = newDefaultBtn(_DEFAULT_BUTTON_ID, getModel());
-        final RepeatingView dropDownMenu = newDropDownMenu(_DROP_DOWN_MENU_ID, getModel());
-        panelBody = newBodyPanel(_PANEL_BODY_ID, getModel());
-        final Panel panelFooter = newFooterPanel(_PANEL_FOOTER_ID, getModel());
+        add(new CssClassNameAppender("card"));
 
-        add(panelTitle);
-        add(btnGroup);
-        if (null == defaultBtn) {
-            defaultBtn = new ExternalLink(_DEFAULT_BUTTON_ID, "#");
-        } else {
-            final String defaultBtnLabel = null != getDefaultBtnLabelModel() ? getDefaultBtnLabelModel().getObject() : "Label not set!";
-            Panel iconPanel;
-            if (null != getDefaultBtnIcon()) {
-                iconPanel = new IconPanel(_DEFAULT_BUTTON_ICON_ID, getDefaultBtnIcon());
-            } else {
-                iconPanel = new EmptyPanel(_DEFAULT_BUTTON_ICON_ID);
+        WebMarkupContainer header;
+        add(header = cardHeader("header"));
+        header.setOutputMarkupId(true);
+
+        header.add(new Label("heading", titleModel()));
+        header.add(quickAccessActionMenu = new RepeatingView("actions"));
+
+        setupResponsiveActions(header);
+    }
+
+    protected WebMarkupContainer cardHeader(String id) {
+        return new WebMarkupContainer(id);
+    }
+
+    protected IModel<String> titleModel() {
+        return Model.of();
+    }
+
+    private void setupResponsiveActions(WebMarkupContainer header) {
+        Component collapseButton;
+        header.add(dropdownActionMenu()
+            .add(collapseButton = new WebMarkupContainer("dropdown-button").setOutputMarkupId(true))
+            .add(dropdownActionContainer(collapseButton)
+                .add(dropdownFallbackActionMenu = new RepeatingView("dropdown-fallback"))
+                .add(dropdownActionMenu = new RepeatingView("dropdown-menu"))
+            ));
+    }
+
+    private WebMarkupContainer dropdownActionMenu() {
+        return new WebMarkupContainer("menu-container") {
+            @Override
+            protected void onInitialize() {
+                super.onInitialize();
+                setOutputMarkupPlaceholderTag(true);
             }
-            iconPanel.add(new Behavior() {
-                @Override
-                public void afterRender(final Component component) {
-                    final Response r = component.getResponse();
-                    r.write(defaultBtnLabel);
-                }
-            });
-            defaultBtn.add(iconPanel);
-        }
-        btnGroup.add(defaultBtn);
-        btnGroup.add(dropDownMenu);
-        add(panelBody);
-        add(panelFooter);
-    }
 
-    public IModel<String> getTitleModel() {
-        return titleModel;
-    }
-
-    public IconType getDefaultBtnIcon() {
-        return defaultBtnIcon;
-    }
-
-    public void setDefaultBtnIcon(final IconType defaultBtnIcon) {
-        this.defaultBtnIcon = defaultBtnIcon;
-    }
-
-    public IModel<String> getDefaultBtnLabelModel() {
-        return defaultBtnLabelModel;
-    }
-
-    public void setDefaultBtnLabelModel(final IModel<String> defaultBtnLabelModel) {
-        this.defaultBtnLabelModel = defaultBtnLabelModel;
-    }
-
-    protected Label newTitleLabel(final String id, final IModel<T> model, final IModel<String> titleModel) {
-        return new Label(id, titleModel);
-    }
-
-    protected AbstractLink newDefaultBtn(final String id, final IModel<T> model) {
-        return null;
-    }
-
-    private WebMarkupContainer newBtnGroup(final String id, final IModel<T> model) {
-        final WebMarkupContainer btnGroup = new WebMarkupContainer(id, model);
-        btnGroup.setOutputMarkupPlaceholderTag(true);
-        btnGroup.setVisible(null != newDefaultBtn(_DEFAULT_BUTTON_ID, model));
-        return btnGroup;
-    }
-
-    protected RepeatingView newDropDownMenu(final String id, final IModel<T> model) {
-        final RepeatingView dropDownMenu = new RepeatingView(id, model) {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-                if (size() <= 0) {
-                    defaultBtn.add(new AttributeModifier("style",
-                            "border-bottom-right-radius: 3px; border-top-right-radius: 3px;"));
-                    setVisible(false);
+                setVisible(hasAnyDropdownItems());
+                hideResponsively();
+            }
+
+            private void hideResponsively() {
+                if (hasNoDropdownOnlyItems()) {
+                    add(new CssClassNameAppender("d-inline-block d-sm-none"));
                 }
+            }
+
+            private boolean hasAnyDropdownItems() {
+                return !hasNoDropdownOnlyItems() || dropdownFallbackActions != 0;
+            }
+
+            private boolean hasNoDropdownOnlyItems() {
+                return dropdownActions == 0;
             }
         };
-        dropDownMenu.setOutputMarkupPlaceholderTag(true);
-        return dropDownMenu;
     }
 
-    protected Panel newBodyPanel(final String id, final IModel<T> model) {
-        final Panel emptyPanel = new EmptyPanel(id);
-        emptyPanel.setDefaultModel(null);
-        return emptyPanel;
-    }
-
-    public Panel getPanelBody() {
-        return panelBody;
-    }
-
-    protected Panel newFooterPanel(final String id, final IModel<T> model) {
-        final Panel emptyPanel = new EmptyPanel(id);
-        emptyPanel.setDefaultModel(null);
-        emptyPanel.setVisible(false);
-        return emptyPanel;
-    }
-
-    protected abstract class DropDownItem extends AbstractItem {
-
-        private static final String _LINK_ID = "link";
-        private static final String _LABEL_ID = "label";
-        private static final String _ICON_ID = "icon";
-
-        public DropDownItem(final String id, final IModel<String> labelModel, final IconType icon) {
-            super(id);
-
-            add(new AjaxLink<Void>(_LINK_ID) {
-                @Override
-                public void onClick(final AjaxRequestTarget target) {
-                    DropDownItem.this.onClick(target);
-                }
+    private WebMarkupContainer dropdownActionContainer(Component collapseButton) {
+        return new WebMarkupContainer("dropdown-container") {
+            @Override
+            protected void onInitialize() {
+                super.onInitialize();
+                add(AttributeAppender.append("aria-labelledby", collapseButton.getMarkupId()));
             }
-                    .add(new Label(_LABEL_ID, labelModel))
-                    .add(null != icon ? new IconPanel(_ICON_ID, icon) : new EmptyPanel(_ICON_ID)));
+        };
+    }
+
+    protected void addQuickAccessAction(SerializableFunction<String, AbstractAction> constructor) {
+        AbstractAction action = constructor.apply(nextQuickAccessActionId());
+        quickAccessActionMenu.add(action);
+        dropdownFallbackActions++;
+        dropdownFallbackActionMenu.add(constructor.apply(nextDropdownFallbackActionId()));
+    }
+
+    private String nextQuickAccessActionId() {
+        return quickAccessActionMenu.newChildId();
+    }
+
+    private String nextDropdownFallbackActionId() {
+        return dropdownFallbackActionMenu.newChildId();
+    }
+
+    protected void addDropdownAction(SerializableFunction<String, AbstractAction> constructor) {
+        AbstractAction action = constructor.apply(nextDropdownActionId());
+        dropdownActions++;
+        dropdownActionMenu.add(action);
+    }
+
+    private String nextDropdownActionId() {
+        return dropdownActionMenu.newChildId();
+    }
+
+
+    public static abstract class AbstractAction extends AbstractItem {
+
+        private final IconType icon;
+
+        public AbstractAction(String id, IModel<String> labelModel, IconType icon) {
+            super(id, labelModel);
+            this.icon = icon;
         }
 
-        protected abstract void onClick(final AjaxRequestTarget target);
+        @Override
+        protected void onInitialize() {
+            super.onInitialize();
+
+            add(link("link")
+                .add(icon())
+                .add(label()));
+        }
+
+        protected abstract AbstractLink link(String id);
+
+        private Component icon() {
+            return new Icon("icon", icon);
+        }
+
+        private Component label() {
+            return new Label("label", getDefaultModel())
+                .setRenderBodyOnly(true);
+        }
+    }
+
+    public static abstract class AjaxAction extends AbstractAction {
+
+        public AjaxAction(String id, IModel<String> labelModel, IconType icon) {
+            super(id, labelModel, icon);
+        }
+
+        public static SerializableFunction<String, AbstractAction> create(IModel<String> labelModel, IconType icon,
+                                                                          SerializableConsumer<AjaxRequestTarget> clickHandler) {
+            return id -> new AjaxAction(id, labelModel, icon) {
+                @Override
+                protected void onClick(AjaxRequestTarget target) {
+                    clickHandler.accept(target);
+                }
+            };
+        }
+
+        protected AbstractLink link(String id) {
+            return new AjaxLink<Void>(id) {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    AjaxAction.this.onClick(target);
+                }
+            };
+        }
+
+        protected abstract void onClick(AjaxRequestTarget target);
     }
 }

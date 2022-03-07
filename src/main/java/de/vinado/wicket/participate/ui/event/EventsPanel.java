@@ -3,15 +3,22 @@ package de.vinado.wicket.participate.ui.event;
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.ParticipateSession;
+import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.panels.AjaxLinkPanel;
+import de.vinado.wicket.participate.components.panels.BootstrapPanel;
+import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventUpdateEvent;
+import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
+import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import de.vinado.wicket.participate.services.EventService;
+import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
@@ -20,7 +27,6 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
@@ -37,20 +43,17 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class EventsPanel extends Panel {
+public class EventsPanel extends BootstrapPanel<List<EventDetails>> {
 
     @SpringBean
     @SuppressWarnings("unused")
     private EventService eventService;
-
-    private IModel<List<EventDetails>> model;
 
     private SimpleDataProvider<EventDetails, String> dataProvider;
     private BootstrapAjaxDataTable<EventDetails, String> dataTable;
 
     public EventsPanel(final String id, final IModel<List<EventDetails>> model) {
         super(id, model);
-        this.model = model;
 
         final TooltipConfig tooltipConfig = new TooltipConfig();
         tooltipConfig.withDelay(Duration.of(300L, ChronoUnit.MILLIS));
@@ -145,14 +148,45 @@ public class EventsPanel extends Panel {
     }
 
     @Override
+    protected IModel<String> titleModel() {
+        return new ResourceModel("overview", "Overview");
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        addQuickAccessAction(AjaxAction.create(new ResourceModel("event.add", "Add Event"),
+            FontAwesome5IconType.plus_s,
+            this::onAdd));
+    }
+
+    private void onAdd(AjaxRequestTarget target) {
+        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        modal.setContent(new AddEditEventPanel(modal, new ResourceModel("event.add", "Add Event"), new CompoundPropertyModel<>(new EventDTO())) {
+            @Override
+            public void onUpdate(final Event savedEvent, final AjaxRequestTarget target) {
+                ParticipateSession.get().setEvent(savedEvent);
+                send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(savedEvent, target));
+                send(getPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
+                Snackbar.show(target, new ResourceModel("event.add.success", "A new event has been added"));
+            }
+        });
+        modal.show(target);
+    }
+
+    protected void onAfterAdd(AjaxRequestTarget target) {
+    }
+
+    @Override
     public void onEvent(final IEvent<?> iEvent) {
         super.onEvent(iEvent);
         final Object payload = iEvent.getPayload();
         if (payload instanceof AjaxUpdateEvent) {
             final AjaxUpdateEvent updateEvent = (AjaxUpdateEvent) payload;
             final AjaxRequestTarget target = updateEvent.getTarget();
-            model.setObject(eventService.getUpcomingEventDetails());
-            dataProvider.set(model.getObject());
+            setModelObject(eventService.getUpcomingEventDetails());
+            dataProvider.set(getModelObject());
             target.add(dataTable);
         }
     }

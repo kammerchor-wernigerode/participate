@@ -5,10 +5,8 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
-import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventSummaryUpdateEvent;
-import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
@@ -21,7 +19,6 @@ import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
@@ -125,16 +122,10 @@ public class EventSummaryPanel extends BreadCrumbPanel {
 
         // Unterer Bereich
         IModel<ParticipantFilter> filterModel = new CompoundPropertyModel<>(new ParticipantFilter());
-        final BootstrapPanel<Event> listPanel = new BootstrapPanel<Event>("listPanel",
-            model.map(EventDetails::getEvent), new PropertyModel<>(model, "name")) {
-            @Override
-            protected Panel newBodyPanel(final String id, final IModel<Event> model) {
-                EventSummaryListPanel panel = new EventSummaryListPanel(id, model, filterModel, editable);
-                panel.add(new UpdateOnEventBehavior<>(ParticipantFilterIntent.class));
-                panel.add(new UpdateOnEventBehavior<>(ParticipantTableUpdateIntent.class));
-                return panel;
-            }
-        };
+
+        EventSummaryListPanel listPanel = new EventSummaryListPanel("listPanel", model.map(EventDetails::getEvent), filterModel, editable);
+        listPanel.add(new UpdateOnEventBehavior<>(ParticipantFilterIntent.class));
+        listPanel.add(new UpdateOnEventBehavior<>(ParticipantTableUpdateIntent.class));
         listPanel.setOutputMarkupId(true);
         wmc.add(listPanel);
     }

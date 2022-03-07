@@ -16,6 +16,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.danekja.java.util.function.serializable.SerializableFunction;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -81,8 +82,16 @@ public class FormPage extends BasePage {
         add(breadcrumb);
 
         IModel<ParticipantFilter> participantFilter = new CompoundPropertyModel<>(new ParticipantFilter());
-        final EventPanel eventPanel = new EventPanel("eventPanel", breadcrumb,
-            new CompoundPropertyModel<>(eventService.getEventDetails(model.getObject().getEvent())), false, () -> model.getObject().getSinger(), participantFilter);
+        final EventPanel eventPanel = new EventPanel("eventPanel", null,
+            new CompoundPropertyModel<>(eventService.getEventDetails(model.getObject().getEvent())), false, () -> model.getObject().getSinger(), participantFilter) {
+            @Override
+            protected void addQuickAccessAction(SerializableFunction<String, AbstractAction> constructor) {
+            }
+
+            @Override
+            protected void addDropdownAction(SerializableFunction<String, AbstractAction> constructor) {
+            }
+        };
         add(eventPanel);
 
         final FormPanel formPanel = new FormPanel("formPanel", breadcrumb,

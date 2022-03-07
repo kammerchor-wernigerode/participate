@@ -2,6 +2,7 @@ package de.vinado.wicket.participate.ui.singers;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
+import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.components.tables.columns.BootstrapAjaxLinkColumn;
@@ -22,7 +23,6 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class SingersPanel extends Panel {
+public class SingersPanel extends BootstrapPanel<List<Singer>> {
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -43,15 +43,11 @@ public class SingersPanel extends Panel {
     @SpringBean
     private EmailBuilderFactory emailBuilderFactory;
 
-    private IModel<List<Singer>> model;
-
     private SimpleDataProvider<Singer, String> dataProvider;
     private BootstrapAjaxDataTable<Singer, String> dataTable;
 
     public SingersPanel(final String id, final IModel<List<Singer>> model) {
         super(id, model);
-
-        this.model = model;
 
         final SingerFilterPanel filterPanel = new SingerFilterPanel("filterPanel", model, new CompoundPropertyModel<>(new SingerFilter())) {
             @Override
@@ -110,14 +106,48 @@ public class SingersPanel extends Panel {
     }
 
     @Override
+    protected IModel<String> titleModel() {
+        return new ResourceModel("singers", "Singers");
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        addQuickAccessAction(AjaxAction.create(new ResourceModel("singer.add", "Add Singer"),
+            FontAwesome5IconType.plus_s,
+            this::add));
+        addDropdownAction(AjaxAction.create(new ResourceModel("email.send", "Send Email"),
+            FontAwesome5IconType.envelope_s,
+            this::email));
+    }
+
+    private void add(AjaxRequestTarget target) {
+        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        modal.setContent(new AddEditSingerPanel(modal, new ResourceModel("singer.add", "Add Singer"),
+            new CompoundPropertyModel<>(new SingerDTO())));
+        modal.show(target);
+    }
+
+    private void email(AjaxRequestTarget target) {
+        Email mailData = emailBuilderFactory.create()
+            .toPeople(getModelObject())
+            .build();
+
+        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
+        modal.show(target);
+    }
+
+    @Override
     public void onEvent(final IEvent<?> event) {
         super.onEvent(event);
         final Object payload = event.getPayload();
         if (payload instanceof SingerUpdateEvent) {
             final SingerUpdateEvent updateEvent = (SingerUpdateEvent) payload;
             final AjaxRequestTarget target = updateEvent.getTarget();
-            model.setObject(personService.getSingers());
-            dataProvider.set(model.getObject());
+            setModelObject(personService.getSingers());
+            dataProvider.set(getModelObject());
             target.add(dataTable);
         }
     }
