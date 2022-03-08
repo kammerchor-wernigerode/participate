@@ -14,10 +14,8 @@ import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.Terminable;
 import de.vinado.wicket.participate.model.User;
-import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
-import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.model.ical4j.SimpleDateProperty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +54,6 @@ import javax.persistence.criteria.Root;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -703,44 +700,6 @@ public class EventServiceImpl extends DataService implements EventService {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("UnsupportedEncodingException", e);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Participant> getFilteredParticipants(final Event event, final ParticipantFilter filter) {
-        if (null == filter) {
-            return getParticipants(event);
-        }
-
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Join<Participant, Singer> singerJoin = root.join("singer");
-
-        final List<Predicate> predicates = new ArrayList<>();
-        predicates.add(criteriaBuilder.equal(root.<Event>get("event"), event));
-
-        final String searchTerm = filter.getName();
-        if (!Strings.isEmpty(searchTerm))
-            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(singerJoin.get("displayName")), "%" + searchTerm + "%"));
-
-        final Voice voice = filter.getVoice();
-        if (null != voice)
-            predicates.add(criteriaBuilder.equal(singerJoin.get("voice"), voice));
-
-        final InvitationStatus invitationStatus = filter.getInvitationStatus();
-        if (null != invitationStatus)
-            predicates.add(criteriaBuilder.equal(root.get("invitationStatus"), invitationStatus));
-
-        if (filter.isNotInvited()) {
-            predicates.add(criteriaBuilder.notEqual(root.get("invitationStatus"), InvitationStatus.UNINVITED));
-        }
-
-        criteriaQuery.where(predicates.toArray(new Predicate[0]));
-        criteriaQuery.orderBy(criteriaBuilder.asc(singerJoin.get("lastName")));
-        return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
     @Override
