@@ -13,6 +13,7 @@ import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * The service takes care of {@link Event} and Event related objects.
@@ -313,14 +314,6 @@ public interface EventService {
     void inviteParticipant(Participant participant, User organizer);
 
     /**
-     * Fetches all {@link EventDetails} that matches the {@link EventFilter}.
-     *
-     * @param eventFilter {@link EventFilter}
-     * @return List of filtered {@link EventDetails}
-     */
-    List<EventDetails> getFilteredEventDetails(EventFilter eventFilter);
-
-    /**
      * Fetches all {@link Participant} where the {@link Event} is present. The result is filtered by
      * {@link ParticipantFilter} and ordered by {@link Person#lastName}.
      *
@@ -335,4 +328,6 @@ public interface EventService {
      * @return {@code true} if the the given participant missed the deadline; {@code false} otherwise
      */
     boolean hasDeadlineExpired(Participant participant);
+
+    Stream<EventDetails> listAll();
 }

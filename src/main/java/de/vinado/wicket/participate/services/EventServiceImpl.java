@@ -17,7 +17,6 @@ import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
-import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.model.ical4j.SimpleDateProperty;
 import lombok.RequiredArgsConstructor;
@@ -710,63 +709,6 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public List<EventDetails> getFilteredEventDetails(final EventFilter eventFilter) {
-        if (null == eventFilter) {
-            return getUpcomingEventDetails();
-        }
-
-        if (eventFilter.isShowAll()) {
-            return getAll(EventDetails.class);
-        }
-
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
-        final Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
-
-        final List<Predicate> orPredicates = new ArrayList<>();
-        final List<Predicate> andPredicates = new ArrayList<>();
-
-        final String searchTerm = eventFilter.getSearchTerm();
-        if (!Strings.isEmpty(eventFilter.getSearchTerm())) {
-            orPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")),
-                "%" + searchTerm.toLowerCase() + "%"));
-            orPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("eventType")),
-                "%" + searchTerm.toLowerCase() + "%"));
-            orPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("location")),
-                "%" + searchTerm.toLowerCase() + "%"));
-        }
-
-        final Date startDate = eventFilter.getStartDate();
-        if (null != startDate) {
-            // if (event.endDate >= startDate)
-            andPredicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("startDate"), startDate));
-        } else {
-            andPredicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("startDate"), new Date()));
-        }
-
-        final Date endDate = eventFilter.getEndDate();
-        if (null != endDate) {
-            // if (event.endDate <= endDate)
-            andPredicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("endDate"), endDate));
-        }
-
-        if (!andPredicates.isEmpty() && orPredicates.isEmpty()) {
-            criteriaQuery.where(andPredicates.toArray(new Predicate[0]));
-        } else if (andPredicates.isEmpty() && !orPredicates.isEmpty()) {
-            criteriaQuery.where(criteriaBuilder.or(orPredicates.toArray(new Predicate[0])));
-        } else {
-            final Predicate and = criteriaBuilder.and(andPredicates.toArray(new Predicate[0]));
-            final Predicate or = criteriaBuilder.or(orPredicates.toArray(new Predicate[0]));
-            criteriaQuery.where(and, or);
-        }
-
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public List<Participant> getFilteredParticipants(final Event event, final ParticipantFilter filter) {
         if (null == filter) {
             return getParticipants(event);
@@ -810,6 +752,11 @@ public class EventServiceImpl extends DataService implements EventService {
         LocalDate now = LocalDate.now();
         LocalDate startDate = toLocalDate(participant.getEvent().getStartDate());
         return applicationProperties.getDeadlineOffset() >= DAYS.between(now, startDate);
+    }
+
+    @Override
+    public Stream<EventDetails> listAll() {
+        return getAll(EventDetails.class).stream();
     }
 
     private static Predicate forUpcomingDate(final CriteriaBuilder criteriaBuilder, final Path<? extends Terminable> eventPath) {

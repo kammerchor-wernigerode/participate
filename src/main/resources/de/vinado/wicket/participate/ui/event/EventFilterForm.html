@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<wicket:eventFilterForm>
+    <input wicket:id="searchTerm">
+    <input wicket:id="startDate">
+    <input wicket:id="endDate">
+    <input type="checkbox" wicket:id="showAll">
+    <wicket:child/>
+    <div class="form-group form-group-sm pull-right">
+        <div class="btn-group btn-group-sm" role="group" aria-label="Filter actions">
+            <a wicket:id="reset"></a>
+            <a wicket:id="apply">
+                <i wicket:id="icon"></i>
+            </a>
+        </div>
+    </div>
+</wicket:eventFilterForm>
+</body>
+</html>
