@@ -38,6 +38,7 @@ public abstract class BootstrapAjaxLinkColumn<T, S> extends AbstractColumn<T, S>
                 BootstrapAjaxLinkColumn.this.onClick(target, rowModel);
             }
         };
+        link.setRenderBodyOnly(true);
         cellItem.add(link);
     }
 
