@@ -1,11 +1,13 @@
 package de.vinado.wicket.participate.behavoirs.decorators;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
@@ -42,6 +44,8 @@ public class BootstrapInlineFormDecorator extends AbstractBootstrapFormDecorator
     public void beforeRender(final Component component) {
         final FormComponent<?> fc = (FormComponent<?>) component;
         final Response r = component.getResponse();
+        String namespace = fc.getMarkup().getMarkupResourceStream().getWicketNamespace();
+        boolean wicketAttributes = stripWicketTags();
 
         final boolean required = fc.isRequired();
         final boolean invalid = !fc.isValid();
@@ -49,20 +53,27 @@ public class BootstrapInlineFormDecorator extends AbstractBootstrapFormDecorator
         final boolean checkGroup = fc instanceof CheckGroup;
         final boolean checkBox = fc instanceof CheckBox;
 
-        if (!checkBox && !radioGroup && !checkGroup) {
-            r.write("<div id=\"" + getAjaxRegionMarkupId(component) + "\" " +
-                    "class=\"form-group form-group-sm" +
-                    (invalid ? " has-error" : "") +
-                    "\">\n");
-        }
+        ComponentTag formGroup = new ComponentTag("div", XmlTag.TagType.OPEN);
+        formGroup.setId(getAjaxRegionMarkupId(component));
+        formGroup.put("class", "col-12");
+        formGroup.writeOutput(r, wicketAttributes, namespace);
 
         if (checkBox) {
-            if (invalid) {
-                r.write("<div class=\"has-error\">\n");
-            }
-            r.write("<div class=\"checkbox\">\n");
-            r.write("<label class=\"" + (invalid ? "has-error" : "") + (required ? " required" : "") + "\"" +
-                    " for=\"" + fc.getMarkupId() + "\">\n");
+            ComponentTag checkbox = new ComponentTag("div", XmlTag.TagType.OPEN);
+            checkbox.put("class", "form-check");
+            checkbox.writeOutput(r, wicketAttributes, namespace);
+        } else {
+            ComponentTag labelOpen = new ComponentTag("label", XmlTag.TagType.OPEN);
+            labelOpen.put("class", "visually-hidden");
+            labelOpen.put("for", fc.getMarkupId());
+            labelOpen.writeOutput(r, wicketAttributes, namespace);
+
+            String defaultPlaceholder = null == fc.getLabel() ? fc.getDefaultLabel() : fc.getLabel().getObject();
+            String placeholder = null == placeholderModel ? defaultPlaceholder : placeholderModel.getObject();
+            r.write(Strings.escapeMarkup(placeholder) + (required ? " *" : ""));
+
+            new ComponentTag("label", XmlTag.TagType.CLOSE)
+                .writeOutput(r, wicketAttributes, namespace);
         }
     }
 
@@ -73,15 +84,16 @@ public class BootstrapInlineFormDecorator extends AbstractBootstrapFormDecorator
         final String defaultPlaceholder = null == fc.getLabel() ? fc.getDefaultLabel() : fc.getLabel().getObject();
         final String placeholder = null == placeholderModel ? defaultPlaceholder : placeholderModel.getObject();
 
+        final boolean invalid = !fc.isValid();
         final boolean checkBox = fc instanceof CheckBox;
         final boolean radioGroup = fc instanceof RadioGroup;
         final boolean checkGroup = fc instanceof CheckGroup;
 
-        if (!checkBox && !radioGroup && !checkGroup) {
-            tag.put("class", "form-control");
-            if (null != placeholder) {
-                tag.put("placeholder", placeholder);
-            }
+        tag.put("class", checkBox ? "form-check-input" : "form-control form-control-sm");
+        tag.put("class", tag.getAttribute("class") + (invalid ? " is-invalid" : ""));
+
+        if (null != placeholder) {
+            tag.put("placeholder", placeholder);
         }
     }
 
@@ -89,9 +101,8 @@ public class BootstrapInlineFormDecorator extends AbstractBootstrapFormDecorator
     public void afterRender(final Component component) {
         final FormComponent<?> fc = (FormComponent<?>) component;
         final Response r = component.getResponse();
-
-        final String defaultPlaceholder = null == fc.getLabel() ? fc.getDefaultLabel() : fc.getLabel().getObject();
-        final String placeholder = null == placeholderModel ? defaultPlaceholder : placeholderModel.getObject();
+        String namespace = fc.getMarkup().getMarkupResourceStream().getWicketNamespace();
+        boolean wicketAttributes = stripWicketTags();
 
         final boolean required = fc.isRequired();
         final boolean invalid = !fc.isValid();
@@ -99,22 +110,32 @@ public class BootstrapInlineFormDecorator extends AbstractBootstrapFormDecorator
         final boolean checkGroup = fc instanceof CheckGroup;
         final boolean checkBox = fc instanceof CheckBox;
 
-        if (checkBox) {
-            r.write(" " + Strings.escapeMarkup(placeholder));
-            r.write((required ? " *" : "") + "</label>\n");
-            r.write("</div>\n");
-            if (invalid) {
-                r.write("</div>\n");
-            }
-        }
+        ComponentTag formGroup = new ComponentTag("div", XmlTag.TagType.CLOSE);
 
-        if (!checkBox && !radioGroup && !checkGroup) {
-            r.write("</div>\n");
+        if (checkBox) {
+            ComponentTag labelOpen = new ComponentTag("label", XmlTag.TagType.OPEN);
+            labelOpen.put("class", "form-check-label");
+            labelOpen.put("for", fc.getMarkupId());
+            labelOpen.writeOutput(r, wicketAttributes, namespace);
+
+            String defaultPlaceholder = null == fc.getLabel() ? fc.getDefaultLabel() : fc.getLabel().getObject();
+            String placeholder = null == placeholderModel ? defaultPlaceholder : placeholderModel.getObject();
+            r.write(" " + Strings.escapeMarkup(placeholder) + (required ? " *" : ""));
+
+            new ComponentTag("label", XmlTag.TagType.CLOSE)
+                .writeOutput(r, wicketAttributes, namespace);
+
+            formGroup.writeOutput(r, wicketAttributes, namespace);
         }
+        formGroup.writeOutput(r, wicketAttributes, namespace);
     }
 
     @Override
     protected String getMarkupSuffix() {
         return "bifd";
+    }
+
+    private boolean stripWicketTags() {
+        return Application.get().getMarkupSettings().getStripWicketTags();
     }
 }

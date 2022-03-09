@@ -60,7 +60,7 @@ public abstract class ParticipantFilterForm extends Form<ParticipantFilter> {
         add(apply = applyButton("apply"));
         setDefaultButton(apply);
 
-        add(new CssClassNameAppender("form-inline clearfix"));
+        add(new CssClassNameAppender("row row-cols-lg-auto g-3 align-items-center"));
         visitChildren(FormComponent.class, (IVisitor<FormComponent<?>, Void>) (component, visit) -> {
             if (!(component instanceof Button)) {
                 component.add(BootstrapInlineFormDecorator.decorate());
@@ -90,7 +90,7 @@ public abstract class ParticipantFilterForm extends Form<ParticipantFilter> {
     }
 
     protected AbstractLink resetButton(String id) {
-        BootstrapAjaxLink<Void> button = new BootstrapAjaxLink<>(id, Buttons.Type.Default) {
+        BootstrapAjaxLink<Void> button = new BootstrapAjaxLink<>(id, Buttons.Type.Outline_Secondary) {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 resetFilter();
