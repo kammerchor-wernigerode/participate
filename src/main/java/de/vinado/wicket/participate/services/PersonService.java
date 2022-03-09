@@ -12,6 +12,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * This service takes care of {@link Singer} and singer related objects.
@@ -155,14 +156,6 @@ public interface PersonService {
     List<Singer> findSingers(String term);
 
     /**
-     * Fetches all {@link Singer}s that matches the {@link SingerFilter}.
-     *
-     * @param singerFilter {@link SingerFilter}
-     * @return List of filtered {@link Singer}s
-     */
-    List<Singer> getFilteredSingerList(SingerFilter singerFilter);
-
-    /**
      * Handles the import of a CSV file with entries of {@link Person}s. The method need Wickets {@link FileUpload}
      * component. The columns has to be separated through comma.
      *
@@ -176,4 +169,6 @@ public interface PersonService {
      * @return {@link StringResourceStream}
      */
     IResourceStream exportSingers();
+
+    Stream<Singer> listAllSingers();
 }

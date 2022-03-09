@@ -132,3 +132,31 @@ main > {
         width: var(--cell-width-adp);
     }
 }
+
+.singers td {
+    --cell-width-name: 300px;
+    --cell-width-emailAddress: 350px;
+    --cell-width-voice: calc(100% - var(--cell-width-name) - var(--cell-width-emailAddress) - var(--acll-width-edit) - var(--acll-width-email));
+    --acll-width-edit: 40px;
+    --acll-width-email: 40px;
+
+    &.name {
+        width: var(--cell-width-name);
+    }
+
+    &.emailAddress {
+        width: var(--cell-width-emailAddress);
+    }
+
+    &.voice {
+        width: var(--cell-width-voice);
+    }
+
+    &.edit {
+        width: var(--acll-width-edit);
+    }
+
+    &.email {
+        width: var(--acll-width-email);
+    }
+}

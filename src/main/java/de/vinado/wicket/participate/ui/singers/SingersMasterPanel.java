@@ -1,5 +1,8 @@
 package de.vinado.wicket.participate.ui.singers;
 
+import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
+import de.vinado.wicket.participate.events.SingerUpdateEvent;
+import de.vinado.wicket.participate.model.filters.SingerFilter;
 import de.vinado.wicket.participate.services.PersonService;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
@@ -20,7 +23,12 @@ public class SingersMasterPanel extends BreadCrumbPanel {
     public SingersMasterPanel(final String id, final IBreadCrumbModel breadCrumbModel) {
         super(id, breadCrumbModel);
 
-        add(new SingersPanel("singersPanel", new CompoundPropertyModel<>(personService.getSingers())));
+        IModel<SingerFilter> filterModel = CompoundPropertyModel.of(new SingerFilter());
+        SingersPanel singersPanel;
+        add(singersPanel = new SingersPanel("singersPanel", filterModel));
+        singersPanel.add(new UpdateOnEventBehavior<>(SingerUpdateEvent.class));
+        singersPanel.add(new UpdateOnEventBehavior<>(SingerFilterIntent.class));
+        singersPanel.setOutputMarkupId(true);
     }
 
     @Override
