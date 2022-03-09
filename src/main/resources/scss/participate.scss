@@ -104,3 +104,31 @@ main > {
         }
     }
 }
+
+.events td {
+    --cell-width-name: 500px;
+    --cell-width-date: 187px;
+    --cell-width-type: calc(100% - var(--cell-width-name) - var(--cell-width-date) - var(--cell-width-location) - var(--cell-width-adp));
+    --cell-width-location: 180px;
+    --cell-width-adp: 80px;
+
+    &.name {
+        width: var(--cell-width-name);
+    }
+
+    &.date {
+        width: var(--cell-width-date);
+    }
+
+    &.type {
+        width: var(--cell-width-type);
+    }
+
+    &.location {
+        width: var(--cell-width-location);
+    }
+
+    &.adp {
+        width: var(--cell-width-adp);
+    }
+}

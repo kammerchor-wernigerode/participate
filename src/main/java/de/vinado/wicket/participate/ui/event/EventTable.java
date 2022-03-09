@@ -40,6 +40,13 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
         setItemReuseStrategy(DefaultItemReuseStrategy.getInstance());
     }
 
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        add(new CssClassNameAppender("events"));
+    }
+
     private static List<IColumn<EventDetails, SerializableFunction<EventDetails, ?>>> columns(
         SerializableBiConsumer<AjaxRequestTarget, IModel<EventDetails>> selectAction) {
         TooltipConfig tooltipConfig = new TooltipConfig();
@@ -119,6 +126,11 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
                 item.add(new Label(componentId, getDataModel(rowModel))
                     .add(new TooltipBehavior(new ResourceModel("event.a-d-p", "Accepted/Declined/Pending"), tooltipConfig))
                     .setOutputMarkupId(true));
+            }
+
+            @Override
+            public String getCssClass() {
+                return "adp";
             }
         };
     }
