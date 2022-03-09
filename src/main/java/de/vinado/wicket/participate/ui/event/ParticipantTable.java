@@ -50,7 +50,7 @@ public class ParticipantTable extends BootstrapAjaxDataTable<Participant, Serial
     protected Item<Participant> newRowItem(String id, int index, IModel<Participant> model) {
         Item<Participant> row = super.newRowItem(id, index, model);
         Person person = model.getObject().getSinger();
-        if (person.equals(personContext.get())) row.add(new CssClassNameAppender("bg-info"));
+        if (person.equals(personContext.get())) row.add(new CssClassNameAppender("table-primary"));
         return row;
     }
 

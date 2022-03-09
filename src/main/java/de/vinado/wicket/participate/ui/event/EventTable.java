@@ -140,7 +140,7 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
         final Item<EventDetails> item = super.newRowItem(id, index, model);
         final Long sessionEventId = ParticipateSession.get().getEvent().getId();
         if (null != sessionEventId && model.getObject().getId().equals(sessionEventId))
-            item.add(new CssClassNameAppender("bg-info"));
+            item.add(new CssClassNameAppender("table-primary"));
         return item;
     }
 
