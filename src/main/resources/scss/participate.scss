@@ -64,7 +64,7 @@ main > {
 
     &.participants-detailed {
         --cell-width-name: 200px;
-        --cell-width-voice: 100px;
+        --cell-width-voice: 110px;
         --cell-width-attribute: 180px;
         --cell-width-period: 140px;
         --cell-width-comment: calc(100% - var(--cell-width-invitationStatus) - var(--cell-width-name) - var(--cell-width-voice) - var(--cell-width-attribute) - var(--cell-width-period) - var(--cell-width-edit) - var(--cell-width-notify));
