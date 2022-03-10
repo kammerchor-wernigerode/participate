@@ -1,10 +1,10 @@
 package de.vinado.wicket.participate.behavoirs.decorators;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
@@ -57,35 +57,40 @@ public class BootstrapHorizontalFormDecorator extends AbstractBootstrapFormDecor
     public void beforeRender(final Component component) {
         final FormComponent<?> fc = (FormComponent<?>) component;
         final Response r = component.getResponse();
+        String namespace = fc.getMarkup().getMarkupResourceStream().getWicketNamespace();
+        boolean wicketAttributes = stripWicketTags();
 
         final String defaultLabel = null == fc.getLabel() ? fc.getDefaultLabel() : fc.getLabel().getObject();
         final String label = null == labelModel ? defaultLabel : labelModel.getObject();
 
         final boolean required = fc.isRequired();
-        final boolean invalid = !fc.isValid();
-        final boolean radioGroup = fc instanceof RadioGroup;
-        final boolean checkGroup = fc instanceof CheckGroup;
         final boolean checkBox = fc instanceof CheckBox;
 
-        r.write("<div id=\"" + getAjaxRegionMarkupId(component) + "\" " +
-                "class=\"form-group form-group-sm" +
-                (invalid ? " has-error" : "") +
-                "\">\n");
+        ComponentTag formGroup = new ComponentTag("div", TagType.OPEN);
+        formGroup.setId(getAjaxRegionMarkupId(component));
+        formGroup.put("class", "form-group row");
+        formGroup.writeOutput(r, wicketAttributes, namespace);
+
+        if (!checkBox) {
+            ComponentTag labelTag = new ComponentTag("label", TagType.OPEN);
+            labelTag.put("class", "col-sm-3 col-form-label");
+            labelTag.put("for", fc.getMarkupId());
+            labelTag.writeOutput(r, wicketAttributes, namespace);
+
+            r.write(Strings.escapeMarkup(label) + (required ? " *" : ""));
+            r.write(labelTag.syntheticCloseTagString());
+        }
+
+        ComponentTag inputContainer = new ComponentTag("div", TagType.OPEN);
+        inputContainer.setId(getAjaxRegionMarkupId(component));
+        inputContainer.put("class", "col-sm-9");
+        inputContainer.put("class", inputContainer.getAttribute("class") + (checkBox ? " offset-sm-3" : ""));
+        inputContainer.writeOutput(r, wicketAttributes, namespace);
 
         if (checkBox) {
-            r.write("<div class=\"col-sm-offset-3 col-sm-9\">\n");
-            r.write("<div class=\"checkbox\">\n");
-            r.write("<label class=\"" + (invalid ? "has-error" : "") + (required ? " required" : "") + "\"" +
-                    " for=\"" + fc.getMarkupId() + "\">\n");
-        } else {
-            r.write("<label for=\"" + component.getMarkupId() + "\" " +
-                    "class=\"col-sm-3 control-label" + (required ? " required" : "") + (invalid ? " has-error" : "") + "\"" +
-                    ">");
-            r.write(Strings.escapeMarkup(label));
-            r.write(required ? " *" : "  ");
-            r.write("</label>\n");
-
-            r.write("<div class=\"" + ((radioGroup || checkGroup) ? "col-sm-8" : "col-sm-9") + "\">\n");
+            ComponentTag formCheck = new ComponentTag("div", TagType.OPEN);
+            formCheck.put("class", "form-check");
+            formCheck.writeOutput(r, wicketAttributes, namespace);
         }
     }
 
@@ -93,6 +98,8 @@ public class BootstrapHorizontalFormDecorator extends AbstractBootstrapFormDecor
     public void afterRender(final Component component) {
         final FormComponent<?> fc = (FormComponent<?>) component;
         final Response r = component.getResponse();
+        boolean wicketAttributes = stripWicketTags();
+        String namespace = fc.getMarkup().getMarkupResourceStream().getWicketNamespace();
 
         final String defaultLabel = null == fc.getLabel() ? fc.getDefaultLabel() : fc.getLabel().getObject();
         final String label = null == getLabelModel() ? defaultLabel : getLabelModel().getObject();
@@ -100,20 +107,21 @@ public class BootstrapHorizontalFormDecorator extends AbstractBootstrapFormDecor
         final boolean required = fc.isRequired();
         final boolean checkBox = fc instanceof CheckBox;
 
+        ComponentTag close = new ComponentTag("div", TagType.CLOSE);
         if (checkBox) {
-            r.write(Strings.escapeMarkup(label));
-            r.write((required ? " *" : "   ") + "</label>\n");
-            r.write("</div>\n");
+            ComponentTag labelTag = new ComponentTag("label", TagType.OPEN);
+            labelTag.put("class", "form-check-label");
+            labelTag.put("for", fc.getMarkupId());
+            labelTag.writeOutput(r, wicketAttributes, namespace);
+
+            r.write(Strings.escapeMarkup(label) + (required ? " *" : ""));
+            r.write(labelTag.syntheticCloseTagString());
+
+            close.writeOutput(r, wicketAttributes, namespace);
         }
 
-        if (null != getHelperBlock()) {
-            r.write("<p class=\"help-block\">");
-            r.write(getHelperBlock().getObject());
-            r.write("</p>\n");
-        }
-
-        r.write("</div>\n");
-        r.write("</div>\n");
+        close.writeOutput(r, wicketAttributes, namespace);
+        close.writeOutput(r, wicketAttributes, namespace);
     }
 
     @Override

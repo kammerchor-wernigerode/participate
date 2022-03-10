@@ -1,7 +1,10 @@
 package de.vinado.wicket.participate.behavoirs.decorators;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
@@ -34,28 +37,47 @@ public class BootstrapFormDecorator extends AbstractBootstrapFormDecorator {
     public void beforeRender(final Component component) {
         final FormComponent<?> fc = (FormComponent<?>) component;
         final Response r = component.getResponse();
+        boolean wicketAttributes = stripWicketTags();
+        String namespace = fc.getMarkup().getMarkupResourceStream().getWicketNamespace();
 
-        final String defaultLabel = null == fc.getLabel() ? fc.getDefaultLabel() : fc.getLabel().getObject();
-        final String label = null == labelModel ? defaultLabel : labelModel.getObject();
+        final boolean checkBox = fc instanceof CheckBox;
 
-        final boolean required = fc.isRequired();
-        final boolean invalid = !fc.isValid();
+        ComponentTag formGroup = new ComponentTag("div", TagType.OPEN);
+        formGroup.setId(getAjaxRegionMarkupId(component));
+        formGroup.put("class", "form-group");
+        formGroup.put("class", formGroup.getAttribute("class") + (checkBox ? " form-check" : ""));
+        formGroup.writeOutput(r, wicketAttributes, namespace);
 
-        r.write("<div id=\"" + getAjaxRegionMarkupId(component) + "\" " +
-                "class=\"form-group form-group-sm" +
-                (invalid ? " has-error" : "") +
-                "\">\n");
-        r.write("<label for=\"" + component.getMarkupId() + "\" " +
-                "class=\"" + (required ? " required" : "") + (invalid ? " has-error" : "") + "\"" +
-                ">");
-        r.write(Strings.escapeMarkup(label));
-        r.write(required ? "*" : "");
-        r.write("</label>\n");
+        if (!checkBox) insertLabel(component);
     }
 
     @Override
-    public void afterRender(final Component component) {
-        component.getResponse().write("</div>\n");
+    public void afterRender(Component component) {
+        Response response = component.getResponse();
+        final boolean checkBox = component instanceof CheckBox;
+        if (checkBox) insertLabel(component);
+        response.write("</div>\n");
+    }
+
+    private void insertLabel(Component component) {
+        FormComponent<?> fc = (FormComponent<?>) component;
+        Response r = component.getResponse();
+        String namespace = fc.getMarkup().getMarkupResourceStream().getWicketNamespace();
+
+        String defaultLabel = null == fc.getLabel() ? fc.getDefaultLabel() : fc.getLabel().getObject();
+        String label = null == labelModel ? defaultLabel : labelModel.getObject();
+
+        boolean wicketAttributes = stripWicketTags();
+        boolean required = fc.isRequired();
+        boolean checkBox = fc instanceof CheckBox;
+
+        ComponentTag labelTag = new ComponentTag("label", TagType.OPEN);
+        labelTag.put("class", checkBox ? "form-check-label" : "form-label");
+        labelTag.put("for", fc.getMarkupId());
+        labelTag.writeOutput(r, wicketAttributes, namespace);
+
+        r.write(Strings.escapeMarkup(label) + (required ? " *" : ""));
+        r.write(labelTag.syntheticCloseTagString());
     }
 
     @Override

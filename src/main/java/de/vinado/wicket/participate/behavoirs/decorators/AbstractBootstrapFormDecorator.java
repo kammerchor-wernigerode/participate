@@ -1,6 +1,7 @@
 package de.vinado.wicket.participate.behavoirs.decorators;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.BootstrapBaseBehavior;
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.IAjaxRegionMarkupIdProvider;
 import org.apache.wicket.markup.ComponentTag;
@@ -22,9 +23,8 @@ public abstract class AbstractBootstrapFormDecorator extends BootstrapBaseBehavi
         final boolean radioGroup = fc instanceof RadioGroup;
         final boolean checkGroup = fc instanceof CheckGroup;
 
-        if (!checkBox && !radioGroup && !checkGroup) {
-            tag.put("class", "form-control");
-        }
+        tag.put("class", checkBox || radioGroup || checkGroup ? "form-check-input" : "form-control");
+        tag.put("class", tag.getAttribute("class") + (fc.isValid() ? "" : " is-invalid"));
     }
 
     @Override
@@ -33,4 +33,8 @@ public abstract class AbstractBootstrapFormDecorator extends BootstrapBaseBehavi
     }
 
     protected abstract String getMarkupSuffix();
+
+    protected boolean stripWicketTags() {
+        return Application.get().getMarkupSettings().getStripWicketTags();
+    }
 }
