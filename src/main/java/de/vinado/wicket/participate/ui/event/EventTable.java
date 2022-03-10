@@ -28,9 +28,11 @@ import java.util.List;
 
 public class EventTable extends BootstrapAjaxDataTable<EventDetails, SerializableFunction<EventDetails, ?>> {
 
+    private static final int ROWS_PER_PAGE = 20;
+
     public EventTable(String id, EventDataProvider dataProvider,
                       SerializableBiConsumer<AjaxRequestTarget, IModel<EventDetails>> selectAction) {
-        super(id, columns(selectAction), dataProvider, Integer.MAX_VALUE);
+        super(id, columns(selectAction), dataProvider, ROWS_PER_PAGE);
 
         dataProvider.setSort(with(EventDetails::getStartDate), SortOrder.ASCENDING);
         setOutputMarkupId(true);
