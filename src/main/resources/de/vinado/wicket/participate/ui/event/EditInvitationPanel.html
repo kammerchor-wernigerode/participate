@@ -6,52 +6,41 @@
 <body>
 <wicket:panel>
     <wicket:extend>
-        <div class="form-horizontal">
-            <select wicket:id="invitationStatus"></select>
-            <div class="form-group form-group-sm">
-                <div class="col-sm-offset-3 col-sm-9">
-                    <a wicket:id="inviteSingerBtn"></a>
-                </div>
+        <select wicket:id="invitationStatus"></select>
+        <div class="row mb-3">
+            <div class="col-sm-9 offset-sm-3">
+                <a wicket:id="inviteSingerBtn"></a>
             </div>
-            <input type="text" wicket:id="fromDate">
-            <input type="text" wicket:id="toDate">
-            <input type="checkbox" wicket:id="catering"/>
-            <input type="checkbox" wicket:id="accommodation"/>
-            <div class="form-group form-group-sm">
-                <label class="hidden-xs col-sm-3 control-label">
-                    <i class="fa fa-car"></i>
-                </label>
-                <div class="col-sm-9">
-                    <div class="row">
-                        <div class="col-sm-1">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" wicket:id="car">
-                                    <i class="hidden-sm hidden-md hidden-lg hidden-xl fa fa-car"></i>
-                                </label>
-                            </div>
+        </div>
+        <input type="text" wicket:id="fromDate">
+        <input type="text" wicket:id="toDate">
+        <input type="checkbox" wicket:id="catering"/>
+        <input type="checkbox" wicket:id="accommodation"/>
+        <div class="form-group row">
+            <div class="col-sm-9 offset-sm-3">
+                <div class="row align-items-center">
+                    <div class="col-2">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" wicket:id="car">
+                            <label class="form-check-label">&nbsp;<i class="fa fa-car"></i></label>
                         </div>
-                        <div class="col-sm-11">
-                            <div class="form-group form-group-sm">
-                                <label class="col-xs-3 col-md-4 col-lg-3 control-label"><wicket:message key="carSeatCount">
-                                    Number of Seats
-                                </wicket:message></label>
-                                <div class="col-xs-9 col-md-8 col-lg-9">
-                                    <input type="number" class="form-control" wicket:id="carSeatCount">
-                                </div>
+                    </div>
+                    <div class="col-auto flex-grow-1">
+                        <div class="row">
+                            <label class="col-lg-4 col-form-label"><wicket:message key="carSeatCount">Number of Seats</wicket:message></label>
+                            <div class="col-lg-8">
+                                <input type="number" class="form-control" wicket:id="carSeatCount">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <textarea wicket:id="comment"></textarea>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-3 control-label">
-                    <wicket:message key="link">Link</wicket:message>
-                </label>
-                <div class="col-sm-9">
-                    <p class="form-control-static"><a class="nobusy" wicket:id="token"></a></p>
-                </div>
+        </div>
+        <textarea wicket:id="comment"></textarea>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label"><wicket:message key="link">Link</wicket:message></label>
+            <div class="col-sm-9">
+                <p class="form-control-plaintext"><a class="nobusy" wicket:id="token"></a></p>
             </div>
         </div>
     </wicket:extend>
