@@ -60,7 +60,7 @@ public abstract class ParticipantFilterForm extends Form<ParticipantFilter> {
         add(apply = applyButton("apply"));
         setDefaultButton(apply);
 
-        add(new CssClassNameAppender("row row-cols-lg-auto g-3 align-items-center"));
+        add(new CssClassNameAppender("form-inline"));
         visitChildren(FormComponent.class, (IVisitor<FormComponent<?>, Void>) (component, visit) -> {
             if (!(component instanceof Button)) {
                 component.add(BootstrapInlineFormDecorator.decorate());

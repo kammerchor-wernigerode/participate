@@ -154,7 +154,7 @@ public abstract class BootstrapModalPanel<T> extends Panel {
      */
     @SuppressWarnings("unused")
     protected void addBootstrapInlineFormDecorator(final Form<T> form) {
-        form.add(new AttributeModifier("class", "row row-cols-lg-auto g-3 align-items-center"));
+        form.add(new AttributeModifier("class", "form-inline"));
         form.visitChildren(FormComponent.class, (IVisitor<FormComponent, Void>) (component, voidIVisit) -> {
             if (!(component instanceof Button) && !(component instanceof CheckGroup) && !(component instanceof RadioGroup)) {
                 component.add(BootstrapInlineFormDecorator.decorate());

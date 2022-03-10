@@ -117,7 +117,7 @@ public abstract class AbstractTableFilterPanel<T, F> extends Panel implements IF
     }
 
     public void addBootstrapFormDecorator(final Form<T> form) {
-        form.add(new AttributeModifier("class", "row row-cols-lg-auto g-3 align-items-center"));
+        form.add(new AttributeModifier("class", "form-inline"));
         form.visitChildren(FormComponent.class, (IVisitor<FormComponent<?>, Void>) (component, voidIVisit) -> {
             if (!(component instanceof Button)) {
                 component.add(BootstrapInlineFormDecorator.decorate());
