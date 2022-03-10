@@ -54,6 +54,7 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
 
     public EditInvitationPanel(final BootstrapModal modal, final IModel<ParticipantDTO> model) {
         super(modal, new ResourceModel("invitation.edit", "Edit Invitation"), model);
+        setModalSize(ModalSize.Medium);
 
         final DatetimePickerConfig fromConfig = new DatetimePickerConfig();
         fromConfig.useLocale("de");

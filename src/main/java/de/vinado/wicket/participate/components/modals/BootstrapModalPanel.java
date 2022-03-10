@@ -96,7 +96,6 @@ public abstract class BootstrapModalPanel<T> extends Panel {
                 });
             }
         };
-        saveBtn.setSize(Buttons.Size.Small);
         saveBtn.setLabel(getSubmitBtnLabel());
         footerWmc.add(saveBtn);
 
@@ -210,8 +209,8 @@ public abstract class BootstrapModalPanel<T> extends Panel {
     public enum ModalSize implements ICssClassNameProvider {
         Default(""),
         Small("modal-sm"),
-        Medium("modal-md"),
-        Large("modal-lg");
+        Medium("modal-lg"),
+        Large("modal-xl");
 
         private String cssClassName;
 

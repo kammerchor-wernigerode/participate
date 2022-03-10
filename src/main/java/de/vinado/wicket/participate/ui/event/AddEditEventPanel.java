@@ -59,6 +59,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
      */
     public AddEditEventPanel(final BootstrapModal modal, final IModel<String> titleModel, final IModel<EventDTO> model) {
         super(modal, titleModel, model);
+        setModalSize(ModalSize.Medium);
 
         edit = null != model.getObject().getEvent();
 
