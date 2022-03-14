@@ -4,9 +4,9 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.ButtonBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.vinado.wicket.bt4.tooltip.TooltipBehavior;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapInlineFormDecorator;
 import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.filters.SingerFilter;

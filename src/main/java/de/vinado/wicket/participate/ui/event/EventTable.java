@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig;
+import de.vinado.wicket.bt4.tooltip.TooltipBehavior;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.components.panels.AjaxLinkPanel;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
