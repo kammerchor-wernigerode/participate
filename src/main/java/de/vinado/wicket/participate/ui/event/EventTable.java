@@ -21,8 +21,6 @@ import org.apache.wicket.model.ResourceModel;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 
@@ -52,8 +50,6 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
     private static List<IColumn<EventDetails, SerializableFunction<EventDetails, ?>>> columns(
         SerializableBiConsumer<AjaxRequestTarget, IModel<EventDetails>> selectAction) {
         TooltipConfig tooltipConfig = new TooltipConfig();
-        tooltipConfig.withDelay(Duration.of(300L, ChronoUnit.MILLIS));
-        tooltipConfig.withHtml(true);
 
         return Arrays.asList(
             nameColumn(selectAction, tooltipConfig),

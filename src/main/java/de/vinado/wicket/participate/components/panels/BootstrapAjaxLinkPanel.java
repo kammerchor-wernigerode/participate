@@ -2,15 +2,11 @@ package de.vinado.wicket.participate.components.panels;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
 import de.vinado.wicket.bt4.tooltip.TooltipBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 
 /**
  * Bootstrap Ajax Button Panel. Use it in {@link org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable
@@ -115,7 +111,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
         if (null != icon) ajaxLink.setIconType(icon);
         if (null != labelModel) ajaxLink.setLabel(labelModel);
         if (null != titleModel) {
-            ajaxLink.add(new TooltipBehavior(titleModel, new TooltipConfig().withDelay(Duration.of(300L, ChronoUnit.MILLIS))));
+            ajaxLink.add(new TooltipBehavior(titleModel));
         }
 
         add(ajaxLink);
