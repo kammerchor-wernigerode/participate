@@ -70,14 +70,14 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
         return new PropertyColumn<>(new ResourceModel("name", "Name"), with(EventDetails::getName), "name") {
             @Override
             public void populateItem(Item<ICellPopulator<EventDetails>> item, String componentId, IModel<EventDetails> rowModel) {
-                item.add(new AjaxLinkPanel(componentId, new PropertyModel<>(rowModel, getPropertyExpression())) {
+                AjaxLinkPanel component = new AjaxLinkPanel(componentId, new PropertyModel<>(rowModel, getPropertyExpression())) {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         selectAction.accept(target, rowModel);
                     }
-                }
-                    .add(new TooltipBehavior(rowModel.map(EventDetails::getName), tooltipConfig))
-                    .setOutputMarkupId(true));
+                };
+                component.getAjaxLink().add(new TooltipBehavior(rowModel.map(EventDetails::getName), tooltipConfig));
+                item.add(component.setOutputMarkupId(true));
             }
 
             @Override
