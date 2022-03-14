@@ -2,6 +2,7 @@ package de.vinado.wicket.participate.components;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
 import de.vinado.wicket.bt4.tooltip.TooltipBehavior;
+import de.vinado.wicket.bt4.tooltip.TooltipConfig;
 import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -199,7 +200,7 @@ public class ShortenedMultilineLabel extends GenericPanel<String> {
             return new TooltipBehavior(() -> {
                 String stateName = state.name().toLowerCase();
                 return getString("event.details.participant.comment.toggle.single." + stateName + ".tooltip");
-            });
+            }, new TooltipConfig().withBoundary(TooltipConfig.Boundary.window));
         }
 
         @Override
