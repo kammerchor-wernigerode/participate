@@ -8,22 +8,22 @@
 <wicket:panel>
     <form wicket:id="signInForm">
         <div class="input-group mb-3">
-            <span class="input-group-text" id="input-addon-username"><i class="fas fa-at" aria-hidden="true"></i></span>
+            <div class="input-group-prepend"><span class="input-group-text" id="input-addon-username"><i class="fas fa-at" aria-hidden="true"></i></span></div>
             <input type="text" class="form-control" placeholder="Username/Email"
                    aria-label="Username/Email" aria-describedby="input-addon-username"
                    wicket:message="placeholder:username-email,aria-label:username-email"
                    wicket:id="username">
         </div>
         <div class="input-group mb-3">
-            <span class="input-group-text" id="input-addon-password"><i class="fas fa-lock" aria-hidden="true"></i></span>
+            <div class="input-group-prepend"><span class="input-group-text" id="input-addon-password"><i class="fas fa-lock" aria-hidden="true"></i></span></div>
             <input type="password" class="form-control" placeholder="Password"
                    aria-label="Password" aria-describedby="input-addon-password"
                    wicket:message="placeholder:password,aria-label:password"
                    wicket:id="password">
         </div>
         <div class="form-check mb-3" wicket:id="rememberMeContainer">
-            <input class="form-check-input" type="checkbox" value="" wicket:id="rememberMe">
-            <label class="form-check-label">
+            <input id="input-rememberMe" class="form-check-input" type="checkbox" value="" wicket:id="rememberMe">
+            <label class="form-check-label" for="input-rememberMe">
                 <wicket:message key="rememberMe">Remember Me</wicket:message>
             </label>
         </div>

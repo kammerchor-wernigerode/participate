@@ -6,68 +6,37 @@
 <body>
 <wicket:extend>
     <div class="container">
-    <div class="clearfix" style="margin-top: 70px;"></div>
-    <div class="row">
-        <div class="col-md-offset-3 col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <span class="panel-title">
-                        <i class="fa fa-user"></i>
-                        <wicket:message key="login">Login</wicket:message>
-                    </span>
-                </div>
-                <div class="panel-body">
+    <div class="clearfix mt-5"></div>
+    <div class="row justify-content-md-center mb-3">
+        <div class="col-md-6 align-self-center">
+            <div class="card">
+                <h5 class="card-header"><i class="fa fa-user" aria-hidden="true"></i> <wicket:message key="login">Login</wicket:message></h5>
+                <div class="card-body">
                     <fieldset>
                         <legend>
                             <wicket:message key="login.form">Participation Form</wicket:message>
                         </legend>
                         <form wicket:id="form">
-                            <div class="form-group" wicket:id="usernameWmc">
-                                <label class="control-label sr-only">
-                                    <wicket:message key="email">Email</wicket:message>
-                                </label>
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-user fa-fw"></i></div>
-                                    <input type="email" class="form-control" placeholder="Email"
-                                           wicket:message="placeholder:email" wicket:id="username">
-                                </div>
+                            <div class="input-group mb-3" wicket:id="usernameWmc">
+                                <div class="input-group-prepend"><span class="input-group-text" wicket:id="usernameAddon"><i class="fa fa-user" aria-hidden="true"></i></span></div>
+                                <input type="email" class="form-control" placeholder="Email" aria-label="Email" wicket:message="placeholder:email,aria-label:email" wicket:id="username">
                             </div>
-                            <div class="form-group" wicket:id="tokenWmc">
-                                <label class="control-label sr-only">
-                                    <wicket:message key="token"/>
-                                </label>
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-envelope-open fa-fw"></i></div>
-                                    <input class="form-control" placeholder="Token" wicket:message="placeholder:token"
-                                           wicket:id="token">
-                                </div>
+                            <div class="input-group mb-3" wicket:id="tokenWmc">
+                                <div class="input-group-prepend"><span class="input-group-text" wicket:id="tokenAddon"><i class="fa fa-envelope-open" aria-hidden="true"></i></span></div>
+                                <input type="text" class="form-control" placeholder="Token" aria-label="Token" wicket:message="placeholder:token,aria-label:token" wicket:id="token">
                             </div>
-                            <div class="form-group">
-                                <label class="control-label sr-only">
-                                    <wicket:message key="password">Password</wicket:message>
-                                </label>
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-lock fa-fw"></i></div>
-                                    <input type="password" class="form-control" placeholder="Password" wicket:message="placeholder:password" wicket:id="password">
-                                </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend"><span class="input-group-text" wicket:id="passwordAddon"><i class="fa fa-lock" aria-hidden="true"></i></span></div>
+                                <input type="password" class="form-control" placeholder="Password" aria-label="Password" wicket:message="placeholder:password,aria-label:password" wicket:id="password">
                             </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" wicket:id="rememberMe">
-                                    <wicket:message key="rememberMe">Remember Me</wicket:message>
-                                </label>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" wicket:id="rememberMe">
+                                <label class="form-check-label" wicket:id="rememberMeLabel"></label>
                             </div>
                             <div class="form-group" wicket:id="eventWmc">
-                                <label class="control-label sr-only">
-                                    <wicket:message key="event">Event</wicket:message>
-                                </label>
-                                <select class="form-control" wicket:id="participant"></select>
+                                <select class="form-control" aria-label="Event" wicket:message="aria-label:event" wicket:id="participant"></select>
                             </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">
-                                    <wicket:message key="login"/>
-                                </button>
-                            </div>
+                            <button type="submit" class="btn btn-primary"><wicket:message key="login"/></button>
                         </form>
                         <span wicket:id="feedback"></span>
                     </fieldset>
