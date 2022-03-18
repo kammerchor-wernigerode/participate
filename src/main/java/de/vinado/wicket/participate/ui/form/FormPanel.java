@@ -4,7 +4,6 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxButt
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
-import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.behavoirs.AutosizeBehavior;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
