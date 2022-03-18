@@ -22,6 +22,7 @@ import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
@@ -29,6 +30,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponentLabel;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
@@ -86,6 +88,10 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
 
         final DatetimePicker toDtP = new DatetimePicker("toDate", fromConfig);
 
+        WebMarkupContainer periodHelp;
+        wmc.add(periodHelp = new WebMarkupContainer("periodHelp"));
+        periodHelp.setOutputMarkupId(true);
+
         final DatetimePicker fromDtP = new DatetimePicker("fromDate", toConfig);
         fromDtP.add(new AjaxFormComponentUpdatingBehavior("dp.hide") {
             @Override
@@ -100,17 +106,16 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
                 }
             }
         });
-        fromDtP.add(BootstrapHorizontalFormDecorator.decorate(new ResourceModel("from", "From")));
-        wmc.add(fromDtP);
+        fromDtP.add(AttributeAppender.append("aria-describedby", periodHelp.getMarkupId()));
+        wmc.add(fromDtP, new FormComponentLabel("fromDateLabel", fromDtP));
 
         toDtP.setOutputMarkupId(true);
-        toDtP.add(BootstrapHorizontalFormDecorator.decorate(new ResourceModel("till", "Till")));
         toDtP.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
             }
         });
-        wmc.add(toDtP);
+        wmc.add(toDtP, new FormComponentLabel("toDateLabel", toDtP));
 
         final CheckBox cateringCb = new CheckBox("catering");
         cateringCb.add(BootstrapHorizontalFormDecorator.decorate());
@@ -133,7 +138,7 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
         carSeatCountTf.setOutputMarkupId(true);
         carSeatCountTf.setMinimum(0);
         carSeatCountTf.setMaximum(127); // 1 Byte maximum signed integer
-        wmc.add(carSeatCountTf);
+        wmc.add(carSeatCountTf, new FormComponentLabel("carSeatCountLabel", carSeatCountTf));
 
         AjaxCheckBox carCb = new AjaxCheckBox("car") {
             @Override
@@ -141,7 +146,7 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
                 target.add(carSeatCountTf);
             }
         };
-        wmc.add(carCb);
+        wmc.add(carCb, new FormComponentLabel("carLabel", carCb));
 
         final TextArea<?> commentTa = new TextArea<>("comment");
         commentTa.setLabel(new ResourceModel("comments", "More comments"));
@@ -163,7 +168,6 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
             }
         };
         submitBtn.setLabel(new ResourceModel("save", "Save"));
-        submitBtn.setSize(Buttons.Size.Small);
         wmc.add(submitBtn);
 
         final BootstrapAjaxButton declineBtn = new BootstrapAjaxButton("decline", Buttons.Type.Default) {
@@ -176,7 +180,6 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
             }
         };
         declineBtn.setLabel(new ResourceModel("decline", "Decline"));
-        declineBtn.setSize(Buttons.Size.Small);
         wmc.add(declineBtn);
     }
 
