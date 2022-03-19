@@ -61,7 +61,7 @@ public class FormPage extends BasePage {
 
         final Navbar navbar = new Navbar("navbar");
         navbar.setOutputMarkupId(true);
-        navbar.setPosition(Navbar.Position.STICKY_TOP);
+        navbar.setPosition(Navbar.Position.TOP);
         navbar.setBrandName(Model.of(""));
         navbar.addComponents(new AbstractNavbarComponent(Navbar.ComponentPosition.RIGHT) {
             @Override
