@@ -1,4 +1,4 @@
-FROM maven:3-jdk-8 as maven
+FROM maven:3-jdk-11 as maven
 RUN mkdir -p  /usr/src/app
 WORKDIR       /usr/src/app
 
@@ -9,14 +9,14 @@ COPY src     /usr/src/app/src
 # Due to missing depencencies, mvn does not run with -o (offline)
 RUN mvn -q package
 
-FROM openjdk:8-jdk-alpine as healthcheck-builder
+FROM openjdk:11-jdk-alpine as healthcheck-builder
 RUN mkdir -p                  /usr/src/healthcheck
 WORKDIR                       /usr/src/healthcheck
 
 COPY scripts/Healthcheck.java /usr/src/healthcheck/
 RUN javac -d . Healthcheck.java
 
-FROM openjdk:8-jre-alpine
+FROM openjdk:11-jre-alpine
 RUN mkdir -p /app
 WORKDIR      /app
 
