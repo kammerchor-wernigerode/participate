@@ -9,14 +9,14 @@ COPY src     /usr/src/app/src
 # Due to missing depencencies, mvn does not run with -o (offline)
 RUN mvn -q package
 
-FROM openjdk:11-jdk-alpine as healthcheck-builder
+FROM openjdk:11-jdk-slim as healthcheck-builder
 RUN mkdir -p                  /usr/src/healthcheck
 WORKDIR                       /usr/src/healthcheck
 
 COPY scripts/Healthcheck.java /usr/src/healthcheck/
 RUN javac -d . Healthcheck.java
 
-FROM openjdk:11-jre-alpine
+FROM openjdk:11-jre-slim
 RUN mkdir -p /app
 WORKDIR      /app
 
