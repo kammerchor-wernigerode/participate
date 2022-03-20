@@ -17,6 +17,11 @@ COPY scripts/Healthcheck.java /usr/src/healthcheck/
 RUN javac -d . Healthcheck.java
 
 FROM openjdk:11-jre-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    netcat \
+ && rm -rf /var/lib/apt/lists/*
+
 RUN mkdir -p /app
 WORKDIR      /app
 
@@ -32,4 +37,4 @@ HEALTHCHECK --interval=20s --timeout=5s --retries=5 --start-period=30s \
 
 EXPOSE 8080
 ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["/usr/bin/java", "-Djava.security.egd=file:/dev/./urandom", "-jar" ,"/app/application.jar"]
+CMD ["/usr/local/openjdk-11/bin/java", "-Djava.security.egd=file:/dev/./urandom", "-jar" ,"/app/application.jar"]
