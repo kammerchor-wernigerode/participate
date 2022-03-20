@@ -9,36 +9,34 @@ import org.apache.wicket.util.lang.Args;
  */
 public class SnackbarConfig extends AbstractConfig {
 
-    private IKey<String> content = newKey("content", "");
-    private IKey<Style> style = newKey("style", Style.snackbar);
-    private IKey<Integer> timeout = newKey("timeout", 0);
+    private static final long serialVersionUID = -3917542944781559481L;
+
+    private final IKey<String> text = newKey("text", "");
+    private final IKey<Integer> duration = newKey("duration", -1);
+    private final IKey<Boolean> showAction = newKey("showAction", true);
 
     public SnackbarConfig() {
     }
 
-    public SnackbarConfig(final SnackbarConfig copy) {
+    public SnackbarConfig(SnackbarConfig copy) {
         Args.notNull(copy, "copy");
-        withContent(copy.get(content));
-        withStyle(copy.get(style));
-        withTimeout(copy.get(timeout));
+        withText(copy.get(text));
+        withDuration(copy.get(duration));
+        withShowAction(copy.get(showAction));
     }
 
-    public SnackbarConfig withContent(final String value) {
-        put(content, value);
+    public SnackbarConfig withText(String value) {
+        put(text, value);
         return this;
     }
 
-    public SnackbarConfig withStyle(final Style value) {
-        put(style, value);
+    public SnackbarConfig withDuration(int value) {
+        put(duration, value);
         return this;
     }
 
-    public SnackbarConfig withTimeout(final Integer value) {
-        put(timeout, value);
+    public SnackbarConfig withShowAction(boolean value) {
+        put(showAction, value);
         return this;
-    }
-
-    public enum Style {
-        snackbar, toast
     }
 }
