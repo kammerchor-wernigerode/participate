@@ -105,6 +105,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         eventTypeS2c.getSettings().setLanguage(getLocale().getLanguage());
         eventTypeS2c.getSettings().setCloseOnSelect(true);
         eventTypeS2c.getSettings().setTheme(new Select2BootstrapTheme(true));
+        eventTypeS2c.getSettings().setDropdownParent(inner.getMarkupId());
         eventTypeS2c.setRequired(true);
         eventTypeS2c.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
@@ -158,6 +159,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         locationS2c.getSettings().setLanguage(getLocale().getLanguage());
         locationS2c.getSettings().setCloseOnSelect(true);
         locationS2c.getSettings().setTheme(new Select2BootstrapTheme(true));
+        locationS2c.getSettings().setDropdownParent(inner.getMarkupId());
         locationS2c.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {

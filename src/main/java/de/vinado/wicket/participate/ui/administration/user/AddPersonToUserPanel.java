@@ -122,6 +122,7 @@ public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDT
         personS2c.getSettings().setTheme(new Select2BootstrapTheme(true));
         personS2c.getSettings().setMinimumInputLength(3);
         personS2c.getSettings().setPlaceholder(new ResourceModel("select.placeholder", "Please Choose").getObject());
+        personS2c.getSettings().setDropdownParent(inner.getMarkupId());
         personS2c.setRequired(true);
         personS2c.setOutputMarkupPlaceholderTag(true);
         personS2c.setEnabled(true);
