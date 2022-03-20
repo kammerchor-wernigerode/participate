@@ -1,6 +1,7 @@
 package de.vinado.wicket.participate.ui.event.details;
 
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
+import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.email.Email;
@@ -19,16 +20,16 @@ import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class EventSummaryListPanel extends GenericPanel<Event> {
+public class EventSummaryListPanel extends BootstrapPanel<Event> {
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -95,6 +96,11 @@ public class EventSummaryListPanel extends GenericPanel<Event> {
         BootstrapModal modal = ((BasePage) getWebPage()).getModal();
         modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
         modal.show(target);
+    }
+
+    @Override
+    protected IModel<String> titleModel() {
+        return new PropertyModel<>(getModel(), "name");
     }
 
     @Override

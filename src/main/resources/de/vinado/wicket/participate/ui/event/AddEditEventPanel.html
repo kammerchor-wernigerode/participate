@@ -6,18 +6,16 @@
 <body>
 <wicket:panel>
     <wicket:extend>
-        <div class="form-horizontal">
-            <input type="text" wicket:id="name"/>
-            <input type="checkbox" wicket:id="isSeveralDays"/>
-            <select wicket:id="eventType"></select>
-            <input type="datetime" wicket:id="startDate"/>
-            <input type="datetime" wicket:id="endDate"/>
-            <select wicket:id="location"></select>
-            <textarea rows="6" wicket:id="description"></textarea>
-            <div class="form-group form-group-sm">
-                <div class="col-sm-offset-3 col-sm-9">
-                    <button class="pull-right" wicket:id="removeBtn"></button>
-                </div>
+        <input type="text" wicket:id="name"/>
+        <input type="checkbox" wicket:id="isSeveralDays"/>
+        <select wicket:id="eventType"></select>
+        <input autocomplete="off" type="text" wicket:id="startDate"/>
+        <input autocomplete="off" type="text" wicket:id="endDate"/>
+        <select wicket:id="location"></select>
+        <textarea rows="6" wicket:id="description"></textarea>
+        <div class="form-group row">
+            <div class="col-sm-9 offset-sm-3 text-right">
+                <button class="pull-right" wicket:id="removeBtn"></button>
             </div>
         </div>
     </wicket:extend>

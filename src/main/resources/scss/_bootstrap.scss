@@ -1,17 +1,11 @@
 // _bootstrap.scss
 
 .table {
-    button,
-    a[role="button"],
-    input[type="button"],
-    input[type="submit"] {
-        display: block;
-        margin: 0 auto;
-
-        &.btn-xs {
-            display: block;
-            margin: 0 auto;
-        }
+    td > .btn-sm {
+        padding: .25rem .4rem;
+        font-size: .875rem;
+        line-height: .5;
+        border-radius: .2rem;
     }
 }
 
@@ -36,16 +30,4 @@
 
 .tooltip .tooltip-inner {
     max-width: 350px;
-}
-
-.d-block {
-    display: block !important;
-}
-
-.d-inline-block {
-    display: inline-block !important;
-}
-
-.d-inline {
-    display: inline !important;
 }

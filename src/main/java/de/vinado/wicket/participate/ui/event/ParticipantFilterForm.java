@@ -4,9 +4,9 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.ButtonBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.vinado.wicket.bt4.tooltip.TooltipBehavior;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapInlineFormDecorator;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Voice;
@@ -60,7 +60,7 @@ public abstract class ParticipantFilterForm extends Form<ParticipantFilter> {
         add(apply = applyButton("apply"));
         setDefaultButton(apply);
 
-        add(new CssClassNameAppender("form-inline clearfix"));
+        add(new CssClassNameAppender("form-inline"));
         visitChildren(FormComponent.class, (IVisitor<FormComponent<?>, Void>) (component, visit) -> {
             if (!(component instanceof Button)) {
                 component.add(BootstrapInlineFormDecorator.decorate());
@@ -90,7 +90,7 @@ public abstract class ParticipantFilterForm extends Form<ParticipantFilter> {
     }
 
     protected AbstractLink resetButton(String id) {
-        BootstrapAjaxLink button = new BootstrapAjaxLink(id, Buttons.Type.Default) {
+        BootstrapAjaxLink<Void> button = new BootstrapAjaxLink<>(id, Buttons.Type.Outline_Secondary) {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 resetFilter();
@@ -98,7 +98,7 @@ public abstract class ParticipantFilterForm extends Form<ParticipantFilter> {
                 onReset();
             }
         };
-        button.setIconType(FontAwesomeIconType.refresh);
+        button.setIconType(FontAwesome5IconType.undo_s);
         button.add(new TooltipBehavior(new ResourceModel("reset", "Reset")));
         return button;
     }
@@ -110,13 +110,13 @@ public abstract class ParticipantFilterForm extends Form<ParticipantFilter> {
     private AbstractSubmitLink applyButton(String id) {
         AjaxSubmitLink button = new AjaxSubmitLink(id) {
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+            protected void onSubmit(AjaxRequestTarget target) {
                 target.add(ParticipantFilterForm.this);
                 onApply();
             }
         };
         button.add(new ButtonBehavior(Buttons.Type.Primary));
-        button.add(new Icon("icon", FontAwesomeIconType.filter));
+        button.add(new Icon("icon", FontAwesome5IconType.filter_s));
         button.add(new TooltipBehavior(new ResourceModel("filter", "Filter")));
         return button;
     }

@@ -61,7 +61,7 @@ public class BootstrapAjaxDataTable<T, S> extends DataTable<T, S> {
      * @return this instance for chaining
      */
     public BootstrapAjaxDataTable condensed() {
-        tableBehavior.condensed();
+        tableBehavior.sm();
         return this;
     }
 

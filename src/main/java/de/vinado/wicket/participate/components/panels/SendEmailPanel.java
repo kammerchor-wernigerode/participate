@@ -45,6 +45,7 @@ public class SendEmailPanel extends BootstrapModalPanel<Email> {
         toTf.getSettings().setCloseOnSelect(true);
         toTf.getSettings().setTheme(new Select2BootstrapTheme(true));
         toTf.getSettings().setPlaceholder(new ResourceModel("select.placeholder", "Please Choose").getObject());
+        toTf.getSettings().setDropdownParent(inner.getMarkupId());
         toTf.setLabel(new ResourceModel("email.recipient", "Recipient"));
         inner.add(toTf);
 

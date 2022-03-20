@@ -1,8 +1,7 @@
 package de.vinado.wicket.participate.ui.pages;
 
 import de.agilecoders.wicket.core.markup.html.references.BootlintHeaderItem;
-import de.agilecoders.wicket.core.markup.html.references.RespondJavaScriptReference;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5CssReference;
 import de.vinado.wicket.participate.resources.css.ParticipateCssResourceReference;
 import de.vinado.wicket.participate.resources.js.BusyIndicatorJsResourceReference;
 import de.vinado.wicket.participate.resources.js.ParticipateJsResourceReference;
@@ -26,11 +25,10 @@ public final class Resources {
         response.render(MetaDataHeaderItem.forMetaTag("robots", "noindex, nofollow"));
         response.render(forLinkTag("shortcut icon", "favicon.ico", "image/x-icon"));
         response.render(new FilteredHeaderItem(JavaScriptHeaderItem.forReference(ParticipateJsResourceReference.INSTANCE), "footer-container"));
-        response.render(RespondJavaScriptReference.headerItem());
         if (!host.getRequest().getRequestParameters().getParameterValue("bootlint").isNull()) {
             response.render(BootlintHeaderItem.INSTANCE);
         }
-        response.render(CssHeaderItem.forReference(FontAwesomeCssReference.instance()));
+        response.render(CssHeaderItem.forReference(FontAwesome5CssReference.instance()));
         response.render(CssReferenceHeaderItem.forReference(ParticipateCssResourceReference.INSTANCE));
         response.render(JavaScriptReferenceHeaderItem.forReference(BusyIndicatorJsResourceReference.INSTANCE));
     }

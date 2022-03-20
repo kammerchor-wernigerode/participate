@@ -4,10 +4,8 @@ import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
-import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.PersonDTO;
 import de.vinado.wicket.participate.model.dtos.SingerDTO;
-import de.vinado.wicket.participate.model.filters.SingerFilter;
 import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +21,6 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +38,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.apache.commons.codec.CharEncoding.UTF_8;
 
@@ -53,7 +51,7 @@ import static org.apache.commons.codec.CharEncoding.UTF_8;
 @Service
 @Transactional
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class PersonServiceImpl extends DataService implements PersonService {
 
     @Override
@@ -281,40 +279,6 @@ public class PersonServiceImpl extends DataService implements PersonService {
      * {@inheritDoc}
      */
     @Override
-    public List<Singer> getFilteredSingerList(final SingerFilter singerFilter) {
-        if (null == singerFilter) {
-            return getSingers();
-        }
-
-        if (singerFilter.isShowAll()) {
-            return getAll(Singer.class);
-        }
-
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
-        final Root<Singer> root = criteriaQuery.from(Singer.class);
-
-        final List<Predicate> predicates = new ArrayList<>();
-        predicates.add(criteriaBuilder.equal(root.get("active"), true));
-
-        final String searchTerm = singerFilter.getSearchTerm();
-        if (!Strings.isEmpty(searchTerm)) {
-            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("searchName")), "%" + searchTerm.toLowerCase() + "%"));
-        }
-
-        final Voice voice = singerFilter.getVoice();
-        if (null != voice) {
-            predicates.add(criteriaBuilder.equal(root.get("voice"), voice));
-        }
-
-        criteriaQuery.where(predicates.toArray(new Predicate[0]));
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void importPersons(final FileUpload upload) {
         try {
             final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(upload.getInputStream(), Charset.forName("UTF-8")));
@@ -376,5 +340,10 @@ public class PersonServiceImpl extends DataService implements PersonService {
         }
 
         return new StringResourceStream(new String(outputStream.toByteArray()));
+    }
+
+    @Override
+    public Stream<Singer> listAllSingers() {
+        return getAll(Singer.class).stream();
     }
 }

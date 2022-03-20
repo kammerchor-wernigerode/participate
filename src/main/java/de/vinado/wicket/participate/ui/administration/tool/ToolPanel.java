@@ -2,11 +2,12 @@ package de.vinado.wicket.participate.ui.administration.tool;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.behavoirs.AjaxDownload;
 import de.vinado.wicket.participate.components.links.BootstrapAjaxButton;
 import de.vinado.wicket.participate.components.panels.Collapsible;
+import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
 import de.vinado.wicket.participate.services.UserService;
@@ -44,10 +45,11 @@ public class ToolPanel extends Panel {
     @SpringBean
     private UserService userService;
 
+    @SpringBean
+    private ApplicationProperties applicationProperties;
+
     public ToolPanel(final String id) {
         super(id);
-
-        final boolean developmentMode = ParticipateApplication.get().isInDevelopmentMode();
 
         final List<ITab> tabs = new ArrayList<>();
         tabs.add(new AbstractTab(new ResourceModel("application-password", "Form Password")) {
@@ -71,7 +73,7 @@ public class ToolPanel extends Panel {
         private PasswordPanel(final String id) {
             super(id);
 
-            add(new Label("password", ParticipateApplication.get().getApplicationProperties().getParticipatePassword()));
+            add(new Label("password", applicationProperties.getParticipatePassword()));
         }
     }
 
@@ -98,7 +100,7 @@ public class ToolPanel extends Panel {
             final BootstrapAjaxButton submitBtn = new BootstrapAjaxButton("submitBtn", new ResourceModel("import", "Import"),
                 Buttons.Type.Primary) {
                 @Override
-                protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+                protected void onSubmit(final AjaxRequestTarget target) {
                     if (null != file) {
                         personService.importPersons(file);
                     }
@@ -109,7 +111,7 @@ public class ToolPanel extends Panel {
                     return feedback;
                 }
             };
-            submitBtn.setIconType(FontAwesomeIconType.database);
+            submitBtn.setIconType(FontAwesome5IconType.database_s);
             submitBtn.setSize(Buttons.Size.Small);
             importWmc.add(submitBtn);
 
@@ -124,7 +126,7 @@ public class ToolPanel extends Panel {
 
             final BootstrapAjaxButton exportBtn = new BootstrapAjaxButton("exportBtn", new ResourceModel("export", "Export"), Buttons.Type.Primary) {
                 @Override
-                protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+                protected void onSubmit(final AjaxRequestTarget target) {
                     export.go(target, personService.exportSingers(), "singer-export.csv");
                     target.add(exportForm);
                 }
@@ -134,7 +136,7 @@ public class ToolPanel extends Panel {
                     return feedback;
                 }
             };
-            exportBtn.setIconType(FontAwesomeIconType.save);
+            exportBtn.setIconType(FontAwesome5IconType.save_s);
             exportBtn.setSize(Buttons.Size.Small);
             exportBtn.add(export);
             exportWmc.add(exportBtn);

@@ -4,24 +4,29 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxButt
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
-import de.vinado.wicket.participate.ParticipateApplication;
+import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
+import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
+import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
 import de.vinado.wicket.participate.behavoirs.AutosizeBehavior;
+import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.DismissableBootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.events.EventUpdateEvent;
+import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.TemplateModel;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
@@ -29,6 +34,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponentLabel;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
@@ -36,19 +42,20 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class FormPanel extends BreadCrumbPanel implements IGenericComponent<ParticipantDTO> {
+public class FormPanel extends BreadCrumbPanel implements IGenericComponent<ParticipantDTO, FormPanel> {
 
     @SuppressWarnings("unused")
     @SpringBean
     private EventService eventService;
+
+    @SpringBean
+    private ApplicationProperties applicationProperties;
 
     public FormPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<ParticipantDTO> model) {
         super(id, breadCrumbModel, model);
@@ -58,18 +65,21 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
         fromConfig.useCurrent(false);
         fromConfig.withFormat("dd.MM.yyyy HH:mm");
         fromConfig.withMinuteStepping(30);
+        fromConfig.with(new DatetimePickerIconConfig());
 
         final DatetimePickerConfig toConfig = new DatetimePickerConfig();
         toConfig.useLocale("de");
         toConfig.useCurrent(false);
         toConfig.withFormat("dd.MM.yyyy HH:mm");
         toConfig.withMinuteStepping(30);
+        toConfig.with(new DatetimePickerIconConfig());
 
         if (null != model.getObject().getEvent()) {
-            fromConfig.withMinDate(model.getObject().getEvent().getStartDate());
-            fromConfig.withMaxDate(model.getObject().getEvent().getEndDate());
-            toConfig.withMinDate(model.getObject().getEvent().getStartDate());
-            toConfig.withMaxDate(model.getObject().getEvent().getEndDate());
+            Event event = model.getObject().getEvent();
+            fromConfig.withMinDate(event.getStartDate());
+            fromConfig.withMaxDate(DateUtils.addMilliseconds(DateUtils.addDays(event.getEndDate(), 1), -1));
+            toConfig.withMinDate(event.getStartDate());
+            toConfig.withMaxDate(DateUtils.addMilliseconds(DateUtils.addDays(event.getEndDate(), 1), -1));
         }
 
         final Form<?> form = new Form<>("form");
@@ -81,33 +91,20 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
 
         wmc.add(new Label("singer.displayName"));
 
-        final DatetimePicker toDtP = new DatetimePicker("toDate", fromConfig);
+        final DatetimePicker toDtP = new DatetimePicker("toDate", toConfig);
 
-        final DatetimePicker fromDtP = new DatetimePicker("fromDate", toConfig);
-        fromDtP.add(new AjaxFormComponentUpdatingBehavior("dp.hide") {
-            @Override
-            protected void onUpdate(final AjaxRequestTarget target) {
-                if (!Strings.isEmpty(fromDtP.getValue())) {
-                    try {
-                        toConfig.withMinDate(new SimpleDateFormat("dd.MM.yyyy").parse(fromDtP.getValue()));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    target.add(toDtP);
-                }
-            }
-        });
-        fromDtP.add(BootstrapHorizontalFormDecorator.decorate(new ResourceModel("from", "From")));
-        wmc.add(fromDtP);
+        WebMarkupContainer periodHelp;
+        wmc.add(periodHelp = new WebMarkupContainer("periodHelp"));
+        periodHelp.setOutputMarkupId(true);
+
+        final DatetimePicker fromDtP = new DatetimePicker("fromDate", fromConfig);
+        fromDtP.add(new DatetimePickerResettingBehavior(toConfig::withMinDate));
+        fromDtP.add(AttributeAppender.append("aria-describedby", periodHelp.getMarkupId()));
+        wmc.add(fromDtP, new FormComponentLabel("fromDateLabel", fromDtP));
 
         toDtP.setOutputMarkupId(true);
-        toDtP.add(BootstrapHorizontalFormDecorator.decorate(new ResourceModel("till", "Till")));
-        toDtP.add(new AjaxFormComponentUpdatingBehavior("change") {
-            @Override
-            protected void onUpdate(final AjaxRequestTarget target) {
-            }
-        });
-        wmc.add(toDtP);
+        toDtP.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
+        wmc.add(toDtP, new FormComponentLabel("toDateLabel", toDtP));
 
         final CheckBox cateringCb = new CheckBox("catering");
         cateringCb.add(BootstrapHorizontalFormDecorator.decorate());
@@ -117,9 +114,10 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
         accommodationCb.add(BootstrapHorizontalFormDecorator.decorate());
         wmc.add(accommodationCb);
 
-        NumberTextField<Integer> carSeatCountTf = new NumberTextField<Integer>("carSeatCount") {
+        NumberTextField<Short> carSeatCountTf = new NumberTextField<>("carSeatCount") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 if (!FormPanel.this.getModelObject().isCar()) {
                     FormPanel.this.getModelObject().setCarSeatCount((short) 0);
                 }
@@ -127,9 +125,9 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
             }
         };
         carSeatCountTf.setOutputMarkupId(true);
-        carSeatCountTf.setMinimum(0);
-        carSeatCountTf.setMaximum(127); // 1 Byte maximum signed integer
-        wmc.add(carSeatCountTf);
+        carSeatCountTf.setMinimum((short) 0);
+        carSeatCountTf.setMaximum((short) 127); // 1 Byte maximum signed integer
+        wmc.add(carSeatCountTf, new FormComponentLabel("carSeatCountLabel", carSeatCountTf));
 
         AjaxCheckBox carCb = new AjaxCheckBox("car") {
             @Override
@@ -137,7 +135,7 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
                 target.add(carSeatCountTf);
             }
         };
-        wmc.add(carCb);
+        wmc.add(carCb, new FormComponentLabel("carLabel", carCb));
 
         final TextArea<?> commentTa = new TextArea<>("comment");
         commentTa.setLabel(new ResourceModel("comments", "More comments"));
@@ -147,7 +145,7 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
 
         final BootstrapAjaxButton submitBtn = new BootstrapAjaxButton("submit", Buttons.Type.Success) {
             @Override
-            protected void onSubmit(final AjaxRequestTarget target, final Form<?> inner) {
+            protected void onSubmit(final AjaxRequestTarget target) {
                 ParticipantDTO dto = model.getObject();
                 Participant updatedParticipant = eventService.acceptEvent(dto);
                 EventUpdateEvent intent = new EventUpdateEvent(updatedParticipant.getEvent(), target);
@@ -159,12 +157,11 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
             }
         };
         submitBtn.setLabel(new ResourceModel("save", "Save"));
-        submitBtn.setSize(Buttons.Size.Small);
         wmc.add(submitBtn);
 
         final BootstrapAjaxButton declineBtn = new BootstrapAjaxButton("decline", Buttons.Type.Default) {
             @Override
-            protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+            protected void onSubmit(final AjaxRequestTarget target) {
                 final Participant savedParticipant = eventService.declineEvent(model.getObject());
                 send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(savedParticipant.getEvent(), target));
                 Snackbar.show(target, new ResourceModel("invitation.decline.success", "Your cancellation has been saved. You can leave this page now."));
@@ -172,15 +169,13 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
             }
         };
         declineBtn.setLabel(new ResourceModel("decline", "Decline"));
-        declineBtn.setSize(Buttons.Size.Small);
         wmc.add(declineBtn);
     }
 
     private void displayConfirmation(Participant participant, AjaxRequestTarget target) {
-        ApplicationProperties properties = ParticipateApplication.get().getApplicationProperties();
-        boolean hasOrganizationResponsible = !Strings.isEmpty(properties.getOrganizationResponsible());
-        boolean hasSleepingPlaceResponsible = !Strings.isEmpty(properties.getSleepingPlaceResponsible());
-        Map<String, Object> templateData = mapSuccessionTemplateData(properties);
+        boolean hasOrganizationResponsible = !Strings.isEmpty(applicationProperties.getOrganizationResponsible());
+        boolean hasSleepingPlaceResponsible = !Strings.isEmpty(applicationProperties.getSleepingPlaceResponsible());
+        Map<String, Object> templateData = mapSuccessionTemplateData(applicationProperties);
 
         if (eventService.hasDeadlineExpired(participant)) {
             if (hasOrganizationResponsible && hasSleepingPlaceResponsible) {
@@ -219,28 +214,6 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
     @Override
     public IModel<String> getTitle() {
         return new ResourceModel("form", "Form");
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public IModel<ParticipantDTO> getModel() {
-        return (IModel<ParticipantDTO>) getDefaultModel();
-    }
-
-    @Override
-    public void setModel(IModel<ParticipantDTO> model) {
-        setDefaultModel(model);
-    }
-
-    @Override
-    public void setModelObject(ParticipantDTO object) {
-        setDefaultModelObject(object);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public ParticipantDTO getModelObject() {
-        return (ParticipantDTO) getDefaultModelObject();
     }
 
     @RequiredArgsConstructor

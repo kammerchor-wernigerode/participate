@@ -5,7 +5,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.ICssClassNamePr
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
 import de.agilecoders.wicket.core.util.Attributes;
 import de.agilecoders.wicket.core.util.CssClassNames;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.components.TextAlign;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
@@ -51,7 +51,7 @@ public class IconPanel extends Panel {
      * @param id Wicket ID.
      */
     public IconPanel(String id) {
-        this(id, FontAwesomeIconType.code, Color.DEFAULT, TextAlign.LEFT);
+        this(id, FontAwesome5IconType.code_s, Color.DEFAULT, TextAlign.LEFT);
     }
 
     /**
@@ -79,7 +79,7 @@ public class IconPanel extends Panel {
 
         cssClassNameModel = Model.of(type.cssClassName());
         final Label label = new Label("label", Model.of(""));
-        label.add(new CssClassNameAppender(Model.of(cssClassNameModel)));
+        label.add(new CssClassNameAppender(cssClassNameModel));
         label.setOutputMarkupId(true);
         add(label);
     }

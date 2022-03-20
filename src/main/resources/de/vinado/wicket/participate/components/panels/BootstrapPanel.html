@@ -1,33 +1,42 @@
 <!DOCTYPE html>
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="UTF-8">
+    <title>Bootstrap Card with interactive Header</title>
 </head>
 <body>
 <wicket:panel>
-    <div class="panel-heading clearfix" wicket:enclosure child="panelTitle">
-        <span class="pull-left" wicket:id="panelTitle"></span>
-        <div class="btn-group btn-group-xs pull-right" role="group" aria-label="..." wicket:id="btnGroup">
-            <button type="button" class="btn btn-default" wicket:id="defaultBtn">
-                <span wicket:id="icon"></span>
-            </button>
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false" wicket:enclosure="dropDownMenu">
-                <span class="caret"></span>
-                <span class="sr-only">Toggle Dropdown</span>
-            </button>
-            <ul class="dropdown-menu">
-                <li wicket:id="dropDownMenu">
-                    <a wicket:id="link">
-                        <i wicket:id="icon"></i> <span wicket:id="label">[label]</span>
-                    </a>
-                </li>
-            </ul>
+    <div class="card-header d-flex align-items-center" wicket:id="header">
+        <span class="flex-grow-1" wicket:id="heading"></span>
+        <div class="btn-group btn-group-sm" role="group" aria-label="Quick Access Menu" wicket:message="aria-label:label.panel.menu.quick">
+            <wicket:container wicket:id="actions">
+                <button type="button" class="btn btn-secondary d-none d-sm-inline-block" wicket:id="link">
+                    <i wicket:id="icon"></i> <span wicket:id="label"></span>
+                </button>
+            </wicket:container>
+
+            <div class="btn-group btn-group-sm" role="group" wicket:id="menu-container">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" wicket:id="dropdown-button">
+                    <wicket:message key="more">More</wicket:message>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" wicket:id="dropdown-container">
+                    <wicket:container wicket:id="dropdown-fallback">
+                        <a class="dropdown-item d-block d-sm-none" href="#" wicket:id="link">
+                            <i class="fa-fw" wicket:id="icon"></i> <span wicket:id="label"></span>
+                        </a>
+                    </wicket:container>
+                    <wicket:container wicket:id="dropdown-menu">
+                        <a class="dropdown-item" href="#" wicket:id="link">
+                            <i class="fa-fw" wicket:id="icon"></i> <span wicket:id="label"></span>
+                        </a>
+                    </wicket:container>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="panel-body" wicket:id="panelBody"></div>
-    <wicket:child/>
-    <div class="panel-footer" wicket:id="panelFooter"></div>
+    <div class="card-body">
+        <wicket:child/>
+    </div>
 </wicket:panel>
 </body>
 </html>

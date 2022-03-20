@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.ui.singers;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.components.forms.validator.ConditionalValidator;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
@@ -85,7 +85,7 @@ public class AddEditSingerPanel extends BootstrapModalPanel<SingerDTO> {
         voiceDd.setLabel(new ResourceModel("voice", "Voice"));
         inner.add(voiceDd);
 
-        final BootstrapAjaxLink removeBtn = new BootstrapAjaxLink("removeBtn", Buttons.Type.Link) {
+        final BootstrapAjaxLink<Void> removeBtn = new BootstrapAjaxLink<>("removeBtn", Buttons.Type.Link) {
             @Override
             protected void onInitialize() {
                 super.onInitialize();
@@ -97,17 +97,17 @@ public class AddEditSingerPanel extends BootstrapModalPanel<SingerDTO> {
                 remove = !remove;
                 if (remove) {
                     setLabel(new ResourceModel("singer.remove.hint", "Singer will be removed"));
-                    setIconType(FontAwesomeIconType.exclamation_circle);
+                    setIconType(FontAwesome5IconType.exclamation_circle_s);
                 } else {
                     setLabel(new ResourceModel("singer.remove", "Remove Singer"));
-                    setIconType(FontAwesomeIconType.trash);
+                    setIconType(FontAwesome5IconType.trash_s);
                 }
                 target.add(this);
             }
         };
         removeBtn.setLabel(new ResourceModel("singer.remove", "Remove Singer"));
-        removeBtn.setIconType(FontAwesomeIconType.trash);
-        removeBtn.setSize(Buttons.Size.Mini);
+        removeBtn.setIconType(FontAwesome5IconType.trash_s);
+        removeBtn.setSize(Buttons.Size.Small);
         removeBtn.setOutputMarkupId(true);
         inner.add(removeBtn);
 

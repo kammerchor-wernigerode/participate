@@ -5,24 +5,26 @@
 </head>
 <body>
 <wicket:panel>
-    <div class="modal fade" role="dialog">
+    <div class="modal fade" role="dialog" tabindex="-1">
         <div class="modal-dialog" wicket:id="dialog">
             <div class="modal-content">
                 <div class="modal-header" wicket:id="header">
-                    <button type="button" class="close nobusy" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" wicket:id="title"></h4>
+                    <h5 class="modal-title" wicket:id="title">Modal title</h5>
+                    <button type="button" class="close nobusy" data-dismiss="modal" aria-label="Close" wicket:message="aria-label:cancel">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <form wicket:id="form">
-                    <div class="modal-body clearfix">
+                    <div class="modal-body">
                         <wicket:child/>
                         <div wicket:id="feedback"></div>
                     </div>
-                    <div class="modal-footer clearfix" wicket:id="footer">
-                        <button type="submit" wicket:id="saveButton"></button>
-                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"
+                    <div class="modal-footer" wicket:id="footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                                 wicket:id="cancelButton">
                             <wicket:message key="cancel">Cancel</wicket:message>
                         </button>
+                        <button type="submit" class="btn btn-primary" wicket:id="saveButton">Save changes</button>
                     </div>
                 </form>
             </div>

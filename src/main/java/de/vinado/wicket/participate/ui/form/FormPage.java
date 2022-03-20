@@ -16,6 +16,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.danekja.java.util.function.serializable.SerializableFunction;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -60,8 +61,7 @@ public class FormPage extends BasePage {
 
         final Navbar navbar = new Navbar("navbar");
         navbar.setOutputMarkupId(true);
-        navbar.setPosition(Navbar.Position.STATIC_TOP);
-        navbar.fluid();
+        navbar.setPosition(Navbar.Position.TOP);
         navbar.setBrandName(Model.of(""));
         navbar.addComponents(new AbstractNavbarComponent(Navbar.ComponentPosition.RIGHT) {
             @Override
@@ -82,8 +82,16 @@ public class FormPage extends BasePage {
         add(breadcrumb);
 
         IModel<ParticipantFilter> participantFilter = new CompoundPropertyModel<>(new ParticipantFilter());
-        final EventPanel eventPanel = new EventPanel("eventPanel", breadcrumb,
-            new CompoundPropertyModel<>(eventService.getEventDetails(model.getObject().getEvent())), false, () -> model.getObject().getSinger(), participantFilter);
+        final EventPanel eventPanel = new EventPanel("eventPanel", null,
+            new CompoundPropertyModel<>(eventService.getEventDetails(model.getObject().getEvent())), false, () -> model.getObject().getSinger(), participantFilter) {
+            @Override
+            protected void addQuickAccessAction(SerializableFunction<String, AbstractAction> constructor) {
+            }
+
+            @Override
+            protected void addDropdownAction(SerializableFunction<String, AbstractAction> constructor) {
+            }
+        };
         add(eventPanel);
 
         final FormPanel formPanel = new FormPanel("formPanel", breadcrumb,
@@ -96,6 +104,7 @@ public class FormPage extends BasePage {
 
     @Override
     protected void onConfigure() {
+        super.onConfigure();
         if (!signedIn) {
             setResponsePage(new FormSignInPage(new CompoundPropertyModel<>(null == FormPage.this.model.getObject() ?
                 new ParticipantDTO() : new ParticipantDTO(FormPage.this.model.getObject()))));

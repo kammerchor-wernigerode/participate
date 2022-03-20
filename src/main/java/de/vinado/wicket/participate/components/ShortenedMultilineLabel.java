@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate.components;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
-import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
+import de.vinado.wicket.bt4.tooltip.TooltipBehavior;
+import de.vinado.wicket.bt4.tooltip.TooltipConfig;
 import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -16,15 +16,14 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
 
 import java.io.Serializable;
 
-import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType.angle_double_down;
-import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType.angle_double_up;
+import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.angle_double_down_s;
+import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.angle_double_up_s;
 
 /**
  * @author Vincent Nadoll
@@ -76,7 +75,7 @@ public class ShortenedMultilineLabel extends GenericPanel<String> {
     }
 
     private IModel<String> textModel() {
-        return Models.map(getModel(), text -> state.render(text, limit));
+        return getModel().map(text -> state.render(text, limit));
     }
 
     private ToggleButton button() {
@@ -194,22 +193,14 @@ public class ShortenedMultilineLabel extends GenericPanel<String> {
         }
 
         private WebMarkupContainer icon() {
-            return new Icon("icon", new AbstractReadOnlyModel<IconType>() {
-                @Override
-                public IconType getObject() {
-                    return state.equals(State.COLLAPSED) ? angle_double_down : angle_double_up;
-                }
-            });
+            return new Icon("icon", () -> state.equals(State.COLLAPSED) ? angle_double_down_s : angle_double_up_s);
         }
 
         private Behavior tooltip() {
-            return new TooltipBehavior(new AbstractReadOnlyModel<String>() {
-                @Override
-                public String getObject() {
-                    String stateName = state.name().toLowerCase();
-                    return getString("event.details.participant.comment.toggle.single." + stateName + ".tooltip");
-                }
-            });
+            return new TooltipBehavior(() -> {
+                String stateName = state.name().toLowerCase();
+                return getString("event.details.participant.comment.toggle.single." + stateName + ".tooltip");
+            }, new TooltipConfig().withBoundary(TooltipConfig.Boundary.window));
         }
 
         @Override
@@ -219,7 +210,7 @@ public class ShortenedMultilineLabel extends GenericPanel<String> {
         }
 
 
-        private final class ToggleModel extends AbstractReadOnlyModel<Intent> {
+        private final class ToggleModel implements IModel<Intent> {
 
             @Override
             public Intent getObject() {

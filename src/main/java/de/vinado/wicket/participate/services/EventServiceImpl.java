@@ -14,16 +14,13 @@ import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.Terminable;
 import de.vinado.wicket.participate.model.User;
-import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
-import de.vinado.wicket.participate.model.filters.EventFilter;
-import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.model.ical4j.SimpleDateProperty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Cn;
 import net.fortuna.ical4j.model.property.CalScale;
@@ -39,7 +36,6 @@ import net.fortuna.ical4j.model.property.Version;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.util.string.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
@@ -58,7 +54,6 @@ import javax.persistence.criteria.Root;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -80,7 +75,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @Service
 @Transactional
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class EventServiceImpl extends DataService implements EventService {
 
     private final PersonService personService;
@@ -693,9 +688,10 @@ public class EventServiceImpl extends DataService implements EventService {
             .map(User::getPerson)
             .map(Person::getEmail)
             .orElse(applicationProperties.getMail().getSender());
-        Organizer vOrganizer = new Organizer(URI.create("mailto:" + orgaEmail));
+        ParameterList organizerParameters = new ParameterList();
+        organizerParameters.add(new Cn(applicationProperties.getCustomer()));
+        Organizer vOrganizer = new Organizer(organizerParameters, URI.create("mailto:" + orgaEmail));
         vEvent.getProperties().add(vOrganizer);
-        vEvent.getProperties().getProperty(Property.ORGANIZER).getParameters().add(new Cn(applicationProperties.getCustomer()));
 
         cal.getComponents().add(vEvent);
 
@@ -704,101 +700,6 @@ public class EventServiceImpl extends DataService implements EventService {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("UnsupportedEncodingException", e);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<EventDetails> getFilteredEventDetails(final EventFilter eventFilter) {
-        if (null == eventFilter) {
-            return getUpcomingEventDetails();
-        }
-
-        if (eventFilter.isShowAll()) {
-            return getAll(EventDetails.class);
-        }
-
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
-        final Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
-
-        final List<Predicate> orPredicates = new ArrayList<>();
-        final List<Predicate> andPredicates = new ArrayList<>();
-
-        final String searchTerm = eventFilter.getSearchTerm();
-        if (!Strings.isEmpty(eventFilter.getSearchTerm())) {
-            orPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")),
-                "%" + searchTerm.toLowerCase() + "%"));
-            orPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("eventType")),
-                "%" + searchTerm.toLowerCase() + "%"));
-            orPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("location")),
-                "%" + searchTerm.toLowerCase() + "%"));
-        }
-
-        final Date startDate = eventFilter.getStartDate();
-        if (null != startDate) {
-            // if (event.endDate >= startDate)
-            andPredicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("startDate"), startDate));
-        } else {
-            andPredicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("startDate"), new Date()));
-        }
-
-        final Date endDate = eventFilter.getEndDate();
-        if (null != endDate) {
-            // if (event.endDate <= endDate)
-            andPredicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("endDate"), endDate));
-        }
-
-        if (!andPredicates.isEmpty() && orPredicates.isEmpty()) {
-            criteriaQuery.where(andPredicates.toArray(new Predicate[0]));
-        } else if (andPredicates.isEmpty() && !orPredicates.isEmpty()) {
-            criteriaQuery.where(criteriaBuilder.or(orPredicates.toArray(new Predicate[0])));
-        } else {
-            final Predicate and = criteriaBuilder.and(andPredicates.toArray(new Predicate[0]));
-            final Predicate or = criteriaBuilder.or(orPredicates.toArray(new Predicate[0]));
-            criteriaQuery.where(and, or);
-        }
-
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Participant> getFilteredParticipants(final Event event, final ParticipantFilter filter) {
-        if (null == filter) {
-            return getParticipants(event);
-        }
-
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Join<Participant, Singer> singerJoin = root.join("singer");
-
-        final List<Predicate> predicates = new ArrayList<>();
-        predicates.add(criteriaBuilder.equal(root.<Event>get("event"), event));
-
-        final String searchTerm = filter.getName();
-        if (!Strings.isEmpty(searchTerm))
-            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(singerJoin.get("displayName")), "%" + searchTerm + "%"));
-
-        final Voice voice = filter.getVoice();
-        if (null != voice)
-            predicates.add(criteriaBuilder.equal(singerJoin.get("voice"), voice));
-
-        final InvitationStatus invitationStatus = filter.getInvitationStatus();
-        if (null != invitationStatus)
-            predicates.add(criteriaBuilder.equal(root.get("invitationStatus"), invitationStatus));
-
-        if (filter.isNotInvited()) {
-            predicates.add(criteriaBuilder.notEqual(root.get("invitationStatus"), InvitationStatus.UNINVITED));
-        }
-
-        criteriaQuery.where(predicates.toArray(new Predicate[0]));
-        criteriaQuery.orderBy(criteriaBuilder.asc(singerJoin.get("lastName")));
-        return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
     @Override
@@ -810,6 +711,11 @@ public class EventServiceImpl extends DataService implements EventService {
         LocalDate now = LocalDate.now();
         LocalDate startDate = toLocalDate(participant.getEvent().getStartDate());
         return applicationProperties.getDeadlineOffset() >= DAYS.between(now, startDate);
+    }
+
+    @Override
+    public Stream<EventDetails> listAll() {
+        return getAll(EventDetails.class).stream();
     }
 
     private static Predicate forUpcomingDate(final CriteriaBuilder criteriaBuilder, final Path<? extends Terminable> eventPath) {

@@ -4,7 +4,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.behavoirs.AjaxFocusBehavior;
 import de.vinado.wicket.participate.behavoirs.AutosizeBehavior;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalFormDecorator;
@@ -59,6 +59,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
      */
     public AddEditEventPanel(final BootstrapModal modal, final IModel<String> titleModel, final IModel<EventDTO> model) {
         super(modal, titleModel, model);
+        setModalSize(ModalSize.Medium);
 
         edit = null != model.getObject().getEvent();
 
@@ -104,6 +105,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         eventTypeS2c.getSettings().setLanguage(getLocale().getLanguage());
         eventTypeS2c.getSettings().setCloseOnSelect(true);
         eventTypeS2c.getSettings().setTheme(new Select2BootstrapTheme(true));
+        eventTypeS2c.getSettings().setDropdownParent(inner.getMarkupId());
         eventTypeS2c.setRequired(true);
         eventTypeS2c.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
@@ -115,6 +117,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         final DateTextField endDateTf = new DateTextField("endDate", endDateConfig) {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setVisible(severalDays.getObject());
             }
         };
@@ -122,6 +125,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         final DateTextField startDateTf = new DateTextField("startDate", startDateConfig) {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 setLabel(severalDays.getObject()
                     ? new ResourceModel("from", "From")
                     : new ResourceModel("on", "On"));
@@ -155,6 +159,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         locationS2c.getSettings().setLanguage(getLocale().getLanguage());
         locationS2c.getSettings().setCloseOnSelect(true);
         locationS2c.getSettings().setTheme(new Select2BootstrapTheme(true));
+        locationS2c.getSettings().setDropdownParent(inner.getMarkupId());
         locationS2c.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
@@ -172,7 +177,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         });
         inner.add(descriptionTa);
 
-        final BootstrapAjaxLink removeBtn = new BootstrapAjaxLink("removeBtn", Buttons.Type.Link) {
+        final BootstrapAjaxLink<Void> removeBtn = new BootstrapAjaxLink<>("removeBtn", Buttons.Type.Link) {
             @Override
             protected void onInitialize() {
                 super.onInitialize();
@@ -184,17 +189,17 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
                 remove = !remove;
                 if (remove) {
                     setLabel(new ResourceModel("event.remove.hint", "Event will be removed"));
-                    setIconType(FontAwesomeIconType.exclamation_circle);
+                    setIconType(FontAwesome5IconType.exclamation_circle_s);
                 } else {
                     setLabel(new ResourceModel("event.remove", "Remove event"));
-                    setIconType(FontAwesomeIconType.trash);
+                    setIconType(FontAwesome5IconType.trash_s);
                 }
                 target.add(this);
             }
         };
         removeBtn.setLabel(new ResourceModel("event.remove", "Remove Event"));
-        removeBtn.setIconType(FontAwesomeIconType.trash);
-        removeBtn.setSize(Buttons.Size.Mini);
+        removeBtn.setIconType(FontAwesome5IconType.trash_s);
+        removeBtn.setSize(Buttons.Size.Small);
         removeBtn.setOutputMarkupId(true);
         inner.add(removeBtn);
     }

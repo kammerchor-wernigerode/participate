@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.model;
 
-import lombok.var;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.Date;
@@ -25,7 +24,7 @@ public class MockedEvent {
     }
 
     public static Event mockEvent(Long id, Date startDate, String location) {
-        var event = mock(Event.class);
+        Event event = mock(Event.class);
         when(event.getId()).thenReturn(id);
         when(event.getStartDate()).thenReturn(startDate);
         when(event.getEndDate()).thenReturn(DateUtils.addDays(startDate, 3));

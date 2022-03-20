@@ -5,89 +5,72 @@
 </head>
 <body>
 <wicket:panel>
+    <div class="clearfix pt-3"></div>
     <form wicket:id="form">
         <div wicket:id="wmc">
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-12">
                     <h1 class="h3"><i class="fa fa-calendar"></i> <span wicket:id="eventName"></span></h1>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="well well-sm text-center">
-                        <a class="pull-left" wicket:id="previousEventBtn"></a>
-                        <a wicket:id="backBtn"></a>
-                        <a class="pull-right" wicket:id="nextEventBtn"></a>
+            <div class="row pb-3">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body bg-light p-2">
+                            <div class="d-flex justify-content-between">
+                                <a wicket:id="previousEventBtn"></a>
+                                <a wicket:id="backBtn"></a>
+                                <a wicket:id="nextEventBtn"></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <!--Oberer Bereich-->
             <div class="row">
-                <div class="col-xs-6 col-sm-4 col-md-2">
-                    <dl class="dl-horizontal">
-                        <dt>
-                            <wicket:message key="InvitationStatus.ACCEPTED">Accepted</wicket:message>
-                            :
-                        </dt>
-                        <dd wicket:id="acceptedCount"></dd>
-                        <dt>
-                            <wicket:message key="InvitationStatus.DECLINED">Declined</wicket:message>
-                            :
-                        </dt>
-                        <dd wicket:id="declinedCount"></dd>
-                        <dt>
-                            <wicket:message key="InvitationStatus.PENDING">Pending</wicket:message>
-                            :
-                        </dt>
-                        <dd wicket:id="pendingCount"></dd>
+                <div class="col-12 col-sm-4 col-lg-2">
+                    <dl class="row">
+                        <dt class="col-3 col-sm-9 col-lg-8 text-right"><wicket:message key="InvitationStatus.ACCEPTED">Accepted</wicket:message>:</dt>
+                        <dd class="col-9 col-sm-3 col-lg-4 mb-0" wicket:id="acceptedCount"></dd>
+
+                        <dt class="col-3 col-sm-9 col-lg-8 text-right"><wicket:message key="InvitationStatus.DECLINED">Declined</wicket:message>:</dt>
+                        <dd class="col-9 col-sm-3 col-lg-4 mb-0" wicket:id="declinedCount"></dd>
+
+                        <dt class="col-3 col-sm-9 col-lg-8 text-right"><wicket:message key="InvitationStatus.PENDING">Pending</wicket:message>:</dt>
+                        <dd class="col-9 col-sm-3 col-lg-4 mb-0" wicket:id="pendingCount"></dd>
                     </dl>
-                    <dl class="dl-horizontal">
-                        <dt>
-                            <wicket:message key="car.seats.available">Available Car Seats</wicket:message>
-                            :
-                        </dt>
-                        <dd wicket:id="carSeatCount"></dd>
+                    <dl class="row row-cols-2">
+                        <dt class="col-3 col-sm-9 col-xxl-8 text-right"><wicket:message key="car.seats.available">Available Car Seats</wicket:message>:</dt>
+                        <dd class="col col-sm mb-0" wicket:id="carSeatCount"></dd>
                     </dl>
                 </div>
-                <div class="col-xs-6 col-sm-4 col-md-2">
-                    <dl class="dl-horizontal">
-                        <dt>
-                            <wicket:message key="Voice.SOPRANO">Soprano</wicket:message>
-                            :
-                        </dt>
-                        <dd wicket:id="sopranoCount"></dd>
-                        <dt>
-                            <wicket:message key="Voice.ALTO">Alto</wicket:message>
-                            :
-                        </dt>
-                        <dd wicket:id="altoCount"></dd>
-                        <dt>
-                            <wicket:message key="Voice.TENOR">Tenor</wicket:message>
-                            :
-                        </dt>
-                        <dd wicket:id="tenorCount"></dd>
-                        <dt>
-                            <wicket:message key="Voice.BASS">Bass</wicket:message>
-                            :
-                        </dt>
-                        <dd wicket:id="bassCount"></dd>
+                <div class="col-12 col-sm-4 col-lg-2">
+                    <dl class="row">
+                        <dt class="col-3 col-sm-9 col-lg-8 text-right"><wicket:message key="Voice.SOPRANO">Soprano</wicket:message>:</dt>
+                        <dd class="col-9 col-sm-3 col-lg-4 mb-0" wicket:id="sopranoCount"></dd>
+
+                        <dt class="col-3 col-sm-9 col-lg-8 text-right"><wicket:message key="Voice.ALTO">Alto</wicket:message>:</dt>
+                        <dd class="col-9 col-sm-3 col-lg-4 mb-0" wicket:id="altoCount"></dd>
+
+                        <dt class="col-3 col-sm-9 col-lg-8 text-right"><wicket:message key="Voice.TENOR">Tenor</wicket:message>:</dt>
+                        <dd class="col-9 col-sm-3 col-lg-4 mb-0" wicket:id="tenorCount"></dd>
+
+                        <dt class="col-3 col-sm-9 col-lg-8 text-right"><wicket:message key="Voice.BASS">Bass</wicket:message>:</dt>
+                        <dd class="col-9 col-sm-3 col-lg-4 mb-0" wicket:id="bassCount"></dd>
                     </dl>
                 </div>
-                <div class="col-xs-12 col-sm-4 col-md-2">
+                <div class="col-12 col-sm-4 col-lg-2">
                     <p>
                         <span wicket:id="accommodationCount"></span>
                         <wicket:message key="of">of</wicket:message>
                         <span wicket:id="accommodationSingerCount"></span>
-                        <wicket:message key="...needAccommodation">need a place to sleep</wicket:message>
-                        .
+                        <wicket:message key="...needAccommodation">need a place to sleep</wicket:message>.
                     </p>
                     <p>
                         <span wicket:id="cateringCount"></span>
                         <wicket:message key="of">of</wicket:message>
                         <span wicket:id="cateringSingerCount"></span>
-                        <wicket:message key="...needCatering">want to participate at popular meals
-                        </wicket:message>
-                        .
+                        <wicket:message key="...needCatering">want to participate at popular meals</wicket:message>.
                     </p>
                     <p>
                         <span wicket:id="carCount"></span>
@@ -96,35 +79,23 @@
                         <wicket:message key="...travelCar">people come by car</wicket:message>
                     </p>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-6">
-                    <dl class="dl-horizontal">
-                        <dt>
-                            <wicket:message key="Voice.SOPRANO">Soprano</wicket:message>
-                            :
-                        </dt>
-                        <dd wicket:id="sopranos"></dd>
-                        <dt>
-                            <wicket:message key="Voice.ALTO">Alto</wicket:message>
-                            :
-                        </dt>
-                        <dd wicket:id="altos"></dd>
-                        <dt>
-                            <wicket:message key="Voice.TENOR">Tenor</wicket:message>
-                            :
-                        </dt>
-                        <dd wicket:id="tenors"></dd>
-                        <dt>
-                            <wicket:message key="Voice.BASS">Bass</wicket:message>
-                            :
-                        </dt>
-                        <dd wicket:id="basses"></dd>
+                <div class="col-12 col-sm-12 col-lg-6">
+                    <dl class="row">
+                        <dt class="col-3 col-sm-2 text-right"><wicket:message key="Voice.SOPRANO">Soprano</wicket:message>:</dt>
+                        <dd class="col-9 col-sm-10 mb-0" wicket:id="sopranos"></dd>
+
+                        <dt class="col-3 col-sm-2 text-right"><wicket:message key="Voice.ALTO">Alto</wicket:message>:</dt>
+                        <dd class="col-9 col-sm-10 mb-0" wicket:id="altos"></dd>
+
+                        <dt class="col-3 col-sm-2 text-right"><wicket:message key="Voice.TENOR">Tenor</wicket:message>:</dt>
+                        <dd class="col-9 col-sm-10 mb-0" wicket:id="tenors"></dd>
+
+                        <dt class="col-3 col-sm-2 text-right"><wicket:message key="Voice.BASS">Bass</wicket:message>:</dt>
+                        <dd class="col-9 col-sm-10 mb-0" wicket:id="basses"></dd>
                     </dl>
-                    <dl class="dl-horizontal">
-                        <dt>
-                            <wicket:message key="InvitationStatus.DECLINED">Declined</wicket:message>
-                            :
-                        </dt>
-                        <dd wicket:id="declined"></dd>
+                    <dl class="row">
+                        <dt class="col-3 col-sm-2 text-right"><wicket:message key="InvitationStatus.DECLINED">Declined</wicket:message>:</dt>
+                        <dd class="col-9 col-sm-10 mb-0" wicket:id="declined"></dd>
                     </dl>
                 </div>
             </div>

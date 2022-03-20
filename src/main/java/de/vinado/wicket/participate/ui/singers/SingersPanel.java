@@ -1,40 +1,48 @@
 package de.vinado.wicket.participate.ui.singers;
 
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
+import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.components.tables.columns.BootstrapAjaxLinkColumn;
 import de.vinado.wicket.participate.components.tables.columns.EnumColumn;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailBuilderFactory;
-import de.vinado.wicket.participate.events.SingerUpdateEvent;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.SingerDTO;
 import de.vinado.wicket.participate.model.filters.SingerFilter;
-import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import de.vinado.wicket.participate.services.PersonService;
 import de.vinado.wicket.participate.ui.pages.BasePage;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.IEvent;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
+import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.extensions.markup.html.basic.SmartLinkLabel;
+import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
+import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.danekja.java.util.function.serializable.SerializableFunction;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class SingersPanel extends Panel {
+public class SingersPanel extends BootstrapPanel<SingerFilter> {
+
+    private static final int ROWS_PER_PAGE = 20;
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -43,41 +51,112 @@ public class SingersPanel extends Panel {
     @SpringBean
     private EmailBuilderFactory emailBuilderFactory;
 
-    private IModel<List<Singer>> model;
-
-    private SimpleDataProvider<Singer, String> dataProvider;
-    private BootstrapAjaxDataTable<Singer, String> dataTable;
-
-    public SingersPanel(final String id, final IModel<List<Singer>> model) {
+    public SingersPanel(String id, IModel<SingerFilter> model) {
         super(id, model);
+    }
 
-        this.model = model;
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
-        final SingerFilterPanel filterPanel = new SingerFilterPanel("filterPanel", model, new CompoundPropertyModel<>(new SingerFilter())) {
+        addQuickAccessAction(AjaxAction.create(new ResourceModel("singer.add", "Add Singer"),
+            FontAwesome5IconType.plus_s,
+            this::add));
+        addDropdownAction(AjaxAction.create(new ResourceModel("email.send", "Send Email"),
+            FontAwesome5IconType.envelope_s,
+            this::email));
+
+        add(filter());
+        add(table());
+    }
+
+    private void add(AjaxRequestTarget target) {
+        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        modal.setContent(new AddEditSingerPanel(modal, new ResourceModel("singer.add", "Add Singer"),
+            new CompoundPropertyModel<>(new SingerDTO())));
+        modal.show(target);
+    }
+
+    private void email(AjaxRequestTarget target) {
+        Email mailData = emailBuilderFactory.create()
+            .toPeople(personService.getSingers())
+            .build();
+
+        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
+        modal.show(target);
+    }
+
+    private SingerFilterForm filter() {
+        return new SingerFilterForm("filter", getModel()) {
             @Override
-            public SimpleDataProvider<Singer, ?> getDataProvider() {
-                return dataProvider;
-            }
-
-            @Override
-            public DataTable<Singer, ?> getDataTable() {
-                return dataTable;
+            protected void onApply() {
+                send(SingersPanel.this, Broadcast.BREADTH, new SingerFilterIntent(getModelObject()));
             }
         };
-        add(filterPanel);
+    }
 
-        dataProvider = new SimpleDataProvider<Singer, String>(model.getObject()) {
+    private Component table() {
+        SortableDataProvider<Singer, SerializableFunction<Singer, ?>> dataProvider = dataProvider();
+        dataProvider.setSort(with(Singer::getSortName), SortOrder.ASCENDING);
+        return new BootstrapAjaxDataTable<>("dataTable", columns(), dataProvider, ROWS_PER_PAGE)
+            .condensed().hover()
+            .setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance())
+            .setOutputMarkupId(true)
+            .add(new CssClassNameAppender("singers"));
+    }
+
+    private SortableDataProvider<Singer, SerializableFunction<Singer, ?>> dataProvider() {
+        return new SingerDataProvider(getModel(), personService);
+    }
+
+    private List<IColumn<Singer, SerializableFunction<Singer, ?>>> columns() {
+        return Arrays.asList(
+            nameColumn(),
+            emailAddressColumn(),
+            voiceColumn(),
+            editColumn(),
+            emailColumn()
+        );
+    }
+
+    private IColumn<Singer, SerializableFunction<Singer, ?>> nameColumn() {
+        return new PropertyColumn<>(new ResourceModel("name", "Name"), with(Singer::getSortName), "sortName") {
             @Override
-            public String getDefaultSort() {
-                return "sortName";
+            public String getCssClass() {
+                return "name";
             }
         };
+    }
 
-        final List<IColumn<Singer, String>> columns = new ArrayList<>();
-        columns.add(new PropertyColumn<>(new ResourceModel("name", "Name"), "sortName", "sortName"));
-        columns.add(new PropertyColumn<>(new ResourceModel("email", "Email"), "email", "email"));
-        columns.add(new EnumColumn<Singer, String, Voice>(new ResourceModel("voice", "voice"), "voice", "voice"));
-        columns.add(new BootstrapAjaxLinkColumn<Singer, String>(FontAwesomeIconType.pencil, new ResourceModel("singer.edit", "Edit Singer")) {
+    private IColumn<Singer, SerializableFunction<Singer, ?>> emailAddressColumn() {
+        return new PropertyColumn<>(new ResourceModel("email", "Email"), with(Singer::getEmail), "email") {
+            @Override
+            public void populateItem(Item<ICellPopulator<Singer>> item, String componentId, IModel<Singer> rowModel) {
+                item.add(new SmartLinkLabel(componentId, getDataModel(rowModel).map(String.class::cast))
+                    .add(new CssClassNameAppender("nobusy")));
+            }
+
+            @Override
+            public String getCssClass() {
+                return "emailAddress";
+            }
+        };
+    }
+
+    private IColumn<Singer, SerializableFunction<Singer, ?>> voiceColumn() {
+        return new EnumColumn<Singer, SerializableFunction<Singer, ?>, Voice>(new ResourceModel("voice", "voice"),
+            with(Singer::getVoice), "voice") {
+            @Override
+            public String getCssClass() {
+                return "voice";
+            }
+        };
+    }
+
+    private IColumn<Singer, SerializableFunction<Singer, ?>> editColumn() {
+        return new BootstrapAjaxLinkColumn<>(FontAwesome5IconType.pencil_alt_s,
+            new ResourceModel("singer.edit", "Edit Singer")) {
             @Override
             public void onClick(final AjaxRequestTarget target, final IModel<Singer> rowModel) {
                 final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
@@ -86,8 +165,17 @@ public class SingersPanel extends Panel {
                     new SingerDTO(singer))));
                 modal.show(target);
             }
-        });
-        columns.add(new BootstrapAjaxLinkColumn<Singer, String>(FontAwesomeIconType.envelope, new ResourceModel("email.send", "Send Email")) {
+
+            @Override
+            public String getCssClass() {
+                return "edit";
+            }
+        };
+    }
+
+    private IColumn<Singer, SerializableFunction<Singer, ?>> emailColumn() {
+        return new BootstrapAjaxLinkColumn<>(FontAwesome5IconType.envelope_s,
+            new ResourceModel("email.send", "Send Email")) {
             @Override
             public void onClick(final AjaxRequestTarget target, final IModel<Singer> rowModel) {
                 final Person person = rowModel.getObject();
@@ -100,25 +188,20 @@ public class SingersPanel extends Panel {
                 modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
                 modal.show(target);
             }
-        });
 
-        dataTable = new BootstrapAjaxDataTable<>("dataTable", columns, dataProvider, 20);
-        dataTable.setOutputMarkupId(true);
-        dataTable.hover();
-        dataTable.condensed();
-        add(dataTable);
+            @Override
+            public String getCssClass() {
+                return "email";
+            }
+        };
+    }
+
+    private static <T, R> SerializableFunction<T, R> with(SerializableFunction<T, R> function) {
+        return function;
     }
 
     @Override
-    public void onEvent(final IEvent<?> event) {
-        super.onEvent(event);
-        final Object payload = event.getPayload();
-        if (payload instanceof SingerUpdateEvent) {
-            final SingerUpdateEvent updateEvent = (SingerUpdateEvent) payload;
-            final AjaxRequestTarget target = updateEvent.getTarget();
-            model.setObject(personService.getSingers());
-            dataProvider.set(model.getObject());
-            target.add(dataTable);
-        }
+    protected IModel<String> titleModel() {
+        return new ResourceModel("singers", "Singers");
     }
 }

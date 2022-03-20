@@ -6,6 +6,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.tabs.TextPanel;
 import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.behavoirs.FocusBehavior;
 import de.vinado.wicket.participate.components.panels.Collapsible;
+import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Singer;
@@ -17,6 +18,7 @@ import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.authentication.strategy.DefaultAuthenticationStrategy;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -25,6 +27,7 @@ import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.markup.html.form.PasswordTextField;
+import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -53,6 +56,9 @@ public class FormSignInPage extends BasePage {
     @SuppressWarnings("unused")
     @SpringBean
     private UserService userService;
+
+    @SpringBean
+    private ApplicationProperties applicationProperties;
 
     private IModel<ParticipantDTO> model;
 
@@ -83,7 +89,7 @@ public class FormSignInPage extends BasePage {
     public FormSignInPage(final PageParameters parameters, final IModel<ParticipantDTO> model) {
         super(parameters);
         this.model = model;
-        this.participatePassword = ParticipateApplication.get().getApplicationProperties().getParticipatePassword();
+        this.participatePassword = applicationProperties.getParticipatePassword();
 
 
         if (null != model.getObject().getEvent()) {
@@ -129,7 +135,12 @@ public class FormSignInPage extends BasePage {
             final WebMarkupContainer usernameWmc = new WebMarkupContainer("usernameWmc");
             usernameWmc.setOutputMarkupPlaceholderTag(true);
 
+            WebMarkupContainer usernameAddon;
+            usernameWmc.add(usernameAddon = new WebMarkupContainer("usernameAddon"));
+            usernameAddon.setOutputMarkupId(true);
+
             final EmailTextField usernameTf = new EmailTextField("username");
+            usernameTf.add(AttributeAppender.append("aria-describedby", usernameAddon.getMarkupId()));
             usernameTf.setEnabled(false);
             usernameTf.setRequired(true);
 
@@ -140,20 +151,33 @@ public class FormSignInPage extends BasePage {
             final WebMarkupContainer tokenWmc = new WebMarkupContainer("tokenWmc");
             tokenWmc.setOutputMarkupPlaceholderTag(true);
 
+            WebMarkupContainer tokenAddon;
+            tokenWmc.add(tokenAddon = new WebMarkupContainer("tokenAddon"));
+            tokenAddon.setOutputMarkupId(true);
+
             final TextField<String> tokenTf = new TextField<>("token");
+            tokenTf.add(AttributeAppender.append("aria-describedby", tokenAddon.getMarkupId()));
             tokenTf.setRequired(true);
 
             tokenWmc.setVisible(Strings.isEmpty(getToken()));
             add(tokenWmc);
             tokenWmc.add(tokenTf);
 
+            WebMarkupContainer passwordAddon;
+            add(passwordAddon = new WebMarkupContainer("passwordAddon"));
+            passwordAddon.setOutputMarkupId(true);
+
             final PasswordTextField passwordTf = new PasswordTextField("password");
+            tokenTf.add(AttributeAppender.append("aria-describedby", passwordAddon.getMarkupId()));
             passwordTf.add(new AttributeModifier("placeholder", new ResourceModel("password", "Password")));
             passwordTf.add(new FocusBehavior());
             passwordTf.setRequired(true);
             add(passwordTf);
 
-            add(new CheckBox("rememberMe"));
+            CheckBox rememberMe;
+            add(rememberMe = new CheckBox("rememberMe"));
+            rememberMe.setLabel(new ResourceModel("rememberMe", "Remember Me"));
+            add(new SimpleFormComponentLabel("rememberMeLabel", rememberMe));
 
             final WebMarkupContainer eventWmc = new WebMarkupContainer("eventWmc");
             eventWmc.setOutputMarkupPlaceholderTag(true);
@@ -212,6 +236,7 @@ public class FormSignInPage extends BasePage {
 
     @Override
     protected void onConfigure() {
+        super.onConfigure();
         final String[] data = strategy.load();
         if ((null != data) && (data.length > 1)) {
             if (signIn(data[1])) {

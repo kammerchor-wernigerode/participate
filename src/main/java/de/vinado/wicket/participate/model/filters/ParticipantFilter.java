@@ -58,14 +58,14 @@ public class ParticipantFilter implements Predicate<Participant>, Serializable {
     }
 
     private boolean matchesFromDate(Participant participant) {
-        if (null == this.fromDate) return true;
         Date fromDate = participant.getFromDate();
+        if (null == this.fromDate || null == fromDate) return true;
         return this.fromDate.after(fromDate) || this.fromDate.equals(fromDate);
     }
 
     private boolean matchesToDate(Participant participant) {
-        if (null == this.toDate) return true;
         Date toDate = participant.getToDate();
+        if (null == this.toDate || null == toDate) return true;
         return this.toDate.after(toDate) || this.toDate.equals(toDate);
     }
 

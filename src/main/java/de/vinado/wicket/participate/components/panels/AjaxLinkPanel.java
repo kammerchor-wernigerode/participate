@@ -25,7 +25,7 @@ public abstract class AjaxLinkPanel extends Panel {
     public AjaxLinkPanel(final String id, final IModel<String> labelModel) {
         super(id, labelModel);
 
-        ajaxLink = new AjaxLink("link") {
+        ajaxLink = new AjaxLink<Void>("link") {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 AjaxLinkPanel.this.onClick(target);

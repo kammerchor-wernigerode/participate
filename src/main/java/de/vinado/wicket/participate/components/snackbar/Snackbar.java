@@ -17,7 +17,8 @@ public class Snackbar {
     /**
      * {@link SnackbarConfig}
      */
-    private static SnackbarConfig snackbarConfig = new SnackbarConfig();
+    private static SnackbarConfig snackbarConfig = new SnackbarConfig()
+        .withShowAction(false);
 
     /**
      * @param content Content of the Snackbar
@@ -34,15 +35,17 @@ public class Snackbar {
      */
     @Deprecated
     public static CharSequence show(final IModel<String> contentModel) {
-        return "$.snackbar(" + snackbarConfig.withContent(contentModel.getObject()).toJsonString() + ");";
+        return "Snackbar.show(" + snackbarConfig.withText(contentModel.getObject()).toJsonString() + ");";
     }
 
     public static void show(final AjaxRequestTarget target, final String content) {
-        target.appendJavaScript("$.snackbar(" + snackbarConfig.withContent(content).toJsonString() + ");");
+        String json = snackbarConfig.withText(content).toJsonString();
+        target.appendJavaScript("Snackbar.show(" + json + ");");
     }
 
     public static void show(final AjaxRequestTarget target, final IModel<String> contentModel) {
-        target.appendJavaScript("$.snackbar(" + snackbarConfig.withContent(contentModel.getObject()).toJsonString() + ");");
+        String json = snackbarConfig.withText(contentModel.getObject()).toJsonString();
+        target.appendJavaScript("Snackbar.show(" + json + ");");
     }
 
     /**

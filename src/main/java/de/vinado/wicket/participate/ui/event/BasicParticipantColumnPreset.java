@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.ui.event;
 
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.components.TextAlign;
 import de.vinado.wicket.participate.components.panels.IconPanel;
 import de.vinado.wicket.participate.components.tables.columns.EnumColumn;
@@ -51,16 +51,16 @@ public class BasicParticipantColumnPreset extends ParticipantColumnListDecorator
 
                 icon.setTextAlign(TextAlign.CENTER);
                 if (InvitationStatus.ACCEPTED.equals(invitationStatus)) {
-                    icon.setType(FontAwesomeIconType.check);
+                    icon.setType(FontAwesome5IconType.check_s);
                     icon.setColor(IconPanel.Color.SUCCESS);
                 } else if (InvitationStatus.DECLINED.equals(invitationStatus)) {
-                    icon.setType(FontAwesomeIconType.times);
+                    icon.setType(FontAwesome5IconType.times_s);
                     icon.setColor(IconPanel.Color.DANGER);
                 } else if (InvitationStatus.UNINVITED.equals(invitationStatus)) {
-                    icon.setType(FontAwesomeIconType.circle_thin);
+                    icon.setType(FontAwesome5IconType.circle_r);
                     icon.setColor(IconPanel.Color.MUTED);
                 } else {
-                    icon.setType(FontAwesomeIconType.circle);
+                    icon.setType(FontAwesome5IconType.circle_s);
                     icon.setColor(IconPanel.Color.WARNING);
                 }
 

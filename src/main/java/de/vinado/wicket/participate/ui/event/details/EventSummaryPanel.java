@@ -2,13 +2,11 @@ package de.vinado.wicket.participate.ui.event.details;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
-import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventSummaryUpdateEvent;
-import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
@@ -21,14 +19,11 @@ import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-
-import static de.vinado.wicket.participate.components.Models.map;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -59,7 +54,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         wmc.add(new Label("eventName", new PropertyModel<>(model, "name")));
 
         // TODO Stylen
-        final BootstrapAjaxLink previousEventBtn = new BootstrapAjaxLink("previousEventBtn", Buttons.Type.Link) {
+        final BootstrapAjaxLink<Void> previousEventBtn = new BootstrapAjaxLink<>("previousEventBtn", Buttons.Type.Link) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 final EventDetails previousEvent =
@@ -74,10 +69,10 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         };
         previousEventBtn.setOutputMarkupPlaceholderTag(true);
         previousEventBtn.setSize(Buttons.Size.Small);
-        previousEventBtn.setIconType(FontAwesomeIconType.caret_left);
+        previousEventBtn.setIconType(FontAwesome5IconType.caret_left_s);
         wmc.add(previousEventBtn);
 
-        final BootstrapAjaxLink backBtn = new BootstrapAjaxLink("backBtn", Buttons.Type.Default) {
+        final BootstrapAjaxLink<Void> backBtn = new BootstrapAjaxLink<>("backBtn", Buttons.Type.Default) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 setResponsePage(EventsPage.class);
@@ -85,10 +80,10 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         };
         backBtn.setLabel(new ResourceModel("show.event.overview", "Show Event Overview"));
         backBtn.setSize(Buttons.Size.Small);
-        backBtn.setIconType(FontAwesomeIconType.calendar);
+        backBtn.setIconType(FontAwesome5IconType.calendar_s);
         wmc.add(backBtn);
 
-        final BootstrapAjaxLink nextEventBtn = new BootstrapAjaxLink("nextEventBtn", Buttons.Type.Link) {
+        final BootstrapAjaxLink<Void> nextEventBtn = new BootstrapAjaxLink<>("nextEventBtn", Buttons.Type.Link) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 final EventDetails nextEvent = eventService.getSuccessor(model.getObject());
@@ -102,7 +97,7 @@ public class EventSummaryPanel extends BreadCrumbPanel {
         };
         nextEventBtn.setOutputMarkupPlaceholderTag(true);
         nextEventBtn.setSize(Buttons.Size.Small);
-        nextEventBtn.setIconType(FontAwesomeIconType.caret_right);
+        nextEventBtn.setIconType(FontAwesome5IconType.caret_right_s);
         wmc.add(nextEventBtn);
 
         wmc.add(new Label("acceptedCount"));
@@ -127,16 +122,10 @@ public class EventSummaryPanel extends BreadCrumbPanel {
 
         // Unterer Bereich
         IModel<ParticipantFilter> filterModel = new CompoundPropertyModel<>(new ParticipantFilter());
-        final BootstrapPanel<Event> listPanel = new BootstrapPanel<Event>("listPanel",
-            map(model, EventDetails::getEvent), new PropertyModel<>(model, "name")) {
-            @Override
-            protected Panel newBodyPanel(final String id, final IModel<Event> model) {
-                EventSummaryListPanel panel = new EventSummaryListPanel(id, model, filterModel, editable);
-                panel.add(new UpdateOnEventBehavior<>(ParticipantFilterIntent.class));
-                panel.add(new UpdateOnEventBehavior<>(ParticipantTableUpdateIntent.class));
-                return panel;
-            }
-        };
+
+        EventSummaryListPanel listPanel = new EventSummaryListPanel("listPanel", model.map(EventDetails::getEvent), filterModel, editable);
+        listPanel.add(new UpdateOnEventBehavior<>(ParticipantFilterIntent.class));
+        listPanel.add(new UpdateOnEventBehavior<>(ParticipantTableUpdateIntent.class));
         listPanel.setOutputMarkupId(true);
         wmc.add(listPanel);
     }

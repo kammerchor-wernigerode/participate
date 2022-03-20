@@ -45,7 +45,7 @@ public class BootstrapForm<T> extends de.agilecoders.wicket.core.markup.html.boo
     }
 
     public void addBootstrapHorizontalFormDecorator() {
-        type(FormType.Horizontal);
+        type(FormType.Default);
         visitChildren(FormComponent.class, (IVisitor<FormComponent, Void>) (component, voidIVisit) -> {
             if (!(component instanceof Button)) {
                 component.add(BootstrapHorizontalFormDecorator.decorate());

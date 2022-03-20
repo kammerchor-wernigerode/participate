@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.ui.form;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.form.FormType;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarForm;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.select.BootstrapSelect;
 import de.vinado.wicket.participate.model.Participant;
@@ -30,6 +31,7 @@ public abstract class EventDropDownForm extends NavbarForm<Participant> {
 
     public EventDropDownForm(final String componentId, final IModel<Participant> model) {
         super(componentId, model);
+        type(FormType.Inline);
 
         setDefaultValue(model.getObject());
 

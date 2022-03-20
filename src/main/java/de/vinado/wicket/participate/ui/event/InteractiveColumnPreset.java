@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.ui.event;
 
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.components.tables.columns.BootstrapAjaxLinkColumn;
 import de.vinado.wicket.participate.model.Participant;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -29,7 +29,7 @@ public class InteractiveColumnPreset extends ParticipantColumnListDecorator {
     private IColumn<Participant, SerializableFunction<Participant, ?>> editColumn(
         SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onClick) {
         return new BootstrapAjaxLinkColumn<Participant, SerializableFunction<Participant, ?>>(
-            FontAwesomeIconType.pencil, new ResourceModel("invitation.edit", "Edit Invitation")) {
+            FontAwesome5IconType.pencil_alt_s, new ResourceModel("invitation.edit", "Edit Invitation")) {
             @Override
             public void onClick(AjaxRequestTarget target, IModel<Participant> rowModel) {
                 onClick.accept(target, rowModel);
@@ -45,7 +45,7 @@ public class InteractiveColumnPreset extends ParticipantColumnListDecorator {
     private IColumn<Participant, SerializableFunction<Participant, ?>> emailColumn(
         SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onClick) {
         return new BootstrapAjaxLinkColumn<Participant, SerializableFunction<Participant, ?>>(
-            FontAwesomeIconType.envelope, new ResourceModel("email.send", "Send Email")) {
+            FontAwesome5IconType.envelope_s, new ResourceModel("email.send", "Send Email")) {
             @Override
             public void onClick(AjaxRequestTarget target, IModel<Participant> rowModel) {
                 onClick.accept(target, rowModel);

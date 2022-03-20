@@ -8,15 +8,12 @@ import de.agilecoders.wicket.core.settings.BootstrapSettings;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
 import de.agilecoders.wicket.extensions.javascript.GoogleClosureJavaScriptCompressor;
 import de.agilecoders.wicket.extensions.javascript.YuiCssCompressor;
-import de.agilecoders.wicket.less.BootstrapLess;
-import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.ui.event.EventsPage;
 import de.vinado.wicket.participate.ui.login.SignInPage;
 import de.vinado.wicket.participate.ui.pages.ErrorPage;
 import de.vinado.wicket.participate.ui.pages.ExpiredPage;
 import de.vinado.wicket.participate.ui.pages.PageRegistry;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.apache.wicket.Application;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.authentication.strategy.DefaultAuthenticationStrategy;
@@ -26,13 +23,12 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Ann
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
-import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
+import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
@@ -40,23 +36,19 @@ import org.apache.wicket.request.resource.caching.version.CachingResourceVersion
 import org.apache.wicket.serialize.java.DeflatedJavaSerializer;
 import org.apache.wicket.settings.RequestCycleSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.scheduling.annotation.EnableScheduling;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 @SpringBootApplication
 @EnableScheduling
 @EnableConfigurationProperties
 @Getter
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ParticipateApplication extends AuthenticatedWebApplication {
-
-    private final ApplicationProperties applicationProperties;
 
     @Value("${spring.application.name}")
     private String applicationName;
@@ -75,19 +67,6 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
         return (ParticipateApplication) Application.get();
     }
 
-    public ApplicationProperties getApplicationProperties() {
-        return applicationProperties;
-    }
-
-    public boolean isInDevelopmentMode() {
-        return applicationProperties.isDevelopmentMode();
-    }
-
-    public String getBaseUrl() {
-        final HttpServletRequest req = (HttpServletRequest) (RequestCycle.get().getRequest()).getContainerRequest();
-        return RequestUtils.toAbsolutePath(req.getRequestURL().toString(), "");
-    }
-
     public Url getRequestedUrl() {
         return new UrlRenderer(RequestCycle.get().getRequest()).getBaseUrl();
     }
@@ -103,6 +82,8 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
     @Override
     public void init() {
         super.init();
+
+        getCspSettings().blocking().disabled();
 
         getApplicationSettings().setUploadProgressUpdatesEnabled(true);
         getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
@@ -131,10 +112,11 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
         }
 
         // spring injector for @SpringBean annotations
-        getComponentInstantiationListeners().add(new SpringComponentInjector(this));
+        WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        getComponentInstantiationListeners().add(new SpringComponentInjector(this, ctx));
 
         // Error Page
-        getRequestCycleListeners().add(new AbstractRequestCycleListener() {
+        getRequestCycleListeners().add(new IRequestCycleListener() {
             @Override
             public IRequestHandler onException(final RequestCycle cycle, final Exception ex) {
                 return new RenderPageRequestHandler(new PageProvider(new ErrorPage(ex)));
@@ -142,18 +124,10 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
         });
     }
 
-    @Override
-    protected void validateInit() {
-        super.validateInit();
-    }
-
     private void configureBootstrap() {
         final IBootstrapSettings settings = new BootstrapSettings();
-        Bootstrap.builder().withBootstrapSettings(settings).install(this);
-
         settings.setJsResourceFilterName("footer-container");
-
-        BootstrapLess.install(this);
+        Bootstrap.builder().withBootstrapSettings(settings).install(this);
     }
 
     private void optimizeForWebPerformance() {

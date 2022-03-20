@@ -1,17 +1,15 @@
 package de.vinado.wicket.participate.configuration;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import java.net.MalformedURLException;
 import java.net.URL;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 /**
  * Reads the properties from "classpath:/application.properties"
@@ -22,7 +20,6 @@ import java.net.URL;
 @ConfigurationProperties("app")
 @Getter
 @Setter
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ApplicationProperties implements InitializingBean {
 
     private static final String EMAIL_PATTERN = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,6}$";

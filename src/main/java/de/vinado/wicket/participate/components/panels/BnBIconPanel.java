@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.components.panels;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.components.TextAlign;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
@@ -9,8 +9,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-
-import static de.vinado.wicket.participate.components.Models.map;
 
 /**
  * This icon panel has nothing to do with the common bed and breakfast. The name summarises it's purpose perfectly with
@@ -25,23 +23,23 @@ public class BnBIconPanel extends Panel {
 
         add(new IconPanel(
             "catering",
-            FontAwesomeIconType.cutlery,
+            FontAwesome5IconType.utensils_s,
             model.getObject().isCatering() ? IconPanel.Color.SUCCESS : IconPanel.Color.DANGER,
             TextAlign.CENTER).setDisplay(IconPanel.Display.INLINE)
         );
 
         add(new IconPanel(
             "accommodation",
-            FontAwesomeIconType.bed,
+            FontAwesome5IconType.bed_s,
             model.getObject().isAccommodation() ? IconPanel.Color.SUCCESS : IconPanel.Color.DANGER,
             TextAlign.CENTER).setDisplay(IconPanel.Display.INLINE)
         );
 
-        IModel<ParticipantDTO> dtoModel = map(model, ParticipantDTO::new);
+        IModel<ParticipantDTO> dtoModel = model.map(ParticipantDTO::new);
         WebMarkupContainer car = new WebMarkupContainer("car");
         car.add(new CssClassNameAppender(dtoModel.getObject().isCar() ? "badge-success" : "badge-transparent text-muted"));
         add(car);
 
-        car.add(new Label("seats", map(dtoModel, ParticipantDTO::getCarSeatCount)));
+        car.add(new Label("seats", dtoModel.map(ParticipantDTO::getCarSeatCount)));
     }
 }

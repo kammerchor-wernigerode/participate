@@ -4,9 +4,9 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.agilecoders.wicket.jquery.util.Strings2;
+import de.vinado.wicket.bt4.tooltip.TooltipBehavior;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapInlineFormDecorator;
 import de.vinado.wicket.participate.model.filters.IFilterPanel;
 import de.vinado.wicket.participate.providers.SimpleDataProvider;
@@ -49,6 +49,7 @@ public abstract class AbstractTableFilterPanel<T, F> extends Panel implements IF
         inner = new WebMarkupContainer("wmc") {
             @Override
             protected void onConfigure() {
+                super.onConfigure();
                 if (visible) {
                     add(new CssClassNameAppender("in"));
                 }
@@ -75,33 +76,33 @@ public abstract class AbstractTableFilterPanel<T, F> extends Panel implements IF
         showButton.setOutputMarkupId(true);
         showButton.add(new AttributeModifier("data-parent", "#" + Strings2.getMarkupId(AbstractTableFilterPanel.this)));
         showButton.add(new AttributeModifier("href", "#" + inner.getMarkupId(true)));
-        showButton.setSize(Buttons.Size.Mini);
-        showButton.setIconType(FontAwesomeIconType.filter);
+        showButton.setSize(Buttons.Size.Small);
+        showButton.setIconType(FontAwesome5IconType.filter_s);
         showButton.setLabel(new ResourceModel("filter.enable", "Show Filter"));
         form.add(showButton);
 
         final BootstrapAjaxButton filterBtn = new BootstrapAjaxButton("filterBtn", Model.of(""), form, Buttons.Type.Primary) {
             @Override
-            protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+            protected void onSubmit(final AjaxRequestTarget target) {
                 onSearch(target, filterModel.getObject());
                 target.focusComponent(getFocusableFormComponent());
             }
         };
-        filterBtn.setIconType(FontAwesomeIconType.search);
+        filterBtn.setIconType(FontAwesome5IconType.search_s);
         filterBtn.add(new TooltipBehavior(new ResourceModel("filter", "Filter")));
         inner.add(filterBtn);
 
         final BootstrapAjaxButton resetBtn = new BootstrapAjaxButton("resetBtn", Model.of(""), form, Buttons.Type.Default) {
             @Override
             @SuppressWarnings("unchecked")
-            protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+            protected void onSubmit(final AjaxRequestTarget target) {
                 filterModel.setObject(newFilter((Class<F>) filterModel.getObject().getClass()));
                 target.add(form);
                 onReset(target);
                 target.focusComponent(getFocusableFormComponent());
             }
         };
-        resetBtn.setIconType(FontAwesomeIconType.refresh);
+        resetBtn.setIconType(FontAwesome5IconType.undo_s);
         resetBtn.add(new TooltipBehavior(new ResourceModel("reset", "Reset")));
         inner.add(resetBtn);
 
@@ -116,7 +117,7 @@ public abstract class AbstractTableFilterPanel<T, F> extends Panel implements IF
     }
 
     public void addBootstrapFormDecorator(final Form<T> form) {
-        form.add(new AttributeModifier("class", "form-inline clearfix"));
+        form.add(new AttributeModifier("class", "form-inline"));
         form.visitChildren(FormComponent.class, (IVisitor<FormComponent<?>, Void>) (component, voidIVisit) -> {
             if (!(component instanceof Button)) {
                 component.add(BootstrapInlineFormDecorator.decorate());

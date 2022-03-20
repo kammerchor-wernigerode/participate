@@ -1,97 +1,60 @@
 package de.vinado.wicket.participate.ui.login;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.vinado.wicket.participate.components.panels.Collapsible;
-import de.vinado.wicket.participate.components.snackbar.Snackbar;
-import de.vinado.wicket.participate.services.UserService;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5CssReference;
+import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.ui.pages.BasePage;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
-import org.apache.wicket.extensions.markup.html.tabs.ITab;
-import org.apache.wicket.markup.html.form.EmailTextField;
+import org.apache.wicket.Component;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.MetaDataHeaderItem;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.string.Strings;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import static org.apache.wicket.markup.head.HtmlImportHeaderItem.forLinkTag;
 
 /**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
+ * @author Vincent Nadoll
  */
 public class SignInPage extends BasePage {
 
-    @SuppressWarnings("unused")
-    @SpringBean
-    private UserService userService;
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
-    public SignInPage(final PageParameters parameters) {
-        super(parameters);
+        setStatelessHint(true);
+        forceStateless();
+        remove("modal");
 
-        add(new SignInPanel("signInPanel"));
+        add(customerLabel("customer"));
+        add(signInPanel("signInPanel"));
 
-        final List<ITab> tabs = new ArrayList<>();
-        tabs.add(new AbstractTab(new ResourceModel("resetPasswordQ", "Forgot Password?")) {
-            @Override
-            public Panel getPanel(final String panelId) {
-                return new ResetPasswordPanel(panelId, new CompoundPropertyModel<>(new ResetPassword()));
-            }
-        });
+        add(passwordResetFrom("passwordResetForm"));
+    }
 
-        add(new Collapsible("collapsible", tabs) {
-            @Override
-            protected CssClassNameAppender getActiveCssClassNameAppender() {
-                return new CssClassNameAppender("");
-            }
+    private void forceStateless() {
+        visitChildren((component, visit) -> {
+            if (!component.isStateless()) throw new WicketRuntimeException("Child components must be stateless");
         });
     }
 
-    private class ResetPasswordPanel extends Panel {
-
-        ResetPasswordPanel(final String id, final IModel<ResetPassword> model) {
-            super(id, model);
-
-            final Form form = new Form("form");
-            add(form);
-
-            final EmailTextField emailTf = new EmailTextField("email");
-            form.add(emailTf);
-
-            final AjaxSubmitLink submitBtn = new AjaxSubmitLink("submit") {
-                @Override
-                protected void onSubmit(final AjaxRequestTarget target, final Form<?> inner) {
-                    if (Strings.isEmpty(model.getObject().getEmail())) {
-                        Snackbar.show(target, new ResourceModel("password.reset.email", "Enter your email address"));
-                        return;
-                    }
-                    if (userService.startPasswordReset(model.getObject().getEmail(), false)) {
-                        Snackbar.show(target, new ResourceModel("password.reset.success", "An email has been sent. Check your inbox."));
-                    } else {
-                        Snackbar.show(target, new ResourceModel("email.send.error", "There was an error while sending the email"));
-                    }
-                }
-            };
-            form.add(submitBtn);
-        }
+    private Component customerLabel(String id) {
+        return new Label(id, ParticipateApplication.get().getApplicationName());
     }
 
-    private class ResetPassword implements Serializable {
+    private Component signInPanel(String id) {
+        return new SignInPanel(id);
+    }
 
-        private String email;
+    private Form<?> passwordResetFrom(String id) {
+        return new PasswordResetForm(id);
+    }
 
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(final String email) {
-            this.email = email;
-        }
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        response.render(MetaDataHeaderItem.forMetaTag("viewport", "width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"));
+        response.render(MetaDataHeaderItem.forMetaTag("robots", "noindex, nofollow"));
+        response.render(forLinkTag("shortcut icon", "favicon.ico", "image/x-icon"));
+        response.render(CssHeaderItem.forReference(FontAwesome5CssReference.instance()));
     }
 }
