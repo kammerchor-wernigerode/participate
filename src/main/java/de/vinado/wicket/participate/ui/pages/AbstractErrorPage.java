@@ -1,15 +1,20 @@
 package de.vinado.wicket.participate.ui.pages;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.html.HtmlTag;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.components.panels.Footer;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import java.util.Locale;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -34,6 +39,18 @@ public abstract class AbstractErrorPage extends org.apache.wicket.markup.html.pa
         add(footer);
 
         add(new HeaderResponseContainer("footer-container", "footer-container"));
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        add(html("html"));
+    }
+
+    protected Component html(String id) {
+        HtmlTag tag = new HtmlTag(id, Locale.getDefault());
+        tag.add(new CssClassNameAppender("h-100"));
+        return tag;
     }
 
     protected abstract void addHomePageLink(final AbstractLink homePageLink);
