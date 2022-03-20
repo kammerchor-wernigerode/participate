@@ -5,15 +5,17 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.ButtonBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
+import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
+import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
 import de.vinado.wicket.bt4.tooltip.TooltipBehavior;
+import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapInlineFormDecorator;
 import de.vinado.wicket.participate.model.filters.EventFilter;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.form.AbstractSubmitLink;
 import org.apache.wicket.markup.html.form.Button;
@@ -28,9 +30,7 @@ import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.visit.IVisitor;
-import org.danekja.java.util.function.serializable.SerializableBiConsumer;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 import java.util.Date;
 
@@ -55,14 +55,9 @@ public abstract class EventFilterForm extends Form<EventFilter> {
         add(termInput("searchTerm"));
         add(showAllCheck("showAll"));
 
-        DateTextFieldConfig endDateConfig = createDateTextFieldConfig();
-        MarkupContainer endDateInput;
-        add(endDateInput = endDateInput("endDate", endDateConfig));
-        endDateInput.setOutputMarkupId(true);
-        add(startDateInput("startDate", (value, target) -> {
-            endDateConfig.withStartDate(DateTime.parse(value, DateTimeFormat.forPattern("dd.MM.yyyy")));
-            target.add(endDateInput);
-        }));
+        DatetimePickerConfig endDateConfig = createDatetimePickerConfig();
+        add(endDateInput("endDate", endDateConfig));
+        add(startDateInput("startDate", endDateConfig::withMinDate));
 
         add(resetButton("reset"));
         add(applyButton("apply"));
@@ -85,36 +80,28 @@ public abstract class EventFilterForm extends Form<EventFilter> {
         return new CheckBox(id);
     }
 
-    protected DateTextFieldConfig createDateTextFieldConfig() {
-        DateTextFieldConfig config = new DateTextFieldConfig();
-        config.withLanguage("de");
+    protected DatetimePickerConfig createDatetimePickerConfig() {
+        DatetimePickerConfig config = new DatetimePickerConfig();
+        config.with(new DatetimePickerIconConfig());
+        config.useLocale(getLocale().getLanguage());
         config.withFormat("dd.MM.yyyy");
-        config.autoClose(true);
+        config.useCurrent(false);
         return config;
     }
 
-    protected FormComponent<Date> startDateInput(String id, SerializableBiConsumer<String, AjaxRequestTarget> onChange) {
-        DateTextFieldConfig config = createDateTextFieldConfig();
+    protected FormComponent<Date> startDateInput(String id, SerializableConsumer<Date> onChange) {
+        DatetimePickerConfig config = createDatetimePickerConfig();
 
-        DateTextField field = new DateTextField(id, config);
+        DatetimePicker field = new DatetimePicker(id, config);
         field.setLabel(new ResourceModel("from", "From"));
-        field.add(new AjaxFormComponentUpdatingBehavior("change") {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-                onChange.accept(getFormComponent().getValue(), target);
-            }
-        });
+        field.add(new DatetimePickerResettingBehavior(onChange));
         return field;
     }
 
-    protected FormComponent<Date> endDateInput(String id, DateTextFieldConfig config) {
-        FormComponent<Date> field = new DateTextField(id, config);
+    protected FormComponent<Date> endDateInput(String id, DatetimePickerConfig config) {
+        FormComponent<Date> field = new DatetimePicker(id, config);
         field.setLabel(new ResourceModel("to", "To"));
-        field.add(new AjaxFormComponentUpdatingBehavior("change") {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-            }
-        });
+        field.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
         return field;
     }
 

@@ -5,19 +5,23 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.select.BootstrapSelect;
-import de.vinado.wicket.participate.ParticipateApplication;
+import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
+import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
+import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.behavoirs.AutosizeBehavior;
+import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.participate.common.ParticipateUtils;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
+import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
-import de.vinado.wicket.participate.ui.form.FormPanel;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -32,11 +36,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.string.Strings;
 
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -56,21 +57,24 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
         super(modal, new ResourceModel("invitation.edit", "Edit Invitation"), model);
         setModalSize(ModalSize.Medium);
 
+        Event event = model.getObject().getEvent();
         final DatetimePickerConfig fromConfig = new DatetimePickerConfig();
         fromConfig.useLocale("de");
         fromConfig.useCurrent(false);
-        fromConfig.withMinDate(model.getObject().getEvent().getStartDate());
-        fromConfig.withMaxDate(model.getObject().getEvent().getEndDate());
+        fromConfig.withMinDate(event.getStartDate());
+        fromConfig.withMaxDate(DateUtils.addMilliseconds(DateUtils.addDays(event.getEndDate(), 1), -1));
         fromConfig.withFormat("dd.MM.yyyy HH:mm");
         fromConfig.withMinuteStepping(30);
+        fromConfig.with(new DatetimePickerIconConfig());
 
         final DatetimePickerConfig toConfig = new DatetimePickerConfig();
         toConfig.useLocale("de");
         toConfig.useCurrent(false);
-        toConfig.withMinDate(model.getObject().getEvent().getStartDate());
-        toConfig.withMaxDate(model.getObject().getEvent().getEndDate());
+        toConfig.withMinDate(event.getStartDate());
+        toConfig.withMaxDate(DateUtils.addMilliseconds(DateUtils.addDays(event.getEndDate(), 1), -1));
         toConfig.withFormat("dd.MM.yyyy HH:mm");
         toConfig.withMinuteStepping(30);
+        toConfig.with(new DatetimePickerIconConfig());
 
         final BootstrapSelect<InvitationStatus> invitationStatusBs = new BootstrapSelect<>("invitationStatus",
             Collections.unmodifiableList(Arrays.asList(InvitationStatus.values())), new EnumChoiceRenderer<>());
@@ -85,27 +89,16 @@ public abstract class EditInvitationPanel extends BootstrapModalPanel<Participan
         invitationStatusBs.add(BootstrapHorizontalFormDecorator.decorate());
         inner.add(invitationStatusBs);
 
-        final DatetimePicker toDtP = new DatetimePicker("toDate", fromConfig);
+        final DatetimePicker toDtP = new DatetimePicker("toDate", toConfig);
 
-        final DatetimePicker fromDtP = new DatetimePicker("fromDate", toConfig);
-        fromDtP.add(new AjaxFormComponentUpdatingBehavior("dp.hide") {
-            @Override
-            protected void onUpdate(final AjaxRequestTarget target) {
-                if (!Strings.isEmpty(fromDtP.getValue())) {
-                    try {
-                        toConfig.withMinDate(new SimpleDateFormat("dd.MM.yyyy").parse(fromDtP.getValue()));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    target.add(toDtP);
-                }
-            }
-        });
+        final DatetimePicker fromDtP = new DatetimePicker("fromDate", fromConfig);
+        fromDtP.add(new DatetimePickerResettingBehavior(toConfig::withMinDate));
         fromDtP.add(BootstrapHorizontalFormDecorator.decorate(new ResourceModel("from", "From")));
         inner.add(fromDtP);
 
         toDtP.setOutputMarkupId(true);
         toDtP.add(BootstrapHorizontalFormDecorator.decorate(new ResourceModel("till", "Till")));
+        toDtP.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
         toDtP.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {

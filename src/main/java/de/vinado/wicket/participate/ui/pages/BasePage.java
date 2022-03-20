@@ -11,7 +11,9 @@ import de.vinado.wicket.participate.resources.js.SnackbarJsResourceReference;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.head.CssReferenceHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -96,5 +98,11 @@ public abstract class BasePage extends WebPage {
         Resources.render(response, this);
         response.render(CssReferenceHeaderItem.forReference(SnackbarCssResourceReference.INSTANCE));
         response.render(JavaScriptReferenceHeaderItem.forReference(SnackbarJsResourceReference.INSTANCE));
+        response.render(JavaScriptHeaderItem.forScript("$(document).on('mouseup touchend', function (e) {\n" +
+            "  var container = $('.bootstrap-datetimepicker-widget');\n" +
+            "  if (!container.is(e.target) && container.has(e.target).length === 0) {\n" +
+            "    container.parent().datetimepicker('hide');\n" +
+            "  }\n" +
+            "});", "datetimepicker_autohide"));
     }
 }

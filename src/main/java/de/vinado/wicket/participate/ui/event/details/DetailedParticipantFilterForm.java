@@ -1,21 +1,21 @@
 package de.vinado.wicket.participate.ui.event.details;
 
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
+import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
+import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
+import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
+import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.ui.event.ParticipantFilterForm;
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
-import org.danekja.java.util.function.serializable.SerializableBiConsumer;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 import java.util.Date;
 
@@ -37,13 +37,9 @@ public abstract class DetailedParticipantFilterForm extends ParticipantFilterFor
         add(accommodationInput("accommodation"));
         add(cateringInput("catering"));
 
-        DateTextFieldConfig toDateConfig = createDateTextFieldConfig();
-        MarkupContainer toDateField = add(toDateInput("toDate", toDateConfig));
-        toDateField.setOutputMarkupId(true);
-        add(fromDateInput("fromDate", (value, target) -> {
-            toDateConfig.withStartDate(DateTime.parse(value, DateTimeFormat.forPattern("dd.MM.yyyy")));
-            target.add(toDateField);
-        }));
+        DatetimePickerConfig toDateConfig = createDatetimePickerConfig();
+        add(toDateInput("toDate", toDateConfig));
+        add(fromDateInput("fromDate", toDateConfig::withMinDate));
 
         super.onInitialize();
     }
@@ -54,28 +50,19 @@ public abstract class DetailedParticipantFilterForm extends ParticipantFilterFor
         return field;
     }
 
-    protected FormComponent<Date> fromDateInput(String id, SerializableBiConsumer<String, AjaxRequestTarget> onChange) {
-        DateTextFieldConfig config = createDateTextFieldConfig();
+    protected FormComponent<Date> fromDateInput(String id, SerializableConsumer<Date> onChange) {
+        DatetimePickerConfig config = createDatetimePickerConfig();
 
-        DateTextField field = new DateTextField(id, config);
+        DatetimePicker field = new DatetimePicker(id, config);
         field.setLabel(new ResourceModel("from", "From"));
-        field.add(new AjaxFormComponentUpdatingBehavior("change") {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-                onChange.accept(getFormComponent().getValue(), target);
-            }
-        });
+        field.add(new DatetimePickerResettingBehavior(onChange));
         return field;
     }
 
-    protected FormComponent<Date> toDateInput(String id, DateTextFieldConfig config) {
-        FormComponent<Date> field = new DateTextField(id, config);
+    protected FormComponent<Date> toDateInput(String id, DatetimePickerConfig config) {
+        DatetimePicker field = new DatetimePicker(id, config);
         field.setLabel(new ResourceModel("to", "To"));
-        field.add(new AjaxFormComponentUpdatingBehavior("change") {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-            }
-        });
+        field.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
         return field;
     }
 
@@ -87,14 +74,16 @@ public abstract class DetailedParticipantFilterForm extends ParticipantFilterFor
         return new CheckBox(id);
     }
 
-    protected DateTextFieldConfig createDateTextFieldConfig() {
+    protected DatetimePickerConfig createDatetimePickerConfig() {
         Event event = eventModel.getObject();
-        DateTextFieldConfig config = new DateTextFieldConfig();
-        config.withLanguage("de");
-        config.withFormat("dd.MM.yyyy");
-        config.withStartDate(new DateTime(event.getStartDate()));
-        config.withEndDate(new DateTime(event.getEndDate()));
-        config.autoClose(true);
+        DatetimePickerConfig config = new DatetimePickerConfig();
+        config.with(new DatetimePickerIconConfig());
+        config.useLocale(getLocale().getLanguage());
+        config.withMinDate(event.getStartDate());
+        config.withMaxDate(DateUtils.addMilliseconds(DateUtils.addDays(event.getEndDate(), 1), -1));
+        config.withFormat("dd.MM.yyyy HH:mm");
+        config.withMinuteStepping(30);
+        config.useCurrent(false);
         return config;
     }
 

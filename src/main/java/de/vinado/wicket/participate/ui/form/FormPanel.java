@@ -4,22 +4,27 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxButt
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
+import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
+import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
+import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
 import de.vinado.wicket.participate.behavoirs.AutosizeBehavior;
+import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.DismissableBootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.events.EventUpdateEvent;
+import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.TemplateModel;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
@@ -37,8 +42,6 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,18 +65,21 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
         fromConfig.useCurrent(false);
         fromConfig.withFormat("dd.MM.yyyy HH:mm");
         fromConfig.withMinuteStepping(30);
+        fromConfig.with(new DatetimePickerIconConfig());
 
         final DatetimePickerConfig toConfig = new DatetimePickerConfig();
         toConfig.useLocale("de");
         toConfig.useCurrent(false);
         toConfig.withFormat("dd.MM.yyyy HH:mm");
         toConfig.withMinuteStepping(30);
+        toConfig.with(new DatetimePickerIconConfig());
 
         if (null != model.getObject().getEvent()) {
-            fromConfig.withMinDate(model.getObject().getEvent().getStartDate());
-            fromConfig.withMaxDate(model.getObject().getEvent().getEndDate());
-            toConfig.withMinDate(model.getObject().getEvent().getStartDate());
-            toConfig.withMaxDate(model.getObject().getEvent().getEndDate());
+            Event event = model.getObject().getEvent();
+            fromConfig.withMinDate(event.getStartDate());
+            fromConfig.withMaxDate(DateUtils.addMilliseconds(DateUtils.addDays(event.getEndDate(), 1), -1));
+            toConfig.withMinDate(event.getStartDate());
+            toConfig.withMaxDate(DateUtils.addMilliseconds(DateUtils.addDays(event.getEndDate(), 1), -1));
         }
 
         final Form<?> form = new Form<>("form");
@@ -85,35 +91,19 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
 
         wmc.add(new Label("singer.displayName"));
 
-        final DatetimePicker toDtP = new DatetimePicker("toDate", fromConfig);
+        final DatetimePicker toDtP = new DatetimePicker("toDate", toConfig);
 
         WebMarkupContainer periodHelp;
         wmc.add(periodHelp = new WebMarkupContainer("periodHelp"));
         periodHelp.setOutputMarkupId(true);
 
-        final DatetimePicker fromDtP = new DatetimePicker("fromDate", toConfig);
-        fromDtP.add(new AjaxFormComponentUpdatingBehavior("dp.hide") {
-            @Override
-            protected void onUpdate(final AjaxRequestTarget target) {
-                if (!Strings.isEmpty(fromDtP.getValue())) {
-                    try {
-                        toConfig.withMinDate(new SimpleDateFormat("dd.MM.yyyy").parse(fromDtP.getValue()));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    target.add(toDtP);
-                }
-            }
-        });
+        final DatetimePicker fromDtP = new DatetimePicker("fromDate", fromConfig);
+        fromDtP.add(new DatetimePickerResettingBehavior(toConfig::withMinDate));
         fromDtP.add(AttributeAppender.append("aria-describedby", periodHelp.getMarkupId()));
         wmc.add(fromDtP, new FormComponentLabel("fromDateLabel", fromDtP));
 
         toDtP.setOutputMarkupId(true);
-        toDtP.add(new AjaxFormComponentUpdatingBehavior("change") {
-            @Override
-            protected void onUpdate(final AjaxRequestTarget target) {
-            }
-        });
+        toDtP.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
         wmc.add(toDtP, new FormComponentLabel("toDateLabel", toDtP));
 
         final CheckBox cateringCb = new CheckBox("catering");
