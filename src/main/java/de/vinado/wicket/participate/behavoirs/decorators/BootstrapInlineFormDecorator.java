@@ -48,10 +48,10 @@ public class BootstrapInlineFormDecorator extends AbstractBootstrapFormDecorator
         final boolean checkBox = fc instanceof CheckBox;
 
         if (checkBox) {
-            ComponentTag checkbox = new ComponentTag("div", XmlTag.TagType.OPEN);
-            checkbox.put("class", "form-check mb-2 mr-sm-2");
-            checkbox.writeOutput(r, wicketAttributes, namespace);
+            r.write("<div id=\"" + getAjaxRegionMarkupId(component) + "\" class=\"form-check mb-2 mr-sm-2\">");
         } else {
+            r.write("<span id=\"" + getAjaxRegionMarkupId(component) + "\">");
+
             ComponentTag labelTag = new ComponentTag("label", XmlTag.TagType.OPEN);
             labelTag.put("class", "sr-only");
             labelTag.put("for", fc.getMarkupId());
@@ -106,6 +106,8 @@ public class BootstrapInlineFormDecorator extends AbstractBootstrapFormDecorator
             r.write(labelTag.syntheticCloseTagString());
 
             formGroup.writeOutput(r, wicketAttributes, namespace);
+        } else {
+            r.write("</span>");
         }
     }
 

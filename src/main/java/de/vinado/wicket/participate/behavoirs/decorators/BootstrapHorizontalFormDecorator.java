@@ -66,10 +66,7 @@ public class BootstrapHorizontalFormDecorator extends AbstractBootstrapFormDecor
         final boolean required = fc.isRequired();
         final boolean checkBox = fc instanceof CheckBox;
 
-        ComponentTag formGroup = new ComponentTag("div", TagType.OPEN);
-        formGroup.setId(getAjaxRegionMarkupId(component));
-        formGroup.put("class", "form-group row");
-        formGroup.writeOutput(r, wicketAttributes, namespace);
+        r.write("<div id=\"" + getAjaxRegionMarkupId(component) + "\" class=\"form-group row\">");
 
         if (!checkBox) {
             ComponentTag labelTag = new ComponentTag("label", TagType.OPEN);

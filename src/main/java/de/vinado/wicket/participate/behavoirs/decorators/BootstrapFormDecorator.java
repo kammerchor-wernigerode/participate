@@ -37,16 +37,10 @@ public class BootstrapFormDecorator extends AbstractBootstrapFormDecorator {
     public void beforeRender(final Component component) {
         final FormComponent<?> fc = (FormComponent<?>) component;
         final Response r = component.getResponse();
-        boolean wicketAttributes = stripWicketTags();
-        String namespace = fc.getMarkup().getMarkupResourceStream().getWicketNamespace();
 
         final boolean checkBox = fc instanceof CheckBox;
 
-        ComponentTag formGroup = new ComponentTag("div", TagType.OPEN);
-        formGroup.setId(getAjaxRegionMarkupId(component));
-        formGroup.put("class", "form-group");
-        formGroup.put("class", formGroup.getAttribute("class") + (checkBox ? " form-check" : ""));
-        formGroup.writeOutput(r, wicketAttributes, namespace);
+        r.write("<div id=\"" + getAjaxRegionMarkupId(component) + "\" class=\"form-group" + (checkBox ? " form-check" : "") + "\">");
 
         if (!checkBox) insertLabel(component);
     }
