@@ -114,7 +114,7 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
         accommodationCb.add(BootstrapHorizontalFormDecorator.decorate());
         wmc.add(accommodationCb);
 
-        NumberTextField<Integer> carSeatCountTf = new NumberTextField<Integer>("carSeatCount") {
+        NumberTextField<Short> carSeatCountTf = new NumberTextField<>("carSeatCount") {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
@@ -125,8 +125,8 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
             }
         };
         carSeatCountTf.setOutputMarkupId(true);
-        carSeatCountTf.setMinimum(0);
-        carSeatCountTf.setMaximum(127); // 1 Byte maximum signed integer
+        carSeatCountTf.setMinimum((short) 0);
+        carSeatCountTf.setMaximum((short) 127); // 1 Byte maximum signed integer
         wmc.add(carSeatCountTf, new FormComponentLabel("carSeatCountLabel", carSeatCountTf));
 
         AjaxCheckBox carCb = new AjaxCheckBox("car") {
