@@ -10,7 +10,6 @@ import de.agilecoders.wicket.extensions.javascript.GoogleClosureJavaScriptCompre
 import de.agilecoders.wicket.extensions.javascript.YuiCssCompressor;
 import de.vinado.wicket.participate.ui.pages.ErrorPage;
 import de.vinado.wicket.participate.ui.pages.ExpiredPage;
-import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.RoleAuthorizationStrategy;
@@ -33,10 +32,6 @@ import org.apache.wicket.settings.SecuritySettings;
 import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
-
-import static org.apache.wicket.RuntimeConfigurationType.DEPLOYMENT;
-import static org.apache.wicket.RuntimeConfigurationType.DEVELOPMENT;
 
 /**
  * @author Vincent Nadoll
@@ -92,7 +87,7 @@ public abstract class AuthenticatedBootstrapWebApplication extends Authenticated
 
     protected void configureMarkup(MarkupSettings markupSettings) {
         markupSettings.setDefaultMarkupEncoding(StandardCharsets.UTF_8.name());
-        if (matches(DEPLOYMENT)) {
+        if (usesDeploymentConfig()) {
             markupSettings.setCompressWhitespace(true);
             markupSettings.setStripComments(true);
         }
@@ -105,7 +100,7 @@ public abstract class AuthenticatedBootstrapWebApplication extends Authenticated
     }
 
     protected void configureResourceManagement(ResourceSettings resourceSettings) {
-        if (matches(DEPLOYMENT)) resourceSettings.setResourcePollFrequency(null);
+        if (usesDeploymentConfig()) resourceSettings.setResourcePollFrequency(null);
     }
 
     protected abstract void mountPages();
@@ -147,18 +142,14 @@ public abstract class AuthenticatedBootstrapWebApplication extends Authenticated
     }
 
     private void configureDebug(DebugSettings debugSettings) {
-        if (matches(DEPLOYMENT)) {
+        if (usesDeploymentConfig()) {
             debugSettings.setComponentUseCheck(false);
-        } else if (matches(DEVELOPMENT)) {
+        } else if (usesDevelopmentConfig()) {
             debugSettings.setComponentPathAttributeName("data-wicket-path");
             debugSettings.setOutputMarkupContainerClassName(true);
         }
     }
 
     protected void installSpringComponentScanning() {
-    }
-
-    private boolean matches(RuntimeConfigurationType configurationType) {
-        return Objects.equals(configurationType, getConfigurationType());
     }
 }
