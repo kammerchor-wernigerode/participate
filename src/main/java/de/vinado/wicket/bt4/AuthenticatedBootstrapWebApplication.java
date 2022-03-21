@@ -44,22 +44,11 @@ import static org.apache.wicket.RuntimeConfigurationType.DEVELOPMENT;
 public abstract class AuthenticatedBootstrapWebApplication extends AuthenticatedWebApplication {
 
     @Override
-    protected void internalInit() {
-        super.internalInit();
+    protected void init() {
+        super.init();
 
         ApplicationSettings applicationSettings = getApplicationSettings();
         configureApplication(applicationSettings);
-    }
-
-    protected void configureApplication(ApplicationSettings applicationSettings) {
-        applicationSettings.setPageExpiredErrorPage(ExpiredPage.class);
-        applicationSettings.setInternalErrorPage(ErrorPage.class);
-        applicationSettings.setUploadProgressUpdatesEnabled(true);
-    }
-
-    @Override
-    protected void init() {
-        super.init();
 
         ContentSecurityPolicySettings cspSettings = getCspSettings();
         configureCps(cspSettings);
@@ -89,6 +78,12 @@ public abstract class AuthenticatedBootstrapWebApplication extends Authenticated
                 return new RenderPageRequestHandler(new PageProvider(new ErrorPage(ex)));
             }
         });
+    }
+
+    protected void configureApplication(ApplicationSettings applicationSettings) {
+        applicationSettings.setPageExpiredErrorPage(ExpiredPage.class);
+        applicationSettings.setInternalErrorPage(ErrorPage.class);
+        applicationSettings.setUploadProgressUpdatesEnabled(true);
     }
 
     protected void configureCps(ContentSecurityPolicySettings cspSettings) {
