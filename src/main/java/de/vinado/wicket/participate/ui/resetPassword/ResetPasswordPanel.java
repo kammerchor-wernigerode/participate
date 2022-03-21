@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.ui.resetPassword;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
-import de.vinado.wicket.participate.ParticipateApplication;
+import de.vinado.wicket.participate.ManagementApplication;
 import de.vinado.wicket.participate.services.UserService;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.markup.html.form.PasswordTextField;
@@ -87,7 +87,7 @@ public class ResetPasswordPanel extends Panel {
 
             if (resetPassword(getRecoveryToken(), getPassword())) {
                 strategy.remove();
-                getRequestCycle().setResponsePage(ParticipateApplication.get().getHomePage());
+                getRequestCycle().setResponsePage(ManagementApplication.get().getHomePage());
             }
         }
     }

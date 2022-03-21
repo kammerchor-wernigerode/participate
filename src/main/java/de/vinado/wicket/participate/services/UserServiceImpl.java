@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.services;
 
-import de.vinado.wicket.participate.ParticipateApplication;
+import de.vinado.wicket.participate.ManagementApplication;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.email.service.EmailService;
@@ -285,7 +285,7 @@ public class UserServiceImpl extends DataService implements UserService {
             final int validDuration = initial ? 30 : 7;
             final UserRecoveryToken token = createUserRecoveryToken(user, validDuration);
 
-            final Url baseUrl = ParticipateApplication.get().getRequestedUrl();
+            final Url baseUrl = ManagementApplication.get().getRequestedUrl();
             final List<String> urlSegments = new ArrayList<>();
             urlSegments.add("resetPassword");
             final Url passwordRecoveryLink = new Url();

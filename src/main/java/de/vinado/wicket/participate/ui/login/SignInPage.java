@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.ui.login;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5CssReference;
-import de.vinado.wicket.participate.ParticipateApplication;
+import de.vinado.wicket.participate.ManagementApplication;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
@@ -39,7 +39,7 @@ public class SignInPage extends BasePage {
     }
 
     private Component customerLabel(String id) {
-        return new Label(id, ParticipateApplication.get().getApplicationName());
+        return new Label(id, ManagementApplication.get().getApplicationName());
     }
 
     private Component signInPanel(String id) {

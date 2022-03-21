@@ -34,10 +34,10 @@ public class WebInitializer implements ServletContextInitializer {
      */
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-        final FilterRegistration filter = servletContext.addFilter("wicket.participate", WicketFilter.class);
+        final FilterRegistration filter = servletContext.addFilter("wicket.participate.management", WicketFilter.class);
         filter.setInitParameter(WicketFilter.APP_FACT_PARAM, SpringWebApplicationFactory.class.getName());
-        filter.setInitParameter("applicationClassName", "de.vinado.wicket.participate.ParticipateApplication");
-        filter.setInitParameter("applicationBean", "participateApplication");
+        filter.setInitParameter("applicationClassName", "de.vinado.wicket.participate.ManagementApplication");
+        filter.setInitParameter("applicationBean", "managementApplication");
         filter.setInitParameter(WicketFilter.IGNORE_PATHS_PARAM, "/static");
         filter.setInitParameter(WicketFilter.FILTER_MAPPING_PARAM, "/*");
         filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR), false, Stream.concat(Stream.of("/", "/wicket/*"), PageRegistry.getInstance().stream().map(PageRegistrar::getPath)).toArray(String[]::new));

@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.components.panels;
 
-import de.vinado.wicket.participate.ParticipateApplication;
+import de.vinado.wicket.participate.ManagementApplication;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.behavoirs.FooterBehavior;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
@@ -56,7 +56,7 @@ public class Footer extends Panel {
         });
         add(new Label("customer", applicationProperties.getCustomer()));
         add(new Label("year", new SimpleDateFormat("yyyy").format(new Date())));
-        add(new Label("applicationName", ParticipateApplication.get().getApplicationName()));
+        add(new Label("applicationName", ManagementApplication.get().getApplicationName()));
         add(new Label("version", applicationProperties.getVersion()));
     }
 }

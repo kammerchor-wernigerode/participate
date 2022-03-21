@@ -37,34 +37,19 @@ import org.apache.wicket.serialize.java.DeflatedJavaSerializer;
 import org.apache.wicket.settings.RequestCycleSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-@SpringBootApplication
-@EnableScheduling
-@EnableConfigurationProperties
 @Getter
-public class ParticipateApplication extends AuthenticatedWebApplication {
+@Component
+public class ManagementApplication extends AuthenticatedWebApplication {
 
     @Value("${spring.application.name}")
     private String applicationName;
 
-    /**
-     * Runs a {@link org.springframework.boot.SpringApplication} using default settings.
-     *
-     * @param args the application arguments
-     * @throws Exception exception if the application cannot be started
-     */
-    public static void main(final String[] args) throws Exception {
-        SpringApplication.run(ParticipateApplication.class, args);
-    }
-
-    public static ParticipateApplication get() {
-        return (ParticipateApplication) Application.get();
+    public static ManagementApplication get() {
+        return (ManagementApplication) Application.get();
     }
 
     public Url getRequestedUrl() {

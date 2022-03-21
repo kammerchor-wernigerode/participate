@@ -4,7 +4,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.HtmlTag;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.IeEdgeMetaTag;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.MetaTag;
-import de.vinado.wicket.participate.ParticipateApplication;
+import de.vinado.wicket.participate.ManagementApplication;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.resources.css.SnackbarCssResourceReference;
 import de.vinado.wicket.participate.resources.js.SnackbarJsResourceReference;
@@ -83,7 +83,7 @@ public abstract class BasePage extends WebPage {
     }
 
     protected IModel<String> getTitle() {
-        return Model.of(ParticipateApplication.get().getApplicationName());
+        return Model.of(ManagementApplication.get().getApplicationName());
     }
 
     /**
