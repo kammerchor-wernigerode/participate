@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.ui.pages;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.heading.Heading;
-import de.vinado.wicket.participate.ManagementApplication;
+import org.apache.wicket.Application;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
@@ -40,7 +40,7 @@ public class ExpiredPage extends AbstractErrorPage {
             protected void onTimer(final AjaxRequestTarget target) {
                 target.add(message);
                 if (COUNTDOWN == 0) {
-                    setResponsePage(ManagementApplication.get().getHomePage());
+                    setResponsePage(Application.get().getHomePage());
                 }
             }
         });

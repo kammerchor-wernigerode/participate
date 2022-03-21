@@ -22,8 +22,10 @@ import de.vinado.wicket.participate.ui.administration.AdminPage;
 import de.vinado.wicket.participate.ui.event.EventsPage;
 import de.vinado.wicket.participate.ui.singers.SingersPage;
 import de.vinado.wicket.participate.wicket.ApplicationName;
+import org.apache.wicket.Application;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -102,7 +104,7 @@ public class ParticipatePage extends BasePage {
                                     @Override
                                     protected void onConfirm(final User user, final AjaxRequestTarget target) {
                                         ParticipateSession.get().setUser(user);
-                                        ManagementApplication.get().getSecuritySettings().getAuthenticationStrategy().remove();
+                                        Application.get().getSecuritySettings().getAuthenticationStrategy().remove();
                                         userLabel = ParticipateSession.get().getUser().getPerson().getDisplayName();
                                         target.add(navbar);
                                         Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
@@ -143,7 +145,7 @@ public class ParticipatePage extends BasePage {
     protected void onConfigure() {
         super.onConfigure();
         if (!ParticipateSession.get().isSignedIn()) {
-            ManagementApplication.get().restartResponseAtSignInPage();
+            ((AuthenticatedWebApplication) AuthenticatedWebApplication.get()).restartResponseAtSignInPage();
         } else {
             final User user = ParticipateSession.get().getUser();
             if (null != user.getPerson()) {
