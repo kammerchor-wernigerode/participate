@@ -3,7 +3,6 @@ package de.vinado.wicket.participate.ui.administration.tool;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
-import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.behavoirs.AjaxDownload;
 import de.vinado.wicket.participate.components.links.BootstrapAjaxButton;
 import de.vinado.wicket.participate.components.panels.Collapsible;
