@@ -147,7 +147,7 @@ public abstract class AuthenticatedBootstrapWebApplication extends Authenticated
         }
 
         if (StringUtils.hasText(Bootstrap.getSettings().getJsResourceFilterName()))
-            getHeaderResponseDecorators().addPostProcessingDecorator(new RenderJavaScriptToFooterHeaderResponseDecorator());
+            setHeaderResponseDecorator(new RenderJavaScriptToFooterHeaderResponseDecorator());
         getRequestCycleSettings().setRenderStrategy(RequestCycleSettings.RenderStrategy.ONE_PASS_RENDER);
     }
 
