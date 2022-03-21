@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.behavoirs.decorators;
+package de.vinado.wicket.bt4.form.decorator;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.BootstrapBaseBehavior;
 import org.apache.wicket.Application;

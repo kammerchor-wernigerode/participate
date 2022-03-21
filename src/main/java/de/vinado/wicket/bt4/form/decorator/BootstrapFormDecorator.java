@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.behavoirs.decorators;
+package de.vinado.wicket.bt4.form.decorator;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
