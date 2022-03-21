@@ -1,7 +1,6 @@
 package de.vinado.wicket.participate.components.panels;
 
 import de.vinado.wicket.participate.ParticipateSession;
-import de.vinado.wicket.participate.behavoirs.FooterBehavior;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.dtos.SendFeedbackDTO;
@@ -30,8 +29,6 @@ public class Footer extends Panel {
 
     public Footer(final String id) {
         super(id);
-
-        add(new FooterBehavior());
 
         final boolean developmentMode = applicationProperties.isDevelopmentMode();
         final boolean signedIn = ParticipateSession.get().isSignedIn();
