@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.behavoirs;
+package de.vinado.wicket.common;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;

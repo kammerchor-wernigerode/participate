@@ -3,7 +3,7 @@ package de.vinado.wicket.participate.components;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
 import de.vinado.wicket.bt4.tooltip.TooltipBehavior;
 import de.vinado.wicket.bt4.tooltip.TooltipConfig;
-import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
+import de.vinado.wicket.common.UpdateOnEventBehavior;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.Component;

@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.ui.login;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
-import de.vinado.wicket.participate.behavoirs.FocusBehavior;
+import de.vinado.wicket.common.FocusBehavior;
 import org.apache.wicket.Component;
 import org.apache.wicket.feedback.FeedbackMessage;
 

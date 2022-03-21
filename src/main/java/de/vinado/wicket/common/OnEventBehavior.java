@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.behavoirs;
+package de.vinado.wicket.common;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.wicket.Component;

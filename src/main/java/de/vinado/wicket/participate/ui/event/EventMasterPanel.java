@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
 import de.vinado.wicket.participate.ParticipateSession;
-import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
+import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.events.RemoveEventUpdateEvent;
 import de.vinado.wicket.participate.model.EventDetails;

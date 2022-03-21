@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.ui.singers;
 
-import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
+import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.events.SingerUpdateEvent;
 import de.vinado.wicket.participate.model.filters.SingerFilter;
 import de.vinado.wicket.participate.services.PersonService;

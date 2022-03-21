@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.ui.form;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
-import de.vinado.wicket.participate.behavoirs.FocusBehavior;
+import de.vinado.wicket.common.FocusBehavior;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
