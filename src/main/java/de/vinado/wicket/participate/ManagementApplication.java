@@ -13,8 +13,6 @@ import de.vinado.wicket.participate.ui.login.SignInPage;
 import de.vinado.wicket.participate.ui.pages.ErrorPage;
 import de.vinado.wicket.participate.ui.pages.ExpiredPage;
 import de.vinado.wicket.participate.ui.pages.PageRegistry;
-import lombok.Getter;
-import org.apache.wicket.Application;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.authentication.strategy.DefaultAuthenticationStrategy;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
@@ -26,8 +24,6 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
@@ -40,17 +36,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-@Getter
 @Component
 public class ManagementApplication extends AuthenticatedWebApplication {
-
-    public static ManagementApplication get() {
-        return (ManagementApplication) Application.get();
-    }
-
-    public Url getRequestedUrl() {
-        return new UrlRenderer(RequestCycle.get().getRequest()).getBaseUrl();
-    }
 
     @Override
     protected void internalInit() {
