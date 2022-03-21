@@ -145,7 +145,7 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
             getResourceSettings().setCachingStrategy(new NoOpResourceCachingStrategy());
         }
 
-        setHeaderResponseDecorator(new RenderJavaScriptToFooterHeaderResponseDecorator());
+        getHeaderResponseDecorators().addPostProcessingDecorator(new RenderJavaScriptToFooterHeaderResponseDecorator());
         getRequestCycleSettings().setRenderStrategy(RequestCycleSettings.RenderStrategy.ONE_PASS_RENDER);
     }
 
