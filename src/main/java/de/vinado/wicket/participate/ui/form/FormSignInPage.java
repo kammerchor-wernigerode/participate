@@ -1,9 +1,7 @@
 package de.vinado.wicket.participate.ui.form;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.vinado.wicket.participate.behavoirs.FocusBehavior;
-import de.vinado.wicket.participate.components.panels.Collapsible;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
@@ -17,7 +15,6 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.authentication.strategy.DefaultAuthenticationStrategy;
 import org.apache.wicket.behavior.AttributeAppender;
-import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
@@ -104,21 +101,6 @@ public class FormSignInPage extends BasePage {
 
         final FormSignInForm form = new FormSignInForm("form");
         add(form);
-
-        final List<ITab> tabs = new ArrayList<>();
-        /*tabs.add(new AbstractTab(new ResourceModel("usage", "Usage")) {
-            @Override
-            public Panel getPanel(final String panelId) {
-                return new TextPanel(panelId, new ResourceModel("formUsageDescription", ""));
-            }
-        });*/
-
-        add(new Collapsible("collapsible", tabs) {
-            @Override
-            protected CssClassNameAppender getActiveCssClassNameAppender() {
-                return new CssClassNameAppender("");
-            }
-        });
     }
 
     private class FormSignInForm extends StatelessForm<FormSignInPage> {
