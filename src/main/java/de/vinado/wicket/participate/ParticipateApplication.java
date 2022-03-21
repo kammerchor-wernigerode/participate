@@ -8,12 +8,14 @@ import de.agilecoders.wicket.core.settings.BootstrapSettings;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
 import de.agilecoders.wicket.extensions.javascript.GoogleClosureJavaScriptCompressor;
 import de.agilecoders.wicket.extensions.javascript.YuiCssCompressor;
+import de.vinado.wicket.participate.configuration.CryptoProperties;
 import de.vinado.wicket.participate.ui.event.EventsPage;
 import de.vinado.wicket.participate.ui.login.SignInPage;
 import de.vinado.wicket.participate.ui.pages.ErrorPage;
 import de.vinado.wicket.participate.ui.pages.ExpiredPage;
 import de.vinado.wicket.participate.ui.pages.PageRegistry;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.apache.wicket.Application;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.authentication.strategy.DefaultAuthenticationStrategy;
@@ -36,6 +38,7 @@ import org.apache.wicket.request.resource.caching.version.CachingResourceVersion
 import org.apache.wicket.serialize.java.DeflatedJavaSerializer;
 import org.apache.wicket.settings.RequestCycleSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.apache.wicket.util.crypt.SunJceCrypt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -44,11 +47,16 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import java.nio.charset.StandardCharsets;
+
 @SpringBootApplication
 @EnableScheduling
-@EnableConfigurationProperties
+@EnableConfigurationProperties({CryptoProperties.class})
 @Getter
+@RequiredArgsConstructor
 public class ParticipateApplication extends AuthenticatedWebApplication {
+
+    private final CryptoProperties cryptoProperties;
 
     @Value("${spring.application.name}")
     private String applicationName;
@@ -89,7 +97,10 @@ public class ParticipateApplication extends AuthenticatedWebApplication {
         getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
         getSecuritySettings().setAuthorizationStrategy(new AnnotationsRoleAuthorizationStrategy(
             roles -> ParticipateSession.get().getRoles().hasAnyRole(roles)));
-        getSecuritySettings().setAuthenticationStrategy(new DefaultAuthenticationStrategy("_login", "fmGr-36Fsh_ds3hU6"));
+        SunJceCrypt crypt = new SunJceCrypt(cryptoProperties.getPbeSalt().getBytes(StandardCharsets.UTF_8), cryptoProperties.getPbeIterationCount());
+        crypt.setKey(cryptoProperties.getSessionSecret());
+        DefaultAuthenticationStrategy authenticationStrategy = new DefaultAuthenticationStrategy("_login", crypt);
+        getSecuritySettings().setAuthenticationStrategy(authenticationStrategy);
         setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), new HttpsConfig(80, 443)));
         getMarkupSettings().setStripWicketTags(true);
 
