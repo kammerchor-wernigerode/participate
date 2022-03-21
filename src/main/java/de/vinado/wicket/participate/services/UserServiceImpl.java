@@ -85,16 +85,6 @@ public class UserServiceImpl extends DataService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public void removeUser(final User user) {
-        final User loadedUser = load(User.class, user.getId());
-        loadedUser.setActive(false);
-        save(loadedUser);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public User assignPerson(final AddUserDTO dto) {
         User user = dto.getUser();
         if (null == user) {

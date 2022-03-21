@@ -148,14 +148,6 @@ public interface PersonService {
     List<Singer> getSingers(Event event);
 
     /**
-     * Fetches all {@link Singer}s by {@link Singer#searchName} that matches the filter term.
-     *
-     * @param term Filter term
-     * @return Filtered list of {@link Person}s
-     */
-    List<Singer> findSingers(String term);
-
-    /**
      * Handles the import of a CSV file with entries of {@link Person}s. The method need Wickets {@link FileUpload}
      * component. The columns has to be separated through comma.
      *

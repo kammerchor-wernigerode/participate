@@ -396,19 +396,6 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public List<Event> getUpcomingEvents(final int offset) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Event> criteriaQuery = criteriaBuilder.createQuery(Event.class);
-        final Root<Event> root = criteriaQuery.from(Event.class);
-        criteriaQuery.orderBy(criteriaBuilder.asc(root.<Event>get("startDate")));
-        criteriaQuery.where(forUpcomingDate(criteriaBuilder, root));
-        return entityManager.createQuery(criteriaQuery).setFirstResult(offset).getResultList();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public EventDetails getEventDetails(final Event event) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
@@ -492,46 +479,6 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public Participant getParticipant(final Singer singer, final Event event) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Predicate forEvent = criteriaBuilder.equal(root.<Event>get("event"), event);
-        final Predicate forSinger = criteriaBuilder.equal(root.<Singer>get("singer"), singer);
-        criteriaQuery.where(forEvent, forSinger);
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (NoResultException e) {
-            log.trace("Could not find any Participant for Event /w id={} and Singer /w id={}", event.getId(), singer.getId());
-            return null;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Participant getParticipant(final String email, final Long eventId) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Join<Participant, Event> eventJoin = root.join("event");
-        final Join<Participant, Singer> singerJoin = root.join("singer");
-        final Predicate forEvent = criteriaBuilder.equal(eventJoin.get("id"), eventId);
-        final Predicate forEmail = criteriaBuilder.equal(singerJoin.get("email"), email);
-        criteriaQuery.where(forEvent, forEmail);
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (NoResultException e) {
-            log.trace("Could not find any participant for Event /w id={} and Singer /w email=****", eventId);
-            return null;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Participant getParticipant(final String token) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
@@ -566,14 +513,6 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public List<Participant> getPendingParticipants(final Event event) {
-        return getParticipants(event, InvitationStatus.PENDING);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public String getToken(final Singer singer, final Event event) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<String> criteriaQuery = criteriaBuilder.createQuery(String.class);
@@ -588,21 +527,6 @@ public class EventServiceImpl extends DataService implements EventService {
             log.trace("Could not find Participant for Singer /w id={} and Event /w id={}", singer, event);
             return null;
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean hasParticipant(final Singer singer, final Event event) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Predicate forSinger = criteriaBuilder.equal(root.get("singer"), singer);
-        final Predicate forEvent = criteriaBuilder.equal(root.get("event"), event);
-        criteriaQuery.select(criteriaBuilder.count(root));
-        criteriaQuery.where(forSinger, forEvent);
-        return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
     /**

@@ -161,14 +161,6 @@ public interface EventService {
     List<String> getLocationList();
 
     /**
-     * Fetches all upcoming {@link Event}s with an start offset sorted by {@link Event#startDate}.
-     *
-     * @param offset Offset
-     * @return List of {@link Event Events}.
-     */
-    List<Event> getUpcomingEvents(int offset);
-
-    /**
      * Fetches an {@link EventDetails} for an {@link Event}.
      *
      * @param event {@link Event}
@@ -234,24 +226,6 @@ public interface EventService {
     boolean hasParticipant(Event event);
 
     /**
-     * Fetches a {@link Participant} for {@link Event} and {@link Singer}.
-     *
-     * @param singer {@link Singer}
-     * @param event  {@link Event}
-     * @return {@link Participant} for {@link Event} and {@link Singer}
-     */
-    Participant getParticipant(Singer singer, Event event);
-
-    /**
-     * Fetches a {@link Participant} for {@link Singer#email} and {@link Event#id}.
-     *
-     * @param email   {@link Singer#email}
-     * @param eventId {@link Event#id}
-     * @return {@link Participant} for {@link Singer#email} and {@link Event#id}.
-     */
-    Participant getParticipant(String email, Long eventId);
-
-    /**
      * Fetches a {@link Participant} for its {@link Participant#token}.
      *
      * @param token {@link Participant#token}
@@ -270,15 +244,6 @@ public interface EventService {
     List<Participant> getParticipants(Singer singer);
 
     /**
-     * Fetches all {@link Participant}s where the {@link Event} is present and the {@link Participant#invitationStatus}
-     * equals {@link InvitationStatus#PENDING}. The result is ordered by {@link Person#lastName}.
-     *
-     * @param event {@link Event} to filter for.
-     * @return List of ordered {@link Participant}s.
-     */
-    List<Participant> getPendingParticipants(Event event);
-
-    /**
      * Fetches the {@link Participant#token} for its {@link Singer} and {@link Event}.
      *
      * @param singer {@link Singer}
@@ -286,15 +251,6 @@ public interface EventService {
      * @return {@link Participant#token} for its {@link Singer} and {@link Event}
      */
     String getToken(Singer singer, Event event);
-
-    /**
-     * Returns whether any {@link Participant} exists for {@link Participant#singer} and {@link Participant#event}.
-     *
-     * @param singer {@link Singer}
-     * @param event  {@link Event}
-     * @return Whether any {@link Participant} exists for {@link Participant#singer} and {@link Participant#event}
-     */
-    boolean hasParticipant(Singer singer, Event event);
 
     /**
      * Sends an invitation to all participating {@link Singer}s of an {@link Event}.

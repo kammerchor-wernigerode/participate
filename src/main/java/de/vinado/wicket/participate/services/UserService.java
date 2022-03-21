@@ -31,13 +31,6 @@ public interface UserService {
     User saveUser(AddUserDTO dto);
 
     /**
-     * Sets an {@link User} to inactive.
-     *
-     * @param user {@link User}
-     */
-    void removeUser(User user);
-
-    /**
      * Assigns a {@link Person} to an {@link User}. If {@link AddUserDTO#person} is null a new {@link Person} will be
      * created. If {@link Person#email} is already in user the {@link Person} will be used instead of creating a new
      * one. User must not be null.
