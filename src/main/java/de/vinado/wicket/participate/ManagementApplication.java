@@ -36,7 +36,6 @@ import org.apache.wicket.request.resource.caching.version.CachingResourceVersion
 import org.apache.wicket.serialize.java.DeflatedJavaSerializer;
 import org.apache.wicket.settings.RequestCycleSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -44,9 +43,6 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 @Getter
 @Component
 public class ManagementApplication extends AuthenticatedWebApplication {
-
-    @Value("${spring.application.name}")
-    private String applicationName;
 
     public static ManagementApplication get() {
         return (ManagementApplication) Application.get();
