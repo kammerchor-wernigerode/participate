@@ -6,7 +6,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.participate.behavoirs.AjaxFocusBehavior;
-import de.vinado.wicket.participate.behavoirs.AutosizeBehavior;
+import de.vinado.wicket.form.AutosizeBehavior;
 import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;

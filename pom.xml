@@ -119,6 +119,12 @@
             <version>${wicket.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>autosize</artifactId>
+            <version>5.0.1</version>
+        </dependency>
+
         <!-- FREEMARKER -->
         <dependency>
             <groupId>org.freemarker</groupId>

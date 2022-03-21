@@ -9,7 +9,7 @@ import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
 import de.vinado.wicket.participate.ParticipateSession;
-import de.vinado.wicket.participate.behavoirs.AutosizeBehavior;
+import de.vinado.wicket.form.AutosizeBehavior;
 import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
 import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.participate.common.ParticipateUtils;
