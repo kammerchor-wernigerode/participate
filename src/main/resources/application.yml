@@ -62,6 +62,10 @@ app:
   deadline-offset: ${DEADLINE_OFFSET:-1}
   organization-responsible: ${RESPONSIBLE_ORGANIZATION}
   sleeping-place-responsible: ${RESPONSIBLE_SLEEPING_PLACE}
+  crypto:
+    session-secret: ${CRYPTO_SESSION_SECRET:}
+    pbe-salt: ${CRYPTO_PBE_SALT:}
+    pbe-iteration-count: ${CRYPTO_PBE_ITERATION_COUNT:1000}
   mail:
     footer: ${spring.application.name}
     sender: ${spring.mail.properties.mail.from}
