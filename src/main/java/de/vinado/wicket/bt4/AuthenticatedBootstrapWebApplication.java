@@ -8,6 +8,7 @@ import de.agilecoders.wicket.core.settings.BootstrapSettings;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
 import de.agilecoders.wicket.extensions.javascript.GoogleClosureJavaScriptCompressor;
 import de.agilecoders.wicket.extensions.javascript.YuiCssCompressor;
+import de.vinado.wicket.http.HttpError;
 import de.vinado.wicket.participate.ui.pages.ErrorPage;
 import de.vinado.wicket.participate.ui.pages.ExpiredPage;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
@@ -70,7 +71,13 @@ public abstract class AuthenticatedBootstrapWebApplication extends Authenticated
         getRequestCycleListeners().add(new IRequestCycleListener() {
             @Override
             public IRequestHandler onException(final RequestCycle cycle, final Exception ex) {
-                return new RenderPageRequestHandler(new PageProvider(new ErrorPage(ex)));
+                ErrorPage page;
+                if (ex instanceof HttpError) {
+                    page = new ErrorPage(ex, ((HttpError) ex).getStatus());
+                } else {
+                    page = new ErrorPage(ex);
+                }
+                return new RenderPageRequestHandler(new PageProvider(page));
             }
         });
     }
