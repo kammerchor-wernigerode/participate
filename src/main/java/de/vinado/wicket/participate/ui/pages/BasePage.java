@@ -7,7 +7,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.html.MetaTag;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.resources.css.SnackbarCssResourceReference;
 import de.vinado.wicket.participate.resources.js.SnackbarJsResourceReference;
-import de.vinado.wicket.participate.wicket.ApplicationName;
+import de.vinado.wicket.participate.wicket.inject.ApplicationName;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.head.CssReferenceHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;

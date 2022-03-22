@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.ui.login;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5CssReference;
 import de.vinado.wicket.participate.ui.pages.BasePage;
-import de.vinado.wicket.participate.wicket.ApplicationName;
+import de.vinado.wicket.participate.wicket.inject.ApplicationName;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.head.CssHeaderItem;

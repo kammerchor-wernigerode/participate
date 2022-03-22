@@ -17,7 +17,7 @@ import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.model.ical4j.SimpleDateProperty;
-import de.vinado.wicket.participate.wicket.ApplicationName;
+import de.vinado.wicket.participate.wicket.inject.ApplicationName;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.fortuna.ical4j.model.DateTime;

@@ -8,7 +8,7 @@ import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.UserRecoveryToken;
 import de.vinado.wicket.participate.model.dtos.AddUserDTO;
 import de.vinado.wicket.participate.model.dtos.PersonDTO;
-import de.vinado.wicket.participate.wicket.RequestUrl;
+import de.vinado.wicket.participate.wicket.inject.RequestUrl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;

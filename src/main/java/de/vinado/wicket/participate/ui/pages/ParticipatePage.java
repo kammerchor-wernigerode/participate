@@ -20,7 +20,7 @@ import de.vinado.wicket.participate.services.UserService;
 import de.vinado.wicket.participate.ui.administration.AdminPage;
 import de.vinado.wicket.participate.ui.event.EventsPage;
 import de.vinado.wicket.participate.ui.singers.SingersPage;
-import de.vinado.wicket.participate.wicket.ApplicationName;
+import de.vinado.wicket.participate.wicket.inject.ApplicationName;
 import org.apache.wicket.Application;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;

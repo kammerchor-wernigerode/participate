@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.wicket;
+package de.vinado.wicket.participate.wicket.inject;
 
 import java.util.function.Supplier;
 
