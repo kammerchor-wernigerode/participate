@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.pages;
+package de.vinado.wicket.participate.wicket.common;
 
 import lombok.Value;
 import org.apache.wicket.Page;

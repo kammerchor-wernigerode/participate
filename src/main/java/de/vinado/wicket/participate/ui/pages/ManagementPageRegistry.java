@@ -7,10 +7,11 @@ import de.vinado.wicket.participate.ui.form.FormSignInPage;
 import de.vinado.wicket.participate.ui.login.SignInPage;
 import de.vinado.wicket.participate.ui.resetPassword.ResetPasswordPage;
 import de.vinado.wicket.participate.ui.singers.SingersPage;
+import de.vinado.wicket.participate.wicket.common.PageRegistrar;
+import de.vinado.wicket.participate.wicket.common.PageRegistry;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.wicket.Page;
-import org.springframework.data.util.Streamable;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,7 +21,7 @@ import java.util.Map;
  * @author Vincent Nadoll
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class PageRegistry implements Streamable<PageRegistrar> {
+public final class ManagementPageRegistry implements PageRegistry {
 
     private static final Map<String, Class<? extends Page>> registrations;
 
@@ -47,11 +48,11 @@ public final class PageRegistry implements Streamable<PageRegistrar> {
             .iterator();
     }
 
-    public static PageRegistry getInstance() {
+    public static ManagementPageRegistry getInstance() {
         return Holder.INSTANCE;
     }
 
     private static final class Holder {
-        private static final PageRegistry INSTANCE = new PageRegistry();
+        private static final ManagementPageRegistry INSTANCE = new ManagementPageRegistry();
     }
 }

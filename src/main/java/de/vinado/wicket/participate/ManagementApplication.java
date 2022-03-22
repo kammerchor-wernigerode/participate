@@ -5,11 +5,9 @@ import de.vinado.wicket.bt4.AuthenticatedBootstrapWebApplication;
 import de.vinado.wicket.participate.configuration.CryptoProperties;
 import de.vinado.wicket.participate.ui.event.EventsPage;
 import de.vinado.wicket.participate.ui.login.SignInPage;
-import de.vinado.wicket.participate.ui.pages.PageRegistrar;
-import de.vinado.wicket.participate.ui.pages.PageRegistry;
+import de.vinado.wicket.participate.ui.pages.ManagementPageRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.apache.wicket.Page;
 import org.apache.wicket.authentication.strategy.DefaultAuthenticationStrategy;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.markup.html.WebPage;
@@ -22,8 +20,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * @author Vincent Nadoll
@@ -51,11 +47,7 @@ public class ManagementApplication extends AuthenticatedBootstrapWebApplication 
 
     @Override
     protected void mountPages() {
-        PageRegistry.getInstance().forEach(unwrapped(this::mountPage));
-    }
-
-    private static Consumer<PageRegistrar> unwrapped(BiConsumer<String, Class<? extends Page>> action) {
-        return registrar -> action.accept(registrar.getPath(), registrar.getPageClass());
+        ManagementPageRegistry.getInstance().mountPages(this);
     }
 
     @Override
