@@ -23,13 +23,10 @@ import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
-import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -37,6 +34,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponentLabel;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -48,7 +46,7 @@ import java.util.Map;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class FormPanel extends BreadCrumbPanel implements IGenericComponent<ParticipantDTO, FormPanel> {
+public class FormPanel extends GenericPanel<ParticipantDTO> {
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -57,8 +55,8 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
     @SpringBean
     private ApplicationProperties applicationProperties;
 
-    public FormPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<ParticipantDTO> model) {
-        super(id, breadCrumbModel, model);
+    public FormPanel(final String id, final IModel<ParticipantDTO> model) {
+        super(id, model);
 
         final DatetimePickerConfig fromConfig = new DatetimePickerConfig();
         fromConfig.useLocale("de");
@@ -209,11 +207,6 @@ public class FormPanel extends BreadCrumbPanel implements IGenericComponent<Part
             titleModel, messageModel);
         modal.setContent(confirmation);
         modal.show(target);
-    }
-
-    @Override
-    public IModel<String> getTitle() {
-        return new ResourceModel("form", "Form");
     }
 
     @RequiredArgsConstructor

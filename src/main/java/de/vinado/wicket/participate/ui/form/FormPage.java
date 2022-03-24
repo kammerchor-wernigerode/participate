@@ -2,7 +2,6 @@ package de.vinado.wicket.participate.ui.form;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.AbstractNavbarComponent;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
-import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
 import de.vinado.wicket.participate.components.panels.Footer;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
@@ -76,11 +75,6 @@ public class FormPage extends BasePage {
         });
         add(navbar);
 
-        final Breadcrumb breadcrumb = new Breadcrumb("breadcrumb");
-        breadcrumb.setOutputMarkupPlaceholderTag(true);
-        breadcrumb.setVisible(false);
-        add(breadcrumb);
-
         IModel<ParticipantFilter> participantFilter = new CompoundPropertyModel<>(new ParticipantFilter());
         final EventPanel eventPanel = new EventPanel("eventPanel", null,
             new CompoundPropertyModel<>(eventService.getEventDetails(model.getObject().getEvent())), false, () -> model.getObject().getSinger(), participantFilter) {
@@ -94,7 +88,7 @@ public class FormPage extends BasePage {
         };
         add(eventPanel);
 
-        final FormPanel formPanel = new FormPanel("formPanel", breadcrumb,
+        final FormPanel formPanel = new FormPanel("formPanel",
             new CompoundPropertyModel<>(null == FormPage.this.model.getObject() ?
                 new ParticipantDTO() : new ParticipantDTO(FormPage.this.model.getObject())));
         add(formPanel);
