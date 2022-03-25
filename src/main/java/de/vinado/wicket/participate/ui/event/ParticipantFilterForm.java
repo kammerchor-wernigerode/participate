@@ -77,14 +77,14 @@ public abstract class ParticipantFilterForm extends Form<ParticipantFilter> {
 
     protected FormComponent<InvitationStatus> invitationStatusSelect(String id) {
         DropDownChoice<InvitationStatus> select = new DropDownChoice<>(id, Arrays.asList(InvitationStatus.values()),
-            new EnumChoiceRenderer<>());
+            new EnumChoiceRenderer<>(this));
         select.setLabel(new ResourceModel("invitationStatus", "Invitation Status"));
         return select;
     }
 
     protected FormComponent<Voice> voiceSelect(String id) {
         DropDownChoice<Voice> select = new DropDownChoice<>(id, Arrays.asList(Voice.values()),
-            new EnumChoiceRenderer<>());
+            new EnumChoiceRenderer<>(this));
         select.setLabel(new ResourceModel("voice", "Voice"));
         return select;
     }
