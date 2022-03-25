@@ -3,7 +3,7 @@ package de.vinado.wicket.participate.ui.singers;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
-import de.vinado.wicket.participate.components.forms.validator.ConditionalValidator;
+import de.vinado.wicket.form.ConditionalValidator;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
@@ -13,6 +13,7 @@ import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.SingerDTO;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -22,7 +23,6 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.string.Strings;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -66,18 +66,8 @@ public class AddEditSingerPanel extends BootstrapModalPanel<SingerDTO> {
         final EmailTextField emailTf = new EmailTextField("email");
         emailTf.setLabel(new ResourceModel("email", "Email"));
         emailTf.setRequired(true);
-        emailTf.add(new ConditionalValidator<String>(new ResourceModel("unique.email", "A person with this e-mail address already exists")) {
-            @Override
-            public boolean getCondition(final String value) {
-                if (Strings.isEmpty(model.getObject().getEmail())) {
-                    return false;
-                } else if (value.equals(model.getObject().getEmail())) {
-                    return false;
-                }
-
-                return personService.hasSinger(value);
-            }
-        });
+        emailTf.add(new ConditionalValidator<>(this::ensureUnique,
+            new ResourceModel("unique.email", "A person with this e-mail address already exists")));
         inner.add(emailTf);
 
         final DropDownChoice<Voice> voiceDd = new DropDownChoice<>("voice",
@@ -112,6 +102,10 @@ public class AddEditSingerPanel extends BootstrapModalPanel<SingerDTO> {
         inner.add(removeBtn);
 
         addBootstrapHorizontalFormDecorator(inner);
+    }
+
+    private boolean ensureUnique(String email) {
+        return StringUtils.equalsIgnoreCase(email, getModelObject().getEmail()) || !personService.hasSinger(email);
     }
 
     @Override

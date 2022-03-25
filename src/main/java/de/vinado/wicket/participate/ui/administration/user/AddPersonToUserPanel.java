@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.ui.administration.user;
 
 import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
-import de.vinado.wicket.participate.components.forms.validator.ConditionalValidator;
+import de.vinado.wicket.form.ConditionalValidator;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.model.Person;
@@ -10,6 +10,7 @@ import de.vinado.wicket.participate.model.dtos.AddUserDTO;
 import de.vinado.wicket.participate.providers.Select2PersonProvider;
 import de.vinado.wicket.participate.services.PersonService;
 import de.vinado.wicket.participate.services.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -22,9 +23,10 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.string.Strings;
 import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2Choice;
+
+import static de.vinado.util.SerializablePredicates.not;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -99,18 +101,8 @@ public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDT
         final EmailTextField emailTf = new EmailTextField("email");
         emailTf.add(BootstrapHorizontalFormDecorator.decorate());
         emailTf.setRequired(true);
-        emailTf.add(new ConditionalValidator<String>(new ResourceModel("unique.email", "A person with this e-mail address already exists")) {
-            @Override
-            public boolean getCondition(final String value) {
-                if (Strings.isEmpty(model.getObject().getEmail())) {
-                    return false;
-                } else if (value.equals(model.getObject().getEmail())) {
-                    return false;
-                }
-
-                return personService.hasPerson(value);
-            }
-        });
+        emailTf.add(new ConditionalValidator<>(this::ensureUnique,
+            new ResourceModel("unique.email", "A person with this e-mail address already exists")));
         wmc.add(emailTf);
 
         // person
@@ -128,15 +120,15 @@ public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDT
         personS2c.setEnabled(true);
         personS2c.setLabel(new ResourceModel("person.select", "Select Person"));
         personS2c.add(BootstrapHorizontalFormDecorator.decorate());
-        personS2c.add(new ConditionalValidator<Person>(new ResourceModel("person.assign.error", "The person is already assigned to a user")) {
-            @Override
-            public boolean getCondition(final Person value) {
-                return userService.hasUser(value);
-            }
-        });
+        personS2c.add(new ConditionalValidator<>(not(userService::hasUser),
+            new ResourceModel("person.assign.error", "The person is already assigned to a user")));
         inner.add(personS2c);
 
         addBootstrapHorizontalFormDecorator(inner);
+    }
+
+    private boolean ensureUnique(String email) {
+        return StringUtils.equalsIgnoreCase(email, getModelObject().getEmail()) || !personService.hasPerson(email);
     }
 
     @Override
