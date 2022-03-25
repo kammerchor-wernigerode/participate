@@ -8,6 +8,7 @@ import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.ContextCleanupListener;
 
+import java.util.function.Function;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
@@ -20,6 +21,8 @@ import java.util.stream.Stream;
  */
 @Configuration
 public class WebInitializer implements ServletContextInitializer {
+
+    static final String APP_ROOT = "/_";
 
     private final ApplicationProperties properties;
 
@@ -38,7 +41,7 @@ public class WebInitializer implements ServletContextInitializer {
         filter.setInitParameter("applicationClassName", "de.vinado.wicket.participate.ManagementApplication");
         filter.setInitParameter("applicationBean", "managementApplication");
         filter.setInitParameter(WicketFilter.IGNORE_PATHS_PARAM, "/static");
-        filter.setInitParameter(WicketFilter.FILTER_MAPPING_PARAM, "/*");
+        filter.setInitParameter(WicketFilter.FILTER_MAPPING_PARAM, APP_ROOT + "/*");
         filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR), false, getUrlPatterns());
         if (properties.isDevelopmentMode()) {
             filter.setInitParameter("configuration", "development");
@@ -51,6 +54,7 @@ public class WebInitializer implements ServletContextInitializer {
 
     private String[] getUrlPatterns() {
         return Stream.concat(listResourceRoots(), listPagePaths())
+            .map(prepend(APP_ROOT))
             .toArray(String[]::new);
     }
 
@@ -60,5 +64,9 @@ public class WebInitializer implements ServletContextInitializer {
 
     private Stream<String> listPagePaths() {
         return ManagementPageRegistry.getInstance().getPaths();
+    }
+
+    private static Function<String, String> prepend(String value) {
+        return path -> value + path;
     }
 }
