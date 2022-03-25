@@ -39,7 +39,7 @@ public class WebInitializer implements ServletContextInitializer {
         filter.setInitParameter("applicationBean", "managementApplication");
         filter.setInitParameter(WicketFilter.IGNORE_PATHS_PARAM, "/static");
         filter.setInitParameter(WicketFilter.FILTER_MAPPING_PARAM, "/*");
-        filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR), false, Stream.concat(Stream.of("/", "/wicket/*"), ManagementPageRegistry.getInstance().getPaths()).toArray(String[]::new));
+        filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR), false, getUrlPatterns());
         if (properties.isDevelopmentMode()) {
             filter.setInitParameter("configuration", "development");
         } else {
@@ -47,5 +47,18 @@ public class WebInitializer implements ServletContextInitializer {
         }
 
         servletContext.addListener(new ContextCleanupListener());
+    }
+
+    private String[] getUrlPatterns() {
+        return Stream.concat(listResourceRoots(), listPagePaths())
+            .toArray(String[]::new);
+    }
+
+    private Stream<String> listResourceRoots() {
+        return Stream.of("/wicket/*");
+    }
+
+    private Stream<String> listPagePaths() {
+        return ManagementPageRegistry.getInstance().getPaths();
     }
 }
