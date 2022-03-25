@@ -9,6 +9,7 @@ import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.ContextCleanupListener;
 
+import java.util.function.Function;
 import java.util.stream.Stream;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
@@ -28,6 +29,8 @@ import static org.apache.wicket.protocol.http.WicketFilter.IGNORE_PATHS_PARAM;
 @RequiredArgsConstructor
 class FormApplicationServletContextInitializer implements ServletContextInitializer {
 
+    public static final String APP_ROOT = "/form";
+
     private final ApplicationProperties properties;
 
     @Override
@@ -37,14 +40,14 @@ class FormApplicationServletContextInitializer implements ServletContextInitiali
         filter.setInitParameter("applicationClassName", "de.vinado.wicket.participate.wicket.form.app.FormApplication");
         filter.setInitParameter("applicationBean", "formApplication");
         filter.setInitParameter(IGNORE_PATHS_PARAM, "/static");
-        filter.setInitParameter(FILTER_MAPPING_PARAM, "/*");
+        filter.setInitParameter(FILTER_MAPPING_PARAM, APP_ROOT + "/*");
         filter.addMappingForUrlPatterns(of(REQUEST, ERROR), false, getUrlPatterns());
         filter.setInitParameter("configuration", properties.isDevelopmentMode() ? "development" : "deployment");
         servletContext.addListener(new ContextCleanupListener());
     }
 
     private String[] getUrlPatterns() {
-        return concat(listResourceRoots(), listPagePaths()).toArray(String[]::new);
+        return concat(listResourceRoots(), listPagePaths()).map(prepend(APP_ROOT)).toArray(String[]::new);
     }
 
     private Stream<String> listResourceRoots() {
@@ -53,5 +56,9 @@ class FormApplicationServletContextInitializer implements ServletContextInitiali
 
     private Stream<String> listPagePaths() {
         return FormPageRegistry.instance().getPaths();
+    }
+
+    private static Function<String, String> prepend(String value) {
+        return path -> value + path;
     }
 }
