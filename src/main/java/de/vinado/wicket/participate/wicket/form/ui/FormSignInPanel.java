@@ -189,7 +189,13 @@ public class FormSignInPanel extends Panel {
 
             SimpleFormComponentLabel rememberMeLabel = new SimpleFormComponentLabel("rememberMeLabel", rememberMe);
 
-            return new Component[]{rememberMe, rememberMeLabel};
+            Component rememberMeContainer;
+            add(rememberMeContainer = new WebMarkupContainer("rememberMeWmc")
+                .add(rememberMe, rememberMeLabel)
+                .setVisible(false)
+                .setOutputMarkupPlaceholderTag(true));
+
+            return new Component[]{rememberMeContainer};
         }
 
         private Component[] participant() {
