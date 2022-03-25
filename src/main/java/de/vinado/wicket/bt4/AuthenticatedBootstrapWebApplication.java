@@ -1,12 +1,10 @@
 package de.vinado.wicket.bt4;
 
-import com.google.javascript.jscomp.CompilationLevel;
 import de.agilecoders.wicket.core.Bootstrap;
 import de.agilecoders.wicket.core.markup.html.RenderJavaScriptToFooterHeaderResponseDecorator;
 import de.agilecoders.wicket.core.request.resource.caching.version.Adler32ResourceVersion;
 import de.agilecoders.wicket.core.settings.BootstrapSettings;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
-import de.agilecoders.wicket.extensions.javascript.GoogleClosureJavaScriptCompressor;
 import de.agilecoders.wicket.extensions.javascript.YuiCssCompressor;
 import de.vinado.wicket.http.HttpError;
 import de.vinado.wicket.participate.ui.pages.ErrorPage;
@@ -141,7 +139,6 @@ public abstract class AuthenticatedBootstrapWebApplication extends Authenticated
                 new CachingResourceVersion(new Adler32ResourceVersion())
             ));
 
-            resourceSettings.setJavaScriptCompressor(new GoogleClosureJavaScriptCompressor(CompilationLevel.SIMPLE_OPTIMIZATIONS));
             resourceSettings.setCssCompressor(new YuiCssCompressor());
 
             getFrameworkSettings().setSerializer(new DeflatedJavaSerializer(getApplicationKey()));
