@@ -5,8 +5,11 @@ import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
-import org.apache.wicket.authroles.authentication.pages.SignInPage;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.StringValue;
+
+import java.util.Optional;
 
 /**
  * @author Vincent Nadoll
@@ -17,6 +20,13 @@ public class FormPage extends BasePage implements IGenericComponent<ParticipantD
 
     public FormPage(PageParameters parameters) {
         super(parameters);
+
+        Optional.of(parameters.get("token"))
+            .map(StringValue::toOptionalString)
+            .map(eventService::getParticipant)
+            .map(ParticipantDTO::new)
+            .map(CompoundPropertyModel::new)
+            .ifPresent(this::setModel);
     }
 
     @Override
@@ -30,6 +40,6 @@ public class FormPage extends BasePage implements IGenericComponent<ParticipantD
         if (AuthenticatedWebSession.get().isSignedIn()) return;
 
         PageParameters parameters = new PageParameters(getPageParameters());
-        throw new RestartResponseAtInterceptPageException(SignInPage.class, parameters);
+        throw new RestartResponseAtInterceptPageException(FormSignInPage.class, parameters);
     }
 }

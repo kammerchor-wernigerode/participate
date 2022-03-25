@@ -3,10 +3,10 @@ package de.vinado.wicket.participate.wicket.form.app;
 import de.vinado.wicket.participate.wicket.common.PageRegistrar;
 import de.vinado.wicket.participate.wicket.common.PageRegistry;
 import de.vinado.wicket.participate.wicket.form.ui.FormPage;
+import de.vinado.wicket.participate.wicket.form.ui.FormSignInPage;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.wicket.Page;
-import org.apache.wicket.authroles.authentication.pages.SignInPage;
 import org.springframework.lang.NonNull;
 
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public final class FormPageRegistry implements PageRegistry {
         storage = new HashMap<>();
 
         storage.put("/participant", FormPage.class);
-        storage.put("/login", SignInPage.class);
+        storage.put("/login", FormSignInPage.class);
     }
 
     @NonNull
