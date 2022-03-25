@@ -9,6 +9,8 @@ import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.EventPanel;
 import de.vinado.wicket.participate.ui.pages.BasePage;
+import de.vinado.wicket.participate.wicket.form.ui.EventDropDownForm;
+import de.vinado.wicket.participate.wicket.form.ui.FormPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;

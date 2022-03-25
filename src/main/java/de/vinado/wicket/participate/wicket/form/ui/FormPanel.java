@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.form;
+package de.vinado.wicket.participate.wicket.form.ui;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;

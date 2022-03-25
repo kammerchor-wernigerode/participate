@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.form;
+package de.vinado.wicket.participate.wicket.form.ui;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.FormType;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarForm;
