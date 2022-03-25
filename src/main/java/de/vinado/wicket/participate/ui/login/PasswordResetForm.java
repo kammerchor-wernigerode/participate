@@ -1,9 +1,9 @@
 package de.vinado.wicket.participate.ui.login;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
+import de.vinado.wicket.bt4.button.BootstrapAjaxButton;
 import de.vinado.wicket.participate.services.UserService;
 import lombok.Getter;
 import lombok.Setter;

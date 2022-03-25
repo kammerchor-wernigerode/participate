@@ -1,9 +1,9 @@
 package de.vinado.wicket.participate.components.modals;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.ICssClassNameProvider;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
+import de.vinado.wicket.bt4.button.BootstrapAjaxButton;
 import de.vinado.wicket.bt4.form.decorator.BootstrapFormDecorator;
 import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.bt4.form.decorator.BootstrapInlineFormDecorator;
@@ -17,11 +17,11 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 
 /**
@@ -83,17 +83,8 @@ public abstract class BootstrapModalPanel<T> extends GenericPanel<T> {
             }
 
             @Override
-            protected void onError(final AjaxRequestTarget target) {
-                target.add(feedback);
-
-                getForm().visitFormComponents(new IVisitor<FormComponent<?>, Object>() {
-                    @Override
-                    public void component(final FormComponent<?> components, final IVisit<Object> iVisit) {
-                        if (!components.getRenderBodyOnly()) {
-                            target.add(components);
-                        }
-                    }
-                });
+            protected FeedbackPanel getFeedbackPanel() {
+                return feedback;
             }
         };
         saveBtn.setLabel(getSubmitBtnLabel());

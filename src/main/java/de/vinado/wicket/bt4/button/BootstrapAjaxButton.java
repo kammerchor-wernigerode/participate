@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.components.links;
+package de.vinado.wicket.bt4.button;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -7,37 +7,40 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 
 /**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
+ * @author Vincent Nadoll
  */
 public class BootstrapAjaxButton extends de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxButton {
 
-    public BootstrapAjaxButton(final String componentId, final Buttons.Type type) {
+    private static final long serialVersionUID = -2401274183769762849L;
+
+    public BootstrapAjaxButton(String componentId, Buttons.Type type) {
         super(componentId, type);
     }
 
-    public BootstrapAjaxButton(final String componentId, final IModel<String> model, final Buttons.Type type) {
+    public BootstrapAjaxButton(String componentId, IModel<String> model, Buttons.Type type) {
         super(componentId, model, type);
     }
 
-    public BootstrapAjaxButton(final String id, final Form<?> form, final Buttons.Type type) {
+    public BootstrapAjaxButton(String id, Form<?> form, Buttons.Type type) {
         super(id, form, type);
     }
 
-    public BootstrapAjaxButton(final String id, final IModel<String> model, final Form<?> form, final Buttons.Type type) {
+    public BootstrapAjaxButton(String id, IModel<String> model, Form<?> form, Buttons.Type type) {
         super(id, model, form, type);
     }
 
     @Override
-    protected void onError(final AjaxRequestTarget target) {
-        if (null == getFeedbackPanel()) {
+    protected void onError(AjaxRequestTarget target) {
+        super.onError(target);
+
+        FeedbackPanel feedbackPanel = getFeedbackPanel();
+        if (null == feedbackPanel) {
             return;
         }
 
-        target.add(getFeedbackPanel());
+        target.add(feedbackPanel);
         getForm().visitFormComponents((components, iVisit) -> {
-            if (!components.getRenderBodyOnly()) {
-                target.add(components);
-            }
+            if (!components.getRenderBodyOnly()) target.add(components);
         });
     }
 
