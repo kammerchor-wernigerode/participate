@@ -265,7 +265,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
             new CompoundPropertyModel<>(new EventDTO(event))) {
             @Override
             public void onUpdate(final Event savedEvent, final AjaxRequestTarget target) {
-                setModelObject(eventService.getEventDetails(savedEvent));
+                EventPanel.this.setModelObject(eventService.getEventDetails(savedEvent));
                 ParticipateSession.get().setEvent(event);
                 send(getPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
                 Snackbar.show(target, new ResourceModel("event.edit.success", "The event was successfully edited"));

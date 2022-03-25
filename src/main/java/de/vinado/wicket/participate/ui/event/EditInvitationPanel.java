@@ -23,7 +23,6 @@ import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -44,7 +43,7 @@ import java.util.Collections;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class EditInvitationPanel extends BootstrapModalPanel<ParticipantDTO> implements IGenericComponent<ParticipantDTO, EditInvitationPanel> {
+public abstract class EditInvitationPanel extends BootstrapModalPanel<ParticipantDTO> {
 
     @SuppressWarnings("unused")
     @SpringBean
