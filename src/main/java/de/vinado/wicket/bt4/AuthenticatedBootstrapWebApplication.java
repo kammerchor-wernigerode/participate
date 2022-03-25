@@ -20,6 +20,7 @@ import org.apache.wicket.csp.ContentSecurityPolicySettings;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.version.CachingResourceVersion;
@@ -68,7 +69,12 @@ public abstract class AuthenticatedBootstrapWebApplication extends Authenticated
 
         installSpringComponentScanning();
 
-        getRequestCycleListeners().add(new IRequestCycleListener() {
+        RequestCycleListenerCollection listeners = getRequestCycleListeners();
+        configureRequestCycleListeners(listeners);
+    }
+
+    protected void configureRequestCycleListeners(RequestCycleListenerCollection listeners) {
+        listeners.add(new IRequestCycleListener() {
             @Override
             public IRequestHandler onException(final RequestCycle cycle, final Exception ex) {
                 ErrorPage page;
