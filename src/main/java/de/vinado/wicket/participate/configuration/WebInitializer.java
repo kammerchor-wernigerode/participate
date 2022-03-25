@@ -1,52 +1,59 @@
 package de.vinado.wicket.participate.configuration;
 
-import de.vinado.wicket.participate.ui.pages.PageRegistrar;
-import de.vinado.wicket.participate.ui.pages.PageRegistry;
+import de.vinado.wicket.participate.ui.pages.ManagementPageRegistry;
+import lombok.RequiredArgsConstructor;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.spring.SpringWebApplicationFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.ContextCleanupListener;
 
+import java.util.EnumSet;
+import java.util.function.Function;
+import java.util.stream.Stream;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import java.util.EnumSet;
-import java.util.stream.Stream;
 
 /**
  * Wicket request handling configuration for Servlet 3.0+ and replacement for web.xml.
  */
 @Configuration
+@RequiredArgsConstructor
 public class WebInitializer implements ServletContextInitializer {
+
+    static final String APP_ROOT = "/_";
 
     private final ApplicationProperties properties;
 
-    @Autowired
-    public WebInitializer(final ApplicationProperties properties) {
-        this.properties = properties;
+    @Override
+    public void onStartup(ServletContext servletContext) {
+        FilterRegistration filter = servletContext.addFilter("wicket.participate.management", WicketFilter.class);
+        filter.setInitParameter(WicketFilter.APP_FACT_PARAM, SpringWebApplicationFactory.class.getName());
+        filter.setInitParameter("applicationClassName", "de.vinado.wicket.participate.ManagementApplication");
+        filter.setInitParameter("applicationBean", "managementApplication");
+        filter.setInitParameter(WicketFilter.IGNORE_PATHS_PARAM, "/static");
+        filter.setInitParameter(WicketFilter.FILTER_MAPPING_PARAM, APP_ROOT + "/*");
+        filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR), false, getUrlPatterns());
+        filter.setInitParameter("configuration", properties.isDevelopmentMode() ? "development" : "deployment");
+        servletContext.addListener(new ContextCleanupListener());
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
-        final FilterRegistration filter = servletContext.addFilter("wicket.participate", WicketFilter.class);
-        filter.setInitParameter(WicketFilter.APP_FACT_PARAM, SpringWebApplicationFactory.class.getName());
-        filter.setInitParameter("applicationClassName", "de.vinado.wicket.participate.ParticipateApplication");
-        filter.setInitParameter("applicationBean", "participateApplication");
-        filter.setInitParameter(WicketFilter.IGNORE_PATHS_PARAM, "/static");
-        filter.setInitParameter(WicketFilter.FILTER_MAPPING_PARAM, "/*");
-        filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR), false, Stream.concat(Stream.of("/", "/wicket/*"), PageRegistry.getInstance().stream().map(PageRegistrar::getPath)).toArray(String[]::new));
-        if (properties.isDevelopmentMode()) {
-            filter.setInitParameter("configuration", "development");
-        } else {
-            filter.setInitParameter("configuration", "deployment");
-        }
+    private String[] getUrlPatterns() {
+        return Stream.concat(listResourceRoots(), listPagePaths())
+            .map(prepend(APP_ROOT))
+            .toArray(String[]::new);
+    }
 
-        servletContext.addListener(new ContextCleanupListener());
+    private Stream<String> listResourceRoots() {
+        return Stream.of("/wicket/*");
+    }
+
+    private Stream<String> listPagePaths() {
+        return ManagementPageRegistry.getInstance().getPaths();
+    }
+
+    private static Function<String, String> prepend(String value) {
+        return path -> value + path;
     }
 }

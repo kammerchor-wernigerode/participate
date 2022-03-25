@@ -35,7 +35,7 @@ public class ParticipateUtils {
 
     public static URL generateInvitationLink(final String baseUrl, final String token) {
         try {
-            final URL url = new URL(baseUrl + "/participate?token=" + token);
+            final URL url = new URL(baseUrl + "/form/participant?token=" + token);
             final URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(),
                 url.getPath(), url.getQuery(), url.getRef());
             return uri.toURL();

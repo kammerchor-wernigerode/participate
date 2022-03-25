@@ -19,8 +19,6 @@ import org.apache.wicket.util.io.ByteArrayOutputStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -257,21 +255,6 @@ public class PersonServiceImpl extends DataService implements PersonService {
         final Root<Participant> root = criteriaQuery.from(Participant.class);
         criteriaQuery.select(root.join("singer"));
         criteriaQuery.where(criteriaBuilder.equal(root.get("event"), event));
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Singer> findSingers(final String term) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
-        final Root<Singer> root = criteriaQuery.from(Singer.class);
-        criteriaQuery.where(criteriaBuilder.like(
-            criteriaBuilder.lower(root.get("searchName")),
-            "%" + term.toLowerCase() + "%"
-        ));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 

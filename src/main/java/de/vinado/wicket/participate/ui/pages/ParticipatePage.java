@@ -6,7 +6,6 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarComponents;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarDropDownButton;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
-import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.panels.EditAccountPanel;
@@ -21,8 +20,11 @@ import de.vinado.wicket.participate.services.UserService;
 import de.vinado.wicket.participate.ui.administration.AdminPage;
 import de.vinado.wicket.participate.ui.event.EventsPage;
 import de.vinado.wicket.participate.ui.singers.SingersPage;
+import de.vinado.wicket.participate.wicket.inject.ApplicationName;
+import org.apache.wicket.Application;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -44,6 +46,9 @@ import java.util.List;
 public class ParticipatePage extends BasePage {
 
     public static final String MODAL_ID = "modal";
+
+    @SpringBean
+    private ApplicationName applicationName;
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -71,7 +76,7 @@ public class ParticipatePage extends BasePage {
         navbar.setOutputMarkupId(true);
         navbar.setPosition(Navbar.Position.TOP);
         navbar.setCollapseBreakdown(Navbar.CollapseBreakpoint.Medium);
-        navbar.setBrandName(Model.of(ParticipateApplication.get().getApplicationName()));
+        navbar.setBrandName(applicationName::get);
         navbar.addComponents(NavbarComponents.transform(
                 Navbar.ComponentPosition.LEFT,
             new NavbarButton(EventsPage.class, new ResourceModel("events", "Events")).setIconType(FontAwesome5IconType.calendar_s),
@@ -98,7 +103,7 @@ public class ParticipatePage extends BasePage {
                                     @Override
                                     protected void onConfirm(final User user, final AjaxRequestTarget target) {
                                         ParticipateSession.get().setUser(user);
-                                        ParticipateApplication.get().getSecuritySettings().getAuthenticationStrategy().remove();
+                                        Application.get().getSecuritySettings().getAuthenticationStrategy().remove();
                                         userLabel = ParticipateSession.get().getUser().getPerson().getDisplayName();
                                         target.add(navbar);
                                         Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
@@ -139,7 +144,7 @@ public class ParticipatePage extends BasePage {
     protected void onConfigure() {
         super.onConfigure();
         if (!ParticipateSession.get().isSignedIn()) {
-            ParticipateApplication.get().restartResponseAtSignInPage();
+            ((AuthenticatedWebApplication) AuthenticatedWebApplication.get()).restartResponseAtSignInPage();
         } else {
             final User user = ParticipateSession.get().getUser();
             if (null != user.getPerson()) {

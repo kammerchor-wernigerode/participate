@@ -5,7 +5,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.Date
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
-import de.vinado.wicket.participate.behavoirs.UpdateOnEventBehavior;
+import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.ui.event.ParticipantFilterForm;

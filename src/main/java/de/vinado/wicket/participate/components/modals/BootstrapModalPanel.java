@@ -4,9 +4,9 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.ICssClassNamePr
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
-import de.vinado.wicket.participate.behavoirs.decorators.BootstrapFormDecorator;
-import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalFormDecorator;
-import de.vinado.wicket.participate.behavoirs.decorators.BootstrapInlineFormDecorator;
+import de.vinado.wicket.bt4.form.decorator.BootstrapFormDecorator;
+import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
+import de.vinado.wicket.bt4.form.decorator.BootstrapInlineFormDecorator;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;

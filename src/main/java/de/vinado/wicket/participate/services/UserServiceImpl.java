@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.services;
 
-import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.email.service.EmailService;
@@ -9,6 +8,7 @@ import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.UserRecoveryToken;
 import de.vinado.wicket.participate.model.dtos.AddUserDTO;
 import de.vinado.wicket.participate.model.dtos.PersonDTO;
+import de.vinado.wicket.participate.wicket.inject.RequestUrl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -30,6 +30,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,7 @@ public class UserServiceImpl extends DataService implements UserService {
     private final PersonService personService;
     private final EmailService emailService;
     private final EmailBuilderFactory emailBuilderFactory;
+    private final RequestUrl requestUrl;
 
     @Override
     @PersistenceContext
@@ -77,16 +79,6 @@ public class UserServiceImpl extends DataService implements UserService {
         loadedUser.setAdmin(dto.getUser().isAdmin());
         loadedUser.setEnabled(dto.getUser().isEnabled());
         return save(loadedUser);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void removeUser(final User user) {
-        final User loadedUser = load(User.class, user.getId());
-        loadedUser.setActive(false);
-        save(loadedUser);
     }
 
     /**
@@ -285,7 +277,7 @@ public class UserServiceImpl extends DataService implements UserService {
             final int validDuration = initial ? 30 : 7;
             final UserRecoveryToken token = createUserRecoveryToken(user, validDuration);
 
-            final Url baseUrl = ParticipateApplication.get().getRequestedUrl();
+            URL baseUrl = requestUrl.get();
             final List<String> urlSegments = new ArrayList<>();
             urlSegments.add("resetPassword");
             final Url passwordRecoveryLink = new Url();

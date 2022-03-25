@@ -4,22 +4,22 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.HtmlTag;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.IeEdgeMetaTag;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.MetaTag;
-import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.resources.css.SnackbarCssResourceReference;
 import de.vinado.wicket.participate.resources.js.SnackbarJsResourceReference;
+import de.vinado.wicket.participate.wicket.inject.ApplicationName;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.head.CssReferenceHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.Locale;
 
@@ -29,6 +29,9 @@ import java.util.Locale;
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
 public abstract class BasePage extends WebPage {
+
+    @SpringBean
+    private ApplicationName applicationName;
 
     private BootstrapModal modal;
 
@@ -84,7 +87,7 @@ public abstract class BasePage extends WebPage {
     }
 
     protected IModel<String> getTitle() {
-        return Model.of(ParticipateApplication.get().getApplicationName());
+        return applicationName::get;
     }
 
     /**

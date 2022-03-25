@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.ui.administration.user;
 
-import de.vinado.wicket.participate.behavoirs.decorators.BootstrapHorizontalFormDecorator;
+import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.participate.components.forms.validator.ConditionalValidator;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;

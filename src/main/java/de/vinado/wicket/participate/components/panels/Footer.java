@@ -1,12 +1,11 @@
 package de.vinado.wicket.participate.components.panels;
 
-import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.ParticipateSession;
-import de.vinado.wicket.participate.behavoirs.FooterBehavior;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.dtos.SendFeedbackDTO;
 import de.vinado.wicket.participate.ui.pages.BasePage;
+import de.vinado.wicket.participate.wicket.inject.ApplicationName;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -23,15 +22,15 @@ import java.util.Date;
 public class Footer extends Panel {
 
     @SpringBean
+    private ApplicationName applicationName;
+
+    @SpringBean
     private ApplicationProperties applicationProperties;
 
     public Footer(final String id) {
         super(id);
 
-        add(new FooterBehavior());
-
         final boolean developmentMode = applicationProperties.isDevelopmentMode();
-        final boolean signedIn = ParticipateSession.get().isSignedIn();
 
         add(new Label("developmentMode", "Development Mode") {
             @Override
@@ -56,7 +55,7 @@ public class Footer extends Panel {
         });
         add(new Label("customer", applicationProperties.getCustomer()));
         add(new Label("year", new SimpleDateFormat("yyyy").format(new Date())));
-        add(new Label("applicationName", ParticipateApplication.get().getApplicationName()));
+        add(new Label("applicationName", applicationName.get()));
         add(new Label("version", applicationProperties.getVersion()));
     }
 }

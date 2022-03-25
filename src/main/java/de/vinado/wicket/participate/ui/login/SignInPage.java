@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate.ui.login;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5CssReference;
-import de.vinado.wicket.participate.ParticipateApplication;
 import de.vinado.wicket.participate.ui.pages.BasePage;
+import de.vinado.wicket.participate.wicket.inject.ApplicationName;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -10,6 +10,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.MetaDataHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import static org.apache.wicket.markup.head.HtmlImportHeaderItem.forLinkTag;
 
@@ -17,6 +18,9 @@ import static org.apache.wicket.markup.head.HtmlImportHeaderItem.forLinkTag;
  * @author Vincent Nadoll
  */
 public class SignInPage extends BasePage {
+
+    @SpringBean
+    private ApplicationName applicationName;
 
     @Override
     protected void onInitialize() {
@@ -39,7 +43,7 @@ public class SignInPage extends BasePage {
     }
 
     private Component customerLabel(String id) {
-        return new Label(id, ParticipateApplication.get().getApplicationName());
+        return new Label(id, applicationName.get());
     }
 
     private Component signInPanel(String id) {

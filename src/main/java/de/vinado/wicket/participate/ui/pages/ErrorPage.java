@@ -24,6 +24,8 @@ public class ErrorPage extends AbstractErrorPage {
 
     private boolean showStacktrace = false;
 
+    private final int status;
+
     private Form form;
 
     private String message;
@@ -31,13 +33,18 @@ public class ErrorPage extends AbstractErrorPage {
     private String stacktrace;
 
     public ErrorPage() {
-        this(new Exception());
+        this(new Exception(), 500);
     }
 
-    public ErrorPage(final Exception exception) {
+    public ErrorPage(Exception e) {
+        this(e, 500);
+    }
+
+    public ErrorPage(final Exception exception, int status) {
         super(new PageParameters());
         this.message = exception.getMessage();
         this.stacktrace = exception.toString();
+        this.status = status;
 
         Writer writer = new StringWriter();
         PrintWriter printWriter = new PrintWriter(writer);
@@ -123,6 +130,6 @@ public class ErrorPage extends AbstractErrorPage {
 
     @Override
     protected int getStatusCode() {
-        return 500;
+        return status;
     }
 }
