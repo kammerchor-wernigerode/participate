@@ -54,10 +54,6 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
 
     private IModel<Boolean> severalDays;
 
-    /**
-     * @param modal {@link de.vinado.wicket.participate.components.modals.BootstrapModal}
-     * @param model {@link EventDTO EventDTO model}
-     */
     public AddEditEventPanel(final ModalAnchor modal, final IModel<String> titleModel, final IModel<EventDTO> model) {
         super(modal, model);
 

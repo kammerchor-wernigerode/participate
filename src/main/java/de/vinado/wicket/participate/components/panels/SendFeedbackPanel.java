@@ -29,10 +29,6 @@ public class SendFeedbackPanel extends FormModal<SendFeedbackDTO> {
     @SpringBean
     private EmailBuilderFactory emailBuilderFactory;
 
-    /**
-     * @param modal {@link de.vinado.wicket.participate.components.modals.BootstrapModal}
-     * @param model Model
-     */
     public SendFeedbackPanel(final ModalAnchor modal, final IModel<SendFeedbackDTO> model) {
         super(modal, model);
 
