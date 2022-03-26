@@ -29,6 +29,7 @@ public class SignInPage extends BasePage {
         setStatelessHint(true);
         forceStateless();
         remove("modal");
+        remove("modal-container");
 
         add(customerLabel("customer"));
         add(signInPanel("signInPanel"));

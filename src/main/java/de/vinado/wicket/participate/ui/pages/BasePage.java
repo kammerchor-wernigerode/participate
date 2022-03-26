@@ -4,10 +4,12 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.HtmlTag;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.IeEdgeMetaTag;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.MetaTag;
+import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.resources.css.SnackbarCssResourceReference;
 import de.vinado.wicket.participate.resources.js.SnackbarJsResourceReference;
 import de.vinado.wicket.participate.wicket.inject.ApplicationName;
+import lombok.Getter;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.head.CssReferenceHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -36,6 +38,9 @@ public abstract class BasePage extends WebPage {
     @Deprecated
     private BootstrapModal modal;
 
+    @Getter
+    private final ModalAnchor modalAnchor;
+
     /**
      * Construct.
      */
@@ -52,6 +57,7 @@ public abstract class BasePage extends WebPage {
         super(parameters);
 
         addModal(ParticipatePage.MODAL_ID);
+        add(modalAnchor = new ModalAnchor(ModalAnchor.MODAL_ID));
 
         add(html("html"));
         add(new IeEdgeMetaTag("xUaCompatible"));
