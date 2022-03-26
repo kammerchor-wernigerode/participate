@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.components.panels;
 
 import de.vinado.wicket.participate.ParticipateSession;
-import de.vinado.wicket.participate.components.modals.BootstrapModal;
+import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.dtos.SendFeedbackDTO;
 import de.vinado.wicket.participate.ui.pages.BasePage;
@@ -42,7 +42,7 @@ public class Footer extends Panel {
         add(new AjaxLink<Void>("feedback") {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+                final ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
                 modal.setContent(new SendFeedbackPanel(modal, new CompoundPropertyModel<>(new SendFeedbackDTO())));
                 modal.show(target);
             }
