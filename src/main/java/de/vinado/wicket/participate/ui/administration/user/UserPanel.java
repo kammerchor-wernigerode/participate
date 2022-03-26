@@ -4,10 +4,9 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.vinado.wicket.bt4.modal.ConfirmationModal;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.components.TextAlign;
-import de.vinado.wicket.participate.components.modals.BootstrapModal;
-import de.vinado.wicket.participate.components.modals.BootstrapModalConfirmationPanel;
 import de.vinado.wicket.participate.components.panels.BootstrapAjaxLinkPanel;
 import de.vinado.wicket.participate.components.panels.IconPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
@@ -97,10 +96,9 @@ public class UserPanel extends Panel {
                     componentId, Buttons.Type.Link, person ? FontAwesome5IconType.trash_alt_s : FontAwesome5IconType.plus_s) {
                     @Override
                     public void onClick(final AjaxRequestTarget target) {
-                        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+                        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
                         if (null != rowModel.getObject().getPerson()) {
-                            modal.setContent(new BootstrapModalConfirmationPanel(modal,
-                                new ResourceModel("user.remove.person", "Remove user-person association"),
+                            modal.setContent(new ConfirmationModal(modal,
                                 new ResourceModel("user.remove.person.question", "Are you sure you want to remove the user-person association?")) {
                                 @Override
                                 protected void onConfirm(final AjaxRequestTarget target) {
@@ -110,7 +108,7 @@ public class UserPanel extends Panel {
                                     dataProvider.set(userService.getUsers());
                                     target.add(dataTable);
                                 }
-                            });
+                            }.title(new ResourceModel("user.remove.person", "Remove user-person association")));
                         } else {
                             modal.setContent(new AddPersonToUserPanel(modal, new CompoundPropertyModel<>(new AddUserDTO(rowModel.getObject()))) {
                                 @Override

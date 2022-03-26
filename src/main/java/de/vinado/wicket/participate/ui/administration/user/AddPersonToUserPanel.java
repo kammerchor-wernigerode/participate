@@ -1,9 +1,9 @@
 package de.vinado.wicket.participate.ui.administration.user;
 
 import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
+import de.vinado.wicket.bt4.modal.FormModal;
+import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.form.ConditionalValidator;
-import de.vinado.wicket.participate.components.modals.BootstrapModal;
-import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.AddUserDTO;
@@ -31,7 +31,7 @@ import static de.vinado.util.SerializablePredicates.not;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDTO> {
+public abstract class AddPersonToUserPanel extends FormModal<AddUserDTO> {
 
     public static final String SELECTED_ASSIGN_PERSON = "person.assign";
     public static final String SELECTED_CREATE_PERSON = "person.add";
@@ -48,20 +48,23 @@ public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDT
 
     private Select2Choice<Person> personS2c;
 
-    /**
-     * @param modal {@link de.vinado.wicket.participate.components.modals.BootstrapModal}
-     * @param model Model
-     */
-    public AddPersonToUserPanel(final BootstrapModal modal, final IModel<AddUserDTO> model) {
-        super(modal, new ResourceModel("person.assign", "Assign Person"), model);
+    public AddPersonToUserPanel(ModalAnchor anchor, IModel<AddUserDTO> model) {
+        super(anchor, model);
+
+        title(new ResourceModel("person.assign", "Assign Person"));
 
         selectedModel.setObject(SELECTED_ASSIGN_PERSON);
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
         final WebMarkupContainer wmc = new WebMarkupContainer("wmc");
         wmc.setOutputMarkupPlaceholderTag(true);
         wmc.setOutputMarkupId(true);
         wmc.setVisible(false);
-        inner.add(wmc);
+        form.add(wmc);
 
         final RadioGroup<String> radioGroup = new RadioGroup<>("personRC", selectedModel);
         radioGroup.setLabel(Model.of(""));
@@ -84,7 +87,7 @@ public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDT
                 }
             }
         });
-        inner.add(radioGroup);
+        form.add(radioGroup);
 
         final TextField firstNameTf = new TextField("firstName");
         firstNameTf.add(BootstrapHorizontalFormDecorator.decorate());
@@ -107,14 +110,14 @@ public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDT
 
         // person
         personS2c = new Select2Choice<>("person",
-            new PropertyModel<>(model, "person"),
+            new PropertyModel<>(getModel(), "person"),
             new Select2PersonProvider(personService));
         personS2c.getSettings().setLanguage(getLocale().getLanguage());
         personS2c.getSettings().setCloseOnSelect(true);
         personS2c.getSettings().setTheme(new Select2BootstrapTheme(true));
         personS2c.getSettings().setMinimumInputLength(3);
         personS2c.getSettings().setPlaceholder(new ResourceModel("select.placeholder", "Please Choose").getObject());
-        personS2c.getSettings().setDropdownParent(inner.getMarkupId());
+        personS2c.getSettings().setDropdownParent(form.getMarkupId());
         personS2c.setRequired(true);
         personS2c.setOutputMarkupPlaceholderTag(true);
         personS2c.setEnabled(true);
@@ -122,9 +125,9 @@ public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDT
         personS2c.add(BootstrapHorizontalFormDecorator.decorate());
         personS2c.add(new ConditionalValidator<>(not(userService::hasUser),
             new ResourceModel("person.assign.error", "The person is already assigned to a user")));
-        inner.add(personS2c);
+        form.add(personS2c);
 
-        addBootstrapHorizontalFormDecorator(inner);
+        addBootstrapHorizontalFormDecorator(form);
     }
 
     private boolean ensureUnique(String email) {
@@ -132,8 +135,8 @@ public abstract class AddPersonToUserPanel extends BootstrapModalPanel<AddUserDT
     }
 
     @Override
-    protected void onSaveSubmit(final IModel<AddUserDTO> model, final AjaxRequestTarget target) {
-        onConfirm(userService.assignPerson(model.getObject()), target);
+    protected void onSubmit(AjaxRequestTarget target) {
+        onConfirm(userService.assignPerson(getModelObject()), target);
     }
 
     public IModel<String> getSelectedModel() {
