@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.ParticipateSession;
-import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.events.EventUpdateEvent;
@@ -78,7 +78,7 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
     }
 
     private void onAdd(AjaxRequestTarget target) {
-        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
         modal.setContent(new AddEditEventPanel(modal, new ResourceModel("event.add", "Add Event"), new CompoundPropertyModel<>(new EventDTO())) {
             @Override
             public void onUpdate(final Event savedEvent, final AjaxRequestTarget target) {

@@ -264,7 +264,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
 
     private void edit(AjaxRequestTarget target) {
         Event event = getModelObject().getEvent();
-        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
         modal.setContent(new AddEditEventPanel(modal, new ResourceModel("event.edit", "Edit Event"),
             new CompoundPropertyModel<>(new EventDTO(event))) {
             @Override

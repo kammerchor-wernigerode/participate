@@ -2,14 +2,15 @@ package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal.Size;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
+import de.vinado.wicket.bt4.modal.FormModal;
+import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.common.AjaxFocusBehavior;
 import de.vinado.wicket.form.AutosizeBehavior;
-import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
-import de.vinado.wicket.participate.components.modals.BootstrapModal;
-import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.RemoveEventUpdateEvent;
@@ -38,7 +39,7 @@ import org.wicketstuff.select2.Select2Choice;
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
+public abstract class AddEditEventPanel extends FormModal<EventDTO> {
 
     @SpringBean
     @SuppressWarnings("unused")
@@ -57,13 +58,20 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
      * @param modal {@link de.vinado.wicket.participate.components.modals.BootstrapModal}
      * @param model {@link EventDTO EventDTO model}
      */
-    public AddEditEventPanel(final BootstrapModal modal, final IModel<String> titleModel, final IModel<EventDTO> model) {
-        super(modal, titleModel, model);
-        setModalSize(ModalSize.Medium);
+    public AddEditEventPanel(final ModalAnchor modal, final IModel<String> titleModel, final IModel<EventDTO> model) {
+        super(modal, model);
 
-        edit = null != model.getObject().getEvent();
+        size(Size.Large);
+        title(titleModel);
+    }
 
-        severalDays = new CompoundPropertyModel<>(edit ? model.getObject().isSeveralDays() : Boolean.TRUE);
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        edit = null != getModelObject().getEvent();
+
+        severalDays = new CompoundPropertyModel<>(edit ? getModelObject().isSeveralDays() : Boolean.TRUE);
 
         final DateTextFieldConfig startDateConfig = new DateTextFieldConfig();
         startDateConfig.withLanguage("de");
@@ -85,17 +93,17 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
             protected void onUpdate(final AjaxRequestTarget target) {
             }
         });
-        inner.add(nameTf);
+        form.add(nameTf);
 
         final AjaxCheckBox isSeveralDaysCb = new AjaxCheckBox("isSeveralDays", severalDays) {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
-                target.add(inner);
+                target.add(form);
             }
         };
         isSeveralDaysCb.setLabel(new ResourceModel("event.multi-day", "Multi-day Event"));
         isSeveralDaysCb.add(BootstrapHorizontalFormDecorator.decorate());
-        inner.add(isSeveralDaysCb);
+        form.add(isSeveralDaysCb);
 
         final Select2Choice<String> eventTypeS2c = new Select2Choice<>("eventType",
             new Select2StringProvider(eventService::getEventTypes));
@@ -105,14 +113,14 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         eventTypeS2c.getSettings().setLanguage(getLocale().getLanguage());
         eventTypeS2c.getSettings().setCloseOnSelect(true);
         eventTypeS2c.getSettings().setTheme(new Select2BootstrapTheme(true));
-        eventTypeS2c.getSettings().setDropdownParent(inner.getMarkupId());
+        eventTypeS2c.getSettings().setDropdownParent(form.getMarkupId());
         eventTypeS2c.setRequired(true);
         eventTypeS2c.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
             }
         });
-        inner.add(eventTypeS2c);
+        form.add(eventTypeS2c);
 
         final DateTextField endDateTf = new DateTextField("endDate", endDateConfig) {
             @Override
@@ -140,7 +148,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         });
         startDateTf.add(BootstrapHorizontalFormDecorator.decorate());
         startDateTf.setRequired(true);
-        inner.add(startDateTf);
+        form.add(startDateTf);
 
         endDateTf.setOutputMarkupId(true);
         endDateTf.add(BootstrapHorizontalFormDecorator.decorate(new ResourceModel("till", "Till")));
@@ -150,7 +158,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
             protected void onUpdate(final AjaxRequestTarget target) {
             }
         });
-        inner.add(endDateTf);
+        form.add(endDateTf);
 
         final Select2Choice<String> locationS2c = new Select2Choice<>("location",
             new Select2StringProvider(eventService::getLocationList));
@@ -159,13 +167,13 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         locationS2c.getSettings().setLanguage(getLocale().getLanguage());
         locationS2c.getSettings().setCloseOnSelect(true);
         locationS2c.getSettings().setTheme(new Select2BootstrapTheme(true));
-        locationS2c.getSettings().setDropdownParent(inner.getMarkupId());
+        locationS2c.getSettings().setDropdownParent(form.getMarkupId());
         locationS2c.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
             }
         });
-        inner.add(locationS2c);
+        form.add(locationS2c);
 
         final TextArea<String> descriptionTa = new TextArea<>("description");
         descriptionTa.add(BootstrapHorizontalFormDecorator.decorate());
@@ -175,7 +183,7 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
             protected void onUpdate(final AjaxRequestTarget target) {
             }
         });
-        inner.add(descriptionTa);
+        form.add(descriptionTa);
 
         final BootstrapAjaxLink<Void> removeBtn = new BootstrapAjaxLink<>("removeBtn", Buttons.Type.Link) {
             @Override
@@ -201,31 +209,27 @@ public abstract class AddEditEventPanel extends BootstrapModalPanel<EventDTO> {
         removeBtn.setIconType(FontAwesome5IconType.trash_s);
         removeBtn.setSize(Buttons.Size.Small);
         removeBtn.setOutputMarkupId(true);
-        inner.add(removeBtn);
+        form.add(removeBtn);
     }
 
-    /**
-     * @param model  {@link EventDTO EventDTO model}
-     * @param target Target
-     * @inheritDoc
-     */
     @Override
-    protected void onSaveSubmit(final IModel<EventDTO> model, final AjaxRequestTarget target) {
+    protected void onSubmit(AjaxRequestTarget target) {
+        EventDTO dto = getModelObject();
         if (!severalDays.getObject()) {
-            model.getObject().setEndDate(model.getObject().getStartDate());
+            dto.setEndDate(dto.getStartDate());
         }
 
         if (edit) {
             if (remove) {
-                eventService.removeEvent(model.getObject().getEvent());
+                eventService.removeEvent(dto.getEvent());
                 send(getPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
                 send(getWebPage(), Broadcast.BREADTH, new RemoveEventUpdateEvent(target));
                 Snackbar.show(target, new ResourceModel("event.remove.success", "The event has been removed"));
                 return;
             }
-            onUpdate(eventService.saveEvent(model.getObject()), target);
+            onUpdate(eventService.saveEvent(dto), target);
         } else {
-            onUpdate(eventService.createEvent(model.getObject()), target);
+            onUpdate(eventService.createEvent(dto), target);
         }
     }
 
