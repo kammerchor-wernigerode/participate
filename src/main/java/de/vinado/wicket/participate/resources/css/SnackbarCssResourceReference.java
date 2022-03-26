@@ -1,15 +1,30 @@
 package de.vinado.wicket.participate.resources.css;
 
-import org.apache.wicket.request.resource.CssResourceReference;
+import de.agilecoders.wicket.webjars.request.resource.WebjarsCssResourceReference;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.HeaderItem;
 
 /**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
+ * @author Vincent Nadoll
  */
-public class SnackbarCssResourceReference extends CssResourceReference {
+public class SnackbarCssResourceReference extends WebjarsCssResourceReference {
 
-    public static final SnackbarCssResourceReference INSTANCE = new SnackbarCssResourceReference();
+    private static final long serialVersionUID = 4407525623180747946L;
 
-    public SnackbarCssResourceReference() {
-        super(SnackbarCssResourceReference.class, "snackbar.min.css");
+    private SnackbarCssResourceReference() {
+        super("node-snackbar/current/snackbar.css");
+    }
+
+    public static HeaderItem asHeaderItem() {
+        return CssHeaderItem.forReference(instance());
+    }
+
+    public static SnackbarCssResourceReference instance() {
+        return Holder.INSTANCE;
+    }
+
+
+    private static final class Holder {
+        private static final SnackbarCssResourceReference INSTANCE = new SnackbarCssResourceReference();
     }
 }

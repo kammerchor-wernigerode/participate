@@ -1,29 +1,42 @@
 package de.vinado.wicket.participate.resources.js;
 
+import de.agilecoders.wicket.core.util.Dependencies;
+import de.agilecoders.wicket.webjars.request.resource.WebjarsJavaScriptResourceReference;
 import de.vinado.wicket.participate.resources.css.SnackbarCssResourceReference;
-import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.HeaderItem;
-import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 
 import java.util.List;
 
 /**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
+ * @author Vincent Nadoll
  */
-public class SnackbarJsResourceReference extends CssResourceReference {
+public class SnackbarJsResourceReference extends WebjarsJavaScriptResourceReference {
 
-    public static final SnackbarJsResourceReference INSTANCE = new SnackbarJsResourceReference();
+    private static final long serialVersionUID = 3397036326573568596L;
 
+    private SnackbarJsResourceReference() {
+        super("node-snackbar/current/snackbar.js");
+    }
 
-    public SnackbarJsResourceReference() {
-        super(SnackbarJsResourceReference.class, "snackbar.min.js");
+    public static HeaderItem asHeaderItem() {
+        return JavaScriptHeaderItem.forReference(instance());
+    }
+
+    public static SnackbarJsResourceReference instance() {
+        return Holder.INSTANCE;
     }
 
     @Override
     public List<HeaderItem> getDependencies() {
-        final List<HeaderItem> dependencies = super.getDependencies();
-        dependencies.add(CssHeaderItem.forReference(SnackbarCssResourceReference.INSTANCE));
+        return Dependencies.combine(
+            super.getDependencies(),
+            SnackbarCssResourceReference.asHeaderItem()
+        );
+    }
 
-        return dependencies;
+
+    private static final class Holder {
+        private static final SnackbarJsResourceReference INSTANCE = new SnackbarJsResourceReference();
     }
 }

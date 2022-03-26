@@ -86,8 +86,8 @@ public abstract class BasePage extends WebPage {
     @Override
     public void renderHead(final IHeaderResponse response) {
         Resources.render(response, this);
-        response.render(CssReferenceHeaderItem.forReference(SnackbarCssResourceReference.INSTANCE));
-        response.render(JavaScriptReferenceHeaderItem.forReference(SnackbarJsResourceReference.INSTANCE));
+        response.render(SnackbarCssResourceReference.asHeaderItem());
+        response.render(SnackbarJsResourceReference.asHeaderItem());
         response.render(JavaScriptHeaderItem.forScript("$(document).on('mouseup touchend', function (e) {\n" +
             "  var container = $('.bootstrap-datetimepicker-widget');\n" +
             "  if (!container.is(e.target) && container.has(e.target).length === 0) {\n" +
