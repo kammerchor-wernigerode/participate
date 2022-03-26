@@ -3,9 +3,9 @@ package de.vinado.wicket.participate.ui.singers;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.vinado.wicket.bt4.modal.FormModal;
+import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.form.ConditionalValidator;
-import de.vinado.wicket.participate.components.modals.BootstrapModal;
-import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.events.SingerUpdateEvent;
 import de.vinado.wicket.participate.model.Singer;
@@ -32,7 +32,7 @@ import java.util.Collections;
  *
  * @author Julius Felchow (julius.felchow@gmail.com)
  */
-public class AddEditSingerPanel extends BootstrapModalPanel<SingerDTO> {
+public class AddEditSingerPanel extends FormModal<SingerDTO> {
 
     @SpringBean
     @SuppressWarnings("unused")
@@ -42,38 +42,42 @@ public class AddEditSingerPanel extends BootstrapModalPanel<SingerDTO> {
     @SuppressWarnings("unused")
     private EventService eventService;
 
-    private boolean edit;
+    private final boolean edit;
     private boolean remove = false;
 
-    /**
-     * @param modal {@link de.vinado.wicket.participate.components.modals.BootstrapModal}
-     * @param model IModel of {@link SingerDTO}
-     */
-    public AddEditSingerPanel(final BootstrapModal modal, final IModel<String> title, IModel<SingerDTO> model) {
-        super(modal, title, model);
+    public AddEditSingerPanel(ModalAnchor anchor, IModel<String> title, IModel<SingerDTO> model) {
+        super(anchor, model);
+
+        title(title);
+
         edit = null != model.getObject().getSinger();
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
         final TextField<String> firstNameTf = new TextField<>("firstName");
         firstNameTf.setLabel(new ResourceModel("firstName", "Given name"));
         firstNameTf.setRequired(true);
-        inner.add(firstNameTf);
+        form.add(firstNameTf);
 
         final TextField<String> lastNameTf = new TextField<>("lastName");
         lastNameTf.setLabel(new ResourceModel("lastName", "Surname"));
         lastNameTf.setRequired(true);
-        inner.add(lastNameTf);
+        form.add(lastNameTf);
 
         final EmailTextField emailTf = new EmailTextField("email");
         emailTf.setLabel(new ResourceModel("email", "Email"));
         emailTf.setRequired(true);
         emailTf.add(new ConditionalValidator<>(this::ensureUnique,
             new ResourceModel("unique.email", "A person with this e-mail address already exists")));
-        inner.add(emailTf);
+        form.add(emailTf);
 
         final DropDownChoice<Voice> voiceDd = new DropDownChoice<>("voice",
             Collections.unmodifiableList(Arrays.asList(Voice.values())), new EnumChoiceRenderer<>());
         voiceDd.setLabel(new ResourceModel("voice", "Voice"));
-        inner.add(voiceDd);
+        form.add(voiceDd);
 
         final BootstrapAjaxLink<Void> removeBtn = new BootstrapAjaxLink<>("removeBtn", Buttons.Type.Link) {
             @Override
@@ -99,9 +103,9 @@ public class AddEditSingerPanel extends BootstrapModalPanel<SingerDTO> {
         removeBtn.setIconType(FontAwesome5IconType.trash_s);
         removeBtn.setSize(Buttons.Size.Small);
         removeBtn.setOutputMarkupId(true);
-        inner.add(removeBtn);
+        form.add(removeBtn);
 
-        addBootstrapHorizontalFormDecorator(inner);
+        addBootstrapHorizontalFormDecorator(form);
     }
 
     private boolean ensureUnique(String email) {
@@ -109,18 +113,19 @@ public class AddEditSingerPanel extends BootstrapModalPanel<SingerDTO> {
     }
 
     @Override
-    protected void onSaveSubmit(final IModel<SingerDTO> model, final AjaxRequestTarget target) {
+    protected void onSubmit(AjaxRequestTarget target) {
+        SingerDTO dto = getModelObject();
         if (edit) {
             if (remove) {
-                personService.removeSinger(model.getObject().getSinger());
+                personService.removeSinger(dto.getSinger());
                 send(getWebPage(), Broadcast.BREADTH, new SingerUpdateEvent(target));
                 Snackbar.show(target, new ResourceModel("singer.remove.success", "The singer has been removed"));
                 return;
             }
-            personService.saveSinger(model.getObject());
+            personService.saveSinger(dto);
             send(getWebPage(), Broadcast.BREADTH, new SingerUpdateEvent(target));
         } else {
-            final Singer singer = personService.createSinger(model.getObject());
+            final Singer singer = personService.createSinger(dto);
             eventService.getUpcomingEvents().forEach(event -> eventService.createParticipant(event, singer));
         }
         send(getWebPage(), Broadcast.BREADTH, new SingerUpdateEvent(target));

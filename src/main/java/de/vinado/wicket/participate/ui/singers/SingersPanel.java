@@ -3,7 +3,6 @@ package de.vinado.wicket.participate.ui.singers;
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
-import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
@@ -72,7 +71,7 @@ public class SingersPanel extends BootstrapPanel<SingerFilter> {
     }
 
     private void add(AjaxRequestTarget target) {
-        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
         modal.setContent(new AddEditSingerPanel(modal, new ResourceModel("singer.add", "Add Singer"),
             new CompoundPropertyModel<>(new SingerDTO())));
         modal.show(target);
@@ -160,7 +159,7 @@ public class SingersPanel extends BootstrapPanel<SingerFilter> {
             new ResourceModel("singer.edit", "Edit Singer")) {
             @Override
             public void onClick(final AjaxRequestTarget target, final IModel<Singer> rowModel) {
-                final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+                ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
                 final Singer singer = rowModel.getObject();
                 modal.setContent(new AddEditSingerPanel(modal, new ResourceModel("singer.edit", "Edit Singer"), new CompoundPropertyModel<>(
                     new SingerDTO(singer))));
