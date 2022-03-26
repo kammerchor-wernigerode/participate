@@ -8,10 +8,10 @@ import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
 import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
+import de.vinado.wicket.bt4.modal.ModalAnchor;
+import de.vinado.wicket.bt4.modal.TextContentModal;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.form.AutosizeBehavior;
-import de.vinado.wicket.participate.components.modals.BootstrapModal;
-import de.vinado.wicket.participate.components.modals.DismissableBootstrapModalPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.events.EventUpdateEvent;
@@ -200,11 +200,11 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
     }
 
     private void displaySuccessionModal(IModel<String> messageModel, AjaxRequestTarget target) {
-        BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
         ResourceModel titleModel = new ResourceModel("invitation.accept.success", "Thanks you for your registration!");
 
-        DismissableBootstrapModalPanel<String> confirmation = new DismissableBootstrapModalPanel<>(modal,
-            titleModel, messageModel);
+        TextContentModal confirmation = new TextContentModal(modal, messageModel);
+        confirmation.title(titleModel);
         modal.setContent(confirmation);
         modal.show(target);
     }
