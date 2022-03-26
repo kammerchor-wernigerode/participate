@@ -130,11 +130,11 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     }
 
     private void edit(AjaxRequestTarget target, IModel<Participant> rowModel) {
-        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        final ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
         modal.setContent(new EditInvitationPanel(modal, new CompoundPropertyModel<>(new ParticipantDTO(rowModel.getObject()))) {
             @Override
-            protected void onSaveSubmit(final IModel<ParticipantDTO> savedModel, final AjaxRequestTarget target) {
-                eventService.saveParticipant(savedModel.getObject());
+            protected void onSubmit(final AjaxRequestTarget target) {
+                eventService.saveParticipant(getModelObject());
                 Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
                 send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
             }

@@ -43,6 +43,7 @@ public abstract class FormModal<T> extends Modal<T> {
         super.onInitialize();
 
         add(form = createForm(FORM_ID));
+        form.setOutputMarkupId(true);
         setupActions();
     }
 

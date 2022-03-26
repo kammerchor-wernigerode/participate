@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.ui.event.details;
 
+import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
@@ -72,14 +73,13 @@ public class EventSummaryListPanel extends BootstrapPanel<Event> {
     }
 
     private void edit(AjaxRequestTarget target, IModel<Participant> rowModel) {
-        BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
         ParticipantDTO participantDTO = new ParticipantDTO(rowModel.getObject());
 
         modal.setContent(new EditInvitationPanel(modal, new CompoundPropertyModel<>(participantDTO)) {
             @Override
-            protected void onSaveSubmit(IModel<ParticipantDTO> savedModel,
-                                        AjaxRequestTarget target) {
-                eventService.saveParticipant(savedModel.getObject());
+            protected void onSubmit(AjaxRequestTarget target) {
+                eventService.saveParticipant(getModelObject());
                 send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
                 Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
             }
