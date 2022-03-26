@@ -170,7 +170,7 @@ public class UserPanel extends Panel {
         final BootstrapAjaxLink<Void> createUserBtn = new BootstrapAjaxLink<>("createUserBtn", Buttons.Type.Default) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+                ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
                 modal.setContent(new AddUserPanel(modal, new CompoundPropertyModel<>(new AddUserDTO())) {
                     @Override
                     protected void onConfirm(final User user, final AjaxRequestTarget target) {
