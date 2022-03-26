@@ -2,12 +2,14 @@ package de.vinado.wicket.bt4.modal;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.ButtonBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.vinado.wicket.bt4.form.decorator.BootstrapFormDecorator;
 import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.bt4.form.decorator.BootstrapInlineFormDecorator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.form.Button;
@@ -31,8 +33,10 @@ public abstract class FormModal<T> extends Modal<T> {
     private static final long serialVersionUID = -1686181807165719605L;
 
     protected static final String FORM_ID = "form";
+    protected static final String FEEDBACK_ID = "feedback";
 
     protected Form<T> form;
+    protected NotificationPanel feedback;
 
     public FormModal(ModalAnchor anchor, IModel<T> model) {
         super(anchor, model);
@@ -45,10 +49,17 @@ public abstract class FormModal<T> extends Modal<T> {
         add(form = createForm(FORM_ID));
         form.setOutputMarkupId(true);
         setupActions();
+
+        form.add(feedback = createFeedback(FEEDBACK_ID));
+        feedback.setOutputMarkupId(true);
     }
 
     protected Form<T> createForm(String id) {
         return new Form<>(id, getModel());
+    }
+
+    protected NotificationPanel createFeedback(String id) {
+        return new NotificationPanel(id);
     }
 
     protected void setupActions() {
@@ -134,6 +145,21 @@ public abstract class FormModal<T> extends Modal<T> {
                 protected void onInitialize() {
                     super.onInitialize();
                     add(buttonBehavior);
+                }
+
+                @Override
+                protected void onError(AjaxRequestTarget target) {
+                    super.onError(target);
+
+                    Optional.ofNullable(getForm().get(FEEDBACK_ID))
+                        .ifPresent(feedback -> onError(target, feedback));
+                }
+
+                private void onError(AjaxRequestTarget target, Component feedback) {
+                    target.add(feedback);
+                    getForm().visitFormComponents((components, iVisit) -> {
+                        if (!components.getRenderBodyOnly()) target.add(components);
+                    });
                 }
 
                 @Override
