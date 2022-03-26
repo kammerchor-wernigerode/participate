@@ -18,8 +18,8 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2MultiChoice;
 
-import javax.mail.internet.InternetAddress;
 import java.util.stream.Stream;
+import javax.mail.internet.InternetAddress;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
