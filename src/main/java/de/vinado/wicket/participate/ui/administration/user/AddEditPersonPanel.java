@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate.ui.administration.user;
 
+import de.vinado.wicket.bt4.modal.FormModal;
+import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.form.ConditionalValidator;
-import de.vinado.wicket.participate.components.modals.BootstrapModal;
-import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
 import de.vinado.wicket.participate.model.dtos.PersonDTO;
 import de.vinado.wicket.participate.services.PersonService;
 import org.apache.commons.lang3.StringUtils;
@@ -16,7 +16,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class AddEditPersonPanel extends BootstrapModalPanel<PersonDTO> {
+public abstract class AddEditPersonPanel extends FormModal<PersonDTO> {
 
     @SpringBean
     @SuppressWarnings("unused")
@@ -24,31 +24,39 @@ public abstract class AddEditPersonPanel extends BootstrapModalPanel<PersonDTO> 
 
     private boolean edit;
 
-    public AddEditPersonPanel(final BootstrapModal modal, final IModel<String> labelModel, final IModel<PersonDTO> model) {
-        super(modal, labelModel, model);
+    public AddEditPersonPanel(ModalAnchor anchor, IModel<String> title, IModel<PersonDTO> model) {
+        super(anchor, model);
+
+        title(title);
+
         edit = null != model.getObject().getPerson();
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
         final RequiredTextField firstNameTf = new RequiredTextField("firstName");
-        inner.add(firstNameTf);
+        form.add(firstNameTf);
 
         final RequiredTextField lastNameTf = new RequiredTextField("lastName");
-        inner.add(lastNameTf);
+        form.add(lastNameTf);
 
         final EmailTextField emailTf = new EmailTextField("email");
         emailTf.setRequired(true);
         emailTf.add(new ConditionalValidator<>(this::ensureUniqueness,
             new ResourceModel("unique.email", "A person with this e-mail address already exists")));
-        inner.add(emailTf);
+        form.add(emailTf);
 
-        addBootstrapHorizontalFormDecorator(inner);
+        addBootstrapHorizontalFormDecorator(form);
     }
 
     @Override
-    protected void onSaveSubmit(final IModel<PersonDTO> model, final AjaxRequestTarget target) {
+    protected void onSubmit(final AjaxRequestTarget target) {
         if (edit) {
-            personService.savePerson(model.getObject());
+            personService.savePerson(getModelObject());
         } else {
-            personService.createPerson(model.getObject());
+            personService.createPerson(getModelObject());
         }
         onUpdate(target);
     }

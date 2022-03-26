@@ -1,10 +1,10 @@
 package de.vinado.wicket.participate.ui.administration.user;
 
-
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.components.TextAlign;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.modals.BootstrapModalConfirmationPanel;
@@ -143,7 +143,7 @@ public class UserPanel extends Panel {
                     item.add(new BootstrapAjaxLinkPanel(componentId, Buttons.Type.Link, FontAwesome5IconType.edit_s) {
                         @Override
                         public void onClick(final AjaxRequestTarget target) {
-                            final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+                            ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
                             modal.setContent(new AddEditPersonPanel(modal, new ResourceModel("person.edit", "Edit Person"),
                                 new CompoundPropertyModel<>(new PersonDTO(person))) {
                                 @Override
