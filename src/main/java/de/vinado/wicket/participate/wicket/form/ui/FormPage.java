@@ -4,7 +4,6 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.AbstractNavbarCom
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
 import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.model.EventDetails;
-import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
@@ -13,9 +12,11 @@ import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -63,13 +64,13 @@ public class FormPage extends BasePage implements IGenericComponent<ParticipantD
 
                 @Override
                 public Component create(String markupId) {
-                    return new EventDropDownForm(markupId, getModel().map(ParticipantDTO::getParticipant)) {
+                    return new EventDropDownForm(markupId, LambdaModel.of(getModel(), ParticipantDTO::getParticipant, ParticipantDTO::setParticipant)) {
                         private static final long serialVersionUID = 7137415331187027778L;
 
                         @Override
-                        protected void onEventChange(Participant participant) {
+                        protected void onSelect(AjaxRequestTarget target) {
                             PageParameters pageParameters = new PageParameters(getPageParameters());
-                            pageParameters.set("token", participant.getToken());
+                            pageParameters.set("token", getModelObject().getToken());
                             setResponsePage(new FormPage(pageParameters));
                         }
                     };
