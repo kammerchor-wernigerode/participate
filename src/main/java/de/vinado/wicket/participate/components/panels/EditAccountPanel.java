@@ -2,8 +2,8 @@ package de.vinado.wicket.participate.components.panels;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.tabs.AjaxBootstrapTabbedPanel;
 import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
-import de.vinado.wicket.participate.components.modals.BootstrapModal;
-import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
+import de.vinado.wicket.bt4.modal.FormModal;
+import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.Voice;
@@ -42,7 +42,7 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public abstract class EditAccountPanel extends BootstrapModalPanel<EditAccountDTO> {
+public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
 
     @SpringBean
     @SuppressWarnings("unused")
@@ -52,21 +52,28 @@ public abstract class EditAccountPanel extends BootstrapModalPanel<EditAccountDT
     @SuppressWarnings("unused")
     private PersonService personService;
 
-    public EditAccountPanel(final BootstrapModal modal, final IModel<EditAccountDTO> model) {
-        super(modal, new ResourceModel("account.edit", "Edit Account"), model);
+    public EditAccountPanel(final ModalAnchor modal, final IModel<EditAccountDTO> model) {
+        super(modal, model);
+
+        title(new ResourceModel("account.edit", "Edit Account"));
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
         final List<ITab> tabs = new ArrayList<>();
         tabs.add(new AbstractTab(new ResourceModel("account.user", "User Account")) {
             @Override
             public Panel getPanel(final String panelId) {
-                return new EditUserPanel(panelId, model);
+                return new EditUserPanel(panelId, getModel());
             }
         });
-        if (null != model.getObject().getPerson()) {
+        if (null != getModelObject().getPerson()) {
             tabs.add(new AbstractTab(new ResourceModel("account.personal-details", "Personal Details")) {
                 @Override
                 public Panel getPanel(final String panelId) {
-                    return new EditPersonPanel(panelId, model);
+                    return new EditPersonPanel(panelId, getModel());
                 }
             });
         }
@@ -78,12 +85,12 @@ public abstract class EditAccountPanel extends BootstrapModalPanel<EditAccountDT
         });*/
 
         final AjaxBootstrapTabbedPanel tabbedPanel = new AjaxBootstrapTabbedPanel<>("tabs", tabs);
-        inner.add(tabbedPanel);
+        form.add(tabbedPanel);
     }
 
     @Override
-    protected void onSaveSubmit(final IModel<EditAccountDTO> model, final AjaxRequestTarget target) {
-        final EditAccountDTO modelObject = model.getObject();
+    protected void onSubmit(final AjaxRequestTarget target) {
+        final EditAccountDTO modelObject = getModelObject();
 
         if (null != modelObject.getSinger()) {
             final PersonDTO personDTO = new PersonDTO(modelObject.getPerson());
@@ -151,8 +158,8 @@ public abstract class EditAccountPanel extends BootstrapModalPanel<EditAccountDT
             });
             add(confirmPasswordTf);
 
-            inner.add(new EqualPasswordInputValidator(passwordTf, confirmPasswordTf));
-            inner.add(new AbstractFormValidator() {
+            form.add(new EqualPasswordInputValidator(passwordTf, confirmPasswordTf));
+            form.add(new AbstractFormValidator() {
                 @Override
                 public FormComponent<?>[] getDependentFormComponents() {
                     return new FormComponent[0];

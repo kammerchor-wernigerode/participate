@@ -6,8 +6,8 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarComponents;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarDropDownButton;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.ParticipateSession;
-import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.panels.EditAccountPanel;
 import de.vinado.wicket.participate.components.panels.Footer;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
@@ -97,7 +97,7 @@ public class ParticipatePage extends BasePage {
                                     singer = personService.hasSinger(person) ? personService.getSinger(person) : null;
                                 }
 
-                                final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+                                ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
                                 modal.setContent(new EditAccountPanel(modal, new CompoundPropertyModel<>(
                                     new EditAccountDTO(user, user.getPerson(), singer))) {
                                     @Override
