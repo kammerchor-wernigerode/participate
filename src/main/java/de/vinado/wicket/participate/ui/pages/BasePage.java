@@ -33,6 +33,7 @@ public abstract class BasePage extends WebPage {
     @SpringBean
     private ApplicationName applicationName;
 
+    @Deprecated
     private BootstrapModal modal;
 
     /**
@@ -70,11 +71,13 @@ public abstract class BasePage extends WebPage {
      *
      * @return {@link de.vinado.wicket.participate.components.modals.BootstrapModal}
      */
+    @Deprecated
     @SuppressWarnings("unused")
     public BootstrapModal getModal() {
         return modal;
     }
 
+    @Deprecated
     private void addModal(final String id) {
         modal = new BootstrapModal(id);
         add(modal);

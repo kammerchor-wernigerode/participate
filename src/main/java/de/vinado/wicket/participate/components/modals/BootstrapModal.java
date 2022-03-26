@@ -13,6 +13,7 @@ import org.apache.wicket.markup.repeater.AbstractRepeater;
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Deprecated
 public class BootstrapModal extends Panel {
 
     /**

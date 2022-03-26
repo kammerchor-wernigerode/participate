@@ -14,6 +14,7 @@ import org.apache.wicket.model.IModel;
  *
  * @author Vincent Nadoll
  */
+@Deprecated
 public class DismissableBootstrapModalPanel<T> extends GenericPanel<T> {
 
     protected static final String TITLE_LABEL_ID = "title";

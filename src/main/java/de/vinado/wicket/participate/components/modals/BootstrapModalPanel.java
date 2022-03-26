@@ -27,6 +27,7 @@ import org.apache.wicket.util.visit.IVisitor;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Deprecated
 public abstract class BootstrapModalPanel<T> extends GenericPanel<T> {
 
     protected final Form<T> inner;

@@ -8,6 +8,7 @@ import org.apache.wicket.model.IModel;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
+@Deprecated
 public abstract class BootstrapModalConfirmationPanel extends BootstrapModalPanel<String> {
 
     /**
