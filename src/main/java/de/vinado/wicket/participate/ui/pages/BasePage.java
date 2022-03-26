@@ -5,7 +5,6 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.html.HtmlTag;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.IeEdgeMetaTag;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.MetaTag;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
-import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.resources.css.SnackbarCssResourceReference;
 import de.vinado.wicket.participate.resources.js.SnackbarJsResourceReference;
 import de.vinado.wicket.participate.wicket.inject.ApplicationName;
@@ -35,9 +34,6 @@ public abstract class BasePage extends WebPage {
     @SpringBean
     private ApplicationName applicationName;
 
-    @Deprecated
-    private BootstrapModal modal;
-
     @Getter
     private final ModalAnchor modalAnchor;
 
@@ -56,7 +52,6 @@ public abstract class BasePage extends WebPage {
     public BasePage(final PageParameters parameters) {
         super(parameters);
 
-        addModal(ParticipatePage.MODAL_ID);
         add(modalAnchor = new ModalAnchor(ModalAnchor.MODAL_ID));
 
         add(html("html"));
@@ -70,23 +65,6 @@ public abstract class BasePage extends WebPage {
         HtmlTag tag = new HtmlTag(id, Locale.getDefault());
         tag.add(new CssClassNameAppender("h-100"));
         return tag;
-    }
-
-    /**
-     * Usage: final BootstrapModal modal = ((BasePage) getWebPage()).getModal;
-     *
-     * @return {@link de.vinado.wicket.participate.components.modals.BootstrapModal}
-     */
-    @Deprecated
-    @SuppressWarnings("unused")
-    public BootstrapModal getModal() {
-        return modal;
-    }
-
-    @Deprecated
-    private void addModal(final String id) {
-        modal = new BootstrapModal(id);
-        add(modal);
     }
 
     @Override

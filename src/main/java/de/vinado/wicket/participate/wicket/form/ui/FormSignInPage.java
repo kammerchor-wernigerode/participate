@@ -47,7 +47,6 @@ public class FormSignInPage extends BasePage implements IGenericComponent<Partic
         setStatelessHint(true);
 
         remove("modal");
-        remove("modal-container");
 
         add(new FormSignInPanel("signInPanel", getModel()));
 
