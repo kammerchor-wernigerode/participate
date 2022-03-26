@@ -1,11 +1,12 @@
 package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.vinado.wicket.bt4.modal.ConfirmationModal;
+import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
-import de.vinado.wicket.participate.components.modals.BootstrapModalConfirmationPanel;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
@@ -224,28 +225,31 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     private void remind(AjaxRequestTarget target) {
         final User organizer = ParticipateSession.get().getUser();
         final Event event = getModelObject().getEvent();
-        if (eventService.hasParticipant(event)) {
-            final BootstrapModal modal = ((ParticipatePage) getWebPage()).getModal();
-            modal.setContent(new BootstrapModalConfirmationPanel(modal,
-                new ResourceModel("email.send.reminder", "Send Reminder"),
-                new ResourceModel("email.send.reminder.question", "Some singers have already received an invitation. Should they be remembered?")) {
-                @Override
-                protected void onConfirm(AjaxRequestTarget target) {
-                    final List<Participant> participants = eventService.getParticipants(event, InvitationStatus.PENDING);
-
-                    final int count = eventService.inviteParticipants(participants, organizer);
-
-                    send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
-                    Snackbar.show(target, "Erinnerung wurde an "
-                        + count
-                        + (count != 1 ? " Mitglieder " : " Mitglied ")
-                        + "versandt.");
-                }
-            });
-            modal.show(target);
-        } else {
+        if (!eventService.hasParticipant(event)) {
             Snackbar.show(target, "Es wurde noch niemand eingeladen!");
+            return;
         }
+
+        ModalAnchor anchor = ((ParticipatePage) getWebPage()).getModalAnchor();
+        anchor.setContent(new ConfirmationModal(anchor,
+            new ResourceModel("email.send.reminder.question", "Some singers have already received an invitation. Should they be remembered?")) {
+            private static final long serialVersionUID = -5430900540362229987L;
+
+            @Override
+            protected void onConfirm(AjaxRequestTarget target) {
+                final List<Participant> participants = eventService.getParticipants(event, InvitationStatus.PENDING);
+
+                final int count = eventService.inviteParticipants(participants, organizer);
+
+                send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
+                Snackbar.show(target, "Erinnerung wurde an "
+                    + count
+                    + (count != 1 ? " Mitglieder " : " Mitglied ")
+                    + "versandt.");
+
+            }
+        }.title(new ResourceModel("email.send.reminder", "Send Reminder")));
+        anchor.show(target);
     }
 
     private void email(AjaxRequestTarget target) {
