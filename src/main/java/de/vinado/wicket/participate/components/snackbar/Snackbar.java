@@ -20,24 +20,6 @@ public class Snackbar {
     private static SnackbarConfig snackbarConfig = new SnackbarConfig()
         .withShowAction(false);
 
-    /**
-     * @param content Content of the Snackbar
-     * @return {@link CharSequence} JavaScript function
-     */
-    @Deprecated
-    public static CharSequence show(final String content) {
-        return show(Model.of(content));
-    }
-
-    /**
-     * @param contentModel Content of the Snackbar
-     * @return {@link CharSequence} JavaScript function
-     */
-    @Deprecated
-    public static CharSequence show(final IModel<String> contentModel) {
-        return "Snackbar.show(" + snackbarConfig.withText(contentModel.getObject()).toJsonString() + ");";
-    }
-
     public static void show(final AjaxRequestTarget target, final String content) {
         String json = snackbarConfig.withText(content).toJsonString();
         target.appendJavaScript("Snackbar.show(" + json + ");");
