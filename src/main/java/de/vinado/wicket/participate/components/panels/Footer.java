@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.components.panels;
 
-import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.dtos.SendFeedbackDTO;
