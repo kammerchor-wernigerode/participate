@@ -1,7 +1,8 @@
 package de.vinado.wicket.participate.components.panels;
 
-import de.vinado.wicket.participate.components.modals.BootstrapModal;
-import de.vinado.wicket.participate.components.modals.BootstrapModalPanel;
+import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal.Size;
+import de.vinado.wicket.bt4.modal.FormModal;
+import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.service.EmailService;
@@ -24,7 +25,7 @@ import java.util.stream.Stream;
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
 @Slf4j
-public class SendEmailPanel extends BootstrapModalPanel<Email> {
+public class SendEmailPanel extends FormModal<Email> {
 
     @SpringBean
     private PersonService personService;
@@ -32,35 +33,42 @@ public class SendEmailPanel extends BootstrapModalPanel<Email> {
     @SpringBean
     private EmailService emailService;
 
-    public SendEmailPanel(final BootstrapModal modal, final IModel<Email> model) {
-        super(modal, new ResourceModel("email.new", "New Email"), model);
-        setModalSize(ModalSize.Large);
+    public SendEmailPanel(ModalAnchor anchor, IModel<Email> model) {
+        super(anchor, model);
+
+        size(Size.Extra_large);
+        title(new ResourceModel("email.new", "New Email"));
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
         final TextField<String> fromTf = new TextField<>("from");
         fromTf.setEnabled(false);
-        inner.add(fromTf);
+        form.add(fromTf);
 
         final Select2MultiChoice<InternetAddress> toTf = new Select2MultiChoice<>("to", new Select2EmailAddressProvider(personService));
         toTf.getSettings().setLanguage(getLocale().getLanguage());
         toTf.getSettings().setCloseOnSelect(true);
         toTf.getSettings().setTheme(new Select2BootstrapTheme(true));
         toTf.getSettings().setPlaceholder(new ResourceModel("select.placeholder", "Please Choose").getObject());
-        toTf.getSettings().setDropdownParent(inner.getMarkupId());
+        toTf.getSettings().setDropdownParent(form.getMarkupId());
         toTf.setLabel(new ResourceModel("email.recipient", "Recipient"));
-        inner.add(toTf);
+        form.add(toTf);
 
         final TextField<String> subjectTf = new TextField<>("subject");
-        inner.add(subjectTf);
+        form.add(subjectTf);
 
         final TextArea<String> messageTa = new TextArea<>("message");
-        inner.add(messageTa);
+        form.add(messageTa);
 
-        addBootstrapFormDecorator(inner);
+        addBootstrapFormDecorator(form);
     }
 
     @Override
-    protected void onSaveSubmit(final IModel<Email> model, final AjaxRequestTarget target) {
-        Email mail = model.getObject();
+    protected void onSubmit(AjaxRequestTarget target) {
+        Email mail = getModelObject();
         Stream<Email> mails = mail.toSingleRecipient();
         emailService.send(mails);
 
@@ -68,7 +76,7 @@ public class SendEmailPanel extends BootstrapModalPanel<Email> {
     }
 
     @Override
-    protected IModel<String> getSubmitBtnLabel() {
+    protected IModel<String> submitButtonLabel() {
         return new ResourceModel("send", "Send");
     }
 }

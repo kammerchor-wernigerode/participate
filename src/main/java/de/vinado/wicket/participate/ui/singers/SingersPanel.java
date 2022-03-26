@@ -2,6 +2,7 @@ package de.vinado.wicket.participate.ui.singers;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
@@ -82,7 +83,7 @@ public class SingersPanel extends BootstrapPanel<SingerFilter> {
             .toPeople(personService.getSingers())
             .build();
 
-        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
         modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
         modal.show(target);
     }
@@ -184,7 +185,7 @@ public class SingersPanel extends BootstrapPanel<SingerFilter> {
                     .to(person)
                     .build();
 
-                final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+                ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
                 modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
                 modal.show(target);
             }

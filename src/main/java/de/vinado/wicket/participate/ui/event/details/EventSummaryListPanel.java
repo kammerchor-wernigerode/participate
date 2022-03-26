@@ -1,7 +1,6 @@
 package de.vinado.wicket.participate.ui.event.details;
 
 import de.vinado.wicket.bt4.modal.ModalAnchor;
-import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
@@ -93,7 +92,7 @@ public class EventSummaryListPanel extends BootstrapPanel<Event> {
             .to(person)
             .build();
 
-        BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
         modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
         modal.show(target);
     }

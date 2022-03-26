@@ -6,7 +6,6 @@ import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.components.PersonContext;
-import de.vinado.wicket.participate.components.modals.BootstrapModal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
@@ -148,7 +147,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
             .to(person)
             .build();
 
-        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
         modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
         modal.show(target);
     }
@@ -257,7 +256,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
             .toPeople(personService.getSingers(getModelObject().getEvent()))
             .build();
 
-        final BootstrapModal modal = ((BasePage) getWebPage()).getModal();
+        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
         modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
         modal.show(target);
     }
