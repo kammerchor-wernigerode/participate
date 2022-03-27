@@ -641,6 +641,17 @@ public class EventServiceImpl extends DataService implements EventService {
         return getAll(EventDetails.class).stream();
     }
 
+    @Override
+    public Optional<EventDetails> findById(Long id) {
+        TypedQuery<EventDetails> query = entityManager.createQuery("SELECT e FROM EventDetails e WHERE e.event.id = :id", EventDetails.class)
+            .setParameter("id", id);
+        try {
+            return Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
     private static Predicate forUpcomingDate(final CriteriaBuilder criteriaBuilder, final Path<? extends Terminable> eventPath) {
         return criteriaBuilder.greaterThanOrEqualTo(eventPath.get("endDate"), new Date());
     }

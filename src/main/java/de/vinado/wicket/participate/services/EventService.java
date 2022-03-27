@@ -13,6 +13,7 @@ import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -276,4 +277,6 @@ public interface EventService {
     boolean hasDeadlineExpired(Participant participant);
 
     Stream<EventDetails> listAll();
+
+    Optional<EventDetails> findById(Long id);
 }

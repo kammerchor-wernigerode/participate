@@ -50,7 +50,8 @@ public class WebInitializer implements ServletContextInitializer {
     }
 
     private Stream<String> listPagePaths() {
-        return ManagementPageRegistry.getInstance().getPaths();
+        return ManagementPageRegistry.getInstance().getPaths()
+            .map(path -> path.replaceAll("#\\{.+\\}", "*"));
     }
 
     private static Function<String, String> prepend(String value) {

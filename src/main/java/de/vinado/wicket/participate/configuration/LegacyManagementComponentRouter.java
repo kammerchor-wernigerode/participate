@@ -28,7 +28,7 @@ import static java.util.stream.Collectors.toMap;
 @Slf4j
 @Component
 @WebFilter(filterName = "legacy-management-router",
-    urlPatterns = {"/administration", "/error/*", "/events", "/login", "/resetPassword", "/singers"})
+    urlPatterns = {"/administration", "/error/*", "/events", "/event/*", "/login", "/resetPassword", "/singers"})
 class LegacyManagementComponentRouter implements Filter {
 
     private static final Map<String, String> mappings;

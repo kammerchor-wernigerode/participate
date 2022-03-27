@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.ui.pages;
 
+import de.vinado.wicket.participate.event.ui.EventSummaryPage;
 import de.vinado.wicket.participate.ui.administration.AdminPage;
 import de.vinado.wicket.participate.ui.event.EventsPage;
 import de.vinado.wicket.participate.ui.login.SignInPage;
@@ -28,6 +29,7 @@ public final class ManagementPageRegistry implements PageRegistry {
 
         registrations.put("/login", SignInPage.class);
         registrations.put("/events", EventsPage.class);
+        registrations.put("/event/#{event}", EventSummaryPage.class);
         registrations.put("/error/500", ErrorPage.class);
         registrations.put("/error/418", ExpiredPage.class);
         registrations.put("/error/404", PageNotFoundPage.class);

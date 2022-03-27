@@ -11,6 +11,7 @@ import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailBuilderFactory;
+import de.vinado.wicket.participate.event.ui.EventSummaryPage;
 import de.vinado.wicket.participate.events.AjaxUpdateEvent;
 import de.vinado.wicket.participate.events.EventUpdateEvent;
 import de.vinado.wicket.participate.model.Event;
@@ -24,7 +25,6 @@ import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
-import de.vinado.wicket.participate.ui.event.details.EventSummaryPanel;
 import de.vinado.wicket.participate.ui.event.details.ParticipantDataProvider;
 import de.vinado.wicket.participate.ui.event.details.ParticipantFilterIntent;
 import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateIntent;
@@ -35,19 +35,20 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
-import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanelLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.AbstractLink;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.request.mapper.parameter.INamedParameters.Type;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -199,11 +200,9 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         return new AbstractAction(id, new ResourceModel("show.event.summary", "Show Event Summary"), FontAwesome5IconType.check_s) {
             @Override
             protected AbstractLink link(String id) {
-                return new BreadCrumbPanelLink(id, breadCrumbModel, (componentId, factoryModel) ->
-                    new EventSummaryPanel(componentId, factoryModel,
-                        new CompoundPropertyModel<>(eventService.getEventDetails(getModelObject().getEvent())),
-                        getModel().map(EventDetails::getEndDate).map(date -> date.after(new Date())).getObject()
-                    ));
+                PageParameters pageParameters = new PageParameters(getWebPage().getPageParameters());
+                pageParameters.set("event", getModelObject().getId(), Type.PATH);
+                return new BookmarkablePageLink<>(id, EventSummaryPage.class, pageParameters);
             }
         };
     }

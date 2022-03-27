@@ -4,10 +4,9 @@
     <meta charset="utf-8"/>
 </head>
 <body>
-<wicket:panel>
-    <div class="clearfix pt-3"></div>
-    <form wicket:id="form">
-        <div wicket:id="wmc">
+<wicket:extend>
+    <div class="container-fluid pb-5">
+        <div class="clearfix pt-3"></div>
             <div class="row">
                 <div class="col-12">
                     <h1 class="h3"><i class="fa fa-calendar"></i> <span wicket:id="eventName"></span></h1>
@@ -101,8 +100,7 @@
             </div>
             <!--Unterer Bereich-->
             <div wicket:id="listPanel"></div>
-        </div>
-    </form>
-</wicket:panel>
+    </div>
+</wicket:extend>
 </body>
 </html>
