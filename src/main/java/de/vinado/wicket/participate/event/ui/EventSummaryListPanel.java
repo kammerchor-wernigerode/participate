@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.event.details;
+package de.vinado.wicket.participate.event.ui;
 
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
@@ -16,6 +16,9 @@ import de.vinado.wicket.participate.ui.event.DetailedParticipantColumnPreset;
 import de.vinado.wicket.participate.ui.event.EditInvitationPanel;
 import de.vinado.wicket.participate.ui.event.InteractiveColumnPresetDecoratorFactory;
 import de.vinado.wicket.participate.ui.event.ParticipantTable;
+import de.vinado.wicket.participate.ui.event.details.DetailedParticipantFilterPanel;
+import de.vinado.wicket.participate.ui.event.details.ParticipantDataProvider;
+import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateIntent;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;

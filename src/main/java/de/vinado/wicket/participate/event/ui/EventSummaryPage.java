@@ -10,7 +10,6 @@ import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.EventsPage;
-import de.vinado.wicket.participate.ui.event.details.EventSummaryListPanel;
 import de.vinado.wicket.participate.ui.event.details.ParticipantFilterIntent;
 import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateIntent;
 import de.vinado.wicket.participate.ui.pages.ParticipatePage;
