@@ -46,18 +46,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
+ * @author Vincent Nadoll
  */
 public class FormPanel extends GenericPanel<ParticipantDTO> {
 
-    @SuppressWarnings("unused")
     @SpringBean
     private EventService eventService;
 
     @SpringBean
     private ApplicationProperties applicationProperties;
 
-    public FormPanel(final String id, final IModel<ParticipantDTO> model) {
+    public FormPanel(String id, IModel<ParticipantDTO> model) {
         super(id, model);
 
         Event event = model.getObject().getEvent();
@@ -68,22 +67,22 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
         toConfig.withMinDate(event.getStartDate());
         toConfig.withMaxDate(DateUtils.addMilliseconds(DateUtils.addDays(event.getEndDate(), 1), -1));
 
-        final Form<?> form = new Form<>("form");
+        Form<?> form = new Form<>("form");
         add(form);
 
-        final WebMarkupContainer wmc = new WebMarkupContainer("wmc");
+        WebMarkupContainer wmc = new WebMarkupContainer("wmc");
         wmc.setOutputMarkupId(true);
         form.add(wmc);
 
         wmc.add(new Label("singer.displayName"));
 
-        final DatetimePicker toDtP = new DatetimePicker("toDate", toConfig);
+        DatetimePicker toDtP = new DatetimePicker("toDate", toConfig);
 
         WebMarkupContainer periodHelp;
         wmc.add(periodHelp = new WebMarkupContainer("periodHelp"));
         periodHelp.setOutputMarkupId(true);
 
-        final DatetimePicker fromDtP = new DatetimePicker("fromDate", fromConfig);
+        DatetimePicker fromDtP = new DatetimePicker("fromDate", fromConfig);
         fromDtP.add(new DatetimePickerResettingBehavior(toConfig::withMinDate));
         fromDtP.add(AttributeAppender.append("aria-describedby", periodHelp.getMarkupId()));
         wmc.add(fromDtP, new FormComponentLabel("fromDateLabel", fromDtP));
@@ -92,11 +91,11 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
         toDtP.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
         wmc.add(toDtP, new FormComponentLabel("toDateLabel", toDtP));
 
-        final CheckBox cateringCb = new CheckBox("catering");
+        CheckBox cateringCb = new CheckBox("catering");
         cateringCb.add(BootstrapHorizontalFormDecorator.decorate());
         wmc.add(cateringCb);
 
-        final CheckBox accommodationCb = new CheckBox("accommodation");
+        CheckBox accommodationCb = new CheckBox("accommodation");
         accommodationCb.add(BootstrapHorizontalFormDecorator.decorate());
         wmc.add(accommodationCb);
 
@@ -123,15 +122,15 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
         };
         wmc.add(carCb, new FormComponentLabel("carLabel", carCb));
 
-        final TextArea<?> commentTa = new TextArea<>("comment");
+        TextArea<?> commentTa = new TextArea<>("comment");
         commentTa.setLabel(new ResourceModel("comments", "More comments"));
         commentTa.add(BootstrapHorizontalFormDecorator.decorate());
         commentTa.add(new AutosizeBehavior());
         wmc.add(commentTa);
 
-        final BootstrapAjaxButton submitBtn = new BootstrapAjaxButton("submit", Buttons.Type.Success) {
+        BootstrapAjaxButton submitBtn = new BootstrapAjaxButton("submit", Buttons.Type.Success) {
             @Override
-            protected void onSubmit(final AjaxRequestTarget target) {
+            protected void onSubmit(AjaxRequestTarget target) {
                 ParticipantDTO dto = model.getObject();
                 Participant updatedParticipant = eventService.acceptEvent(dto);
                 EventUpdateEvent intent = new EventUpdateEvent(updatedParticipant.getEvent(), target);
@@ -145,10 +144,10 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
         submitBtn.setLabel(new ResourceModel("save", "Save"));
         wmc.add(submitBtn);
 
-        final BootstrapAjaxButton declineBtn = new BootstrapAjaxButton("decline", Buttons.Type.Default) {
+        BootstrapAjaxButton declineBtn = new BootstrapAjaxButton("decline", Buttons.Type.Default) {
             @Override
-            protected void onSubmit(final AjaxRequestTarget target) {
-                final Participant savedParticipant = eventService.declineEvent(model.getObject());
+            protected void onSubmit(AjaxRequestTarget target) {
+                Participant savedParticipant = eventService.declineEvent(model.getObject());
                 send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(savedParticipant.getEvent(), target));
                 Snackbar.show(target, new ResourceModel("invitation.decline.success", "Your cancellation has been saved. You can leave this page now."));
                 target.add(form);
