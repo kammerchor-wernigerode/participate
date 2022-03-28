@@ -3,10 +3,12 @@ package de.vinado.wicket.participate.wicket.form.ui;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
+import de.agilecoders.wicket.jquery.Key;
 import de.vinado.wicket.bt4.button.BootstrapAjaxButton;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
+import de.vinado.wicket.bt4.datetimepicker.DatetimePickerWidgetPositioningConfig;
 import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.bt4.modal.TextContentModal;
@@ -58,11 +60,16 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
     public FormPanel(final String id, final IModel<ParticipantDTO> model) {
         super(id, model);
 
+        Key<DatetimePickerWidgetPositioningConfig> positioningConfigKey = new Key<>("widgetPositioning");
+        DatetimePickerWidgetPositioningConfig widgetPositioning = new DatetimePickerWidgetPositioningConfig()
+            .withVerticalPositioning("bottom");
         final DatetimePickerConfig fromConfig = new DatetimePickerConfig();
         fromConfig.useLocale("de");
         fromConfig.useCurrent(false);
         fromConfig.withFormat("dd.MM.yyyy HH:mm");
         fromConfig.withMinuteStepping(30);
+        fromConfig.put(positioningConfigKey, widgetPositioning);
+        fromConfig.put(new Key<>("date", null), "null");
         fromConfig.with(new DatetimePickerIconConfig());
 
         final DatetimePickerConfig toConfig = new DatetimePickerConfig();
@@ -70,6 +77,7 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
         toConfig.useCurrent(false);
         toConfig.withFormat("dd.MM.yyyy HH:mm");
         toConfig.withMinuteStepping(30);
+        toConfig.put(positioningConfigKey, widgetPositioning);
         toConfig.with(new DatetimePickerIconConfig());
 
         Event event = model.getObject().getEvent();
