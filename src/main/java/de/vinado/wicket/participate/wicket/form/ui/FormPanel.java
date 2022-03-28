@@ -58,8 +58,13 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
 
     public FormPanel(String id, IModel<ParticipantDTO> model) {
         super(id, model);
+    }
 
-        Event event = model.getObject().getEvent();
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        Event event = getModelObject().getEvent();
         DatetimePickerConfig fromConfig = createDatetimePickerConfig();
         DatetimePickerConfig toConfig = createDatetimePickerConfig();
         fromConfig.withMinDate(event.getStartDate());
@@ -131,7 +136,7 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
         BootstrapAjaxButton submitBtn = new BootstrapAjaxButton("submit", Buttons.Type.Success) {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
-                ParticipantDTO dto = model.getObject();
+                ParticipantDTO dto = FormPanel.this.getModelObject();
                 Participant updatedParticipant = eventService.acceptEvent(dto);
                 EventUpdateEvent intent = new EventUpdateEvent(updatedParticipant.getEvent(), target);
                 send(getPage(), Broadcast.BREADTH, intent);
@@ -147,7 +152,7 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
         BootstrapAjaxButton declineBtn = new BootstrapAjaxButton("decline", Buttons.Type.Default) {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
-                Participant savedParticipant = eventService.declineEvent(model.getObject());
+                Participant savedParticipant = eventService.declineEvent(FormPanel.this.getModelObject());
                 send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(savedParticipant.getEvent(), target));
                 Snackbar.show(target, new ResourceModel("invitation.decline.success", "Your cancellation has been saved. You can leave this page now."));
                 target.add(form);
