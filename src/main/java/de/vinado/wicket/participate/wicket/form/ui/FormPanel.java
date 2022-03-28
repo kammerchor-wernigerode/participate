@@ -60,27 +60,9 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
     public FormPanel(final String id, final IModel<ParticipantDTO> model) {
         super(id, model);
 
-        Key<DatetimePickerWidgetPositioningConfig> positioningConfigKey = new Key<>("widgetPositioning");
-        DatetimePickerWidgetPositioningConfig widgetPositioning = new DatetimePickerWidgetPositioningConfig()
-            .withVerticalPositioning("bottom");
-        final DatetimePickerConfig fromConfig = new DatetimePickerConfig();
-        fromConfig.useLocale("de");
-        fromConfig.useCurrent(false);
-        fromConfig.withFormat("dd.MM.yyyy HH:mm");
-        fromConfig.withMinuteStepping(30);
-        fromConfig.put(positioningConfigKey, widgetPositioning);
-        fromConfig.put(new Key<>("date", null), "null");
-        fromConfig.with(new DatetimePickerIconConfig());
-
-        final DatetimePickerConfig toConfig = new DatetimePickerConfig();
-        toConfig.useLocale("de");
-        toConfig.useCurrent(false);
-        toConfig.withFormat("dd.MM.yyyy HH:mm");
-        toConfig.withMinuteStepping(30);
-        toConfig.put(positioningConfigKey, widgetPositioning);
-        toConfig.with(new DatetimePickerIconConfig());
-
         Event event = model.getObject().getEvent();
+        DatetimePickerConfig fromConfig = createDatetimePickerConfig();
+        DatetimePickerConfig toConfig = createDatetimePickerConfig();
         fromConfig.withMinDate(event.getStartDate());
         fromConfig.withMaxDate(DateUtils.addMilliseconds(DateUtils.addDays(event.getEndDate(), 1), -1));
         toConfig.withMinDate(event.getStartDate());
@@ -174,6 +156,21 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
         };
         declineBtn.setLabel(new ResourceModel("decline", "Decline"));
         wmc.add(declineBtn);
+    }
+
+    private DatetimePickerConfig createDatetimePickerConfig() {
+        Key<DatetimePickerWidgetPositioningConfig> positioningConfigKey = new Key<>("widgetPositioning");
+        DatetimePickerWidgetPositioningConfig widgetPositioning = new DatetimePickerWidgetPositioningConfig()
+            .withVerticalPositioning("bottom");
+        DatetimePickerConfig config = new DatetimePickerConfig();
+        config.useLocale("de");
+        config.useCurrent(false);
+        config.withFormat("dd.MM.yyyy HH:mm");
+        config.withMinuteStepping(30);
+        config.put(positioningConfigKey, widgetPositioning);
+        config.put(new Key<>("date", null), "null");
+        config.with(new DatetimePickerIconConfig());
+        return config;
     }
 
     private void displayConfirmation(Participant participant, AjaxRequestTarget target) {
