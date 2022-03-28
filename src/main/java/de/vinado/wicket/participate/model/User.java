@@ -1,13 +1,13 @@
 package de.vinado.wicket.participate.model;
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,7 +28,6 @@ import javax.persistence.Table;
 @Setter
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode
 public class User implements Identifiable<Long>, Hideable {
 
     @Id
@@ -67,5 +66,18 @@ public class User implements Identifiable<Long>, Hideable {
         this.admin = admin;
         this.enabled = enabled;
         this.active = true;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        User user = (User) obj;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 7;
     }
 }
