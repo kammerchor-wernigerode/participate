@@ -16,8 +16,8 @@ import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.form.AutosizeBehavior;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
-import de.vinado.wicket.participate.events.EventUpdateEvent;
 import de.vinado.wicket.participate.model.Event;
+import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.TemplateModel;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
@@ -28,7 +28,6 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.behavior.AttributeAppender;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -48,7 +47,7 @@ import java.util.Map;
 /**
  * @author Vincent Nadoll
  */
-public class FormPanel extends GenericPanel<ParticipantDTO> {
+public abstract class FormPanel extends GenericPanel<ParticipantDTO> {
 
     @SpringBean
     private EventService eventService;
@@ -136,13 +135,9 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
         BootstrapAjaxButton submitBtn = new BootstrapAjaxButton("submit", Buttons.Type.Success) {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
-                ParticipantDTO dto = FormPanel.this.getModelObject();
-                Participant updatedParticipant = eventService.acceptEvent(dto);
-                EventUpdateEvent intent = new EventUpdateEvent(updatedParticipant.getEvent(), target);
-                send(getPage(), Broadcast.BREADTH, intent);
-
-                displayConfirmation(dto.getParticipant(), target);
-
+                FormPanel.this.getModelObject().setInvitationStatus(InvitationStatus.ACCEPTED);
+                onAcceptEvent(target);
+                displayConfirmation(FormPanel.this.getModelObject().getParticipant(), target);
                 target.add(form);
             }
         };
@@ -152,9 +147,13 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
         BootstrapAjaxButton declineBtn = new BootstrapAjaxButton("decline", Buttons.Type.Default) {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
-                Participant savedParticipant = eventService.declineEvent(FormPanel.this.getModelObject());
-                send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(savedParticipant.getEvent(), target));
-                Snackbar.show(target, new ResourceModel("invitation.decline.success", "Your cancellation has been saved. You can leave this page now."));
+                FormPanel.this.getModelObject().setInvitationStatus(InvitationStatus.ACCEPTED);
+                onDeclineEvent(target);
+
+                ResourceModel model = new ResourceModel("invitation.decline.success",
+                    "Your cancellation has been saved. You can leave this page now.");
+                Snackbar.show(target, model);
+
                 target.add(form);
             }
         };
@@ -176,6 +175,10 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
         config.with(new DatetimePickerIconConfig());
         return config;
     }
+
+    protected abstract void onAcceptEvent(AjaxRequestTarget target);
+
+    protected abstract void onDeclineEvent(AjaxRequestTarget target);
 
     private void displayConfirmation(Participant participant, AjaxRequestTarget target) {
         boolean hasOrganizationResponsible = !Strings.isEmpty(applicationProperties.getOrganizationResponsible());
