@@ -87,7 +87,7 @@ public class FormPage extends BasePage implements IGenericComponent<ParticipantD
         PersonContext personContext = () -> getModelObject().getSinger();
         IModel<ParticipantFilter> participantFilter = new CompoundPropertyModel<>(new ParticipantFilter());
 
-        return new EventPanel("eventPanel", null, new CompoundPropertyModel<>(eventModel),
+        return new EventPanel("eventPanel", new CompoundPropertyModel<>(eventModel),
             false, personContext, participantFilter) {
             private static final long serialVersionUID = -7117624285946973330L;
 

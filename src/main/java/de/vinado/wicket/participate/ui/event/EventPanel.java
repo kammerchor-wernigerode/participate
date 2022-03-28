@@ -34,7 +34,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
@@ -68,13 +67,11 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
 
     private final PersonContext personContext;
     private final IModel<ParticipantFilter> filterModel;
-    private final IBreadCrumbModel breadCrumbModel;
 
     private final Form form;
 
-    public EventPanel(final String id, final IBreadCrumbModel breadCrumbModel, final IModel<EventDetails> model, final boolean editable, PersonContext personContext, IModel<ParticipantFilter> filterModel) {
+    public EventPanel(final String id, final IModel<EventDetails> model, final boolean editable, PersonContext personContext, IModel<ParticipantFilter> filterModel) {
         super(id, model);
-        this.breadCrumbModel = breadCrumbModel;
         setOutputMarkupPlaceholderTag(true);
 
         this.personContext = personContext;

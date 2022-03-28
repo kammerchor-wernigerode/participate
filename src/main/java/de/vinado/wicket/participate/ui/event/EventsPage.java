@@ -67,7 +67,7 @@ public class EventsPage extends ParticipatePage implements IGenericComponent<Eve
         add(eventListPanel);
 
         IModel<ParticipantFilter> participantFilter = new CompoundPropertyModel<>(new ParticipantFilter());
-        eventPanel = new EventPanel("event", null, getModel(), true, personContext, participantFilter) {
+        eventPanel = new EventPanel("event", getModel(), true, personContext, participantFilter) {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
