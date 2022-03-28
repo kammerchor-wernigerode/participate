@@ -4,11 +4,11 @@ import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.bt4.modal.TextContentModal;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
-import de.vinado.wicket.participate.events.EventUpdateEvent;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.TemplateModel;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
+import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateIntent;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import lombok.RequiredArgsConstructor;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -53,16 +53,14 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
 
             @Override
             protected void onAcceptEvent(AjaxRequestTarget target) {
-                Participant participant = eventService.acceptEvent(getModelObject());
-                send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(participant.getEvent(), target));
+                send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
 
                 displayConfirmation(getModelObject().getParticipant(), target);
             }
 
             @Override
             protected void onDeclineEvent(AjaxRequestTarget target) {
-                Participant participant = eventService.declineEvent(getModelObject());
-                send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(participant.getEvent(), target));
+                send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
 
                 ResourceModel model = new ResourceModel("invitation.decline.success",
                     "Your cancellation has been saved. You can leave this page now.");
