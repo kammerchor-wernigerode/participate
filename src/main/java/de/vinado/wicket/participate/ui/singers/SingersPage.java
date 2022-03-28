@@ -1,36 +1,33 @@
 package de.vinado.wicket.participate.ui.singers;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.navigation.Breadcrumb;
-import de.vinado.wicket.participate.model.Singer;
+import de.vinado.wicket.common.UpdateOnEventBehavior;
+import de.vinado.wicket.participate.events.SingerUpdateEvent;
+import de.vinado.wicket.participate.model.filters.SingerFilter;
 import de.vinado.wicket.participate.ui.pages.ParticipatePage;
-import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
- * Page provides interaction with {@link Singer}s
- *
- * @author Julius Felchow (julius.felchow@gmail.com)
+ * @author Julius Felchow
  */
 public class SingersPage extends ParticipatePage {
 
-    public SingersPage() {
-        this(new PageParameters());
+    private static final long serialVersionUID = -865631168773605240L;
+
+    public SingersPage(PageParameters parameters) {
+        super(parameters);
     }
 
-    /**
-     * @param parameters {@link PageParameters}
-     */
-    public SingersPage(final PageParameters parameters) {
-        super(parameters);
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
-        final Breadcrumb breadcrumb = new Breadcrumb("breadcrumb");
-        breadcrumb.setOutputMarkupPlaceholderTag(true);
-        breadcrumb.setVisible(false);
-        add(breadcrumb);
-
-        final BreadCrumbPanel breadCrumbPanel = new SingersMasterPanel("singerPanel", breadcrumb);
-        breadCrumbPanel.setOutputMarkupId(true);
-        breadcrumb.setActive(breadCrumbPanel);
-        add(breadCrumbPanel);
+        IModel<SingerFilter> filterModel = CompoundPropertyModel.of(new SingerFilter());
+        SingersPanel singersPanel;
+        add(singersPanel = new SingersPanel("singersPanel", filterModel));
+        singersPanel.add(new UpdateOnEventBehavior<>(SingerUpdateEvent.class));
+        singersPanel.add(new UpdateOnEventBehavior<>(SingerFilterIntent.class));
+        singersPanel.setOutputMarkupId(true);
     }
 }
