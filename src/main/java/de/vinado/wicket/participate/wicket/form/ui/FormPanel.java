@@ -72,13 +72,11 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
         toConfig.withMinuteStepping(30);
         toConfig.with(new DatetimePickerIconConfig());
 
-        if (null != model.getObject().getEvent()) {
-            Event event = model.getObject().getEvent();
-            fromConfig.withMinDate(event.getStartDate());
-            fromConfig.withMaxDate(DateUtils.addMilliseconds(DateUtils.addDays(event.getEndDate(), 1), -1));
-            toConfig.withMinDate(event.getStartDate());
-            toConfig.withMaxDate(DateUtils.addMilliseconds(DateUtils.addDays(event.getEndDate(), 1), -1));
-        }
+        Event event = model.getObject().getEvent();
+        fromConfig.withMinDate(event.getStartDate());
+        fromConfig.withMaxDate(DateUtils.addMilliseconds(DateUtils.addDays(event.getEndDate(), 1), -1));
+        toConfig.withMinDate(event.getStartDate());
+        toConfig.withMaxDate(DateUtils.addMilliseconds(DateUtils.addDays(event.getEndDate(), 1), -1));
 
         final Form<?> form = new Form<>("form");
         add(form);
