@@ -1,13 +1,12 @@
 package de.vinado.wicket.participate.ui.administration.user;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.bt4.modal.ConfirmationModal;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.components.TextAlign;
 import de.vinado.wicket.participate.components.panels.BootstrapAjaxLinkPanel;
+import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.IconPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
@@ -24,7 +23,6 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColu
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
@@ -38,24 +36,29 @@ import java.util.List;
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class UserPanel extends Panel {
+public class UserPanel extends BootstrapPanel<Void> {
 
     @SpringBean
     @SuppressWarnings("unused")
     private UserService userService;
 
+    private SimpleDataProvider<User, String> dataProvider;
     private BootstrapAjaxDataTable<User, String> dataTable;
 
     public UserPanel(final String id) {
         super(id);
+    }
 
-        final SimpleDataProvider<User, String> dataProvider =
-            new SimpleDataProvider<User, String>(userService.getAll()) {
-                @Override
-                public String getDefaultSort() {
-                    return "id";
-                }
-            };
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        dataProvider = new SimpleDataProvider<User, String>(userService.getAll()) {
+            @Override
+            public String getDefaultSort() {
+                return "id";
+            }
+        };
 
         final List<IColumn<User, String>> columns = new ArrayList<>();
         columns.add(new PropertyColumn<>(new ResourceModel("user.id", "User ID"), "id", "id"));
@@ -165,25 +168,19 @@ public class UserPanel extends Panel {
         dataTable.hover().condensed();
         add(dataTable);
 
-        final BootstrapAjaxLink<Void> createUserBtn = new BootstrapAjaxLink<>("createUserBtn", Buttons.Type.Default) {
+        addQuickAccessAction(AjaxAction.create(new ResourceModel("user.add", "Add User"), FontAwesome5IconType.plus_s, this::add));
+    }
+
+    private void add(AjaxRequestTarget target) {
+        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
+        modal.setContent(new AddUserPanel(modal, new CompoundPropertyModel<>(new AddUserDTO())) {
             @Override
-            public void onClick(final AjaxRequestTarget target) {
-                ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
-                modal.setContent(new AddUserPanel(modal, new CompoundPropertyModel<>(new AddUserDTO())) {
-                    @Override
-                    protected void onConfirm(final User user, final AjaxRequestTarget target) {
-                        dataProvider.set(userService.getAll());
-                        target.add(dataTable);
-                        Snackbar.show(target, new ResourceModel("user.add.success", "A new user has been added"));
-                    }
-                });
-                modal.show(target);
+            protected void onConfirm(final User user, final AjaxRequestTarget target) {
+                dataProvider.set(userService.getAll());
+                target.add(dataTable);
+                Snackbar.show(target, new ResourceModel("user.add.success", "A new user has been added"));
             }
-        };
-        createUserBtn.add(new CssClassNameAppender(Model.of("pull-right")));
-        createUserBtn.setLabel(new ResourceModel("user.add", "Add User"));
-        createUserBtn.setSize(Buttons.Size.Small);
-        createUserBtn.setIconType(FontAwesome5IconType.plus_s);
-        add(createUserBtn);
+        });
+        modal.show(target);
     }
 }

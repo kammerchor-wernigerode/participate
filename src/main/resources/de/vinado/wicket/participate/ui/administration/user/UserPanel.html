@@ -4,18 +4,10 @@
     <meta charset="utf-8"/>
 </head>
 <body>
-<wicket:panel>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <span class="panel-title"><wicket:message key="user">User</wicket:message></span>
-            <button type="button" wicket:id="createUserBtn"></button>
-        </div>
-        <div class="panel-body">
-            <div class="table-responsive">
-                <table wicket:id="dataTable"></table>
-            </div>
-        </div>
+<wicket:extend>
+    <div class="table-responsive">
+        <table wicket:id="dataTable"></table>
     </div>
-</wicket:panel>
+</wicket:extend>
 </body>
 </html>
