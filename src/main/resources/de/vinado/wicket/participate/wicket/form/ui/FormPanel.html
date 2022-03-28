@@ -1,80 +1,8 @@
-<!DOCTYPE html>
-<html xmlns:wicket="http://wicket.apache.org">
-<head>
-    <meta charset="utf-8"/>
-</head>
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:panel>
-    <form wicket:id="form">
-        <div wicket:id="wmc">
-            <h3><i class="fas fa-pencil-alt" aria-hidden="true"></i> <wicket:message key="form">Form</wicket:message></h3>
-            <div class="card">
-                <div class="card-header d-flex align-items-center">
-                    <span class="flex-grow-1">&nbsp;</span>
-                </div>
-                <div class="card-body">
-                    <div class="alert alert-info" role="alert">
-                        <wicket:message key="feature.car.seats">
-                            From now on you can tell us whether you are arriving by car and how many seats your car has.
-                        </wicket:message>
-                    </div>
-                    <div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label"><wicket:message key="name">Name</wicket:message></label>
-                            <div class="col-sm-9">
-                                <p class="form-control-plaintext" wicket:id="singer.displayName"></p>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label"><wicket:message key="period">Period</wicket:message></label>
-                            <div class="col-sm-9">
-                                <div class="form-row">
-                                    <div class="form-group col-sm-6 mb-0">
-                                        <label class="sr-only" wicket:id="fromDateLabel"><wicket:message key="from">From</wicket:message></label>
-                                        <input autocomplete="off" type="text" class="form-control" placeholder="From" wicket:message="placeholder:from" wicket:id="fromDate">
-                                    </div>
-                                    <div class="form-group col-sm-6 mb-0">
-                                        <label class="sr-only" wicket:id="toDateLabel"><wicket:message key="till">Till</wicket:message></label>
-                                        <input autocomplete="off" type="text" class="form-control" placeholder="To" wicket:message="placeholder:to" wicket:id="toDate">
-                                    </div>
-                                </div>
-                                <small class="form-text text-muted" wicket:id="periodHelp">
-                                    <wicket:message key="period.help">If you do not specify a time period, we assume that you are present throughout.</wicket:message>
-                                </small>
-                            </div>
-                        </div>
-                        <input type="checkbox" wicket:id="catering">
-                        <input type="checkbox" wicket:id="accommodation">
-                        <div class="form-group row">
-                            <div class="col-sm-9 offset-sm-3">
-                                <div class="row align-items-center">
-                                    <div class="col-2">
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" wicket:id="car">
-                                            <label class="form-check-label" aria-label="I'm arriving by car" wicket:message="aria-label:car.label.cb" wicket:id="carLabel">&nbsp;<i class="fa fa-car" aria-hidden="true" title="I'm arriving by car" wicket:message="title:car.label.cb"></i></label>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto flex-grow-1">
-                                        <div class="row">
-                                            <label class="col-lg-4 col-form-label" wicket:id="carSeatCountLabel"><wicket:message key="carSeatCount">Number of Seats</wicket:message></label>
-                                            <div class="col-lg-8">
-                                                <input type="number" class="form-control" wicket:id="carSeatCount">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <textarea wicket:id="comment"></textarea>
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="ml-1" wicket:id="decline"></button>
-                            <button type="submit" class="ml-1" wicket:id="submit"></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
+    <form wicket:id="form"></form>
 </wicket:panel>
 </body>
 </html>

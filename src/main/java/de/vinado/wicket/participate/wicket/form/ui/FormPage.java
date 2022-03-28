@@ -3,9 +3,7 @@ package de.vinado.wicket.participate.wicket.form.ui;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.AbstractNavbarComponent;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
 import de.vinado.wicket.participate.components.PersonContext;
-import de.vinado.wicket.participate.events.EventUpdateEvent;
 import de.vinado.wicket.participate.model.EventDetails;
-import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
@@ -16,7 +14,6 @@ import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
@@ -82,19 +79,7 @@ public class FormPage extends BasePage implements IGenericComponent<ParticipantD
     }
 
     private Component form() {
-        return new FormPanel("formPanel", getModel()) {
-            @Override
-            protected void onAcceptEvent(AjaxRequestTarget target) {
-                Participant participant = eventService.acceptEvent(getModelObject());
-                send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(participant.getEvent(), target));
-            }
-
-            @Override
-            protected void onDeclineEvent(AjaxRequestTarget target) {
-                Participant participant = eventService.declineEvent(getModelObject());
-                send(getPage(), Broadcast.BREADTH, new EventUpdateEvent(participant.getEvent(), target));
-            }
-        };
+        return new FormPanel("formPanel", getModel());
     }
 
     private Component event() {
