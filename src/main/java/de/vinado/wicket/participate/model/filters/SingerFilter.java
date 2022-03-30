@@ -5,16 +5,14 @@ import de.vinado.wicket.participate.model.Voice;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-
-import java.io.Serializable;
-import java.util.function.Predicate;
+import org.danekja.java.util.function.serializable.SerializablePredicate;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
 @Getter
 @Setter
-public class SingerFilter implements Predicate<Singer>, Serializable {
+public class SingerFilter implements SerializablePredicate<Singer> {
 
     private String searchTerm;
     private Voice voice;

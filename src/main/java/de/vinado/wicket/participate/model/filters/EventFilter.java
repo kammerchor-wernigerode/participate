@@ -4,17 +4,16 @@ import de.vinado.wicket.participate.model.EventDetails;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.danekja.java.util.function.serializable.SerializablePredicate;
 
-import java.io.Serializable;
 import java.util.Date;
-import java.util.function.Predicate;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
 @Getter
 @Setter
-public class EventFilter implements Predicate<EventDetails>, Serializable {
+public class EventFilter implements SerializablePredicate<EventDetails> {
 
     private String searchTerm;
     private Date startDate;
