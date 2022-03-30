@@ -76,6 +76,7 @@ public class UserServiceImpl extends DataService implements UserService {
         if (!Strings.isEmpty(dto.getPassword())) {
             loadedUser.setPasswordSha256(null != dto.getPassword() ? DigestUtils.sha256Hex(dto.getPassword()) : null);
         }
+        loadedUser.setPerson(dto.getPerson());
         loadedUser.setAdmin(dto.getUser().isAdmin());
         loadedUser.setEnabled(dto.getUser().isEnabled());
         return save(loadedUser);
