@@ -44,7 +44,7 @@ public abstract class AddEditPersonPanel extends FormModal<PersonDTO> {
 
         final EmailTextField emailTf = new EmailTextField("email");
         emailTf.setRequired(true);
-        emailTf.add(new ConditionalValidator<>(this::ensureUniqueness,
+        emailTf.add(new ConditionalValidator<>(this::ensureUnique,
             new ResourceModel("unique.email", "A person with this e-mail address already exists")));
         form.add(emailTf);
 
@@ -61,8 +61,8 @@ public abstract class AddEditPersonPanel extends FormModal<PersonDTO> {
         onUpdate(target);
     }
 
-    private boolean ensureUniqueness(String email) {
-        return !StringUtils.equalsIgnoreCase(email, getModelObject().getEmail()) && personService.hasPerson(email);
+    private boolean ensureUnique(String email) {
+        return StringUtils.equalsIgnoreCase(email, getModelObject().getEmail()) || !personService.hasPerson(email);
     }
 
     protected abstract void onUpdate(final AjaxRequestTarget target);
