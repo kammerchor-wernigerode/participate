@@ -6,11 +6,9 @@ import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
-import lombok.RequiredArgsConstructor;
-import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
+import de.vinado.wicket.repeater.table.FilterableDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.danekja.java.util.function.serializable.SerializableFunction;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -21,12 +19,10 @@ import java.util.stream.Stream;
 /**
  * @author Vincent Nadoll
  */
-@RequiredArgsConstructor
-public class ParticipantDataProvider extends SortableDataProvider<Participant, SerializableFunction<Participant, ?>> {
+public class ParticipantDataProvider extends FilterableDataProvider<Participant> {
 
     private final IModel<Event> event;
     private final EventService eventService;
-    private final IModel<ParticipantFilter> filterModel;
     private final PersonContext selfSupplier;
 
     public ParticipantDataProvider(IModel<Event> event,
@@ -35,41 +31,34 @@ public class ParticipantDataProvider extends SortableDataProvider<Participant, S
         this(event, eventService, filterModel, () -> null);
     }
 
+    public ParticipantDataProvider(IModel<Event> event,
+                                   EventService eventService,
+                                   IModel<ParticipantFilter> filterModel,
+                                   PersonContext selfSupplier) {
+        super(filterModel);
+        this.event = event;
+        this.eventService = eventService;
+        this.selfSupplier = selfSupplier;
+    }
+
     @Override
     public Iterator<? extends Participant> iterator(long first, long count) {
         Person self = selfSupplier.get();
-        return streamFilteredParticipants()
-            .sorted(Comparator.comparing(keyExtractor(), Comparator.nullsFirst(comparator())))
+        return load()
+            .filter(filter())
+            .sorted(Comparator.comparing(keyExtractor(), keyComparator()))
             .sorted(Comparator.comparing(people(person -> Objects.equals(person, self)), Comparator.reverseOrder()))
             .skip(first).limit(count)
             .iterator();
     }
 
+    @Override
+    protected Stream<Participant> load() {
+        return eventService.getParticipants(event.getObject()).stream();
+    }
+
     private static Function<Participant, Boolean> people(Function<Person, Boolean> keyExtractor) {
         return keyExtractor.compose(Participant::getSinger);
-    }
-
-    private Function<Participant, String> keyExtractor() {
-        return getSort().getProperty().andThen(ParticipantDataProvider::toString);
-    }
-
-    private static String toString(Object property) {
-        return null == property ? null : property.toString();
-    }
-
-    private Comparator<String> comparator() {
-        return getSort().isAscending() ? Comparator.naturalOrder() : Comparator.reverseOrder();
-    }
-
-    @Override
-    public long size() {
-        return streamFilteredParticipants().count();
-    }
-
-    private Stream<Participant> streamFilteredParticipants() {
-        return eventService.getParticipants(event.getObject())
-            .stream()
-            .filter(filterModel.getObject());
     }
 
     @Override
@@ -107,7 +96,7 @@ public class ParticipantDataProvider extends SortableDataProvider<Participant, S
 
     @Override
     public void detach() {
-        filterModel.detach();
+        event.detach();
         super.detach();
     }
 }

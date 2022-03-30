@@ -3,62 +3,30 @@ package de.vinado.wicket.participate.ui.singers;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.filters.SingerFilter;
 import de.vinado.wicket.participate.services.PersonService;
-import lombok.RequiredArgsConstructor;
+import de.vinado.wicket.repeater.table.FilterableDataProvider;
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.danekja.java.util.function.serializable.SerializableFunction;
 
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-@RequiredArgsConstructor
-public class SingerDataProvider extends SortableDataProvider<Singer, SerializableFunction<Singer, ?>> {
+public class SingerDataProvider extends FilterableDataProvider<Singer> {
 
     private final IModel<SingerFilter> filterModel;
     private final PersonService personService;
 
-    @Override
-    public Iterator<? extends Singer> iterator(long first, long count) {
-        return streamFiltered()
-            .sorted(Comparator.comparing(keyExtractor(), comparator()))
-            .skip(first).limit(count)
-            .iterator();
-    }
-
-    private Function<Singer, String> keyExtractor() {
-        return getSort().getProperty().andThen(SingerDataProvider::toString);
-    }
-
-    private static String toString(Object property) {
-        return null == property ? null : property.toString();
-    }
-
-    private Comparator<String> comparator() {
-        Comparator<String> comparator = getSort().isAscending()
-            ? Comparator.naturalOrder()
-            : Comparator.reverseOrder();
-        return Comparator.nullsFirst(comparator);
+    public SingerDataProvider(IModel<SingerFilter> filter, PersonService personService) {
+        super(filter);
+        this.filterModel = filter;
+        this.personService = personService;
     }
 
     @Override
-    public long size() {
-        return streamFiltered().count();
-    }
-
-    private Stream<Singer> streamFiltered() {
-        return streamPreFiltered()
-            .filter(filterModel.getObject());
-    }
-
-    private Stream<Singer> streamPreFiltered() {
+    protected Stream<Singer> load() {
         return filterModel.getObject().isShowAll()
             ? personService.listAllSingers()
             : personService.getSingers().stream();
