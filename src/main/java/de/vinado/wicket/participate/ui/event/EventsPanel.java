@@ -5,7 +5,6 @@ import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
-import de.vinado.wicket.participate.events.EventUpdateEvent;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
@@ -63,10 +62,7 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
 
     private void selectEvent(AjaxRequestTarget target, IModel<EventDetails> model) {
         Event event = model.getObject().getEvent();
-        ParticipateSession.get().setEvent(event);
         send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(event));
-        send(getWebPage(), Broadcast.BREADTH, new EventUpdateEvent(event, target));
-        send(getWebPage(), Broadcast.BREADTH, new EventTableUpdateIntent());
     }
 
     private EventDataProvider dataProvider() {
@@ -83,10 +79,7 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
         modal.setContent(new AddEditEventPanel(modal, new ResourceModel("event.add", "Add Event"), new CompoundPropertyModel<>(new EventDTO())) {
             @Override
             public void onUpdate(final Event savedEvent, final AjaxRequestTarget target) {
-                ParticipateSession.get().setEvent(savedEvent);
                 send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(savedEvent));
-                send(getWebPage(), Broadcast.BREADTH, new EventUpdateEvent(savedEvent, target));
-                send(getWebPage(), Broadcast.BREADTH, new EventTableUpdateIntent());
                 Snackbar.show(target, new ResourceModel("event.add.success", "A new event has been added"));
             }
         });

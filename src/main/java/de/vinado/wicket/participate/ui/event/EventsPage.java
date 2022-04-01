@@ -1,9 +1,9 @@
 package de.vinado.wicket.participate.ui.event;
 
+import de.vinado.wicket.common.OnEventBehavior;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.components.PersonContext;
-import de.vinado.wicket.participate.events.RemoveEventUpdateEvent;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.filters.EventFilter;
@@ -13,6 +13,7 @@ import de.vinado.wicket.participate.ui.pages.ParticipatePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -22,6 +23,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * @author Vincent Nadoll
@@ -57,28 +59,13 @@ public class EventsPage extends ParticipatePage implements IGenericComponent<Eve
         add(eventListPanel);
 
         add(eventPanel = createEventPanel("event")
-            .add(new UpdateOnEventBehavior<>(EventSelectedEvent.class, this::onSelect)));
-    }
-
-    private void onSelect(EventSelectedEvent intent) {
-        Event selection = intent.getSelection();
-        EventDetails details = eventService.getEventDetails(selection);
-        setModelObject(details);
-
-        Component replacement = createEventPanel("event")
-            .add(new UpdateOnEventBehavior<>(EventSelectedEvent.class, this::onSelect));
-        eventPanel.replaceWith(replacement);
-        eventPanel = replacement;
-
-        RequestCycle.get().find(AjaxRequestTarget.class)
-            .ifPresent(target -> target.add(eventPanel));
+            .add(new ReplaceOnEventBehavior()));
     }
 
     private Component createEventPanel(String id) {
         return (null == getModelObject()
             ? emptyPanel(id)
-            : eventPanel(id))
-            .setOutputMarkupId(true);
+            : eventPanel(id));
     }
 
     private EmptyPanel emptyPanel(String id) {
@@ -90,23 +77,24 @@ public class EventsPage extends ParticipatePage implements IGenericComponent<Eve
     }
 
     @Override
-    public void onEvent(IEvent<?> iEvent) {
-        super.onEvent(iEvent);
-        Object payload = iEvent.getPayload();
+    public void onEvent(IEvent<?> event) {
+        super.onEvent(event);
 
-        if (payload instanceof RemoveEventUpdateEvent) {
-            RemoveEventUpdateEvent event = (RemoveEventUpdateEvent) payload;
-            AjaxRequestTarget target = event.getTarget();
+        Object eventPayload = event.getPayload();
+        if (eventPayload instanceof EventSelectedEvent) {
+            Optional.ofNullable(((EventSelectedEvent) eventPayload).getSelection())
+                .map(eventService::getEventDetails)
+                .or(this::eventDetails)
+                .ifPresentOrElse(details -> {
+                    ParticipateSession.get().setEvent(details.getEvent());
+                    getModel().setObject(details);
+                }, () -> {
+                    ParticipateSession.get().setEvent(null);
+                    setModelObject(null);
+                });
 
-            if (!eventService.hasUpcomingEvents()) {
-                ParticipateSession.get().setEvent(null);
-            } else {
-                ParticipateSession.get().setEvent(eventService.getLatestEvent());
-                setModelObject(eventDetails().orElse(null));
-            }
-
-            target.add(eventListPanel);
-            target.add(eventPanel);
+            send(eventPanel, Broadcast.EXACT, new EventPanelUpdateIntent());
+            send(eventListPanel, Broadcast.EXACT, new EventTableUpdateIntent());
         }
     }
 
@@ -136,5 +124,33 @@ public class EventsPage extends ParticipatePage implements IGenericComponent<Eve
     private IModel<ParticipantFilter> participantFilterModel() {
         ParticipantFilter filter = new ParticipantFilter();
         return new CompoundPropertyModel<>(filter);
+    }
+
+
+    private final class ReplaceOnEventBehavior extends OnEventBehavior<EventPanelUpdateIntent> {
+
+        private static final long serialVersionUID = 5243751166057373448L;
+
+        public ReplaceOnEventBehavior() {
+            super(EventPanelUpdateIntent.class);
+        }
+
+        @Override
+        protected void onEvent(Component component, EventPanelUpdateIntent intent) {
+            Component replacement = createEventPanel("event")
+                .add(new ReplaceOnEventBehavior());
+            eventPanel.replaceWith(replacement);
+            eventPanel = replacement;
+
+            registerUpdate(eventPanel);
+        }
+
+        private void registerUpdate(Component component) {
+            update(target -> target.add(component));
+        }
+
+        private void update(Consumer<AjaxRequestTarget> callback) {
+            RequestCycle.get().find(AjaxRequestTarget.class).ifPresent(callback);
+        }
     }
 }

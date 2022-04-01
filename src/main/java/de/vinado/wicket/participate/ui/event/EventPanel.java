@@ -12,8 +12,6 @@ import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.event.ui.EventSummaryPage;
-import de.vinado.wicket.participate.events.AjaxUpdateEvent;
-import de.vinado.wicket.participate.events.EventUpdateEvent;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.InvitationStatus;
@@ -33,7 +31,6 @@ import de.vinado.wicket.participate.ui.pages.ParticipatePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
@@ -152,25 +149,6 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     }
 
     @Override
-    public void onEvent(final IEvent<?> iEvent) {
-        super.onEvent(iEvent);
-        final Object payload = iEvent.getPayload();
-        if (payload instanceof EventUpdateEvent) {
-            final EventUpdateEvent updateEvent = (EventUpdateEvent) payload;
-            final AjaxRequestTarget target = updateEvent.getTarget();
-            final Event event = updateEvent.getEvent();
-            setModelObject(eventService.getEventDetails(event));
-            target.add(form);
-        }
-
-        if (payload instanceof AjaxUpdateEvent) {
-            final AjaxUpdateEvent event = (AjaxUpdateEvent) payload;
-            final AjaxRequestTarget target = event.getTarget();
-            target.add(form);
-        }
-    }
-
-    @Override
     protected IModel<String> titleModel() {
         return new ResourceModel("event", "Event");
     }
@@ -211,7 +189,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         final List<Participant> participants = eventService.getParticipants(getModelObject().getEvent(), false);
         final int count = eventService.inviteParticipants(participants, organizer);
 
-        send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
+        send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
         Snackbar.show(target, "Einladung wurde an "
             + count
             + (count != 1 ? " Mitglieder " : " Mitglied ")
@@ -234,10 +212,8 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
             @Override
             protected void onConfirm(AjaxRequestTarget target) {
                 final List<Participant> participants = eventService.getParticipants(event, InvitationStatus.PENDING);
-
                 final int count = eventService.inviteParticipants(participants, organizer);
 
-                send(getWebPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
                 Snackbar.show(target, "Erinnerung wurde an "
                     + count
                     + (count != 1 ? " Mitglieder " : " Mitglied ")
@@ -266,8 +242,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
             @Override
             public void onUpdate(final Event savedEvent, final AjaxRequestTarget target) {
                 EventPanel.this.setModelObject(eventService.getEventDetails(savedEvent));
-                ParticipateSession.get().setEvent(event);
-                send(getPage(), Broadcast.BREADTH, new AjaxUpdateEvent(target));
+                send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(savedEvent));
                 Snackbar.show(target, new ResourceModel("event.edit.success", "The event was successfully edited"));
             }
         });
