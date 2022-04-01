@@ -133,6 +133,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
             protected void onSubmit(final AjaxRequestTarget target) {
                 eventService.saveParticipant(getModelObject());
                 Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
+                send(getWebPage(), Broadcast.BREADTH, new EventTableUpdateIntent());
                 send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
             }
         });
