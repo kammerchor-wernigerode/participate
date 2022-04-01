@@ -64,6 +64,7 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
     private void selectEvent(AjaxRequestTarget target, IModel<EventDetails> model) {
         Event event = model.getObject().getEvent();
         ParticipateSession.get().setEvent(event);
+        send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(event));
         send(getWebPage(), Broadcast.BREADTH, new EventUpdateEvent(event, target));
         send(getWebPage(), Broadcast.BREADTH, new EventTableUpdateIntent());
     }
@@ -83,6 +84,7 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
             @Override
             public void onUpdate(final Event savedEvent, final AjaxRequestTarget target) {
                 ParticipateSession.get().setEvent(savedEvent);
+                send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(savedEvent));
                 send(getWebPage(), Broadcast.BREADTH, new EventUpdateEvent(savedEvent, target));
                 send(getWebPage(), Broadcast.BREADTH, new EventTableUpdateIntent());
                 Snackbar.show(target, new ResourceModel("event.add.success", "A new event has been added"));
