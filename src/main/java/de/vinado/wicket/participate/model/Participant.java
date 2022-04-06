@@ -38,7 +38,7 @@ import static de.vinado.wicket.participate.model.InvitationStatus.UNINVITED;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class Participant implements Identifiable<Long> {
+public class Participant implements Identifiable<Long>, Invitable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

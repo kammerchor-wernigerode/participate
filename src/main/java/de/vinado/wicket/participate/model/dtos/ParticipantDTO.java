@@ -1,6 +1,7 @@
 package de.vinado.wicket.participate.model.dtos;
 
 import de.vinado.wicket.participate.model.Event;
+import de.vinado.wicket.participate.model.Invitable;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Singer;
@@ -17,7 +18,7 @@ import java.util.Date;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class ParticipantDTO implements Serializable {
+public class ParticipantDTO implements Serializable, Invitable {
 
     private Participant participant;
     private Event event;

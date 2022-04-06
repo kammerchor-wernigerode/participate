@@ -23,7 +23,7 @@ public enum InvitationStatus implements Sorted {
 
     private final int sortOrder;
 
-    public static Predicate<Participant> by(InvitationStatus invitationStatus) {
-        return participant -> Objects.equals(participant.getInvitationStatus(), invitationStatus);
+    public static Predicate<Invitable> by(InvitationStatus invitationStatus) {
+        return invitable -> Objects.equals(invitable.getInvitationStatus(), invitationStatus);
     }
 }
