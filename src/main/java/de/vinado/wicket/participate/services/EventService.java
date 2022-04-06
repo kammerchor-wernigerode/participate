@@ -9,8 +9,6 @@ import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
-import de.vinado.wicket.participate.model.filters.EventFilter;
-import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 
 import java.util.List;
 import java.util.Optional;
