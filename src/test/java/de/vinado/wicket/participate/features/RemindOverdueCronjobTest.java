@@ -8,7 +8,6 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -38,33 +37,47 @@ class RemindOverdueCronjobTest {
     }
 
     @Test
-    void run() {
-        Event event1 = MockedEvent.mockEvent(1L);
-        Event event2 = MockedEvent.mockEvent(2L, DateUtils.addDays(NOW, 14));
-        Event event3 = MockedEvent.mockEvent(3L, DateUtils.addDays(NOW, 30));
+    void runningJobWithinIntervalButNoEligibleParticipants_shouldNotInvite() {
+        Event event = MockedEvent.mockEvent(1L, DateUtils.addDays(NOW, 3));
+        Participant participant = mock(Participant.class);
+        List<Participant> participants = Collections.singletonList(participant);
 
-        Participant participant11 = mock(Participant.class);
-        when(participant11.getInvitationStatus()).thenReturn(ACCEPTED);
-        List<Participant> event1Participants = Collections.singletonList(participant11);
-
-        Participant participant21 = mock(Participant.class);
-        when(participant21.getInvitationStatus()).thenReturn(PENDING);
-        List<Participant> event2Participants = Collections.singletonList(participant21);
-
-        Participant participant31 = mock(Participant.class);
-        when(participant31.getInvitationStatus()).thenReturn(PENDING);
-        List<Participant> event3Participants = Collections.singletonList(participant31);
-
-
-        when(eventService.getUpcomingEvents()).thenReturn(Arrays.asList(event1, event2, event3));
-        when(eventService.getInvitedParticipants(event1)).thenReturn(event1Participants);
-        when(eventService.getInvitedParticipants(event2)).thenReturn(event2Participants);
-        when(eventService.getInvitedParticipants(event3)).thenReturn(event3Participants);
+        when(participant.getInvitationStatus()).thenReturn(ACCEPTED);
+        when(eventService.getUpcomingEvents()).thenReturn(List.of(event));
+        when(eventService.getInvitedParticipants(event)).thenReturn(participants);
 
         feature.run();
 
-        verify(eventService, never()).inviteParticipants(event1Participants, null);
-        verify(eventService, times(1)).inviteParticipants(event2Participants, null);
-        verify(eventService, never()).inviteParticipants(event3Participants, null);
+        verify(eventService, never()).inviteParticipants(participants, null);
+    }
+
+    @Test
+    void runningJobWithinIntervalAndPendingInvitation_shouldInvite() {
+        Event event = MockedEvent.mockEvent(2L, DateUtils.addDays(NOW, 14));
+        Participant participant = mock(Participant.class);
+        List<Participant> participants = Collections.singletonList(participant);
+
+        when(participant.getInvitationStatus()).thenReturn(PENDING);
+        when(eventService.getUpcomingEvents()).thenReturn(List.of(event));
+        when(eventService.getInvitedParticipants(event)).thenReturn(participants);
+
+        feature.run();
+
+        verify(eventService, times(1)).inviteParticipants(participants, null);
+    }
+
+    @Test
+    void runningJobOutsideIntervalAndPendingInvitation_shouldNotInvite() {
+        Event event = MockedEvent.mockEvent(3L, DateUtils.addDays(NOW, 30));
+        Participant participant = mock(Participant.class);
+        List<Participant> participants = Collections.singletonList(participant);
+
+        when(participant.getInvitationStatus()).thenReturn(PENDING);
+        when(eventService.getUpcomingEvents()).thenReturn(List.of(event));
+        when(eventService.getInvitedParticipants(event)).thenReturn(participants);
+
+        feature.run();
+
+        verify(eventService, never()).inviteParticipants(participants, null);
     }
 }
