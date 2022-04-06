@@ -7,5 +7,7 @@ public enum InvitationStatus {
     ACCEPTED,
     DECLINED,
     PENDING,
-    UNINVITED
+    UNINVITED,
+    TENTATIVE,
+    ;
 }

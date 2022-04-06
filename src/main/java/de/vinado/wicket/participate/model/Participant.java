@@ -23,6 +23,7 @@ import javax.persistence.TemporalType;
 import static de.vinado.wicket.participate.model.InvitationStatus.ACCEPTED;
 import static de.vinado.wicket.participate.model.InvitationStatus.DECLINED;
 import static de.vinado.wicket.participate.model.InvitationStatus.PENDING;
+import static de.vinado.wicket.participate.model.InvitationStatus.TENTATIVE;
 import static de.vinado.wicket.participate.model.InvitationStatus.UNINVITED;
 
 /**
@@ -123,5 +124,9 @@ public class Participant implements Identifiable<Long> {
 
     public boolean isDeclined() {
         return DECLINED.equals(invitationStatus);
+    }
+
+    public boolean isTentative() {
+        return TENTATIVE.equals(invitationStatus);
     }
 }
