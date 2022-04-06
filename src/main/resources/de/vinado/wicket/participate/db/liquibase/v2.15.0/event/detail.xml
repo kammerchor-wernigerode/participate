@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="v2.15.0-v_event_details" author="Vincent Nadoll" dbms="mysql">
+        <sql>
+            DROP VIEW IF EXISTS v_event_details;
+        </sql>
+        <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="v_event_details.sql"/>
+
+        <rollback>
+            <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="../../v2.12.0/event/v_event_details.sql"/>
+            <dropView viewName="v_participants_tentative"/>
+            <update tableName="participants">
+                <column name="invitation_status" type="INT" valueNumeric="3"/>
+                <where>invitation_status = 4</where>
+            </update>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

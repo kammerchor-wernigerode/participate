@@ -76,6 +76,9 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
     @Column(name = "count_declined")
     private Long declinedCount;
 
+    @Column(name = "count_tentative")
+    private Long tentativeCount;
+
     @Column(name = "count_pending")
     private Long pendingCount;
 
@@ -102,6 +105,9 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
 
     @Column(name = "bass", columnDefinition = "TEXT")
     private String basses;
+
+    @Column(columnDefinition = "TEXT")
+    private String tentative;
 
     @Column(columnDefinition = "TEXT")
     private String declined;
@@ -142,6 +148,11 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
     public long getOffset() {
         long diff = new Date().getTime() - getCreationDate().getTime();
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+    }
+
+    @Transient
+    public long getAcceptedSum() {
+        return acceptedCount + tentativeCount;
     }
 
     @Override

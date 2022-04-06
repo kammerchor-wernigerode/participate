@@ -136,6 +136,15 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
         };
         declineBtn.setLabel(new ResourceModel("decline", "Decline"));
         add(declineBtn);
+
+        add(new BootstrapAjaxButton("acceptTentatively", Buttons.Type.Warning) {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target) {
+                ParticipantForm.this.getModelObject().setInvitationStatus(InvitationStatus.TENTATIVE);
+                onAcceptTentatively(target);
+                target.add(ParticipantForm.this);
+            }
+        }.setLabel(new ResourceModel("tentative", "Tentative")));
     }
 
     protected DatetimePickerConfig createDatetimePickerConfig(Event event) {
@@ -165,6 +174,8 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
     protected abstract void onAcceptEvent(AjaxRequestTarget target);
 
     protected abstract void onDeclineEvent(AjaxRequestTarget target);
+
+    protected abstract void onAcceptTentatively(AjaxRequestTarget target);
 
     @Override
     protected IMarkupSourcingStrategy newMarkupSourcingStrategy() {

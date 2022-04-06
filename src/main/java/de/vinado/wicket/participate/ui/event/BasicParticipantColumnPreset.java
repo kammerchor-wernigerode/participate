@@ -53,6 +53,9 @@ public class BasicParticipantColumnPreset extends ParticipantColumnListDecorator
                 if (InvitationStatus.ACCEPTED.equals(invitationStatus)) {
                     icon.setType(FontAwesome5IconType.check_s);
                     icon.setColor(IconPanel.Color.SUCCESS);
+                } else if (InvitationStatus.TENTATIVE.equals(invitationStatus)) {
+                    icon.setType(FontAwesome5IconType.question_s);
+                    icon.setColor(IconPanel.Color.INFO);
                 } else if (InvitationStatus.DECLINED.equals(invitationStatus)) {
                     icon.setType(FontAwesome5IconType.times_s);
                     icon.setColor(IconPanel.Color.DANGER);

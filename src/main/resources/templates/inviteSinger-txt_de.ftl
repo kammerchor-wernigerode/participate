@@ -18,6 +18,7 @@ Ein Ort wurde noch nicht festgelegt.
 
 Sag uns bitte, ob und wie viel Zeit du hast, ob du einen Schlafplatz brauchst oder ob du Schlafplätze anbieten kannst.
 
+Selbst wenn du noch nicht genau weißt, ob du kommen kannst, kannst du vorläufig zusagen.
 Ab sofort kannst du uns mitteilen, ob du mit dem Auto anreist und wie viele Sitzplätze dein Auto hat.
 
 ${acceptLink}
