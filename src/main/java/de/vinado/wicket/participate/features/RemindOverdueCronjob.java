@@ -1,6 +1,7 @@
 package de.vinado.wicket.participate.features;
 
 import de.vinado.wicket.participate.model.Event;
+import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.services.EventService;
 import lombok.Getter;
@@ -53,7 +54,7 @@ public class RemindOverdueCronjob {
             .peek(event -> eventIds.add(event.getId()))
             .map(eventService::getInvitedParticipants)
             .flatMap(List::stream)
-            .filter(Participant::isPending)
+            .filter(InvitationStatus.by(InvitationStatus.PENDING).or(InvitationStatus.by(InvitationStatus.TENTATIVE)))
             .collect(Collectors.toList());
 
         eventService.inviteParticipants(participants, null);
