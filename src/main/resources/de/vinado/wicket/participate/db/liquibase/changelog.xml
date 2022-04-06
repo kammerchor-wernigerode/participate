@@ -31,4 +31,8 @@
     </changeSet>
 
     <include relativeToChangelogFile="true" file="v2.15.0/event/detail.xml"/>
+
+    <changeSet id="v2.15.0-tag" author="Vincent Nadoll">
+        <tagDatabase tag="2.15.0"/>
+    </changeSet>
 </databaseChangeLog>
