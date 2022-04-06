@@ -29,4 +29,6 @@
     <changeSet id="v2.14.0-tag" author="Vincent Nadoll">
         <tagDatabase tag="2.14.0"/>
     </changeSet>
+
+    <include relativeToChangelogFile="true" file="v2.15.0/event/detail.xml"/>
 </databaseChangeLog>
