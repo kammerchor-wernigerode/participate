@@ -53,6 +53,7 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
 
             @Override
             protected void onAcceptEvent(AjaxRequestTarget target) {
+                eventService.acceptEvent(getModelObject());
                 send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
 
                 displayConfirmation(getModelObject().getParticipant(), target);
@@ -60,6 +61,7 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
 
             @Override
             protected void onDeclineEvent(AjaxRequestTarget target) {
+                eventService.declineEvent(getModelObject());
                 send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
 
                 ResourceModel model = new ResourceModel("invitation.decline.success",
