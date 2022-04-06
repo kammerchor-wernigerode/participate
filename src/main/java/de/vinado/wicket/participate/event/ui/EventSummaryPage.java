@@ -95,6 +95,7 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
         add(new Label("acceptedCount"));
         add(new Label("declinedCount"));
         add(new Label("pendingCount"));
+        add(new Label("tentativeCount"));
         add(new Label("sopranoCount"));
         add(new Label("altoCount"));
         add(new Label("tenorCount"));
@@ -105,12 +106,13 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
         add(new Label("altos"));
         add(new Label("tenors"));
         add(new Label("basses"));
+        add(new Label("tentative"));
         add(new Label("declined"));
         add(new Label("carCount"));
         add(new Label("carSeatCount"));
-        add(new Label("accommodationSingerCount", PropertyModel.of(getModel(), "acceptedCount")));
-        add(new Label("cateringSingerCount", new PropertyModel<>(getModel(), "acceptedCount")));
-        add(new Label("carSingerCount", new PropertyModel<>(getModel(), "acceptedCount")));
+        add(new Label("accommodationSingerCount", PropertyModel.of(getModel(), "acceptedSum")));
+        add(new Label("cateringSingerCount", new PropertyModel<>(getModel(), "acceptedSum")));
+        add(new Label("carSingerCount", new PropertyModel<>(getModel(), "acceptedSum")));
 
         // Unterer Bereich
         IModel<ParticipantFilter> filterModel = new CompoundPropertyModel<>(new ParticipantFilter());

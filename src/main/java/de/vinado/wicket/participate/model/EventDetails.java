@@ -150,6 +150,11 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
 
+    @Transient
+    public long getAcceptedSum() {
+        return acceptedCount + tentativeCount;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
