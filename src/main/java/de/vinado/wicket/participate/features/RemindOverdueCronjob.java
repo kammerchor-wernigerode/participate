@@ -14,12 +14,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.validation.constraints.Min;
 
 import static de.vinado.wicket.participate.common.DateUtils.toLocalDate;
 import static de.vinado.wicket.participate.features.RemindOverdueCronjob.Configuration.CRON_EXPRESSION;
