@@ -202,6 +202,12 @@ public class EventServiceImpl extends DataService implements EventService {
         return saveParticipant(dto);
     }
 
+    @Override
+    public Participant acceptEventTentatively(ParticipantDTO dto) {
+        dto.setInvitationStatus(InvitationStatus.TENTATIVE);
+        return saveParticipant(dto);
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -68,6 +68,15 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
                     "Your cancellation has been saved. You can leave this page now.");
                 Snackbar.show(target, model);
             }
+
+            @Override
+            protected void onAcceptTentatively(AjaxRequestTarget target) {
+                eventService.acceptEventTentatively(getModelObject());
+                send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
+
+                TemplateModel templateModel = new TemplateModel("invitation.tentative.success-txt.ftl");
+                displaySuccessionModal(templateModel, target);
+            }
         };
     }
 

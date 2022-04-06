@@ -69,6 +69,8 @@ public interface EventService {
      */
     Participant acceptEvent(ParticipantDTO dto);
 
+    Participant acceptEventTentatively(ParticipantDTO dto);
+
     /**
      * Changes the {@link InvitationStatus} to {@link InvitationStatus#DECLINED} and resets the {@link Participant} to
      * default.

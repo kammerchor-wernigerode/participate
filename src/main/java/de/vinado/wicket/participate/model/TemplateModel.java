@@ -10,6 +10,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -25,6 +26,10 @@ public class TemplateModel implements IModel<String> {
     private final String templateName;
     private final IModel<String> defaultValue;
     private final Map<String, Object> data;
+
+    public TemplateModel(String templateName) {
+        this(templateName, Collections.emptyMap());
+    }
 
     /**
      * @param templateName the template to be processed
