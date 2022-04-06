@@ -13,6 +13,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static de.vinado.wicket.participate.model.InvitationStatus.ACCEPTED;
+import static de.vinado.wicket.participate.model.InvitationStatus.PENDING;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -42,15 +44,15 @@ class RemindOverdueCronjobTest {
         Event event3 = MockedEvent.mockEvent(3L, DateUtils.addDays(NOW, 30));
 
         Participant participant11 = mock(Participant.class);
-        when(participant11.isPending()).thenReturn(false);
+        when(participant11.getInvitationStatus()).thenReturn(ACCEPTED);
         List<Participant> event1Participants = Collections.singletonList(participant11);
 
         Participant participant21 = mock(Participant.class);
-        when(participant21.isPending()).thenReturn(true);
+        when(participant21.getInvitationStatus()).thenReturn(PENDING);
         List<Participant> event2Participants = Collections.singletonList(participant21);
 
         Participant participant31 = mock(Participant.class);
-        when(participant31.isPending()).thenReturn(true);
+        when(participant31.getInvitationStatus()).thenReturn(PENDING);
         List<Participant> event3Participants = Collections.singletonList(participant31);
 
 
