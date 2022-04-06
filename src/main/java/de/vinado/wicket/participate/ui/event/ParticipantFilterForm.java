@@ -30,6 +30,8 @@ import org.apache.wicket.util.visit.IVisitor;
 
 import java.util.Arrays;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  * @author Vincent Nadoll
  */
@@ -76,7 +78,7 @@ public abstract class ParticipantFilterForm extends Form<ParticipantFilter> {
     }
 
     protected FormComponent<InvitationStatus> invitationStatusSelect(String id) {
-        DropDownChoice<InvitationStatus> select = new DropDownChoice<>(id, Arrays.asList(InvitationStatus.values()),
+        DropDownChoice<InvitationStatus> select = new DropDownChoice<>(id, InvitationStatus.stream().collect(toList()),
             new EnumChoiceRenderer<>(this));
         select.setLabel(new ResourceModel("invitationStatus", "Invitation Status"));
         return select;

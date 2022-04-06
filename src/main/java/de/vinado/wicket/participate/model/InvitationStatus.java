@@ -5,8 +5,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -25,5 +27,10 @@ public enum InvitationStatus implements Sorted {
 
     public static Predicate<Invitable> by(InvitationStatus invitationStatus) {
         return invitable -> Objects.equals(invitable.getInvitationStatus(), invitationStatus);
+    }
+
+    public static Stream<InvitationStatus> stream() {
+        return Arrays.stream(values())
+            .sorted(Sorted.compare());
     }
 }

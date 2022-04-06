@@ -16,7 +16,6 @@ import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.form.AutosizeBehavior;
 import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.common.ParticipateUtils;
-import de.vinado.wicket.participate.common.Sorted;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.Event;
@@ -39,10 +38,9 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -86,11 +84,8 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
         toConfig.withMinuteStepping(30);
         toConfig.with(new DatetimePickerIconConfig());
 
-        List<InvitationStatus> values = Arrays.stream(InvitationStatus.values())
-            .sorted(Sorted.compare())
-            .collect(Collectors.toList());
         final BootstrapSelect<InvitationStatus> invitationStatusBs = new BootstrapSelect<>("invitationStatus",
-            values, new EnumChoiceRenderer<>());
+            InvitationStatus.stream().collect(toList()), new EnumChoiceRenderer<>());
         invitationStatusBs.add(new AjaxFormComponentUpdatingBehavior("hidden.bs.select") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
