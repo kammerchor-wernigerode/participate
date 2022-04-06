@@ -3,6 +3,7 @@ package de.vinado.wicket.participate.ui.event;
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
+import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.ui.event.details.ParticipantDataProvider;
@@ -28,7 +29,7 @@ public class ParticipantTable extends BootstrapAjaxDataTable<Participant, Serial
         super(id, columns, dataProvider, rowsPerPage);
         this.personContext = personContext;
 
-        dataProvider.setSort(with(Participant::getInvitationStatus).andThen(Enum::ordinal), SortOrder.ASCENDING);
+        dataProvider.setSort(with(Participant::getInvitationStatus).andThen(InvitationStatus::getSortOrder), SortOrder.ASCENDING);
         setOutputMarkupId(true);
         condensed().hover();
 
