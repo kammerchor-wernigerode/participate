@@ -212,6 +212,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
             @Override
             protected void onConfirm(AjaxRequestTarget target) {
                 final List<Participant> participants = eventService.getParticipants(event, InvitationStatus.PENDING);
+                participants.addAll(eventService.getParticipants(event, InvitationStatus.TENTATIVE));
                 final int count = eventService.inviteParticipants(participants, organizer);
 
                 Snackbar.show(target, "Erinnerung wurde an "
