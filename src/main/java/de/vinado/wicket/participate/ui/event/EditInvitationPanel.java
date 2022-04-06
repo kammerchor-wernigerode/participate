@@ -114,13 +114,7 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
         });
         form.add(toDtP);
 
-        final CheckBox cateringCb = new CheckBox("catering") {
-            @Override
-            protected void onConfigure() {
-                super.onConfigure();
-                setEnabled(InvitationStatus.ACCEPTED.equals(EditInvitationPanel.this.getModelObject().getInvitationStatus()));
-            }
-        };
+        final CheckBox cateringCb = new CheckBox("catering");
         cateringCb.add(BootstrapHorizontalFormDecorator.decorate());
         cateringCb.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
@@ -130,13 +124,7 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
         });
         form.add(cateringCb);
 
-        final CheckBox accommodationCb = new CheckBox("accommodation") {
-            @Override
-            protected void onConfigure() {
-                super.onConfigure();
-                setEnabled(InvitationStatus.ACCEPTED.equals(EditInvitationPanel.this.getModelObject().getInvitationStatus()));
-            }
-        };
+        final CheckBox accommodationCb = new CheckBox("accommodation");
         accommodationCb.add(BootstrapHorizontalFormDecorator.decorate());
         accommodationCb.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
@@ -169,13 +157,7 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
         };
         form.add(carCb);
 
-        final TextArea commentTa = new TextArea<>("comment") {
-            @Override
-            protected void onConfigure() {
-                super.onConfigure();
-                setEnabled(InvitationStatus.ACCEPTED.equals(EditInvitationPanel.this.getModelObject().getInvitationStatus()));
-            }
-        };
+        final TextArea commentTa = new TextArea<>("comment");
         commentTa.add(new AutosizeBehavior());
         commentTa.add(BootstrapHorizontalFormDecorator.decorate());
         commentTa.add(new AjaxFormComponentUpdatingBehavior("change") {
