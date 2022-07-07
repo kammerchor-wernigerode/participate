@@ -138,7 +138,7 @@ public abstract class FormModal<T> extends Modal<T> {
 
         @Override
         protected AbstractLink link(String id) {
-            return new AjaxSubmitLink(id, form) {
+            AjaxSubmitLink link = new AjaxSubmitLink(id, form) {
                 private static final long serialVersionUID = -96187706316648756L;
 
                 @Override
@@ -168,6 +168,8 @@ public abstract class FormModal<T> extends Modal<T> {
                     AjaxSubmitAction.this.onSubmit(target);
                 }
             };
+            link.add(new AttributeModifier("form", form.getMarkupId()));
+            return link;
         }
 
         protected abstract void onSubmit(AjaxRequestTarget target);
