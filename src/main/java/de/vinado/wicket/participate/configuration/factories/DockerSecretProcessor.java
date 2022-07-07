@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Reads Docker Secret files from the local system an passes their values to the configured Spring properties.
+ * Reads Docker Secret files from the local system and passes their values to the configured Spring properties.
  *
  * @author Vincent Nadoll
  */
