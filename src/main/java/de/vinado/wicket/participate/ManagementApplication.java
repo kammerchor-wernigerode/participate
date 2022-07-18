@@ -38,7 +38,7 @@ public class ManagementApplication extends AuthenticatedBootstrapWebApplication 
     protected void configureSecurity(SecuritySettings securitySettings) {
         super.configureSecurity(securitySettings);
 
-        SunJceCrypt crypt = new SunJceCrypt(cryptoProperties.getPbeSalt().getBytes(StandardCharsets.UTF_8),
+        SunJceCrypt crypt = new SunJceCrypt(cryptoProperties.getPbeSalt(),
             cryptoProperties.getPbeIterationCount());
         crypt.setKey(cryptoProperties.getSessionSecret());
         DefaultAuthenticationStrategy authenticationStrategy = new DefaultAuthenticationStrategy("_login", crypt);

@@ -7,8 +7,6 @@ import org.apache.wicket.util.crypt.SunJceCrypt;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.StringUtils;
 
-import java.nio.charset.StandardCharsets;
-
 import static org.springframework.util.Assert.isTrue;
 
 /**
@@ -20,7 +18,7 @@ import static org.springframework.util.Assert.isTrue;
 public class CryptoProperties {
 
     private String sessionSecret;
-    private String pbeSalt;
+    private byte[] pbeSalt;
     private int pbeIterationCount;
 
     public String getSessionSecret() {
@@ -30,11 +28,15 @@ public class CryptoProperties {
         return sessionSecret;
     }
 
-    public String getPbeSalt() {
-        if (!StringUtils.hasText(pbeSalt)) {
-            pbeSalt = new String(SunJceCrypt.randomSalt(), StandardCharsets.UTF_8);
+    public byte[] getPbeSalt() {
+        if (pbeSalt.length == 0) {
+            pbeSalt = SunJceCrypt.randomSalt();
         }
-        isTrue(pbeSalt.getBytes(StandardCharsets.UTF_8).length == 8, "Salt must be 8 bytes long");
+        isTrue(pbeSalt.length == 8, "Salt must be 8 bytes long");
         return pbeSalt;
+    }
+
+    public void setPbeSalt(String pbeSalt) {
+        this.pbeSalt = pbeSalt.getBytes();
     }
 }

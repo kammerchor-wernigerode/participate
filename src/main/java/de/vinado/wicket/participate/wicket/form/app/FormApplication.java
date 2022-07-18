@@ -66,7 +66,7 @@ public class FormApplication extends AuthenticatedBootstrapWebApplication implem
         securitySettings.setAuthorizationStrategy(strategy);
         securitySettings.setUnauthorizedComponentInstantiationListener(listener);
 
-        SunJceCrypt crypt = new SunJceCrypt(cryptoProperties.getPbeSalt().getBytes(StandardCharsets.UTF_8),
+        SunJceCrypt crypt = new SunJceCrypt(cryptoProperties.getPbeSalt(),
             cryptoProperties.getPbeIterationCount());
         crypt.setKey(cryptoProperties.getSessionSecret());
         IAuthenticationStrategy authenticationStrategy = new DefaultAuthenticationStrategy("_form-login", crypt);
