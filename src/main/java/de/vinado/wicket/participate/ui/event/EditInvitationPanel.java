@@ -134,7 +134,7 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
         });
         form.add(accommodationCb);
 
-        NumberTextField<Integer> carSeatCountTf = new NumberTextField<Integer>("carSeatCount") {
+        NumberTextField<Short> carSeatCountTf = new NumberTextField<>("carSeatCount") {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
@@ -145,8 +145,8 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
             }
         };
         carSeatCountTf.setOutputMarkupId(true);
-        carSeatCountTf.setMinimum(0);
-        carSeatCountTf.setMaximum(127); // 1 Byte maximum signed integer
+        carSeatCountTf.setMinimum((short) 0);
+        carSeatCountTf.setMaximum((short) 127); // 1 Byte maximum signed integer
         form.add(carSeatCountTf);
 
         AjaxCheckBox carCb = new AjaxCheckBox("car") {
