@@ -58,7 +58,7 @@ public class SignInPage extends BasePage {
     public void renderHead(IHeaderResponse response) {
         response.render(MetaDataHeaderItem.forMetaTag("viewport", "width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"));
         response.render(MetaDataHeaderItem.forMetaTag("robots", "noindex, nofollow"));
-        response.render(forLinkTag("shortcut icon", "favicon.ico", "image/x-icon"));
+        response.render(forLinkTag("shortcut icon", "/favicon.ico", "image/x-icon"));
         response.render(CssHeaderItem.forReference(FontAwesome5CssReference.instance()));
     }
 }
