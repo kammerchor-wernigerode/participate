@@ -2,6 +2,7 @@ package de.vinado.wicket.participate.ui.login;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5CssReference;
 import de.vinado.wicket.participate.ui.pages.BasePage;
+import de.vinado.wicket.participate.ui.pages.Resources;
 import de.vinado.wicket.participate.wicket.inject.ApplicationName;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
@@ -11,8 +12,6 @@ import org.apache.wicket.markup.head.MetaDataHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-
-import static org.apache.wicket.markup.head.HtmlImportHeaderItem.forLinkTag;
 
 /**
  * @author Vincent Nadoll
@@ -58,7 +57,7 @@ public class SignInPage extends BasePage {
     public void renderHead(IHeaderResponse response) {
         response.render(MetaDataHeaderItem.forMetaTag("viewport", "width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"));
         response.render(MetaDataHeaderItem.forMetaTag("robots", "noindex, nofollow"));
-        response.render(forLinkTag("shortcut icon", "/favicon.ico", "image/x-icon"));
+        Resources.renderFavicons(response);
         response.render(CssHeaderItem.forReference(FontAwesome5CssReference.instance()));
     }
 }

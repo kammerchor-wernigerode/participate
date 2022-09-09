@@ -5,6 +5,7 @@ import de.vinado.wicket.http.BadRequest;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.pages.BasePage;
+import de.vinado.wicket.participate.ui.pages.Resources;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -15,8 +16,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.Optional;
-
-import static org.apache.wicket.markup.head.HtmlImportHeaderItem.forLinkTag;
 
 /**
  * @author Vincent Nadoll
@@ -63,7 +62,7 @@ public class FormSignInPage extends BasePage implements IGenericComponent<Partic
     public void renderHead(IHeaderResponse response) {
         response.render(MetaDataHeaderItem.forMetaTag("viewport", "width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"));
         response.render(MetaDataHeaderItem.forMetaTag("robots", "noindex, nofollow"));
-        response.render(forLinkTag("shortcut icon", "/favicon.ico", "image/x-icon"));
+        Resources.renderFavicons(response);
         response.render(CssHeaderItem.forReference(FontAwesome5CssReference.instance()));
     }
 
