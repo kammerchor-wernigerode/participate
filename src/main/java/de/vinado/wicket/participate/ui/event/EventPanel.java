@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.ui.event;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.bt4.modal.ConfirmationModal;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
@@ -9,6 +10,7 @@ import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
+import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.event.ui.EventSummaryPage;
@@ -37,6 +39,7 @@ import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
@@ -44,8 +47,12 @@ import org.apache.wicket.request.mapper.parameter.INamedParameters.Type;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
+import org.danekja.java.util.function.serializable.SerializableFunction;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -61,6 +68,9 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
 
     @SpringBean
     private PersonService personService;
+
+    @SpringBean
+    private ApplicationProperties applicationProperties;
 
     private final PersonContext personContext;
     private final IModel<ParticipantFilter> filterModel;
@@ -164,7 +174,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         addDropdownAction(AjaxAction.create(new ResourceModel("email.send.reminder", "Send Reminder"),
             FontAwesome5IconType.exclamation_s,
             this::remind));
-        addDropdownAction(AjaxAction.create(new ResourceModel("email.send", "Send Email"),
+        addDropdownAction(create(new ResourceModel("email.send", "Send Email"),
             FontAwesome5IconType.envelope_s,
             this::email));
         addDropdownAction(AjaxAction.create(new ResourceModel("event.edit", "Edit Event"),
@@ -225,14 +235,40 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         anchor.show(target);
     }
 
-    private void email(AjaxRequestTarget target) {
-        Email mailData = emailBuilderFactory.create()
-            .toPeople(personService.getSingers(getModelObject().getEvent()))
-            .build();
+    private static SerializableFunction<String, AbstractAction> create(IModel<String> labelModel,
+                                                                       IconType icon,
+                                                                       SerializableFunction<String, AbstractLink> link) {
+        return id -> new AbstractAction(id, labelModel, icon) {
+            @Override
+            protected AbstractLink link(String id) {
+                return link.apply(id);
+            }
+        };
+    }
 
-        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
-        modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
-        modal.show(target);
+    private AbstractLink email(String id) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("mailto:");
+        populateRecipients(builder);
+        populateSender(builder);
+
+        return new ExternalLink(id, builder.toUriString());
+    }
+
+    private void populateSender(UriComponentsBuilder builder) {
+        ApplicationProperties.Mail mailProperties = applicationProperties.getMail();
+        ParticipateSession session = ParticipateSession.get();
+        Optional.ofNullable(session.getUser())
+            .map(User::getPerson)
+            .map(Person::getEmail)
+            .ifPresentOrElse(email -> builder.queryParam("to", email), () -> builder.queryParam("to", mailProperties.getSender()));
+    }
+
+    private void populateRecipients(UriComponentsBuilder builder) {
+        String bccValue = eventService.getParticipants(getModelObject().getEvent(), InvitationStatus.ACCEPTED).stream()
+            .map(Participant::getSinger)
+            .map(Person::getEmail)
+            .collect(Collectors.joining(","));
+        builder.queryParam("bcc", bccValue);
     }
 
     private void edit(AjaxRequestTarget target) {
