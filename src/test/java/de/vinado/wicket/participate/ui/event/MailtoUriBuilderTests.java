@@ -17,8 +17,7 @@ class MailtoUriBuilderTests {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("mailto:")
             .queryParam("to", FROM)
             .queryParam("bcc", email1)
-            .queryParam("bcc", email2)
-            .queryParam("reply-to", "no-reply@kammerchor-wernigerode.de");
+            .queryParam("bcc", email2);
 
         assertEquals("mailto:?to=" + FROM + "&bcc=" + email1 + "&bcc=" + email2, builder.toUriString());
     }
