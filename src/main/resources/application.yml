@@ -89,3 +89,9 @@ app:
 management:
   server:
     port: ${HEALTHCHECK_PORT:8081}
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics.tags:
+    application: ${spring.application.name}
