@@ -36,7 +36,7 @@ public class Healthcheck {
     }
 
     public static int getPort() {
-        return Optional.ofNullable(System.getenv("HEALTHCHECK_PORT"))
+        return Optional.ofNullable(System.getenv("MANAGEMENT_SERVER_PORT"))
             .map(Integer::parseInt)
             .orElse(8081);
     }
