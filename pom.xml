@@ -14,7 +14,7 @@
     <groupId>de.vinado.wicket</groupId>
     <artifactId>participate</artifactId>
     <packaging>jar</packaging>
-    <version>2.17.0</version>
+    <version>2.17.1</version>
 
     <name>participate</name>
     <description>

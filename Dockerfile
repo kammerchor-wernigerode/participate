@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN mkdir -p /app
 WORKDIR      /app
 
-ARG JAR_FILE=participate-2.17.0.jar
+ARG JAR_FILE=participate-2.17.1.jar
 COPY --from=maven /usr/src/app/target/$JAR_FILE /app/application.jar
 COPY --from=healthcheck-builder /usr/src/healthcheck/Healthcheck.class /usr/local/bin/
 COPY scripts/docker-entrypoint.sh /usr/local/bin/
