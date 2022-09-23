@@ -33,9 +33,12 @@ import de.vinado.wicket.participate.ui.pages.ParticipatePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.extensions.markup.html.basic.DefaultLinkParser;
+import org.apache.wicket.extensions.markup.html.basic.ILinkParser;
+import org.apache.wicket.extensions.markup.html.basic.LinkParser;
+import org.apache.wicket.extensions.markup.html.basic.SmartLinkMultiLineLabel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -98,11 +101,21 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         wmc.add(new Label("displayDate"));
         wmc.add(new Label("creationDateTimeIso").add(new RelativeTimePipe()));
         wmc.add(new Label("location"));
-        wmc.add(new MultiLineLabel("description") {
+        wmc.add(new SmartLinkMultiLineLabel("description", model.map(EventDetails::getDescription)) {
+            private static final long serialVersionUID = 2045612009711043821L;
+
             @Override
             protected void onConfigure() {
                 super.onConfigure();
                 setVisible(!Strings.isEmpty(model.getObject().getDescription()));
+            }
+
+            @Override
+            protected ILinkParser getLinkParser() {
+                LinkParser parser = new LinkParser();
+                parser.addLinkRenderStrategy("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", DefaultLinkParser.EMAIL_RENDER_STRATEGY);
+                parser.addLinkRenderStrategy("([a-zA-Z]+://[\\w\\.\\-\\:\\/~]+)[\\w\\.:\\-/?&=%,;]*", DefaultLinkParser.URL_RENDER_STRATEGY);
+                return parser;
             }
         });
 
