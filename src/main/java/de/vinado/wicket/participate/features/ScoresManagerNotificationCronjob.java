@@ -1,7 +1,6 @@
 package de.vinado.wicket.participate.features;
 
 import com.opencsv.CSVWriter;
-import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailAttachment;
 import de.vinado.wicket.participate.email.EmailBuilderFactory;
@@ -60,7 +59,6 @@ public class ScoresManagerNotificationCronjob {
     @SpringBean
     private EmailBuilderFactory emailBuilderFactory;
 
-    private final ApplicationProperties applicationProperties;
     private final Configuration configuration;
     private final EventService eventService;
     private final PersonService personService;
