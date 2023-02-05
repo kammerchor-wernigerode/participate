@@ -62,6 +62,15 @@ class ScoresManagerNotificationCronjobTests {
     }
 
     @Test
+    void creatingNullArguments_shouldThrowException() {
+        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(null, configuration, eventService, personService, emailService));
+        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailBuilderFactory, null, eventService, personService, emailService));
+        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailBuilderFactory, configuration, null, personService, emailService));
+        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailBuilderFactory, configuration, eventService, null, emailService));
+        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailBuilderFactory, configuration, eventService, personService, null));
+    }
+
+    @Test
     void nullScoresManagerEmail_shouldThrowException() {
         when(configuration.getScoresManagerEmail()).thenReturn(null);
 

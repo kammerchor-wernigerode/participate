@@ -12,6 +12,7 @@ import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -57,11 +58,11 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @RequiredArgsConstructor
 public class ScoresManagerNotificationCronjob {
 
-    private final EmailBuilderFactory emailBuilderFactory;
-    private final Configuration configuration;
-    private final EventService eventService;
-    private final PersonService personService;
-    private final EmailService emailService;
+    private final @NonNull EmailBuilderFactory emailBuilderFactory;
+    private final @NonNull Configuration configuration;
+    private final @NonNull EventService eventService;
+    private final @NonNull PersonService personService;
+    private final @NonNull EmailService emailService;
 
     /**
      * Searches for upcoming events and their accepted invitations to send the singers name to the club's score's
