@@ -19,7 +19,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.stream.Stream;
+import java.util.Collection;
 
 import static de.vinado.wicket.participate.email.service.MultipartType.HTML;
 import static de.vinado.wicket.participate.email.service.MultipartType.PLAIN;
@@ -68,8 +68,8 @@ public class EmailServiceImpl implements EmailService {
      * @param emails a stream of emails to send
      */
     @Override
-    public void send(final Stream<Email> emails) {
-        final MimeMessagePreparator[] preparedMessages = emails.map(email ->
+    public void send(final Collection<Email> emails) {
+        final MimeMessagePreparator[] preparedMessages = emails.stream().map(email ->
             (MimeMessagePreparator) mimeMessage ->
                 prepareMimeMessage(mimeMessage, email))
             .toArray(MimeMessagePreparator[]::new);
@@ -103,8 +103,8 @@ public class EmailServiceImpl implements EmailService {
      * @param htmlTemplateFileName      the HTML template file name
      */
     @Override
-    public void send(final Stream<Email> emails, final String plaintextTemplateFileName, final String htmlTemplateFileName) {
-        final MimeMessagePreparator[] preparedMessages = emails.map(email ->
+    public void send(final Collection<Email> emails, final String plaintextTemplateFileName, final String htmlTemplateFileName) {
+        final MimeMessagePreparator[] preparedMessages = emails.stream().map(email ->
             (MimeMessagePreparator) mimeMessage ->
                 prepareMimeMessage(mimeMessage, email, plaintextTemplateFileName, htmlTemplateFileName))
             .toArray(MimeMessagePreparator[]::new);

@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.email.service;
 
 import de.vinado.wicket.participate.email.Email;
 
-import java.util.stream.Stream;
+import java.util.Collection;
 
 /**
  * Provides several functions to send single plaintext email, a single multipart email, multiple plaintext emails and
@@ -24,7 +24,7 @@ public interface EmailService {
      *
      * @param emails a stream of emails to send
      */
-    default void send(Stream<Email> emails) {
+    default void send(Collection<Email> emails) {
         emails.forEach(this::send);
     }
 
@@ -44,7 +44,7 @@ public interface EmailService {
      * @param plaintextTemplateFileName the plaintext template file name
      * @param htmlTemplateFileName      the HTML template file name
      */
-    default void send(Stream<Email> emails, String plaintextTemplateFileName, String htmlTemplateFileName) {
+    default void send(Collection<Email> emails, String plaintextTemplateFileName, String htmlTemplateFileName) {
         emails.forEach(email -> send(email, plaintextTemplateFileName, htmlTemplateFileName));
     }
 }

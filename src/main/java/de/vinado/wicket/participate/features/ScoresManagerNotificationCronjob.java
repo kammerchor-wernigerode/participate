@@ -91,7 +91,7 @@ public class ScoresManagerNotificationCronjob {
                 .map(event -> prepare(event, recipient))
                 .filter(Objects::nonNull);
 
-            emailService.send(emails, "scoresManagerNotification-txt.ftl", null);
+            emailService.send(emails.collect(Collectors.toList()), "scoresManagerNotification-txt.ftl", null);
             log.info("Ran score's manager reminder job");
         } catch (AddressException e) {
             log.error("Malformed email address encountered", e);
