@@ -23,10 +23,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MimeType;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -37,6 +33,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
 
 import static com.pivovarit.function.ThrowingFunction.sneaky;
 import static de.vinado.wicket.participate.common.DateUtils.toLocalDate;
