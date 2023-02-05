@@ -50,6 +50,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -566,7 +567,7 @@ public class EventServiceImpl extends DataService implements EventService {
             });
 
         // TODO Create notification template
-        emailService.send(invitations, "inviteSinger-txt.ftl", "inviteSinger-html.ftl");
+        emailService.send(invitations.collect(Collectors.toList()), "inviteSinger-txt.ftl", "inviteSinger-html.ftl");
         return participants.size();
     }
 

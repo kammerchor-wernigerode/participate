@@ -1,7 +1,6 @@
 package de.vinado.wicket.participate.features;
 
 import com.opencsv.CSVWriter;
-import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailAttachment;
 import de.vinado.wicket.participate.email.EmailBuilderFactory;
@@ -13,21 +12,18 @@ import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MimeType;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -38,6 +34,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
 
 import static com.pivovarit.function.ThrowingFunction.sneaky;
 import static de.vinado.wicket.participate.common.DateUtils.toLocalDate;
@@ -54,17 +54,15 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @Slf4j
 @Component
 @ConditionalOnExpression(FEATURE_ENABLED)
+@EnableConfigurationProperties(ScoresManagerNotificationCronjob.Configuration.class)
 @RequiredArgsConstructor
 public class ScoresManagerNotificationCronjob {
 
-    @SpringBean
-    private EmailBuilderFactory emailBuilderFactory;
-
-    private final ApplicationProperties applicationProperties;
-    private final Configuration configuration;
-    private final EventService eventService;
-    private final PersonService personService;
-    private final EmailService emailService;
+    private final @NonNull EmailBuilderFactory emailBuilderFactory;
+    private final @NonNull Configuration configuration;
+    private final @NonNull EventService eventService;
+    private final @NonNull PersonService personService;
+    private final @NonNull EmailService emailService;
 
     /**
      * Searches for upcoming events and their accepted invitations to send the singers name to the club's score's
@@ -94,7 +92,7 @@ public class ScoresManagerNotificationCronjob {
                 .map(event -> prepare(event, recipient))
                 .filter(Objects::nonNull);
 
-            emailService.send(emails, "scoresManagerNotification-txt.ftl", null);
+            emailService.send(emails.collect(Collectors.toList()), "scoresManagerNotification-txt.ftl", null);
             log.info("Ran score's manager reminder job");
         } catch (AddressException e) {
             log.error("Malformed email address encountered", e);
@@ -185,7 +183,6 @@ public class ScoresManagerNotificationCronjob {
      */
     @Getter
     @Setter
-    @org.springframework.context.annotation.Configuration
     @ConfigurationProperties("app.features.scores-manager-notification")
     @ConditionalOnExpression(FEATURE_ENABLED)
     static class Configuration {

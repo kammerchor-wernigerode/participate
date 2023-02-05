@@ -18,6 +18,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2MultiChoice;
 
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.mail.internet.InternetAddress;
 
@@ -70,7 +71,7 @@ public class SendEmailPanel extends FormModal<Email> {
     protected void onSubmit(AjaxRequestTarget target) {
         Email mail = getModelObject();
         Stream<Email> mails = mail.toSingleRecipient();
-        emailService.send(mails);
+        emailService.send(mails.collect(Collectors.toList()));
 
         Snackbar.show(target, new ResourceModel("email.send.success", "Email sent"));
     }
