@@ -15,7 +15,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -56,9 +55,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @RequiredArgsConstructor
 public class ScoresManagerNotificationCronjob {
 
-    @SpringBean
-    private EmailBuilderFactory emailBuilderFactory;
-
+    private final EmailBuilderFactory emailBuilderFactory;
     private final Configuration configuration;
     private final EventService eventService;
     private final PersonService personService;
