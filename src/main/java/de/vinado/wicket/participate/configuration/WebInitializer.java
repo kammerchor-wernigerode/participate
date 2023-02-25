@@ -11,9 +11,10 @@ import org.springframework.web.context.ContextCleanupListener;
 import java.util.EnumSet;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
+
+import static javax.servlet.DispatcherType.*;
 
 /**
  * Wicket request handling configuration for Servlet 3.0+ and replacement for web.xml.
@@ -34,7 +35,7 @@ public class WebInitializer implements ServletContextInitializer {
         filter.setInitParameter("applicationBean", "managementApplication");
         filter.setInitParameter(WicketFilter.IGNORE_PATHS_PARAM, "/static");
         filter.setInitParameter(WicketFilter.FILTER_MAPPING_PARAM, APP_ROOT + "/*");
-        filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR), false, getUrlPatterns());
+        filter.addMappingForUrlPatterns(EnumSet.of(REQUEST, INCLUDE), false, getUrlPatterns());
         filter.setInitParameter("configuration", properties.isDevelopmentMode() ? "development" : "deployment");
         servletContext.addListener(new ContextCleanupListener());
     }

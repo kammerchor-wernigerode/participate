@@ -16,8 +16,7 @@ import javax.servlet.ServletContext;
 
 import static java.util.EnumSet.of;
 import static java.util.stream.Stream.concat;
-import static javax.servlet.DispatcherType.ERROR;
-import static javax.servlet.DispatcherType.REQUEST;
+import static javax.servlet.DispatcherType.*;
 import static org.apache.wicket.protocol.http.WicketFilter.APP_FACT_PARAM;
 import static org.apache.wicket.protocol.http.WicketFilter.FILTER_MAPPING_PARAM;
 import static org.apache.wicket.protocol.http.WicketFilter.IGNORE_PATHS_PARAM;
@@ -41,7 +40,7 @@ class FormApplicationServletContextInitializer implements ServletContextInitiali
         filter.setInitParameter("applicationBean", "formApplication");
         filter.setInitParameter(IGNORE_PATHS_PARAM, "/static");
         filter.setInitParameter(FILTER_MAPPING_PARAM, APP_ROOT + "/*");
-        filter.addMappingForUrlPatterns(of(REQUEST, ERROR), false, getUrlPatterns());
+        filter.addMappingForUrlPatterns(of(REQUEST, INCLUDE), false, getUrlPatterns());
         filter.setInitParameter("configuration", properties.isDevelopmentMode() ? "development" : "deployment");
         servletContext.addListener(new ContextCleanupListener());
     }
