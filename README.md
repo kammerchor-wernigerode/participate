@@ -62,7 +62,7 @@ Run the command below to start a development database as well as [FakeSMTP](http
 Received emails will be stored in `$HOME/received-emails`.
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ## Deployment
