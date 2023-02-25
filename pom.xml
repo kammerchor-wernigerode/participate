@@ -17,9 +17,7 @@
     <version>2.17.2</version>
 
     <name>participate</name>
-    <description>
-        Participation Manager for Kammerchor Wernigerode e.V.
-    </description>
+    <description>Participation Manager for Kammerchor Wernigerode e.V.</description>
 
     <properties>
         <skipTests>false</skipTests>
