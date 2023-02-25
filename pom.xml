@@ -115,49 +115,13 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- APACHE COMMONS -->
         <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-
-        <!-- CSS COMPRESSOR -->
-        <dependency>
-            <groupId>com.yahoo.platform.yui</groupId>
-            <artifactId>yuicompressor</artifactId>
-        </dependency>
-
-        <!-- ICAL GENERATOR -->
-        <dependency>
-            <groupId>org.mnode.ical4j</groupId>
-            <artifactId>ical4j</artifactId>
-        </dependency>
-
-        <!-- LOMBOK -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- WICKET BOOTSTRAP -->
-        <dependency>
-            <groupId>de.agilecoders.wicket</groupId>
-            <artifactId>wicket-bootstrap-extensions</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wicketstuff</groupId>
-            <artifactId>wicketstuff-select2</artifactId>
-        </dependency>
-
-        <!-- SPRING BOOT -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -168,6 +132,24 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>de.vinado.boot</groupId>
             <artifactId>mail-extensions-all-spring-boot-starter</artifactId>
         </dependency>
@@ -176,12 +158,6 @@
             <artifactId>spring-boot-secrets-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-
-        <!-- WICKET SPRING DEPENDENCIES-->
-        <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-spring</artifactId>
         </dependency>
@@ -189,7 +165,14 @@
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-auth-roles</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.wicketstuff</groupId>
+            <artifactId>wicketstuff-select2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.agilecoders.wicket</groupId>
+            <artifactId>wicket-bootstrap-extensions</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.webjars.npm</groupId>
             <artifactId>autosize</artifactId>
@@ -198,19 +181,27 @@
             <groupId>org.webjars</groupId>
             <artifactId>node-snackbar</artifactId>
         </dependency>
-
-        <!-- FREEMARKER -->
         <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
+            <groupId>com.yahoo.platform.yui</groupId>
+            <artifactId>yuicompressor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mnode.ical4j</groupId>
+            <artifactId>ical4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.pivovarit</groupId>
+            <artifactId>throwing-function</artifactId>
         </dependency>
 
-        <!-- DATABASE -->
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-            <scope>runtime</scope>
-        </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -221,21 +212,11 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
             <scope>runtime</scope>
         </dependency>
-
-        <!-- MISC -->
         <dependency>
-            <groupId>org.apache.tika</groupId>
-            <artifactId>tika-core</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>com.pivovarit</groupId>
-            <artifactId>throwing-function</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.opencsv</groupId>
-            <artifactId>opencsv</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
