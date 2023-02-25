@@ -31,6 +31,8 @@
 
         <dependency.sass.version>1.58.3</dependency.sass.version>
 
+        <webjar.autosize.version>6.0.1</webjar.autosize.version>
+
         <plugin.sass.version>1.0.2</plugin.sass.version>
     </properties>
 
@@ -121,7 +123,7 @@
         <dependency>
             <groupId>org.webjars.npm</groupId>
             <artifactId>autosize</artifactId>
-            <version>5.0.1</version>
+            <version>${webjar.autosize.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
