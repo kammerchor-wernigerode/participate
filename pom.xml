@@ -30,7 +30,7 @@
         <dependency.spring-boot-secrets-api.version>1.1.0</dependency.spring-boot-secrets-api.version>
         <dependency.throwing-function.version>1.5.1</dependency.throwing-function.version>
         <dependency.tika.version>2.3.0</dependency.tika.version>
-        <dependency.wicket.version>9.7.0</dependency.wicket.version>
+        <dependency.wicket.version>9.12.0</dependency.wicket.version>
         <dependency.wicket-bootstrap.version>5.0.6</dependency.wicket-bootstrap.version>
         <dependency.yuicompressor.version>2.4.8</dependency.yuicompressor.version>
 
@@ -51,6 +51,11 @@
                 <groupId>de.vinado.boot</groupId>
                 <artifactId>spring-boot-secrets-api</artifactId>
                 <version>${dependency.spring-boot-secrets-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-core</artifactId>
+                <version>${dependency.wicket.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.wicket</groupId>
@@ -152,6 +157,10 @@
         <dependency>
             <groupId>de.vinado.boot</groupId>
             <artifactId>spring-boot-secrets-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.wicket</groupId>
