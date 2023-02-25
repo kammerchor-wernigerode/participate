@@ -1,6 +1,7 @@
 package de.vinado.wicket.participate.ui.administration;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.tabs.AjaxBootstrapTabbedPanel;
+import de.vinado.wicket.participate.ui.administration.person.PersonAdministrationPanel;
 import de.vinado.wicket.participate.ui.administration.tool.ToolPanel;
 import de.vinado.wicket.participate.ui.administration.user.UserPanel;
 import de.vinado.wicket.participate.ui.pages.ParticipatePage;
@@ -40,6 +41,7 @@ public class AdminPage extends ParticipatePage {
         List<ITab> tabs = new ArrayList<>();
         tabs.add(new LambdaTab(new ResourceModel("tools", "Tools"), ToolPanel::new));
         tabs.add(new LambdaTab(new ResourceModel("tools.user-management", "User Management"), UserPanel::new));
+        tabs.add(new LambdaTab(new ResourceModel("persons", "Persons"), PersonAdministrationPanel::new));
         return tabs;
     }
 }
