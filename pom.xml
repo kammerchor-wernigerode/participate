@@ -44,6 +44,76 @@
         <plugin.sass.version>1.0.2</plugin.sass.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>de.vinado.boot</groupId>
+                <artifactId>mail-extensions-all-spring-boot-starter</artifactId>
+                <version>${dependency.mail-extensions-all-spring-boot-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.vinado.boot</groupId>
+                <artifactId>spring-boot-secrets-api</artifactId>
+                <version>${dependency.spring-boot-secrets-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-spring</artifactId>
+                <version>${dependency.wicket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-auth-roles</artifactId>
+                <version>${dependency.wicket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wicketstuff</groupId>
+                <artifactId>wicketstuff-select2</artifactId>
+                <version>${dependency.wicket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.agilecoders.wicket</groupId>
+                <artifactId>wicket-bootstrap-extensions</artifactId>
+                <version>${dependency.wicket-bootstrap.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars.npm</groupId>
+                <artifactId>autosize</artifactId>
+                <version>${webjar.autosize.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>node-snackbar</artifactId>
+                <version>${webjar.snackbar.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.yahoo.platform.yui</groupId>
+                <artifactId>yuicompressor</artifactId>
+                <version>${dependency.yuicompressor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tika</groupId>
+                <artifactId>tika-core</artifactId>
+                <version>${dependency.tika.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.opencsv</groupId>
+                <artifactId>opencsv</artifactId>
+                <version>${dependency.opencsv.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mnode.ical4j</groupId>
+                <artifactId>ical4j</artifactId>
+                <version>${dependency.ical4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.pivovarit</groupId>
+                <artifactId>throwing-function</artifactId>
+                <version>${dependency.throwing-function.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <!-- APACHE COMMONS -->
         <dependency>
@@ -55,14 +125,12 @@
         <dependency>
             <groupId>com.yahoo.platform.yui</groupId>
             <artifactId>yuicompressor</artifactId>
-            <version>${dependency.yuicompressor.version}</version>
         </dependency>
 
         <!-- ICAL GENERATOR -->
         <dependency>
             <groupId>org.mnode.ical4j</groupId>
             <artifactId>ical4j</artifactId>
-            <version>${dependency.ical4j.version}</version>
         </dependency>
 
         <!-- LOMBOK -->
@@ -76,12 +144,10 @@
         <dependency>
             <groupId>de.agilecoders.wicket</groupId>
             <artifactId>wicket-bootstrap-extensions</artifactId>
-            <version>${dependency.wicket-bootstrap.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wicketstuff</groupId>
             <artifactId>wicketstuff-select2</artifactId>
-            <version>${dependency.wicket.version}</version>
         </dependency>
 
         <!-- SPRING BOOT -->
@@ -104,12 +170,10 @@
         <dependency>
             <groupId>de.vinado.boot</groupId>
             <artifactId>mail-extensions-all-spring-boot-starter</artifactId>
-            <version>${dependency.mail-extensions-all-spring-boot-starter.version}</version>
         </dependency>
         <dependency>
             <groupId>de.vinado.boot</groupId>
             <artifactId>spring-boot-secrets-api</artifactId>
-            <version>${dependency.spring-boot-secrets-api.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -120,23 +184,19 @@
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-spring</artifactId>
-            <version>${dependency.wicket.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-auth-roles</artifactId>
-            <version>${dependency.wicket.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.webjars.npm</groupId>
             <artifactId>autosize</artifactId>
-            <version>${webjar.autosize.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>node-snackbar</artifactId>
-            <version>${webjar.snackbar.version}</version>
         </dependency>
 
         <!-- FREEMARKER -->
@@ -166,17 +226,14 @@
         <dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-core</artifactId>
-            <version>${dependency.tika.version}</version>
         </dependency>
         <dependency>
             <groupId>com.pivovarit</groupId>
             <artifactId>throwing-function</artifactId>
-            <version>${dependency.throwing-function.version}</version>
         </dependency>
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-            <version>${dependency.opencsv.version}</version>
         </dependency>
 
         <dependency>
@@ -213,6 +270,17 @@
                 </excludes>
             </resource>
         </resources>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>us.hebi.sass</groupId>
+                    <artifactId>sass-cli-maven-plugin</artifactId>
+                    <version>${plugin.sass.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -229,7 +297,6 @@
             <plugin>
                 <groupId>us.hebi.sass</groupId>
                 <artifactId>sass-cli-maven-plugin</artifactId>
-                <version>${plugin.sass.version}</version>
                 <executions>
                     <execution>
                         <phase>generate-resources</phase>
