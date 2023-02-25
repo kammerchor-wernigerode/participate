@@ -1,8 +1,6 @@
 target/
 !**/src/main/**/target/
 !**/src/test/**/target/
-tools/
-!tools/docker-compose.yml
 
 ### STS ###
 .apt_generated

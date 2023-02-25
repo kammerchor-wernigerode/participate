@@ -58,14 +58,12 @@ make sure you are running a database container too.
 
 ---
 
-Navigate to `tools/` and run
+Run the command below to start a development database as well as [FakeSMTP](https://github.com/Nilhcem/FakeSMTP).
+Received emails will be stored in `$HOME/received-emails`.
 
 ```bash
 docker-compose up -d
 ```
-
-to start a development database as well as [FakeSMTP](https://github.com/Nilhcem/FakeSMTP).
-Received emails will be stored in `$HOME/received-emails`.
 
 ## Deployment
 
