@@ -28,6 +28,10 @@
         <wicket.version>9.7.0</wicket.version>
         <wicket.bootstrap.version>5.0.6</wicket.bootstrap.version>
         <liquibase.version>4.3.5</liquibase.version>
+
+        <dependency.sass.version>1.58.3</dependency.sass.version>
+
+        <plugin.sass.version>1.0.2</plugin.sass.version>
     </properties>
 
     <dependencies>
@@ -223,21 +227,23 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>com.github.warmuuh</groupId>
-                <artifactId>libsass-maven-plugin</artifactId>
-                <version>0.2.10-libsass_3.5.3</version>
+                <groupId>us.hebi.sass</groupId>
+                <artifactId>sass-cli-maven-plugin</artifactId>
+                <version>${plugin.sass.version}</version>
                 <executions>
                     <execution>
                         <phase>generate-resources</phase>
                         <goals>
-                            <goal>compile</goal>
+                            <goal>run</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <inputPath>${project.basedir}/src/main/resources/scss</inputPath>
-                    <outputPath>${project.build.directory}/generated-sources/src/main/java/de/vinado/wicket/participate/resources/css</outputPath>
-                    <generateSourceMap>false</generateSourceMap>
+                    <sassVersion>${dependency.sass.version}</sassVersion>
+                    <args>
+                        <arg>${project.basedir}/src/main/resources/scss:${project.build.directory}/generated-sources/src/main/java/de/vinado/wicket/participate/resources/css</arg>
+                        <arg>--no-source-map</arg>
+                    </args>
                 </configuration>
             </plugin>
         </plugins>
