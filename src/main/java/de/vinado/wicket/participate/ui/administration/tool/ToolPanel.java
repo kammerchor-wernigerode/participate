@@ -50,12 +50,21 @@ public class ToolPanel extends Panel {
     public ToolPanel(final String id) {
         super(id);
 
-        final List<ITab> tabs = new ArrayList<>();
+        add(accordion("collapsible"));
+    }
+
+    private WebMarkupContainer accordion(String id) {
+        List<ITab> tabs = content();
+        return new Collapsible(id, tabs);
+    }
+
+    private List<ITab> content() {
+        List<ITab> tabs = new ArrayList<>();
         tabs.add(new LambdaTab(new ResourceModel("application-password", "Form Password"), PasswordPanel::new));
         tabs.add(new LambdaTab(new ResourceModel("tools.import-export.persons", "Import/Export Persons"), ImportExportPersonCSVPanel::new));
-
-        add(new Collapsible("collapsible", tabs));
+        return tabs;
     }
+
 
     private class PasswordPanel extends Panel {
 
