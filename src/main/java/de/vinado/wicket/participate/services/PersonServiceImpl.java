@@ -6,7 +6,6 @@ import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.dtos.PersonDTO;
 import de.vinado.wicket.participate.model.dtos.SingerDTO;
-import de.vinado.wicket.participate.person.model.PersonRepository;
 import de.vinado.wicket.participate.providers.SimpleDataProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static java.util.function.Predicate.not;
 import static org.apache.commons.codec.CharEncoding.UTF_8;
 
 /**
@@ -52,7 +50,7 @@ import static org.apache.commons.codec.CharEncoding.UTF_8;
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
-public class PersonServiceImpl extends DataService implements PersonService, PersonRepository {
+public class PersonServiceImpl extends DataService implements PersonService {
 
     @Override
     @PersistenceContext
@@ -330,12 +328,5 @@ public class PersonServiceImpl extends DataService implements PersonService, Per
     @Override
     public Stream<Singer> listAllSingers() {
         return getAll(Singer.class).stream();
-    }
-
-    @Override
-    public Stream<Person> listInactivePersons() {
-        return listAllSingers()
-            .filter(not(Singer::isActive))
-            .map(Person.class::cast);
     }
 }
