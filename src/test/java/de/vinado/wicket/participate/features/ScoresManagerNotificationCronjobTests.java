@@ -5,8 +5,10 @@ import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.email.service.EmailService;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
+import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,11 +20,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -193,6 +197,21 @@ class ScoresManagerNotificationCronjobTests {
         cronjob.run();
 
         verify(emailService).send(argThat(containsElements(2)), any(String.class), isNull());
+    }
+
+    @Test
+    @SneakyThrows
+    void creatingCsv_shouldWriteSingers() {
+        Singer singer_0 = mock(Singer.class);
+        when(singer_0.getLastName()).thenReturn("Doe");
+        when(singer_0.getFirstName()).thenReturn("Jane");
+        Singer singer_1 = mock(Singer.class);
+        when(singer_1.getLastName()).thenReturn("Doe");
+        when(singer_1.getFirstName()).thenReturn("John");
+
+        byte[] csv = cronjob.getAttendeeByteArray(Arrays.asList(singer_0, singer_1));
+
+        assertEquals("Doe, Jane\nDoe, John\n", new String(csv));
     }
 
     private static Event createEvent(Date startDate) {

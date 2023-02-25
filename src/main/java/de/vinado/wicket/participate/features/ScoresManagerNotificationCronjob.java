@@ -149,16 +149,23 @@ public class ScoresManagerNotificationCronjob {
      * @return byte array of CSV data
      * @throws IOException if an error occurs during stream processing
      */
-    private byte[] getAttendeeByteArray(final List<Singer> singers) throws IOException {
+    protected byte[] getAttendeeByteArray(List<Singer> singers) throws IOException {
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-            final CSVWriter writer = new CSVWriter(new OutputStreamWriter(stream, UTF_8), ';', '\u0000', '\u0000', "\n");
-            singers.stream()
-                // this is intended
-                .map(singer -> new String[]{String.format("%s, %s", singer.getLastName(), singer.getFirstName())})
-                .forEach(writer::writeNext);
-            writer.close();
-
+            write(singers, stream);
             return stream.toByteArray();
+        }
+    }
+
+    private void write(List<Singer> singers, ByteArrayOutputStream target) throws IOException {
+        try (OutputStreamWriter subject = new OutputStreamWriter(target, UTF_8)) {
+            try (CSVWriter writer = new CSVWriter(subject, ';', '\u0000', '\u0000', "\n")) {
+                singers.stream()
+                    .map(singer -> singer.getLastName() + ", " + singer.getFirstName())
+                    .map(name -> new String[]{name})
+                    .forEach(writer::writeNext);
+
+                subject.flush();
+            }
         }
     }
 
