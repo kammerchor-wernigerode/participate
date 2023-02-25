@@ -20,7 +20,6 @@
     <description>Participation Manager for Kammerchor Wernigerode e.V.</description>
 
     <properties>
-        <skipTests>false</skipTests>
         <resource.delimiter>^</resource.delimiter>
         <java.version>11</java.version>
         <liquibase.version>4.3.5</liquibase.version>
