@@ -4,9 +4,8 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.tabs.AjaxBootstrapTabbed
 import de.vinado.wicket.participate.ui.administration.tool.ToolPanel;
 import de.vinado.wicket.participate.ui.administration.user.UserPanel;
 import de.vinado.wicket.participate.ui.pages.ParticipatePage;
-import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
+import de.vinado.wicket.tabs.LambdaTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -29,18 +28,8 @@ public class AdminPage extends ParticipatePage {
         super.onInitialize();
 
         List<ITab> tabs = new ArrayList<>();
-        tabs.add(new AbstractTab(new ResourceModel("tools", "Tools")) {
-            @Override
-            public WebMarkupContainer getPanel(String panelId) {
-                return new ToolPanel(panelId);
-            }
-        });
-        tabs.add(new AbstractTab(new ResourceModel("tools.user-management", "User Management")) {
-            @Override
-            public WebMarkupContainer getPanel(String panelId) {
-                return new UserPanel(panelId);
-            }
-        });
+        tabs.add(new LambdaTab(new ResourceModel("tools", "Tools"), ToolPanel::new));
+        tabs.add(new LambdaTab(new ResourceModel("tools.user-management", "User Management"), UserPanel::new));
 
         AjaxBootstrapTabbedPanel<ITab> tabbedPanel = new AjaxBootstrapTabbedPanel<>("tabbedPanel", tabs);
         add(tabbedPanel);
