@@ -5,10 +5,12 @@ import de.vinado.wicket.participate.person.model.PersonRepository;
 import de.vinado.wicket.repeater.table.FunctionalDataProvider;
 import lombok.RequiredArgsConstructor;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 
@@ -43,7 +45,12 @@ public class PersonAdministrationPanel extends Panel {
 
     private List<? extends IColumn<Person, SerializableFunction<Person, ?>>> columns() {
         ArrayList<IColumn<Person, SerializableFunction<Person, ?>>> columns = new ArrayList<>();
+        columns.add(nameColumn());
         return columns;
+    }
+
+    private IColumn<Person, SerializableFunction<Person, ?>> nameColumn() {
+        return new PropertyColumn<>(new ResourceModel("name", "Name"), Person::getSortName, "sortName");
     }
 
 
