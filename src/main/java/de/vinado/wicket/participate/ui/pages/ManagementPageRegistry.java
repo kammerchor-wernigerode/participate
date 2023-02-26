@@ -34,7 +34,7 @@ public final class ManagementPageRegistry implements PageRegistry {
         registrations.put("/error/418", ExpiredPage.class);
         registrations.put("/error/404", PageNotFoundPage.class);
         registrations.put("/singers", SingersPage.class);
-        registrations.put("/administration", AdminPage.class);
+        registrations.put("/administration/#{tab}", AdminPage.class);
         registrations.put("/resetPassword", ResetPasswordPage.class);
     }
 
