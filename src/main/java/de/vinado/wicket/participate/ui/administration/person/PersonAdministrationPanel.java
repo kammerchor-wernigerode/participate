@@ -6,6 +6,7 @@ import de.vinado.wicket.participate.person.model.PersonRepository;
 import de.vinado.wicket.repeater.table.FunctionalDataProvider;
 import lombok.RequiredArgsConstructor;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -75,6 +76,7 @@ public class PersonAdministrationPanel extends Panel {
 
     private void restore(AjaxRequestTarget target, IModel<Person> rowModel) {
         personRepository.restore(rowModel.getObject());
+        send(this, Broadcast.BREADTH, new PersonAdministrationTable.UpdateIntent());
     }
 
 

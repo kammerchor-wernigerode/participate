@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.ui.administration.person;
 
+import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.repeater.table.FunctionalDataProvider;
@@ -22,7 +23,12 @@ public class PersonAdministrationTable extends BootstrapAjaxDataTable<Person, Se
         dataProvider.setSort(Person::getSortName, SortOrder.ASCENDING);
         setOutputMarkupId(true);
         condensed().hover();
+        add(new UpdateOnEventBehavior<>(UpdateIntent.class));
 
         setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
+    }
+
+
+    static class UpdateIntent {
     }
 }
