@@ -15,7 +15,7 @@ import static java.util.function.Predicate.not;
 
 @Repository
 @RequiredArgsConstructor
-class AntiCorruptingPersonRepository implements PersonRepository {
+class JpaPersonRepository implements PersonRepository {
 
     private final PersonService personService;
     private final PersonRecordRepository recordRepository;
