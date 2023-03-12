@@ -81,7 +81,7 @@ public class PersonAdministrationPanel extends Panel {
     }
 
     private IColumn<Person, SerializableFunction<Person, ?>> restoreColumn() {
-        return new BootstrapAjaxLinkColumn<>(trash_restore_s, new ResourceModel("person.restore", "Restore person")) {
+        return new BootstrapAjaxLinkColumn<>(trash_restore_s, new ResourceModel("person.restore", "Restore")) {
 
             @Override
             public void onClick(AjaxRequestTarget target, IModel<Person> rowModel) {
