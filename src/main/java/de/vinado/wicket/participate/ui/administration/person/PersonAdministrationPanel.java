@@ -7,6 +7,7 @@ import de.vinado.wicket.repeater.table.FunctionalDataProvider;
 import lombok.RequiredArgsConstructor;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -44,6 +45,8 @@ public class PersonAdministrationPanel extends Panel {
 
     private WebMarkupContainer deletedPersonTable(String id) {
         PersonDataProvider dataProvider = new PersonDataProvider(personRepository);
+        dataProvider.setSort(Person::getSortName, SortOrder.ASCENDING);
+
         List<? extends IColumn<Person, SerializableFunction<Person, ?>>> columns = columns();
         return new PersonAdministrationTable(id, columns, dataProvider);
     }

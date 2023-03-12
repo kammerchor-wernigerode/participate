@@ -4,7 +4,6 @@ import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.repeater.table.FunctionalDataProvider;
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import org.danekja.java.util.function.serializable.SerializableFunction;
@@ -19,8 +18,12 @@ public class PersonAdministrationTable extends BootstrapAjaxDataTable<Person, Se
                                      List<? extends IColumn<Person, SerializableFunction<Person, ?>>> columns,
                                      FunctionalDataProvider<Person> dataProvider) {
         super(id, columns, dataProvider, Integer.MAX_VALUE);
+    }
 
-        dataProvider.setSort(Person::getSortName, SortOrder.ASCENDING);
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
         setOutputMarkupId(true);
         condensed().hover();
         add(new UpdateOnEventBehavior<>(UpdateIntent.class));
