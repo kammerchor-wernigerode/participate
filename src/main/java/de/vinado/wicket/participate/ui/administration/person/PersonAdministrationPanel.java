@@ -44,11 +44,15 @@ public class PersonAdministrationPanel extends Panel {
     }
 
     private WebMarkupContainer deletedPersonTable(String id) {
-        PersonDataProvider dataProvider = new PersonDataProvider(personRepository);
-        dataProvider.setSort(Person::getSortName, SortOrder.ASCENDING);
-
+        PersonDataProvider dataProvider = dataProvider();
         List<? extends IColumn<Person, SerializableFunction<Person, ?>>> columns = columns();
         return new PersonAdministrationTable(id, columns, dataProvider);
+    }
+
+    private PersonDataProvider dataProvider() {
+        PersonDataProvider dataProvider = new PersonDataProvider(personRepository);
+        dataProvider.setSort(Person::getSortName, SortOrder.ASCENDING);
+        return dataProvider;
     }
 
     private List<? extends IColumn<Person, SerializableFunction<Person, ?>>> columns() {
