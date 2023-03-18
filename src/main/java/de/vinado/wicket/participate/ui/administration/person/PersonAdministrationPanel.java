@@ -3,6 +3,7 @@ package de.vinado.wicket.participate.ui.administration.person;
 import de.vinado.wicket.participate.components.tables.columns.BootstrapAjaxLinkColumn;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.person.model.PersonRepository;
+import de.vinado.wicket.participate.person.presentation.ui.PersonRestorationService;
 import de.vinado.wicket.repeater.table.FunctionalDataProvider;
 import lombok.RequiredArgsConstructor;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -31,6 +32,9 @@ public class PersonAdministrationPanel extends Panel {
 
     @SpringBean
     private PersonRepository personRepository;
+
+    @SpringBean
+    private PersonRestorationService personRestorationService;
 
     public PersonAdministrationPanel(String id) {
         super(id);
@@ -87,7 +91,7 @@ public class PersonAdministrationPanel extends Panel {
     }
 
     private void restore(AjaxRequestTarget target, IModel<Person> rowModel) {
-        personRepository.restore(rowModel.getObject());
+        personRestorationService.restore(rowModel.getObject());
         send(this, Broadcast.BREADTH, new PersonAdministrationTable.UpdateIntent());
     }
 
