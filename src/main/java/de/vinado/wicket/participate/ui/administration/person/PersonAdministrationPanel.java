@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.ui.administration.person;
 
+import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.components.tables.columns.BootstrapAjaxLinkColumn;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.person.model.PersonRepository;
@@ -16,6 +17,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 
@@ -91,8 +93,16 @@ public class PersonAdministrationPanel extends Panel {
     }
 
     private void restore(AjaxRequestTarget target, IModel<Person> rowModel) {
+        IModel<String> successMessage = restoreConfirmationMessage(rowModel);
         personRestorationService.restore(rowModel.getObject());
         send(this, Broadcast.BREADTH, new PersonAdministrationTable.UpdateIntent());
+        Snackbar.show(target, successMessage);
+    }
+
+    private IModel<String> restoreConfirmationMessage(IModel<Person> model) {
+        Person person = model.getObject();
+        return new StringResourceModel("person.restore.message.success", model)
+            .setDefaultValue(person.getDisplayName() + "has been restored and invitations to upcoming events have been sent out.");
     }
 
 
