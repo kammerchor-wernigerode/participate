@@ -18,11 +18,8 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -71,13 +68,7 @@ public class PersonAdministrationPanel extends Panel {
     }
 
     private IColumn<Person, SerializableFunction<Person, ?>> lastModifiedColumn() {
-        return new PropertyColumn<>(new ResourceModel("person.deleted", "Deleted"), format(Person::getLastModified), "lastModified");
-    }
-
-    private SerializableFunction<Person, ?> format(SerializableFunction<Person, Date> mapper) {
-        Locale locale = getSession().getLocale();
-        DateFormat formatter = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
-        return person -> mapper.andThen(formatter::format).apply(person);
+        return new PropertyColumn<>(new ResourceModel("person.deleted", "Deleted"), Person::getLastModified, "lastModified");
     }
 
     private IColumn<Person, SerializableFunction<Person, ?>> restoreColumn() {
