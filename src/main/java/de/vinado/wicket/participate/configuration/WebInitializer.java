@@ -1,9 +1,11 @@
 package de.vinado.wicket.participate.configuration;
 
+import de.vinado.app.participate.wicket.WicketProperties;
 import de.vinado.wicket.participate.ui.pages.ManagementPageRegistry;
 import lombok.RequiredArgsConstructor;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.spring.SpringWebApplicationFactory;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.ContextCleanupListener;
@@ -21,6 +23,7 @@ import static javax.servlet.DispatcherType.*;
  */
 @Configuration
 @RequiredArgsConstructor
+@EnableConfigurationProperties(WicketProperties.class)
 public class WebInitializer implements ServletContextInitializer {
 
     static final String APP_ROOT = "/_";

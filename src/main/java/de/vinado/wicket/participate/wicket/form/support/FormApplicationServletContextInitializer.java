@@ -1,10 +1,12 @@
 package de.vinado.wicket.participate.wicket.form.support;
 
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
+import de.vinado.app.participate.wicket.WicketProperties;
 import de.vinado.wicket.participate.wicket.form.app.FormPageRegistry;
 import lombok.RequiredArgsConstructor;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.spring.SpringWebApplicationFactory;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.ContextCleanupListener;
@@ -26,6 +28,7 @@ import static org.apache.wicket.protocol.http.WicketFilter.IGNORE_PATHS_PARAM;
  */
 @Configuration
 @RequiredArgsConstructor
+@EnableConfigurationProperties(WicketProperties.class)
 class FormApplicationServletContextInitializer implements ServletContextInitializer {
 
     public static final String APP_ROOT = "/form";
