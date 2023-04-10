@@ -29,13 +29,11 @@ public class Footer extends Panel {
     public Footer(final String id) {
         super(id);
 
-        final boolean developmentMode = applicationProperties.isDevelopmentMode();
-
         add(new Label("developmentMode", "Development Mode") {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-                setVisible(developmentMode);
+                setVisible(isDevelopmentMode());
             }
         });
         add(new AjaxLink<Void>("feedback") {
@@ -49,12 +47,16 @@ public class Footer extends Panel {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-                setVisible(!developmentMode);
+                setVisible(!isDevelopmentMode());
             }
         });
         add(new Label("customer", applicationProperties.getCustomer()));
         add(new Label("year", new SimpleDateFormat("yyyy").format(new Date())));
         add(new Label("applicationName", applicationName.get()));
         add(new Label("version", applicationProperties.getVersion()));
+    }
+
+    private boolean isDevelopmentMode() {
+        return applicationProperties.isDevelopmentMode();
     }
 }
