@@ -28,7 +28,7 @@ public class WebInitializer implements ServletContextInitializer {
 
     static final String APP_ROOT = "/_";
 
-    private final ApplicationProperties properties;
+    private final WicketProperties properties;
 
     @Override
     public void onStartup(ServletContext servletContext) {
@@ -39,7 +39,7 @@ public class WebInitializer implements ServletContextInitializer {
         filter.setInitParameter(WicketFilter.IGNORE_PATHS_PARAM, "/static");
         filter.setInitParameter(WicketFilter.FILTER_MAPPING_PARAM, APP_ROOT + "/*");
         filter.addMappingForUrlPatterns(EnumSet.of(REQUEST, INCLUDE), false, getUrlPatterns());
-        filter.setInitParameter("configuration", properties.isDevelopmentMode() ? "development" : "deployment");
+        filter.setInitParameter("configuration", properties.getRuntimeConfiguration().name());
         servletContext.addListener(new ContextCleanupListener());
     }
 

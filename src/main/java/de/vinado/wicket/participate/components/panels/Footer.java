@@ -1,10 +1,12 @@
 package de.vinado.wicket.participate.components.panels;
 
+import de.vinado.app.participate.wicket.WicketProperties;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.dtos.SendFeedbackDTO;
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import de.vinado.wicket.participate.wicket.inject.ApplicationName;
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -25,6 +27,9 @@ public class Footer extends Panel {
 
     @SpringBean
     private ApplicationProperties applicationProperties;
+
+    @SpringBean
+    private WicketProperties wicketProperties;
 
     public Footer(final String id) {
         super(id);
@@ -57,6 +62,6 @@ public class Footer extends Panel {
     }
 
     private boolean isDevelopmentMode() {
-        return applicationProperties.isDevelopmentMode();
+        return RuntimeConfigurationType.DEVELOPMENT.equals(wicketProperties.getRuntimeConfiguration());
     }
 }

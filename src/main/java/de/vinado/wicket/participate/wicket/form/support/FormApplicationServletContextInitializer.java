@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.wicket.form.support;
 
-import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.app.participate.wicket.WicketProperties;
 import de.vinado.wicket.participate.wicket.form.app.FormPageRegistry;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +32,7 @@ class FormApplicationServletContextInitializer implements ServletContextInitiali
 
     public static final String APP_ROOT = "/form";
 
-    private final ApplicationProperties properties;
+    private final WicketProperties properties;
 
     @Override
     public void onStartup(ServletContext servletContext) {
@@ -44,7 +43,7 @@ class FormApplicationServletContextInitializer implements ServletContextInitiali
         filter.setInitParameter(IGNORE_PATHS_PARAM, "/static");
         filter.setInitParameter(FILTER_MAPPING_PARAM, APP_ROOT + "/*");
         filter.addMappingForUrlPatterns(of(REQUEST, INCLUDE), false, getUrlPatterns());
-        filter.setInitParameter("configuration", properties.isDevelopmentMode() ? "development" : "deployment");
+        filter.setInitParameter("configuration", properties.getRuntimeConfiguration().name());
         servletContext.addListener(new ContextCleanupListener());
     }
 
