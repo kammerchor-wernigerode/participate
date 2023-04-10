@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.configuration;
+package de.vinado.app.participate.wicket.management;
 
 import de.vinado.app.participate.wicket.WicketProperties;
 import de.vinado.wicket.participate.ui.pages.ManagementPageRegistry;
@@ -24,7 +24,7 @@ import static javax.servlet.DispatcherType.*;
 @Configuration
 @RequiredArgsConstructor
 @EnableConfigurationProperties(WicketProperties.class)
-public class WebInitializer implements ServletContextInitializer {
+public class ManagementConfiguration implements ServletContextInitializer {
 
     static final String APP_ROOT = "/_";
 

@@ -8,7 +8,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 /**
  * @author Vincent Nadoll
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+    "de.vinado.wicket.participate",
+    "de.vinado.app.participate"
+})
 @EnableScheduling
 @EnableConfigurationProperties
 public class Participate {
