@@ -65,7 +65,6 @@ app:
   base-url: ${BASE_URL:http://localhost:8080}
   customer: ${APPLICATION_CUSTOMER:Default Customer}
   participate-password: ${APPLICATION_PASSWORD:f0rmp4ss}
-  development-mode: false
   deadline-offset: ${DEADLINE_OFFSET:-1}
   organization-responsible: ${RESPONSIBLE_ORGANIZATION}
   sleeping-place-responsible: ${RESPONSIBLE_SLEEPING_PLACE}

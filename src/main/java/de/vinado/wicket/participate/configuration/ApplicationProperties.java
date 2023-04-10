@@ -26,7 +26,6 @@ public class ApplicationProperties implements InitializingBean {
 
     private String version;
     private @NotBlank String baseUrl;
-    private boolean developmentMode = false;
     private String customer = "";
     private @NotBlank String participatePassword;
     private Mail mail;
