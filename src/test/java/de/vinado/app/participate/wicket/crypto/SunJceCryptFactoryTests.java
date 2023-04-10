@@ -1,6 +1,5 @@
 package de.vinado.app.participate.wicket.crypto;
 
-import de.vinado.wicket.participate.configuration.CryptoProperties;
 import org.apache.wicket.util.crypt.SunJceCrypt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

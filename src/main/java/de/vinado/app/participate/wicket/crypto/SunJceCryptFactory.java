@@ -1,6 +1,5 @@
 package de.vinado.app.participate.wicket.crypto;
 
-import de.vinado.wicket.participate.configuration.CryptoProperties;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.wicket.util.crypt.SunJceCrypt;
