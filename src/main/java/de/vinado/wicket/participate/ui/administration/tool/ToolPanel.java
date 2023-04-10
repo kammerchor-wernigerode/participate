@@ -10,8 +10,8 @@ import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
 import de.vinado.wicket.participate.services.UserService;
+import de.vinado.wicket.tabs.LambdaTab;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -50,22 +50,21 @@ public class ToolPanel extends Panel {
     public ToolPanel(final String id) {
         super(id);
 
-        final List<ITab> tabs = new ArrayList<>();
-        tabs.add(new AbstractTab(new ResourceModel("application-password", "Form Password")) {
-            @Override
-            public WebMarkupContainer getPanel(final String panelId) {
-                return new PasswordPanel(panelId);
-            }
-        });
-        tabs.add(new AbstractTab(new ResourceModel("tools.import-export.persons", "Import/Export Persons")) {
-            @Override
-            public WebMarkupContainer getPanel(final String panelId) {
-                return new ImportExportPersonCSVPanel(panelId);
-            }
-        });
-
-        add(new Collapsible("collapsible", tabs));
+        add(accordion("collapsible"));
     }
+
+    private WebMarkupContainer accordion(String id) {
+        List<ITab> tabs = content();
+        return new Collapsible(id, tabs);
+    }
+
+    private List<ITab> content() {
+        List<ITab> tabs = new ArrayList<>();
+        tabs.add(new LambdaTab(new ResourceModel("application-password", "Form Password"), PasswordPanel::new));
+        tabs.add(new LambdaTab(new ResourceModel("tools.import-export.persons", "Import/Export Persons"), ImportExportPersonCSVPanel::new));
+        return tabs;
+    }
+
 
     private class PasswordPanel extends Panel {
 
