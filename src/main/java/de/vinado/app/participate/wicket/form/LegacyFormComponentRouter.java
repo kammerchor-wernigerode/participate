@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.wicket.form.support;
+package de.vinado.app.participate.wicket.form;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static de.vinado.wicket.participate.wicket.form.support.FormApplicationServletContextInitializer.APP_ROOT;
+import static de.vinado.app.participate.wicket.form.FormConfiguration.APP_ROOT;
 
 /**
  * @author Vincent Nadoll
