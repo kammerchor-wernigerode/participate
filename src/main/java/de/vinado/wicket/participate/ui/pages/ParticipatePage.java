@@ -55,8 +55,6 @@ public class ParticipatePage extends BasePage {
 
     private String userLabel;
 
-    private Navbar navbar;
-
     public ParticipatePage() {
         this(new PageParameters());
     }
@@ -64,7 +62,7 @@ public class ParticipatePage extends BasePage {
     public ParticipatePage(final PageParameters parameters) {
         super(parameters);
 
-        navbar = new Navbar("navbar");
+        Navbar navbar = new Navbar("navbar");
         navbar.setOutputMarkupId(true);
         navbar.setPosition(Navbar.Position.TOP);
         navbar.setCollapseBreakdown(Navbar.CollapseBreakpoint.Medium);
