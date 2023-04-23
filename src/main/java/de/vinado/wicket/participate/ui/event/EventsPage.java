@@ -40,14 +40,14 @@ public class EventsPage extends ParticipatePage implements IGenericComponent<Eve
 
     public EventsPage(PageParameters parameters) {
         super(parameters);
-
-        EventDetails eventView = eventDetails().orElse(null);
-        setModel(new CompoundPropertyModel<>(eventView));
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        EventDetails eventView = eventDetails().orElse(null);
+        setModel(new CompoundPropertyModel<>(eventView));
 
         eventListPanel = new EventsPanel("events", eventFilterModel());
         eventListPanel.add(new UpdateOnEventBehavior<>(EventTableUpdateIntent.class));

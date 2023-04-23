@@ -34,18 +34,18 @@ public class FormPage extends BasePage implements IGenericComponent<ParticipantD
 
     public FormPage(PageParameters parameters) {
         super(parameters);
-
-        Optional.of(parameters.get("token"))
-            .map(StringValue::toOptionalString)
-            .map(eventService::getParticipant)
-            .map(ParticipantDTO::new)
-            .map(CompoundPropertyModel::new)
-            .ifPresent(this::setModel);
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        Optional.of(getPageParameters().get("token"))
+            .map(StringValue::toOptionalString)
+            .map(eventService::getParticipant)
+            .map(ParticipantDTO::new)
+            .map(CompoundPropertyModel::new)
+            .ifPresent(this::setModel);
 
         add(navbar());
         add(form());

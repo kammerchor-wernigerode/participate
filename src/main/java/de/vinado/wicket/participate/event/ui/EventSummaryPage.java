@@ -40,18 +40,18 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
 
     public EventSummaryPage(PageParameters parameters) {
         super(parameters);
-
-        EventDetails eventDetails = Optional.ofNullable(parameters.get("event"))
-            .map(StringValue::toOptionalLong)
-            .flatMap(eventService::findById)
-            .or(() -> Optional.ofNullable(eventService.getLatestEventDetails()))
-            .orElseThrow(IllegalArgumentException::new);
-        setModel(CompoundPropertyModel.of(eventDetails));
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        EventDetails eventDetails = Optional.ofNullable(getPageParameters().get("event"))
+            .map(StringValue::toOptionalLong)
+            .flatMap(eventService::findById)
+            .or(() -> Optional.ofNullable(eventService.getLatestEventDetails()))
+            .orElseThrow(IllegalArgumentException::new);
+        setModel(CompoundPropertyModel.of(eventDetails));
 
         add(new Label("eventName", new PropertyModel<>(getModel(), "name")));
 

@@ -26,19 +26,19 @@ public class FormSignInPage extends BasePage implements IGenericComponent<Partic
 
     public FormSignInPage(PageParameters parameters) {
         super(parameters);
+    }
 
-        Optional.of(parameters.get("token"))
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        Optional.of(getPageParameters().get("token"))
             .map(stringValue -> stringValue.to(String.class))
             .map(eventService::getParticipant)
             .map(participant -> (IModel<Participant>) () -> participant)
             .ifPresentOrElse(this::setModel, () -> {
                 throw new MissingTokenException();
             });
-    }
-
-    @Override
-    protected void onInitialize() {
-        super.onInitialize();
 
         setStatelessHint(true);
 
