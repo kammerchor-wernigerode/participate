@@ -8,6 +8,7 @@ import de.vinado.wicket.participate.resources.js.SnackbarJsResourceReference;
 import de.vinado.wicket.participate.wicket.inject.ApplicationName;
 import lombok.Getter;
 import org.apache.wicket.Component;
+import org.apache.wicket.Session;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
@@ -16,8 +17,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-
-import java.util.Locale;
 
 public abstract class BasePage extends WebPage {
 
@@ -42,7 +41,7 @@ public abstract class BasePage extends WebPage {
     }
 
     private Component html(String id) {
-        HtmlTag tag = new HtmlTag(id, Locale.getDefault());
+        HtmlTag tag = new HtmlTag(id, Session.get().getLocale());
         tag.add(new CssClassNameAppender("h-100"));
         return tag;
     }
