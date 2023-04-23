@@ -17,9 +17,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.Optional;
 
-/**
- * @author Vincent Nadoll
- */
 public class FormSignInPage extends BasePage implements IGenericComponent<Participant, FormSignInPage> {
 
     @SpringBean

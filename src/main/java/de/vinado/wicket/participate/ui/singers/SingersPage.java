@@ -8,9 +8,6 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-/**
- * @author Julius Felchow
- */
 public class SingersPage extends ParticipatePage {
 
     private static final long serialVersionUID = -865631168773605240L;

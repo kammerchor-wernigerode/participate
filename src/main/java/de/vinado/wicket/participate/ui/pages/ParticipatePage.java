@@ -38,11 +38,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Main page with navigation bar. Authorized starts here.
- *
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class ParticipatePage extends BasePage {
 
     public static final String MODAL_ID = "modal";
@@ -66,9 +61,6 @@ public class ParticipatePage extends BasePage {
         this(new PageParameters());
     }
 
-    /**
-     * @param parameters Page parameters
-     */
     public ParticipatePage(final PageParameters parameters) {
         super(parameters);
 

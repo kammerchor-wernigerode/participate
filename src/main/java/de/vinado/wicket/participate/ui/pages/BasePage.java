@@ -20,11 +20,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.Locale;
 
-/**
- * Base page for the Application. All pages will inherit this Page.
- *
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public abstract class BasePage extends WebPage {
 
     @SpringBean
@@ -33,18 +28,10 @@ public abstract class BasePage extends WebPage {
     @Getter
     private final ModalAnchor modalAnchor;
 
-    /**
-     * Construct.
-     */
     public BasePage() {
         this(new PageParameters());
     }
 
-    /**
-     * Construct with page parameters
-     *
-     * @param parameters {@link PageParameters}
-     */
     public BasePage(final PageParameters parameters) {
         super(parameters);
 
@@ -72,12 +59,6 @@ public abstract class BasePage extends WebPage {
         return applicationName::get;
     }
 
-    /**
-     * Includes all needed resources and sets the meta tags.
-     * {@inheritDoc}
-     *
-     * @param response {@link IHeaderResponse}
-     */
     @Override
     public void renderHead(final IHeaderResponse response) {
         Resources.render(response, this);

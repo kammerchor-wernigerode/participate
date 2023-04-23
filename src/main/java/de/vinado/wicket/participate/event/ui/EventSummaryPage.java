@@ -31,9 +31,6 @@ import java.util.Optional;
 import static de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons.Type.Default;
 import static de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons.Type.Link;
 
-/**
- * @author Vincent Nadoll
- */
 public class EventSummaryPage extends ParticipatePage implements IGenericComponent<EventDetails, EventSummaryPage> {
 
     private static final long serialVersionUID = -8832389184392838952L;

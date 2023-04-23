@@ -25,9 +25,6 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
 
 import java.util.Optional;
 
-/**
- * @author Vincent Nadoll
- */
 public class FormPage extends BasePage implements IGenericComponent<ParticipantDTO, FormPage> {
 
     private static final long serialVersionUID = -8963400167069618982L;

@@ -18,9 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * @author Vincent Nadoll
- */
 public class AdminPage extends ParticipatePage implements IGenericComponent<Integer, AdminPage> {
 
     private static final long serialVersionUID = 1365961032818332554L;

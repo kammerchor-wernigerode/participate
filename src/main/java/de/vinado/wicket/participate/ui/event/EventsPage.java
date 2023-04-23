@@ -25,9 +25,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-/**
- * @author Vincent Nadoll
- */
 public class EventsPage extends ParticipatePage implements IGenericComponent<EventDetails, EventsPage> {
 
     private static final long serialVersionUID = -4123194846716920977L;
