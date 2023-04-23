@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.configuration;
+package de.vinado.app.participate.wicket.crypto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,7 @@ import static org.springframework.util.Assert.isTrue;
 @Getter
 @Setter
 @ConfigurationProperties("app.crypto")
-public class CryptoProperties {
+class CryptoProperties {
 
     private String sessionSecret;
     private byte[] pbeSalt;

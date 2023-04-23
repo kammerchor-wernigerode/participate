@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate;
 
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
+import de.vinado.app.participate.wicket.crypto.CryptFactory;
 import de.vinado.wicket.bt4.AuthenticatedBootstrapWebApplication;
-import de.vinado.wicket.participate.configuration.CryptoProperties;
 import de.vinado.wicket.participate.ui.event.EventsPage;
 import de.vinado.wicket.participate.ui.login.SignInPage;
 import de.vinado.wicket.participate.ui.pages.ManagementPageRegistry;
@@ -13,23 +13,19 @@ import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSessio
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.settings.SecuritySettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.apache.wicket.util.crypt.SunJceCrypt;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.apache.wicket.util.crypt.ICrypt;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
-
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author Vincent Nadoll
  */
 @Component
 @RequiredArgsConstructor
-@EnableConfigurationProperties({CryptoProperties.class})
 public class ManagementApplication extends AuthenticatedBootstrapWebApplication implements ApplicationContextAware {
 
-    private final CryptoProperties cryptoProperties;
+    private final CryptFactory cryptFactory;
 
     @Setter
     private ApplicationContext applicationContext;
@@ -38,9 +34,7 @@ public class ManagementApplication extends AuthenticatedBootstrapWebApplication 
     protected void configureSecurity(SecuritySettings securitySettings) {
         super.configureSecurity(securitySettings);
 
-        SunJceCrypt crypt = new SunJceCrypt(cryptoProperties.getPbeSalt(),
-            cryptoProperties.getPbeIterationCount());
-        crypt.setKey(cryptoProperties.getSessionSecret());
+        ICrypt crypt = cryptFactory.create();
         DefaultAuthenticationStrategy authenticationStrategy = new DefaultAuthenticationStrategy("_login", crypt);
         securitySettings.setAuthenticationStrategy(authenticationStrategy);
     }

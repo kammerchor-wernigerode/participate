@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.configuration;
+package de.vinado.app.participate.wicket.management;
 
 import de.vinado.wicket.participate.ui.pages.ManagementPageRegistry;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static de.vinado.wicket.participate.configuration.WebInitializer.APP_ROOT;
+import static de.vinado.app.participate.wicket.management.ManagementConfiguration.APP_ROOT;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 

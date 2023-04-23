@@ -1,4 +1,6 @@
 spring:
+  main.banner-mode: "off"
+
   datasource:
     url: jdbc:h2:mem:kch-database;MODE=MYSQL
     username: kch

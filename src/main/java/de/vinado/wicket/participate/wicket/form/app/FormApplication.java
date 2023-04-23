@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate.wicket.form.app;
 
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
+import de.vinado.app.participate.wicket.crypto.CryptFactory;
 import de.vinado.wicket.bt4.AuthenticatedBootstrapWebApplication;
-import de.vinado.wicket.participate.configuration.CryptoProperties;
 import de.vinado.wicket.participate.wicket.form.ui.FormPage;
 import de.vinado.wicket.participate.wicket.form.ui.FormSignInPage;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +25,12 @@ import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.settings.SecuritySettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.apache.wicket.util.crypt.SunJceCrypt;
+import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.string.StringValue;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -44,13 +42,12 @@ import static org.apache.wicket.request.mapper.parameter.INamedParameters.Type.Q
  */
 @Component
 @RequiredArgsConstructor
-@EnableConfigurationProperties({CryptoProperties.class})
 public class FormApplication extends AuthenticatedBootstrapWebApplication implements ApplicationContextAware {
 
     @Setter
     private ApplicationContext applicationContext;
 
-    private final CryptoProperties cryptoProperties;
+    private final CryptFactory cryptFactory;
 
     @Override
     protected void configureRequestCycleListeners(RequestCycleListenerCollection listeners) {
@@ -66,9 +63,7 @@ public class FormApplication extends AuthenticatedBootstrapWebApplication implem
         securitySettings.setAuthorizationStrategy(strategy);
         securitySettings.setUnauthorizedComponentInstantiationListener(listener);
 
-        SunJceCrypt crypt = new SunJceCrypt(cryptoProperties.getPbeSalt(),
-            cryptoProperties.getPbeIterationCount());
-        crypt.setKey(cryptoProperties.getSessionSecret());
+        ICrypt crypt = cryptFactory.create();
         IAuthenticationStrategy authenticationStrategy = new DefaultAuthenticationStrategy("_form-login", crypt);
         securitySettings.setAuthenticationStrategy(authenticationStrategy);
     }
