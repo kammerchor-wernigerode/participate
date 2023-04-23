@@ -3,22 +3,18 @@ package de.vinado.wicket.participate.ui.pages;
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.HtmlTag;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.IeEdgeMetaTag;
-import de.agilecoders.wicket.core.markup.html.bootstrap.html.MetaTag;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.resources.css.SnackbarCssResourceReference;
 import de.vinado.wicket.participate.resources.js.SnackbarJsResourceReference;
 import de.vinado.wicket.participate.wicket.inject.ApplicationName;
 import lombok.Getter;
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.head.CssReferenceHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -56,7 +52,6 @@ public abstract class BasePage extends WebPage {
 
         add(html("html"));
         add(new IeEdgeMetaTag("xUaCompatible"));
-        add(new MetaTag("author", Model.of("author"), Model.of("Vincent Nadoll, Julius Felchow")));
 
         add(new HeaderResponseContainer("footer-container", "footer-container"));
     }
