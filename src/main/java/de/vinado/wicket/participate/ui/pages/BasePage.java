@@ -33,11 +33,15 @@ public abstract class BasePage extends WebPage {
     public BasePage(final PageParameters parameters) {
         super(parameters);
 
-        add(modalAnchor = new ModalAnchor(ModalAnchor.MODAL_ID));
+        add(modalAnchor = modalAnchor(ModalAnchor.MODAL_ID));
 
         add(html("html"));
 
         add(new HeaderResponseContainer("footer-container", "footer-container"));
+    }
+
+    private ModalAnchor modalAnchor(String wicketId) {
+        return new ModalAnchor(wicketId);
     }
 
     private Component html(String id) {
