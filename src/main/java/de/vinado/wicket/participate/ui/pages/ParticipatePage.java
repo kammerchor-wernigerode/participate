@@ -125,6 +125,11 @@ public class ParticipatePage extends BasePage {
     @Override
     protected void onConfigure() {
         super.onConfigure();
+
+        assertSignedIn();
+    }
+
+    private static void assertSignedIn() {
         if (!ParticipateSession.get().isSignedIn()) {
             ((AuthenticatedWebApplication) AuthenticatedWebApplication.get()).restartResponseAtSignInPage();
         }
