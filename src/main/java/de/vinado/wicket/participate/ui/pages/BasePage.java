@@ -2,7 +2,6 @@ package de.vinado.wicket.participate.ui.pages;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.HtmlTag;
-import de.agilecoders.wicket.core.markup.html.bootstrap.html.IeEdgeMetaTag;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.resources.css.SnackbarCssResourceReference;
 import de.vinado.wicket.participate.resources.js.SnackbarJsResourceReference;
@@ -38,7 +37,6 @@ public abstract class BasePage extends WebPage {
         add(modalAnchor = new ModalAnchor(ModalAnchor.MODAL_ID));
 
         add(html("html"));
-        add(new IeEdgeMetaTag("xUaCompatible"));
 
         add(new HeaderResponseContainer("footer-container", "footer-container"));
     }
