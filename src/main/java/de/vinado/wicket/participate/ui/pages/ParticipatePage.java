@@ -59,6 +59,8 @@ public class ParticipatePage extends BasePage {
     protected void onInitialize() {
         super.onInitialize();
 
+        assertSignedIn();
+
         add(navbar("navbar"));
 
         add(new Footer("footer"));
