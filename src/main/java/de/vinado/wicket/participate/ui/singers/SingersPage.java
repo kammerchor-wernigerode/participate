@@ -6,15 +6,10 @@ import de.vinado.wicket.participate.model.filters.SingerFilter;
 import de.vinado.wicket.participate.ui.pages.ParticipatePage;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class SingersPage extends ParticipatePage {
 
     private static final long serialVersionUID = -865631168773605240L;
-
-    public SingersPage(PageParameters parameters) {
-        super(parameters);
-    }
 
     @Override
     protected void onInitialize() {

@@ -12,7 +12,6 @@ import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.MetaDataHeaderItem;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.Optional;
@@ -23,10 +22,6 @@ public class FormSignInPage extends BasePage implements IGenericComponent<Partic
     private EventService eventService;
 
     private static final long serialVersionUID = 2300708725396474529L;
-
-    public FormSignInPage(PageParameters parameters) {
-        super(parameters);
-    }
 
     @Override
     protected void onInitialize() {

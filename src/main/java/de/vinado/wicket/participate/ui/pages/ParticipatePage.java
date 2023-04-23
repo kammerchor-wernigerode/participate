@@ -33,7 +33,6 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
@@ -55,14 +54,6 @@ public class ParticipatePage extends BasePage {
     private PersonService personService;
 
     private String userLabel;
-
-    public ParticipatePage() {
-        this(new PageParameters());
-    }
-
-    public ParticipatePage(final PageParameters parameters) {
-        super(parameters);
-    }
 
     @Override
     protected void onInitialize() {

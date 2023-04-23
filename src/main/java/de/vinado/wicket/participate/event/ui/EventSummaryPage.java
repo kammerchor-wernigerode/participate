@@ -38,10 +38,6 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
     @SpringBean
     private EventService eventService;
 
-    public EventSummaryPage(PageParameters parameters) {
-        super(parameters);
-    }
-
     @Override
     protected void onInitialize() {
         super.onInitialize();

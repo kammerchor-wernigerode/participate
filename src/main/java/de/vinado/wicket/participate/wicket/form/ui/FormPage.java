@@ -32,10 +32,6 @@ public class FormPage extends BasePage implements IGenericComponent<ParticipantD
     @SpringBean
     private EventService eventService;
 
-    public FormPage(PageParameters parameters) {
-        super(parameters);
-    }
-
     @Override
     protected void onInitialize() {
         super.onInitialize();
@@ -68,7 +64,7 @@ public class FormPage extends BasePage implements IGenericComponent<ParticipantD
                         protected void onSelect(AjaxRequestTarget target) {
                             PageParameters pageParameters = new PageParameters(getPageParameters());
                             pageParameters.set("token", getModelObject().getToken());
-                            setResponsePage(new FormPage(pageParameters));
+                            setResponsePage(FormPage.class, pageParameters);
                         }
                     };
                 }

@@ -19,7 +19,6 @@ import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.Optional;
@@ -37,10 +36,6 @@ public class EventsPage extends ParticipatePage implements IGenericComponent<Eve
 
     private EventsPanel eventListPanel;
     private Component eventPanel;
-
-    public EventsPage(PageParameters parameters) {
-        super(parameters);
-    }
 
     @Override
     protected void onInitialize() {

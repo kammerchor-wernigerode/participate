@@ -22,10 +22,6 @@ public class AdminPage extends ParticipatePage implements IGenericComponent<Inte
 
     private static final long serialVersionUID = 1365961032818332554L;
 
-    public AdminPage(PageParameters parameters) {
-        super(parameters);
-    }
-
     @Override
     protected void onInitialize() {
         super.onInitialize();

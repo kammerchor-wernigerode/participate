@@ -6,14 +6,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class ResetPasswordPage extends BasePage {
 
-    public ResetPasswordPage() {
-        this(new PageParameters());
-    }
-
-    public ResetPasswordPage(final PageParameters parameters) {
-        super(parameters);
-    }
-
     @Override
     protected void onInitialize() {
         super.onInitialize();
