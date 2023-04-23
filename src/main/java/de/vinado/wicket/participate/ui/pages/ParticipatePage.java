@@ -30,13 +30,15 @@ import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 public class ParticipatePage extends BasePage {
 
@@ -52,8 +54,6 @@ public class ParticipatePage extends BasePage {
     @SuppressWarnings("unused")
     @SpringBean
     private PersonService personService;
-
-    private String userLabel;
 
     @Override
     protected void onInitialize() {
@@ -76,7 +76,7 @@ public class ParticipatePage extends BasePage {
             new NavbarButton(SingersPage.class, new ResourceModel("singers", "Singers")).setIconType(FontAwesome5IconType.users_s)));
         navbar.addComponents(NavbarComponents.transform(
             Navbar.ComponentPosition.RIGHT,
-            new NavbarDropDownButton(new PropertyModel<>(this, "userLabel"), Model.of(FontAwesome5IconType.user_s)) {
+            new NavbarDropDownButton(new UsernameModel(), Model.of(FontAwesome5IconType.user_s)) {
                 @Override
                 protected List<AbstractLink> newSubMenuButtons(final String buttonMarkupId) {
                     final List<AbstractLink> menuButtons = new ArrayList<>();
@@ -97,7 +97,6 @@ public class ParticipatePage extends BasePage {
                                 protected void onConfirm(final User user, final AjaxRequestTarget target) {
                                     ParticipateSession.get().setUser(user);
                                     Application.get().getSecuritySettings().getAuthenticationStrategy().remove();
-                                    userLabel = ParticipateSession.get().getUser().getPerson().getDisplayName();
                                     target.add(navbar);
                                     Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
                                 }
@@ -123,26 +122,29 @@ public class ParticipatePage extends BasePage {
         return navbar;
     }
 
-    public String getUserLabel() {
-        return userLabel;
-    }
-
-    public void setUserLabel(final String userLabel) {
-        this.userLabel = userLabel;
-    }
-
     @Override
     protected void onConfigure() {
         super.onConfigure();
         if (!ParticipateSession.get().isSignedIn()) {
             ((AuthenticatedWebApplication) AuthenticatedWebApplication.get()).restartResponseAtSignInPage();
-        } else {
-            final User user = ParticipateSession.get().getUser();
-            if (null != user.getPerson()) {
-                setUserLabel(user.getPerson().getDisplayName());
-            } else {
-                setUserLabel(user.getUsername());
-            }
+        }
+    }
+
+
+    private static class UsernameModel implements IModel<String> {
+
+        @Override
+        public String getObject() {
+            ParticipateSession session = ParticipateSession.get();
+            return Optional.ofNullable(session.getUser())
+                .map(User::getPerson)
+                .map(Person::getDisplayName)
+                .or(username(session))
+                .orElse(null);
+        }
+
+        private static Supplier<Optional<String>> username(ParticipateSession session) {
+            return () -> Optional.ofNullable(session.getUser()).map(User::getUsername);
         }
     }
 }
