@@ -62,6 +62,11 @@ public class ParticipatePage extends BasePage {
 
     public ParticipatePage(final PageParameters parameters) {
         super(parameters);
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
         add(navbar("navbar"));
 

@@ -24,7 +24,7 @@ public abstract class BasePage extends WebPage {
     private ApplicationName applicationName;
 
     @Getter
-    private final ModalAnchor modalAnchor;
+    private ModalAnchor modalAnchor;
 
     public BasePage() {
         this(new PageParameters());
@@ -32,6 +32,11 @@ public abstract class BasePage extends WebPage {
 
     public BasePage(final PageParameters parameters) {
         super(parameters);
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
         add(modalAnchor = modalAnchor(ModalAnchor.MODAL_ID));
 

@@ -12,8 +12,13 @@ public class ResetPasswordPage extends BasePage {
 
     public ResetPasswordPage(final PageParameters parameters) {
         super(parameters);
+    }
 
-        final String tokenParameter = parameters.get("token").to(String.class);
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        final String tokenParameter = getPageParameters().get("token").to(String.class);
 
         add(new ResetPasswordPanel("resetPasswordPanel", tokenParameter));
         add(new BookmarkablePageLink("goHomeLink", getApplication().getHomePage()));
