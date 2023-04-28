@@ -10,17 +10,12 @@ spring:
     default: metrics
 
   jpa:
-    database: MYSQL
     hibernate:
-      naming:
-        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
-        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
       ddl-auto: validate
     show-sql: false
     open-in-view: true
     properties:
       hibernate.format_sql: true
-      hibernate.dialect: org.hibernate.dialect.MariaDB102Dialect
 
   datasource:
     url: jdbc:mariadb://${DATABASE_HOST:localhost}:${DATABASE_PORT:3306}/${DATABASE_NAME:participate}?allowPublicKeyRetrieval=true&sslMode=disable
