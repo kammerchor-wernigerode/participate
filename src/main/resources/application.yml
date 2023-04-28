@@ -20,7 +20,7 @@ spring:
     open-in-view: true
     properties:
       hibernate.format_sql: true
-      hibernate.dialect: org.hibernate.dialect.MySQL57Dialect
+      hibernate.dialect: org.hibernate.dialect.MariaDB102Dialect
 
   datasource:
     url: jdbc:mysql://${DATABASE_HOST:localhost}:${DATABASE_PORT:3306}/${DATABASE_NAME:participate}?useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false

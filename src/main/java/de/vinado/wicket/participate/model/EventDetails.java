@@ -94,22 +94,22 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
     @Column(name = "count_bass")
     private Long bassCount;
 
-    @Column(name = "soprano", columnDefinition = "TEXT")
+    @Column(name = "soprano", columnDefinition = "MEDIUMTEXT")
     private String sopranos;
 
-    @Column(name = "alto", columnDefinition = "TEXT")
+    @Column(name = "alto", columnDefinition = "MEDIUMTEXT")
     private String altos;
 
-    @Column(name = "tenor", columnDefinition = "TEXT")
+    @Column(name = "tenor", columnDefinition = "MEDIUMTEXT")
     private String tenors;
 
-    @Column(name = "bass", columnDefinition = "TEXT")
+    @Column(name = "bass", columnDefinition = "MEDIUMTEXT")
     private String basses;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String tentative;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String declined;
 
     @Column(name = "count_invitations")
