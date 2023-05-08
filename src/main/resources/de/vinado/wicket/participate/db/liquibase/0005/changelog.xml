@@ -19,8 +19,9 @@
     </changeSet>
 
     <changeSet id="0005-functions-cast_to_bit" author="Vincent Nadoll" dbms="mariadb">
+        <validCheckSum>8:074459a140f02ee91abec37391c366b0</validCheckSum>
         <sql endDelimiter="$$">
-            CREATE FUNCTION CAST_TO_BIT(N INT) RETURNS bit(1)
+            CREATE FUNCTION IF NOT EXISTS CAST_TO_BIT(N INT) RETURNS bit(1)
             BEGIN
             RETURN N;
             end;
