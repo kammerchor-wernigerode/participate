@@ -110,7 +110,7 @@ main > {
     --cell-width-date: 195px;
     --cell-width-type: calc(100% - var(--cell-width-name) - var(--cell-width-date) - var(--cell-width-location) - var(--cell-width-adp));
     --cell-width-location: 180px;
-    --cell-width-adp: 80px;
+    --cell-width-adp: 120px;
 
     &.name {
         width: var(--cell-width-name);
@@ -130,6 +130,36 @@ main > {
 
     &.adp {
         width: var(--cell-width-adp);
+
+        & > div {
+            border: 2px solid white;
+            border-radius: .25rem;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+
+            div {
+                color: white;
+                font-weight: bold;
+                font-size: .75em;
+                line-height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .a {
+                background-color: var(--success);
+            }
+
+            .d {
+                background-color: var(--danger);
+            }
+
+            .p {
+                background-color: var(--warning);
+            }
+        }
     }
 }
 
