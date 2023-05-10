@@ -130,6 +130,36 @@ main > {
 
     &.adp {
         width: var(--cell-width-adp);
+
+        & > div {
+            border: 2px solid white;
+            border-radius: .25rem;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+
+            div {
+                color: white;
+                font-weight: bold;
+                font-size: .75em;
+                line-height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .a {
+                background-color: var(--success);
+            }
+
+            .d {
+                background-color: var(--danger);
+            }
+
+            .p {
+                background-color: var(--warning);
+            }
+        }
     }
 }
 

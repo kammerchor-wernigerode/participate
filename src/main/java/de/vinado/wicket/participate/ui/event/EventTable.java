@@ -123,7 +123,7 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
         return new PropertyColumn<>(new ResourceModel("event.a-d-p.short", "A/D/P"), "countAcceptedDeclinedPending") {
             @Override
             public void populateItem(Item<ICellPopulator<EventDetails>> item, String componentId, IModel<EventDetails> rowModel) {
-                item.add(new Label(componentId, getDataModel(rowModel))
+                item.add(new ParticipationMeter(componentId, rowModel)
                     .add(new TooltipBehavior(new ResourceModel("event.a-d-p", "Accepted/Declined/Pending"), tooltipConfig))
                     .setOutputMarkupId(true));
             }
