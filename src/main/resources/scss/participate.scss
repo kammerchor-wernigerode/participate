@@ -110,7 +110,7 @@ main > {
     --cell-width-date: 195px;
     --cell-width-type: calc(100% - var(--cell-width-name) - var(--cell-width-date) - var(--cell-width-location) - var(--cell-width-adp));
     --cell-width-location: 180px;
-    --cell-width-adp: 80px;
+    --cell-width-adp: 120px;
 
     &.name {
         width: var(--cell-width-name);
