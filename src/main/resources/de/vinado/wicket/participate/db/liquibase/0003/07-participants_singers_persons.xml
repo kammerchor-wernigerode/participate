@@ -8,13 +8,13 @@
         <addUniqueConstraint tableName="persons" columnNames="email" constraintName="UC_email"/>
     </changeSet>
 
-    <changeSet id="0003-singers" author="Vincent Nadoll" dbms="mysql">
+    <changeSet id="0003-singers" author="Vincent Nadoll" dbms="mariadb">
         <renameTable oldTableName="members" newTableName="singers"/>
 
         <sql dbms="h2">
             ALTER TABLE singers CHANGE id id BIGINT NOT NULL;
         </sql>
-        <sql dbms="mysql">
+        <sql dbms="mariadb">
             SET FOREIGN_KEY_CHECKS = 0;
             ALTER TABLE singers
             DROP PRIMARY KEY,
@@ -45,7 +45,7 @@
         <sql dbms="h2">
             ALTER TABLE singers CHANGE id id BIGINT NOT NULL;
         </sql>
-        <sql dbms="mysql">
+        <sql dbms="mariadb">
             SET FOREIGN_KEY_CHECKS = 0;
             ALTER TABLE singers
             DROP PRIMARY KEY,
@@ -69,7 +69,7 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="0003-participants" author="Vincent Nadoll" dbms="mysql">
+    <changeSet id="0003-participants" author="Vincent Nadoll" dbms="mariadb">
         <dropAllForeignKeyConstraints baseTableName="m_member_event"/>
         <dropIndex tableName="m_member_event" indexName="fk_m_ev_member_events"/>
         <dropIndex tableName="m_member_event" indexName="fk_m_ev_member_invite_status"/>
@@ -100,7 +100,7 @@
             ALTER TABLE participants DROP PRIMARY KEY;
             ALTER TABLE participants CHANGE id id BIGINT NOT NULL;
         </sql>
-        <sql dbms="mysql">
+        <sql dbms="mariadb">
             SET FOREIGN_KEY_CHECKS = 0;
             ALTER TABLE participants
             DROP PRIMARY KEY,
@@ -161,7 +161,7 @@
             ALTER TABLE participants DROP PRIMARY KEY;
             ALTER TABLE participants CHANGE id id BIGINT NOT NULL;
         </sql>
-        <sql dbms="mysql">
+        <sql dbms="mariadb">
             SET FOREIGN_KEY_CHECKS = 0;
             ALTER TABLE participants
             DROP PRIMARY KEY,

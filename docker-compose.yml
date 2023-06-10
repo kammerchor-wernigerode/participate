@@ -1,16 +1,18 @@
 services:
   database:
-    image: mysql:5.7
+    image: mariadb:10.2
     ports:
       - "3306:3306"
+    volumes:
+      - ./docker/mariadb/dumps/:/docker-entrypoint-initdb.d/
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
-      MYSQL_DATABASE: participate
-      MYSQL_USER: participate
-      MYSQL_PASSWORD: participate
+      MARIADB_RANDOM_ROOT_PASSWORD: 'yes'
+      MARIADB_DATABASE: participate
+      MARIADB_USER: participate
+      MARIADB_PASSWORD: participate
 
   fakesmtp:
-    image: amontaigu/fakesmtp
+    image: ghusta/fakesmtp:2.3-jre17
     ports:
       - "587:25"
     volumes:

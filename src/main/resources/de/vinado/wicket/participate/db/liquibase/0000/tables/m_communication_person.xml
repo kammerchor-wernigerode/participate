@@ -3,7 +3,7 @@
                    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="0000-tables-m_communication_person" author="Vincent Nadoll" dbms="mysql">
+    <changeSet id="0000-tables-m_communication_person" author="Vincent Nadoll" dbms="mariadb">
         <createTable tableName="m_communication_person">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_m_attribute_person"/>

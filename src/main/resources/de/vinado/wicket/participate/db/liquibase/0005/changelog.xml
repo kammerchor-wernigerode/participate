@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="0005-drop_views" author="Vincent Nadoll" runOnChange="true" dbms="mysql">
+    <changeSet id="0005-drop_views" author="Vincent Nadoll" runOnChange="true" dbms="mariadb">
         <sql>
             DROP VIEW IF EXISTS v_event_member_accepted;
             DROP VIEW IF EXISTS v_event_member_declined;
@@ -18,16 +18,17 @@
         </sql>
     </changeSet>
 
-    <changeSet id="0005-functions-cast_to_bit" author="Vincent Nadoll" dbms="mysql">
+    <changeSet id="0005-functions-cast_to_bit" author="Vincent Nadoll" dbms="mariadb">
+        <validCheckSum>8:074459a140f02ee91abec37391c366b0</validCheckSum>
         <sql endDelimiter="$$">
-            CREATE FUNCTION CAST_TO_BIT(N INT) RETURNS bit(1)
+            CREATE FUNCTION IF NOT EXISTS CAST_TO_BIT(N INT) RETURNS bit(1)
             BEGIN
             RETURN N;
             end;
         </sql>
     </changeSet>
 
-    <changeSet id="0005-v_event_details" author="Vincent Nadoll" runOnChange="true" dbms="mysql">
+    <changeSet id="0005-v_event_details" author="Vincent Nadoll" runOnChange="true" dbms="mariadb">
         <sql>
             DROP VIEW IF EXISTS v_event_details;
         </sql>

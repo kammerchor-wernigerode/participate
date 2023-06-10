@@ -1,0 +1,6 @@
+*.sql
+*.sql.gz
+*.sql.xz
+*.sql.zst
+
+!01_functions.sql

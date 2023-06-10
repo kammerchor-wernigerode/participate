@@ -18,7 +18,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="0003-v_event_details" author="Vincent Nadoll" runOnChange="true" dbms="mysql">
+    <changeSet id="0003-v_event_details" author="Vincent Nadoll" runOnChange="true" dbms="mariadb">
         <sql>
             DROP VIEW IF EXISTS v_event_details;
         </sql>

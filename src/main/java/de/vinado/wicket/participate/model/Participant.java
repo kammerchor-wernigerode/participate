@@ -77,7 +77,7 @@ public class Participant implements Identifiable<Long>, Invitable {
     @Column(name = "car_seat_count")
     private Short carSeatCount;
 
-    @Column(length = 65535, columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String comment;
 
     /**
