@@ -1,10 +1,8 @@
 spring:
   main.banner-mode: "off"
 
-  datasource:
-    url: jdbc:h2:mem:kch-database;MODE=MYSQL
-    username: kch
-    password: kch
+  datasource.url: jdbc:tc:mariadb:10.2:///
 
   liquibase:
-    enabled: false
+    enabled: true
+    change-log: classpath:/de/vinado/wicket/participate/db/liquibase/changelog.xml
