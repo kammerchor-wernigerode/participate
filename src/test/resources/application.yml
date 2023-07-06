@@ -6,3 +6,9 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:/de/vinado/wicket/participate/db/liquibase/changelog.xml
+
+  mail:
+    host: localhost
+    port: 587
+
+app.base-url: http://localhost:8080
