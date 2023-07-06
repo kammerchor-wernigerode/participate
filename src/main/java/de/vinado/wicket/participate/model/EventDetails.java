@@ -1,24 +1,31 @@
 package de.vinado.wicket.participate.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.format.ISODateTimeFormat;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
+import static com.google.common.primitives.Ints.saturatedCast;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
@@ -26,6 +33,7 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "v_event_details")
 @Getter
+@Setter(AccessLevel.PACKAGE)
 @NoArgsConstructor
 @ToString
 public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
@@ -55,14 +63,17 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
     @Column
     private String location;
 
+    @OneToMany(
+        mappedBy = "event",
+        fetch = FetchType.EAGER
+    )
+    private List<Participant> participants;
+
     @Column(name = "count_accepted_declined_pending")
     private String countAcceptedDeclinedPending;
 
     @Column(name = "count_catering", length = 23, columnDefinition = "DECIMAL")
     private Long cateringCount;
-
-    @Column(name = "count_accommodation", length = 23, columnDefinition = "DECIMAL")
-    private Long accommodationCount;
 
     @Column(name = "count_car", length = 21, columnDefinition = "DECIMAL")
     private Long carCount;
@@ -153,6 +164,15 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
     @Transient
     public long getAcceptedSum() {
         return acceptedCount + tentativeCount;
+    }
+
+    @Transient
+    public int getAccommodationCount() {
+        long count = participants.stream()
+            .map(Participant::isAccommodation)
+            .filter(Boolean::booleanValue)
+            .count();
+        return saturatedCast(count);
     }
 
     @Override

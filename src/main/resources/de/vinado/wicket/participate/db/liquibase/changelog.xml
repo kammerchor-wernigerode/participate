@@ -35,4 +35,6 @@
     <changeSet id="v2.15.0-tag" author="Vincent Nadoll">
         <tagDatabase tag="2.15.0"/>
     </changeSet>
+
+    <include relativeToChangelogFile="true" file="changelog-3.1.0.xml"/>
 </databaseChangeLog>

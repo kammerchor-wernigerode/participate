@@ -8,7 +8,10 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Date;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -71,14 +74,18 @@ public class Participant implements Identifiable<Long>, Invitable {
     @Column(name = "need_catering")
     private boolean catering;
 
-    @Column(name = "need_accommodation")
-    private boolean accommodation;
-
     @Column(name = "car_seat_count")
     private Short carSeatCount;
 
     @Column(columnDefinition = "TEXT")
     private String comment;
+
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "status", column = @Column(name = "accommodation_status")),
+        @AttributeOverride(name = "beds", column = @Column(name = "accommodation_bed_count")),
+    })
+    private Accommodation accommodation;
 
     /**
      * @param event            {@link Event}
@@ -91,7 +98,7 @@ public class Participant implements Identifiable<Long>, Invitable {
      */
     public Participant(final Event event, final Singer singer, final String token,
                        final InvitationStatus invitationStatus, final Date fromDate, final Date toDate,
-                       final boolean catering, final boolean accommodation, short carSeatCount,
+                       final boolean catering, final Accommodation accommodation, short carSeatCount,
                        final String comment) {
         this.event = event;
         this.singer = singer;
@@ -107,7 +114,7 @@ public class Participant implements Identifiable<Long>, Invitable {
 
     public Participant(final Event event, final Singer singer, final String token,
                        final InvitationStatus invitationStatus) {
-        this(event, singer, token, invitationStatus, null, null, false, false, (short) -1, null);
+        this(event, singer, token, invitationStatus, null, null, false, Accommodation.noNeed(), (short) -1, null);
     }
 
     public boolean isUninvited() {
@@ -128,5 +135,9 @@ public class Participant implements Identifiable<Long>, Invitable {
 
     public boolean isTentative() {
         return TENTATIVE.equals(invitationStatus);
+    }
+
+    public boolean isAccommodation() {
+        return Accommodation.Status.SEARCHING.equals(accommodation.getStatus());
     }
 }

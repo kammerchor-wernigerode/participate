@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="v3.1.0-participants" author="Vincent Nadoll">
+        <addColumn tableName="participants">
+            <column type="VARCHAR(255)" name="accommodation_status" afterColumn="need_accommodation"/>
+            <column type="INT" name="accommodation_bed_count" afterColumn="accommodation_status"/>
+        </addColumn>
+
+        <update tableName="participants">
+            <column name="accommodation_status" value="SEARCHING"/>
+            <column name="accommodation_bed_count" valueNumeric="1"/>
+            <where>need_accommodation = true</where>
+        </update>
+        <update tableName="participants">
+            <column name="accommodation_status" value="NO_NEED"/>
+            <where>need_accommodation = false</where>
+        </update>
+
+        <dropColumn tableName="participants">
+            <column name="need_accommodation"/>
+        </dropColumn>
+    </changeSet>
+</databaseChangeLog>

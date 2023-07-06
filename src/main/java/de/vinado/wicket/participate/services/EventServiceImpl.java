@@ -6,6 +6,7 @@ import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailAttachment;
 import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.email.service.EmailService;
+import de.vinado.wicket.participate.model.Accommodation;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.InvitationStatus;
@@ -188,10 +189,16 @@ public class EventServiceImpl extends DataService implements EventService {
         loadedParticipant.setFromDate(dto.getFromDate());
         loadedParticipant.setToDate(dto.getToDate());
         loadedParticipant.setCatering(dto.isCatering());
-        loadedParticipant.setAccommodation(dto.isAccommodation());
+        loadedParticipant.setAccommodation(createAccommodation(dto));
         loadedParticipant.setCarSeatCount(dto.isCar() ? dto.getCarSeatCount() : -1);
         loadedParticipant.setComment(dto.getComment());
         return save(loadedParticipant);
+    }
+
+    private Accommodation createAccommodation(ParticipantDTO dto) {
+        return dto.isAccommodation()
+            ? new Accommodation(Accommodation.Status.SEARCHING, 1)
+            : new Accommodation(Accommodation.Status.NO_NEED, null);
     }
 
     /**
