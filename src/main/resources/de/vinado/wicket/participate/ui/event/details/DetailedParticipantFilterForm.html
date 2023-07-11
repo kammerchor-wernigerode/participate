@@ -5,10 +5,24 @@
 </head>
 <body>
 <wicket:extend>
-    <input wicket:id="comment">
-    <input type="text" wicket:id="fromDate">
-    <input type="text" wicket:id="toDate">
-    <select wicket:id="accommodation"></select>
+    <div class="col-12">
+        <label for="comment" class="visually-hidden"><wicket:message key="filter.comments"/></label>
+        <input id="comment" class="form-control" type="text" wicket:message="placeholder:filter.comments" wicket:id="comment">
+    </div>
+    <div class="col-12">
+        <label for="fromDate" class="visually-hidden"><wicket:message key="from"/></label>
+        <input id="fromDate" class="form-control" type="text" wicket:message="placeholder:from" wicket:id="fromDate">
+    </div>
+    <div class="col-12">
+        <label for="toDate" class="visually-hidden"><wicket:message key="to"/></label>
+        <input id="toDate" class="form-control" type="text" wicket:message="placeholder:to" wicket:id="toDate">
+    </div>
+    <div class="col-12">
+        <div class="form-check">
+            <input id="accommodation" class="form-check-input" type="checkbox" wicket:id="accommodation">
+            <label for="accommodation" class="form-check-label"><wicket:message key="accommodation"/></label>
+        </div>
+    </div>
     <wicket:child/>
 </wicket:extend>
 </body>

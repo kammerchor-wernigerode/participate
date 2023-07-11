@@ -5,12 +5,26 @@
 </head>
 <body>
 <wicket:eventFilterForm>
-    <input wicket:id="searchTerm">
-    <input autocomplete="off" type="text" wicket:id="startDate">
-    <input autocomplete="off" type="text" wicket:id="endDate">
-    <input type="checkbox" wicket:id="showAll">
+    <div class="col-12">
+        <label for="searchTerm" class="visually-hidden"><wicket:message key="search"/></label>
+        <input id="searchTerm" class="form-control" type="text" wicket:message="placeholder:search" wicket:id="searchTerm">
+    </div>
+    <div class="col-12">
+        <label for="startDate" class="visually-hidden"><wicket:message key="from"/></label>
+        <input id="startDate" class="form-control" type="text" wicket:message="placeholder:from" wicket:id="startDate">
+    </div>
+    <div class="col-12">
+        <label for="endDate" class="visually-hidden"><wicket:message key="to"/></label>
+        <input id="endDate" class="form-control" type="text" wicket:message="placeholder:to" wicket:id="endDate">
+    </div>
+    <div class="col-12">
+        <div class="form-check">
+            <input id="showAll" class="form-check-input" type="checkbox" wicket:id="showAll">
+            <label for="showAll" class="form-check-label"><wicket:message key="showAll"/></label>
+        </div>
+    </div>
     <wicket:child/>
-    <div class="ml-auto mb-2 mr-sm-2">
+    <div class="col-12 ms-auto">
         <div class="btn-group btn-group-sm w-100" role="group" aria-label="Filter navigation">
             <a wicket:id="reset"></a>
             <a wicket:id="apply">

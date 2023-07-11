@@ -62,13 +62,7 @@ public abstract class EventFilterForm extends Form<EventFilter> {
         add(resetButton("reset"));
         add(applyButton("apply"));
 
-        add(new CssClassNameAppender("form-inline"));
-        visitChildren(FormComponent.class, (IVisitor<FormComponent<?>, Void>) (component, visit) -> {
-            if (!(component instanceof Button)) {
-                component.add(BootstrapInlineFormDecorator.decorate());
-            }
-            visit.dontGoDeeper();
-        });
+        add(new CssClassNameAppender("row row-cols-lg-auto g-3 align-items-center"));
     }
 
     protected FormComponent<String> termInput(String id) {
