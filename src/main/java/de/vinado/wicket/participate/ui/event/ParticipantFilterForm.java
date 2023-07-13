@@ -56,7 +56,7 @@ public abstract class ParticipantFilterForm extends Form<ParticipantFilter> {
         add(voice("voice"));
 
         add(resetButton("reset"));
-        add(applyButton("apply"));
+        add(applyButton("apply", this));
 
         add(new CssClassNameAppender("row row-cols-lg-auto g-3 align-items-center"));
     }
@@ -114,7 +114,7 @@ public abstract class ParticipantFilterForm extends Form<ParticipantFilter> {
         setModelObject(new ParticipantFilter());
     }
 
-    private AbstractSubmitLink applyButton(String id) {
+    private AbstractSubmitLink applyButton(String id, Form<ParticipantFilter> form) {
         AjaxSubmitLink button = new AjaxSubmitLink(id) {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
@@ -125,7 +125,7 @@ public abstract class ParticipantFilterForm extends Form<ParticipantFilter> {
         button.add(new ButtonBehavior(Buttons.Type.Primary));
         button.add(new Icon("icon", FontAwesome5IconType.filter_s));
         button.add(new TooltipBehavior(new ResourceModel("filter", "Filter")));
-        setDefaultButton(button);
+        form.setDefaultButton(button);
         return button;
     }
 
