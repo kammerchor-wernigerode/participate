@@ -53,7 +53,7 @@ public abstract class DetailedParticipantFilterForm extends ParticipantFilterFor
 
         IModel<String> model = LambdaModel.of(getModel(), ParticipantFilter::getComment, ParticipantFilter::setComment);
         FormComponent<String> control = new TextField<>("control", model)
-            .setLabel(new ResourceModel("filter.comments", "Filter by comments"));
+            .setLabel(new ResourceModel("filter.participant.form.control.comment", "Filter by comments"));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 
         return container.add(control, label);
@@ -65,7 +65,7 @@ public abstract class DetailedParticipantFilterForm extends ParticipantFilterFor
         IModel<Date> model = LambdaModel.of(getModel(), ParticipantFilter::getFromDate, ParticipantFilter::setFromDate);
         DatetimePickerConfig config = createDatetimePickerConfig();
         FormComponent<Date> control = new DatetimePicker("control", model, config);
-        control.setLabel(new ResourceModel("from", "From"));
+        control.setLabel(new ResourceModel("filter.participant.form.control.from", "From"));
         control.add(new DatetimePickerResettingBehavior(onChange));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 
@@ -77,7 +77,7 @@ public abstract class DetailedParticipantFilterForm extends ParticipantFilterFor
 
         IModel<Date> model = LambdaModel.of(getModel(), ParticipantFilter::getToDate, ParticipantFilter::setToDate);
         FormComponent<Date> control = new DatetimePicker("control", model, config);
-        control.setLabel(new ResourceModel("to", "To"));
+        control.setLabel(new ResourceModel("filter.participant.form.control.to", "To"));
         control.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 

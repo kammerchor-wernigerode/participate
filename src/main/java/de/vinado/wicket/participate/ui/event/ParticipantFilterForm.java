@@ -61,7 +61,7 @@ public abstract class ParticipantFilterForm extends GenericPanel<ParticipantFilt
 
         IModel<String> model = LambdaModel.of(getModel(), ParticipantFilter::getName, ParticipantFilter::setName);
         FormComponent<String> control = new TextField<>("control", model)
-            .setLabel(new ResourceModel("filter.names", "Filter by Name"));
+            .setLabel(new ResourceModel("filter.participant.form.control.name", "Filter by name"));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 
         return container.add(control, label);
@@ -73,7 +73,7 @@ public abstract class ParticipantFilterForm extends GenericPanel<ParticipantFilt
         IModel<InvitationStatus> model = LambdaModel.of(getModel(), ParticipantFilter::getInvitationStatus, ParticipantFilter::setInvitationStatus);
         FormComponent<InvitationStatus> control = new DropDownChoice<>("control", model,
             InvitationStatus.stream().collect(Collectors.toList()), new EnumChoiceRenderer<>(this))
-            .setLabel(new ResourceModel("invitationStatus", "Invitation Status"));
+            .setLabel(new ResourceModel("filter.participant.form.control.invitation-status", "Invitation Status"));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 
         return container.add(control, label);
@@ -85,7 +85,7 @@ public abstract class ParticipantFilterForm extends GenericPanel<ParticipantFilt
         IModel<Voice> model = LambdaModel.of(getModel(), ParticipantFilter::getVoice, ParticipantFilter::setVoice);
         FormComponent<Voice> control = new DropDownChoice<>("control", model,
             Arrays.asList(Voice.values()), new EnumChoiceRenderer<>(this))
-            .setLabel(new ResourceModel("voice", "Voice"));
+            .setLabel(new ResourceModel("filter.participant.form.control.voice", "Voice"));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 
         return container.add(control, label);
@@ -101,7 +101,7 @@ public abstract class ParticipantFilterForm extends GenericPanel<ParticipantFilt
             }
         };
         button.setIconType(FontAwesome5IconType.undo_s);
-        button.add(new TooltipBehavior(new ResourceModel("reset", "Reset")));
+        button.add(new TooltipBehavior(new ResourceModel("filter.participant.form.button.reset", "Reset")));
         return button;
     }
 
@@ -119,7 +119,7 @@ public abstract class ParticipantFilterForm extends GenericPanel<ParticipantFilt
         };
         button.add(new ButtonBehavior(Buttons.Type.Primary));
         button.add(new Icon("icon", FontAwesome5IconType.filter_s));
-        button.add(new TooltipBehavior(new ResourceModel("filter", "Filter")));
+        button.add(new TooltipBehavior(new ResourceModel("filter.participant.form.button.submit", "Filter")));
         form.setDefaultButton(button);
         return button;
     }
