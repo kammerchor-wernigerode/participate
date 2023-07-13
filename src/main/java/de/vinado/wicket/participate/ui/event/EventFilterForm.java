@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.ui.event;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.ButtonBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
@@ -26,9 +25,7 @@ import org.apache.wicket.markup.html.form.FormComponentLabel;
 import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.AbstractLink;
-import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
-import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
@@ -36,13 +33,7 @@ import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 import java.util.Date;
 
-public abstract class EventFilterForm extends Form<EventFilter> {
-
-    private static final String TAG_NAME = "eventFilterForm";
-
-    static {
-        WicketTagIdentifier.registerWellKnownTagName(TAG_NAME);
-    }
+public abstract class EventFilterForm extends GenericPanel<EventFilter> {
 
     public EventFilterForm(String id, IModel<EventFilter> model) {
         super(id, model);
@@ -54,17 +45,20 @@ public abstract class EventFilterForm extends Form<EventFilter> {
 
         setOutputMarkupId(true);
 
-        add(searchTerm("searchTerm"));
-        add(showAll("showAll"));
+        queue(form("form"));
+        queue(searchTerm("searchTerm"));
+        queue(showAll("showAll"));
 
         DatetimePickerConfig endDateConfig = createDatetimePickerConfig();
-        add(endDate("endDate", endDateConfig));
-        add(startDate("startDate", endDateConfig::withMinDate));
+        queue(endDate("endDate", endDateConfig));
+        queue(startDate("startDate", endDateConfig::withMinDate));
 
-        add(resetButton("reset"));
-        add(applyButton("apply"));
+        queue(resetButton("reset"));
+        queue(applyButton("apply"));
+    }
 
-        add(new CssClassNameAppender("row row-cols-lg-auto g-3 align-items-center"));
+    private Form<EventFilter> form(String wicketId) {
+        return new Form<>(wicketId);
     }
 
     protected MarkupContainer searchTerm(String wicketId) {
@@ -158,10 +152,5 @@ public abstract class EventFilterForm extends Form<EventFilter> {
 
     protected void onReset() {
         onApply();
-    }
-
-    @Override
-    protected IMarkupSourcingStrategy newMarkupSourcingStrategy() {
-        return new PanelMarkupSourcingStrategy(TAG_NAME, false);
     }
 }
