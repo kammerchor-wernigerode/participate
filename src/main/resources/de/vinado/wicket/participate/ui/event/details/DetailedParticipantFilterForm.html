@@ -5,23 +5,21 @@
 </head>
 <body>
 <wicket:extend>
-    <div class="col-12">
-        <label for="comment" class="visually-hidden"><wicket:message key="filter.comments"/></label>
-        <input id="comment" class="form-control" type="text" wicket:message="placeholder:filter.comments" wicket:id="comment">
+    <div class="col-12" wicket:id="comment">
+        <label class="visually-hidden" wicket:id="label"></label>
+        <input class="form-control" type="text" wicket:message="placeholder:filter.comments" wicket:id="control">
     </div>
-    <div class="col-12">
-        <label for="fromDate" class="visually-hidden"><wicket:message key="from"/></label>
-        <input id="fromDate" class="form-control" type="text" wicket:message="placeholder:from" wicket:id="fromDate">
+    <div class="col-12" wicket:id="fromDate">
+        <label class="visually-hidden" wicket:id="label"></label>
+        <input class="form-control" type="text" wicket:message="placeholder:from" wicket:id="control">
     </div>
-    <div class="col-12">
-        <label for="toDate" class="visually-hidden"><wicket:message key="to"/></label>
-        <input id="toDate" class="form-control" type="text" wicket:message="placeholder:to" wicket:id="toDate">
+    <div class="col-12" wicket:id="toDate">
+        <label class="visually-hidden" wicket:id="label"></label>
+        <input class="form-control" type="text" wicket:message="placeholder:to" wicket:id="control">
     </div>
-    <div class="col-12">
-        <div class="form-check">
-            <input id="accommodation" class="form-check-input" type="checkbox" wicket:id="accommodation">
-            <label for="accommodation" class="form-check-label"><wicket:message key="accommodation"/></label>
-        </div>
+    <div class="col-12" wicket:id="accommodation">
+        <label class="visually-hidden" wicket:id="label"></label>
+        <select class="form-select" type="text" wicket:message="placeholder:accommodation" wicket:id="control"></select>
     </div>
     <wicket:child/>
 </wicket:extend>

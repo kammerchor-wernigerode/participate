@@ -5,11 +5,22 @@
 </head>
 <body>
 <wicket:singerFilterForm>
-    <input wicket:id="searchTerm">
-    <select wicket:id="voice"></select>
-    <input type="checkbox" wicket:id="showAll">
+    <div class="col-12" wicket:id="searchTerm">
+        <label class="visually-hidden" wicket:id="label"></label>
+        <input class="form-control" type="text" wicket:message="placeholder:search" wicket:id="control">
+    </div>
+    <div class="col-12" wicket:id="voice">
+        <label class="visually-hidden" wicket:id="label"></label>
+        <select class="form-select" wicket:id="control"></select>
+    </div>
+    <div class="col-12" wicket:id="showAll">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" wicket:id="control">
+            <label class="form-check-label" wicket:id="label"></label>
+        </div>
+    </div>
     <wicket:child/>
-    <div class="ml-auto mb-2 mr-sm-2">
+    <div class="col-12 ms-auto">
         <div class="btn-group btn-group-sm w-100" role="group" aria-label="Filter navigation">
             <a wicket:id="reset"></a>
             <a wicket:id="apply">

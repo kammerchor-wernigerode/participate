@@ -15,18 +15,23 @@ import de.vinado.wicket.bt4.form.decorator.BootstrapInlineFormDecorator;
 import de.vinado.wicket.bt4.tooltip.TooltipBehavior;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.model.filters.EventFilter;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.AbstractSubmitLink;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.FormComponentLabel;
+import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
 
@@ -50,12 +55,12 @@ public abstract class EventFilterForm extends Form<EventFilter> {
 
         setOutputMarkupId(true);
 
-        add(termInput("searchTerm"));
-        add(showAllCheck("showAll"));
+        add(searchTerm("searchTerm"));
+        add(showAll("showAll"));
 
         DatetimePickerConfig endDateConfig = createDatetimePickerConfig();
-        add(endDateInput("endDate", endDateConfig));
-        add(startDateInput("startDate", endDateConfig::withMinDate));
+        add(endDate("endDate", endDateConfig));
+        add(startDate("startDate", endDateConfig::withMinDate));
 
         add(resetButton("reset"));
         add(applyButton("apply"));
@@ -63,13 +68,50 @@ public abstract class EventFilterForm extends Form<EventFilter> {
         add(new CssClassNameAppender("row row-cols-lg-auto g-3 align-items-center"));
     }
 
-    protected FormComponent<String> termInput(String id) {
-        return new TextField<String>(id)
+    protected MarkupContainer searchTerm(String wicketId) {
+        WebMarkupContainer container = new WebMarkupContainer(wicketId);
+
+        IModel<String> model = LambdaModel.of(getModel(), EventFilter::getSearchTerm, EventFilter::setSearchTerm);
+        FormComponent<String> control = new TextField<>("control", model)
             .setLabel(new ResourceModel("search", "Search"));
+        FormComponentLabel label = new SimpleFormComponentLabel("label", control);
+
+        return container.add(control, label);
     }
 
-    protected FormComponent<Boolean> showAllCheck(String id) {
-        return new CheckBox(id);
+    protected MarkupContainer showAll(String wicketId) {
+        WebMarkupContainer container = new WebMarkupContainer(wicketId);
+
+        IModel<Boolean> model = LambdaModel.of(getModel(), EventFilter::isShowAll, EventFilter::setShowAll);
+        FormComponent<Boolean> control = new CheckBox("control", model)
+            .setLabel(new ResourceModel("showAll", "Show All"));
+        FormComponentLabel label = new SimpleFormComponentLabel("label", control);
+
+        return container.add(control, label);
+    }
+
+    protected MarkupContainer endDate(String wicketId, DatetimePickerConfig config) {
+        WebMarkupContainer container = new WebMarkupContainer(wicketId);
+
+        IModel<Date> model = LambdaModel.of(getModel(), EventFilter::getEndDate, EventFilter::setEndDate);
+        FormComponent<Date> control = new DatetimePicker("control", model, config);
+        control.setLabel(new ResourceModel("to", "To"));
+        control.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
+        FormComponentLabel label = new SimpleFormComponentLabel("label", control);
+
+        return container.add(control, label);
+    }
+
+    protected MarkupContainer startDate(String wicketId, SerializableConsumer<Date> onChange) {
+        WebMarkupContainer container = new WebMarkupContainer(wicketId);
+
+        IModel<Date> model = LambdaModel.of(getModel(), EventFilter::getStartDate, EventFilter::setStartDate);
+        FormComponent<Date> control = new DatetimePicker("control", model, createDatetimePickerConfig());
+        control.setLabel(new ResourceModel("from", "From"));
+        control.add(new DatetimePickerResettingBehavior(onChange));
+        FormComponentLabel label = new SimpleFormComponentLabel("label", control);
+
+        return container.add(control, label);
     }
 
     protected DatetimePickerConfig createDatetimePickerConfig() {
@@ -79,22 +121,6 @@ public abstract class EventFilterForm extends Form<EventFilter> {
         config.withFormat("dd.MM.yyyy");
         config.useCurrent(false);
         return config;
-    }
-
-    protected FormComponent<Date> startDateInput(String id, SerializableConsumer<Date> onChange) {
-        DatetimePickerConfig config = createDatetimePickerConfig();
-
-        DatetimePicker field = new DatetimePicker(id, config);
-        field.setLabel(new ResourceModel("from", "From"));
-        field.add(new DatetimePickerResettingBehavior(onChange));
-        return field;
-    }
-
-    protected FormComponent<Date> endDateInput(String id, DatetimePickerConfig config) {
-        FormComponent<Date> field = new DatetimePicker(id, config);
-        field.setLabel(new ResourceModel("to", "To"));
-        field.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
-        return field;
     }
 
     protected AbstractLink resetButton(String id) {

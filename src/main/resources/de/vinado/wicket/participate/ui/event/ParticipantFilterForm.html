@@ -5,17 +5,17 @@
 </head>
 <body>
 <wicket:participantFilterForm>
-    <div class="col-12">
-        <label for="name" class="visually-hidden"><wicket:message key="filter.names"/></label>
-        <input id="name" class="form-control" type="text" wicket:message="placeholder:filter.names" wicket:id="name">
+    <div class="col-12" wicket:id="name">
+        <label class="visually-hidden" wicket:id="label"></label>
+        <input class="form-control" type="text" wicket:message="placeholder:filter.names" wicket:id="control">
     </div>
-    <div class="col-12">
-        <label for="invitationStatus" class="visually-hidden"><wicket:message key="invitationStatus"/></label>
-        <select id="invitationStatus" class="form-select" wicket:id="invitationStatus"></select>
+    <div class="col-12" wicket:id="invitationStatus">
+        <label class="visually-hidden" wicket:id="label"></label>
+        <select class="form-select" wicket:id="control"></select>
     </div>
-    <div class="col-12">
-        <label for="voice" class="visually-hidden"><wicket:message key="voice"/></label>
-        <select id="voice" class="form-select" wicket:id="voice"></select>
+    <div class="col-12" wicket:id="voice">
+        <label class="visually-hidden" wicket:id="label"></label>
+        <select class="form-select" wicket:id="control"></select>
     </div>
     <wicket:child/>
     <div class="col-12 ms-auto">
