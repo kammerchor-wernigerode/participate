@@ -66,7 +66,7 @@ public abstract class EventFilterForm extends GenericPanel<EventFilter> {
 
         IModel<String> model = LambdaModel.of(getModel(), EventFilter::getSearchTerm, EventFilter::setSearchTerm);
         FormComponent<String> control = new TextField<>("control", model)
-            .setLabel(new ResourceModel("search", "Search"));
+            .setLabel(new ResourceModel("filter.event.form.control.search", "Search"));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 
         return container.add(control, label);
@@ -77,7 +77,7 @@ public abstract class EventFilterForm extends GenericPanel<EventFilter> {
 
         IModel<Boolean> model = LambdaModel.of(getModel(), EventFilter::isShowAll, EventFilter::setShowAll);
         FormComponent<Boolean> control = new CheckBox("control", model)
-            .setLabel(new ResourceModel("showAll", "Show All"));
+            .setLabel(new ResourceModel("filter.event.form.control.show-all", "Show all"));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 
         return container.add(control, label);
@@ -88,7 +88,7 @@ public abstract class EventFilterForm extends GenericPanel<EventFilter> {
 
         IModel<Date> model = LambdaModel.of(getModel(), EventFilter::getEndDate, EventFilter::setEndDate);
         FormComponent<Date> control = new DatetimePicker("control", model, config);
-        control.setLabel(new ResourceModel("to", "To"));
+        control.setLabel(new ResourceModel("filter.event.form.control.to", "To"));
         control.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 
@@ -100,7 +100,7 @@ public abstract class EventFilterForm extends GenericPanel<EventFilter> {
 
         IModel<Date> model = LambdaModel.of(getModel(), EventFilter::getStartDate, EventFilter::setStartDate);
         FormComponent<Date> control = new DatetimePicker("control", model, createDatetimePickerConfig());
-        control.setLabel(new ResourceModel("from", "From"));
+        control.setLabel(new ResourceModel("filter.event.form.control.from", "From"));
         control.add(new DatetimePickerResettingBehavior(onChange));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 
@@ -126,7 +126,7 @@ public abstract class EventFilterForm extends GenericPanel<EventFilter> {
             }
         };
         button.setIconType(FontAwesome5IconType.undo_s);
-        button.add(new TooltipBehavior(new ResourceModel("reset", "Reset")));
+        button.add(new TooltipBehavior(new ResourceModel("filter.event.form.button.reset", "Reset")));
         return button;
     }
 
@@ -144,7 +144,7 @@ public abstract class EventFilterForm extends GenericPanel<EventFilter> {
         };
         button.add(new ButtonBehavior(Buttons.Type.Primary));
         button.add(new Icon("icon", FontAwesome5IconType.filter_s));
-        button.add(new TooltipBehavior(new ResourceModel("filter", "Filter")));
+        button.add(new TooltipBehavior(new ResourceModel("filter.event.form.button.submit", "Filter")));
         return button;
     }
 
