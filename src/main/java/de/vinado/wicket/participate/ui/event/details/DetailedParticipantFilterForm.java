@@ -38,14 +38,14 @@ public abstract class DetailedParticipantFilterForm extends ParticipantFilterFor
 
     @Override
     protected void onInitialize() {
-        add(comment("comment"));
-        add(accommodation("accommodation"));
+        super.onInitialize();
+
+        queue(comment("comment"));
+        queue(accommodation("accommodation"));
 
         DatetimePickerConfig toDateConfig = createDatetimePickerConfig();
-        add(toDate("toDate", toDateConfig));
-        add(fromDate("fromDate", toDateConfig::withMinDate));
-
-        super.onInitialize();
+        queue(toDate("toDate", toDateConfig));
+        queue(fromDate("fromDate", toDateConfig::withMinDate));
     }
 
     protected MarkupContainer comment(String wicketId) {

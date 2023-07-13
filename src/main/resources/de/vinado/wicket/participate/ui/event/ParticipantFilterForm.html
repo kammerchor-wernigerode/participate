@@ -4,28 +4,32 @@
     <meta charset="utf-8"/>
 </head>
 <body>
-<wicket:participantFilterForm>
-    <div class="col-12" wicket:id="name">
-        <label class="visually-hidden" wicket:id="label"></label>
-        <input class="form-control" type="text" wicket:message="placeholder:filter.names" wicket:id="control">
-    </div>
-    <div class="col-12" wicket:id="invitationStatus">
-        <label class="visually-hidden" wicket:id="label"></label>
-        <select class="form-select" wicket:id="control"></select>
-    </div>
-    <div class="col-12" wicket:id="voice">
-        <label class="visually-hidden" wicket:id="label"></label>
-        <select class="form-select" wicket:id="control"></select>
-    </div>
-    <wicket:child/>
-    <div class="col-12 ms-auto">
-        <div class="btn-group btn-group-sm w-100" role="group" aria-label="Filter navigation">
-            <a wicket:id="reset"></a>
-            <a wicket:id="apply">
-                <i wicket:id="icon"></i>
-            </a>
+<wicket:panel>
+    <form wicket:id="form">
+        <div class="row row-cols-lg-auto g-3 align-items-center">
+            <div class="col-12" wicket:id="name">
+                <label class="visually-hidden" wicket:id="label"></label>
+                <input class="form-control" type="text" wicket:message="placeholder:filter.names" wicket:id="control">
+            </div>
+            <div class="col-12" wicket:id="invitationStatus">
+                <label class="visually-hidden" wicket:id="label"></label>
+                <select class="form-select" wicket:id="control"></select>
+            </div>
+            <div class="col-12" wicket:id="voice">
+                <label class="visually-hidden" wicket:id="label"></label>
+                <select class="form-select" wicket:id="control"></select>
+            </div>
+            <wicket:child/>
+            <div class="col-12 ms-auto">
+                <div class="btn-group btn-group-sm w-100" role="group" aria-label="Filter navigation">
+                    <a wicket:id="reset"></a>
+                    <a wicket:id="apply">
+                        <i wicket:id="icon"></i>
+                    </a>
+                </div>
+            </div>
         </div>
-    </div>
-</wicket:participantFilterForm>
+    </form>
+</wicket:panel>
 </body>
 </html>
