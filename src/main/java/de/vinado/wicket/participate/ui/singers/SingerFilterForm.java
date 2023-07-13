@@ -59,7 +59,7 @@ public abstract class SingerFilterForm extends GenericPanel<SingerFilter> {
 
         IModel<String> model = LambdaModel.of(getModel(), SingerFilter::getSearchTerm, SingerFilter::setSearchTerm);
         FormComponent<String> control = new TextField<>("control", model)
-            .setLabel(new ResourceModel("search", "Search"));
+            .setLabel(new ResourceModel("filter.singer.form.control.search", "Search"));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 
         return container.add(control, label);
@@ -71,7 +71,7 @@ public abstract class SingerFilterForm extends GenericPanel<SingerFilter> {
         IModel<Voice> model = LambdaModel.of(getModel(), SingerFilter::getVoice, SingerFilter::setVoice);
         FormComponent<Voice> control = new DropDownChoice<>("control", model, Arrays.asList(Voice.values()),
             new EnumChoiceRenderer<>())
-            .setLabel(new ResourceModel("voice", "Voice"));
+            .setLabel(new ResourceModel("filter.singer.form.control.voice", "Voice"));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 
         return container.add(control, label);
@@ -82,7 +82,7 @@ public abstract class SingerFilterForm extends GenericPanel<SingerFilter> {
 
         IModel<Boolean> model = LambdaModel.of(getModel(), SingerFilter::isShowAll, SingerFilter::setShowAll);
         FormComponent<Boolean> control = new CheckBox("control", model)
-            .setLabel(new ResourceModel("showAll", "Show All"));
+            .setLabel(new ResourceModel("filter.singer.form.control.show-all", "Show all"));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 
         return container.add(control, label);
@@ -98,7 +98,7 @@ public abstract class SingerFilterForm extends GenericPanel<SingerFilter> {
             }
         };
         button.setIconType(FontAwesome5IconType.undo_s);
-        button.add(new TooltipBehavior(new ResourceModel("reset", "Reset")));
+        button.add(new TooltipBehavior(new ResourceModel("filter.singer.form.button.reset", "Reset")));
         return button;
     }
 
@@ -116,7 +116,7 @@ public abstract class SingerFilterForm extends GenericPanel<SingerFilter> {
         };
         button.add(new ButtonBehavior(Buttons.Type.Primary));
         button.add(new Icon("icon", FontAwesome5IconType.filter_s));
-        button.add(new TooltipBehavior(new ResourceModel("filter", "Filter")));
+        button.add(new TooltipBehavior(new ResourceModel("filter.singer.form.button.submit", "Filter")));
         return button;
     }
 
