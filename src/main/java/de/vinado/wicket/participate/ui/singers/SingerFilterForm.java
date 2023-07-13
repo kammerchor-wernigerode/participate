@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.ui.singers;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.ButtonBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
@@ -23,22 +22,14 @@ import org.apache.wicket.markup.html.form.FormComponentLabel;
 import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.AbstractLink;
-import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
-import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 
 import java.util.Arrays;
 
-public abstract class SingerFilterForm extends Form<SingerFilter> {
-
-    private static final String TAG_NAME = "singerFilterForm";
-
-    static {
-        WicketTagIdentifier.registerWellKnownTagName(TAG_NAME);
-    }
+public abstract class SingerFilterForm extends GenericPanel<SingerFilter> {
 
     public SingerFilterForm(String id, IModel<SingerFilter> model) {
         super(id, model);
@@ -50,14 +41,17 @@ public abstract class SingerFilterForm extends Form<SingerFilter> {
 
         setOutputMarkupId(true);
 
-        add(searchTerm("searchTerm"));
-        add(voice("voice"));
-        add(showAll("showAll"));
+        queue(form("form"));
+        queue(searchTerm("searchTerm"));
+        queue(voice("voice"));
+        queue(showAll("showAll"));
 
-        add(resetButton("reset"));
-        add(applyButton("apply"));
+        queue(resetButton("reset"));
+        queue(applyButton("apply"));
+    }
 
-        add(new CssClassNameAppender("row row-cols-lg-auto g-3 align-items-center"));
+    protected Form<SingerFilter> form(String wicketId) {
+        return new Form<>(wicketId);
     }
 
     protected MarkupContainer searchTerm(String wicketId) {
@@ -130,10 +124,5 @@ public abstract class SingerFilterForm extends Form<SingerFilter> {
 
     protected void onReset() {
         onApply();
-    }
-
-    @Override
-    protected IMarkupSourcingStrategy newMarkupSourcingStrategy() {
-        return new PanelMarkupSourcingStrategy(TAG_NAME, false);
     }
 }
