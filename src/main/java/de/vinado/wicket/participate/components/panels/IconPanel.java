@@ -26,7 +26,7 @@ public class IconPanel extends Panel {
     private IModel<String> cssClassNameModel;
 
     public IconPanel(String id) {
-        this(id, FontAwesome5IconType.code_s, Color.DEFAULT, TextAlign.LEFT);
+        this(id, FontAwesome5IconType.code_s, Color.DEFAULT, TextAlign.START);
     }
 
     public IconPanel(String id, IconType type, Color color, TextAlign textAlign) {
