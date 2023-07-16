@@ -47,7 +47,14 @@
                     </div>
                 </div>
                 <input type="checkbox" wicket:id="catering">
-                <input type="checkbox" wicket:id="accommodation">
+                <fieldset class="form-group row">
+                    <legend class="col-form-label col-sm-3 float-sm-left pt-0">
+                        <wicket:message key="event.participant.form.label.accommodation">Accommodation</wicket:message>
+                    </legend>
+                    <div class="col-sm-9">
+                        <div wicket:id="accommodation"></div>
+                    </div>
+                </fieldset>
                 <div class="form-group row">
                     <div class="col-sm-9 offset-sm-3">
                         <div class="row align-items-center">
