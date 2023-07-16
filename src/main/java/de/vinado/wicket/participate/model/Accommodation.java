@@ -7,6 +7,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
@@ -15,7 +16,7 @@ import javax.persistence.Enumerated;
 @Data
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Accommodation {
+public class Accommodation implements Serializable {
 
     @Column
     @Enumerated(EnumType.STRING)
