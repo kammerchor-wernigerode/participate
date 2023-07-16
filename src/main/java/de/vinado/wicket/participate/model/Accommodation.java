@@ -2,6 +2,7 @@ package de.vinado.wicket.participate.model;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Transient;
 
 @Data
 @Embeddable
@@ -41,13 +43,21 @@ public class Accommodation implements Serializable {
         return new Accommodation(Status.NO_NEED, null);
     }
 
+    @Transient
+    public boolean isQuantifiable() {
+        return status.quantifiable;
+    }
+
 
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     public enum Status {
 
-        SEARCHING,
-        OFFERING,
-        NO_NEED,
+        SEARCHING(true),
+        OFFERING(true),
+        NO_NEED(false),
         ;
+
+        @Getter
+        private final boolean quantifiable;
     }
 }
