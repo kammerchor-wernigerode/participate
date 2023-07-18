@@ -58,15 +58,7 @@ public class AccommodationFormGroup extends FormComponentPanel<Accommodation> {
         IModel<Status> model = lambda(Accommodation::getStatus, Accommodation::setStatus);
         List<Status> choices = Arrays.asList(Status.values());
         EnumChoiceRenderer<Status> renderer = new EnumChoiceRenderer<>(this);
-        BootstrapRadioChoice<Status> control = new BootstrapRadioChoice<>(wicketId, model, choices, renderer) {
-
-            @Override
-            protected void onInvalid() {
-                super.onInvalid();
-
-                add(new CssClassNameAppender("is-invalid"));
-            }
-        };
+        BootstrapRadioChoice<Status> control = new BootstrapRadioChoice<>(wicketId, model, choices, renderer);
         control.setOutputMarkupId(true);
         control.setInline(true);
         control.setRequired(true);
