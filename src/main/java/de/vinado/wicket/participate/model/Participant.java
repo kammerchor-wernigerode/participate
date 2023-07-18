@@ -142,8 +142,4 @@ public class Participant implements Identifiable<Long>, Invitable {
     public boolean isConsiderable() {
         return invitationStatus.isConsiderable();
     }
-
-    public boolean isAccommodation() {
-        return Accommodation.Status.SEARCHING.equals(accommodation.getStatus());
-    }
 }
