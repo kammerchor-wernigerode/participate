@@ -5,6 +5,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5I
 import de.vinado.wicket.participate.components.TextAlign;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
+import de.vinado.wicket.participate.ui.event.AccommodationIcon;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -28,12 +29,7 @@ public class BnBIconPanel extends Panel {
             TextAlign.CENTER).setDisplay(IconPanel.Display.INLINE)
         );
 
-        add(new IconPanel(
-            "accommodation",
-            FontAwesome5IconType.bed_s,
-            model.getObject().isAccommodation() ? IconPanel.Color.SUCCESS : IconPanel.Color.DANGER,
-            TextAlign.CENTER).setDisplay(IconPanel.Display.INLINE)
-        );
+        add(new AccommodationIcon("accommodation", model.map(Participant::accommodation)));
 
         IModel<ParticipantDTO> dtoModel = model.map(ParticipantDTO::new);
         WebMarkupContainer car = new WebMarkupContainer("car");
