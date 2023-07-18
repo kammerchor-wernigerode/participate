@@ -29,7 +29,7 @@ public class BnBIconPanel extends Panel {
             TextAlign.CENTER).setDisplay(IconPanel.Display.INLINE)
         );
 
-        add(new AccommodationIcon("accommodation", model.map(Participant::accommodation)));
+        add(new AccommodationIcon("accommodation", model.map(Participant::getAccommodation)));
 
         IModel<ParticipantDTO> dtoModel = model.map(ParticipantDTO::new);
         WebMarkupContainer car = new WebMarkupContainer("car");

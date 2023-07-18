@@ -168,7 +168,7 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
     public int getAccommodationCount() {
         return participants.stream()
             .filter(Participant::isConsiderable)
-            .map(Participant::accommodation)
+            .map(Participant::getAccommodation)
             .filter(Accommodation::isSearching)
             .map(Accommodation::getBeds)
             .reduce(0, Integer::sum);

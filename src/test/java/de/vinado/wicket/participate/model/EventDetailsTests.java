@@ -30,7 +30,7 @@ class EventDetailsTests {
         event.setParticipants(singletonList(participant));
         when(accommodation.isSearching()).thenReturn(false);
         when(participant.isConsiderable()).thenReturn(true);
-        when(participant.accommodation()).thenReturn(accommodation);
+        when(participant.getAccommodation()).thenReturn(accommodation);
 
         int result = event.getAccommodationCount();
 
@@ -45,7 +45,7 @@ class EventDetailsTests {
         event.setParticipants(singletonList(participant));
         when(accommodation.isSearching()).thenReturn(true);
         when(accommodation.getBeds()).thenReturn(1);
-        when(participant.accommodation()).thenReturn(accommodation);
+        when(participant.getAccommodation()).thenReturn(accommodation);
         when(participant.isConsiderable()).thenReturn(true);
 
         int result = event.getAccommodationCount();
@@ -62,7 +62,7 @@ class EventDetailsTests {
         event.setParticipants(singletonList(participant));
         when(accommodation.isSearching()).thenReturn(true);
         when(accommodation.getBeds()).thenReturn(beds);
-        when(participant.accommodation()).thenReturn(accommodation);
+        when(participant.getAccommodation()).thenReturn(accommodation);
         when(participant.isConsiderable()).thenReturn(true);
 
         int result = event.getAccommodationCount();
@@ -80,11 +80,11 @@ class EventDetailsTests {
         event.setParticipants(asList(participant1, participant2));
         when(accommodation1.isSearching()).thenReturn(true);
         when(accommodation1.getBeds()).thenReturn(1);
-        when(participant1.accommodation()).thenReturn(accommodation1);
+        when(participant1.getAccommodation()).thenReturn(accommodation1);
         when(participant1.isConsiderable()).thenReturn(true);
         when(accommodation2.isSearching()).thenReturn(true);
         when(accommodation2.getBeds()).thenReturn(1);
-        when(participant2.accommodation()).thenReturn(accommodation2);
+        when(participant2.getAccommodation()).thenReturn(accommodation2);
         when(participant2.isConsiderable()).thenReturn(true);
 
         int result = event.getAccommodationCount();

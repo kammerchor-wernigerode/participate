@@ -146,9 +146,4 @@ public class Participant implements Identifiable<Long>, Invitable {
     public boolean isAccommodation() {
         return Accommodation.Status.SEARCHING.equals(accommodation.getStatus());
     }
-
-    @Transient
-    public Accommodation accommodation() {
-        return accommodation;
-    }
 }

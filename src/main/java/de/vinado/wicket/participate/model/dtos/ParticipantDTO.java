@@ -43,7 +43,7 @@ public class ParticipantDTO implements Serializable, Invitable {
         this.toDate = participant.getToDate();
         this.invitationStatus = participant.getInvitationStatus();
         this.catering = participant.isCatering();
-        this.accommodation = participant.accommodation();
+        this.accommodation = participant.getAccommodation();
         this.car = participant.getCarSeatCount() >= 0;
         this.carSeatCount = participant.getCarSeatCount() < 0 ? 0 : participant.getCarSeatCount();
         this.comment = participant.getComment();
