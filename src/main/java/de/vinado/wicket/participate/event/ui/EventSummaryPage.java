@@ -96,6 +96,7 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
         add(new Label("tenorCount"));
         add(new Label("bassCount"));
         add(accommodationDemand("accommodationDemand"));
+        add(accommodationSupply("accommodationSupply"));
         add(new Label("cateringCount"));
         add(new Label("sopranos"));
         add(new Label("altos"));
@@ -120,6 +121,11 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
 
     protected Component accommodationDemand(String wicketId) {
         IModel<?> model = new StringResourceModel("event.participant.accommodation.demand", getModel());
+        return new Label(wicketId, model);
+    }
+
+    protected Component accommodationSupply(String wicketId) {
+        IModel<?> model = new StringResourceModel("event.participant.accommodation.supply", getModel());
         return new Label(wicketId, model);
     }
 

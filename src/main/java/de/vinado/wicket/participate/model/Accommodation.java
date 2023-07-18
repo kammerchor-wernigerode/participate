@@ -15,6 +15,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Transient;
 
+import static de.vinado.wicket.participate.model.Accommodation.Status.OFFERING;
 import static de.vinado.wicket.participate.model.Accommodation.Status.SEARCHING;
 
 @Data
@@ -53,6 +54,11 @@ public class Accommodation implements Serializable {
     @Transient
     public boolean isSearching() {
         return SEARCHING.equals(status);
+    }
+
+    @Transient
+    public boolean isOffering() {
+        return OFFERING.equals(status);
     }
 
 

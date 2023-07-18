@@ -174,6 +174,16 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
             .reduce(0, Integer::sum);
     }
 
+    @Transient
+    public int getAccommodationSupply() {
+        return participants.stream()
+            .filter(Participant::isConsiderable)
+            .map(Participant::getAccommodation)
+            .filter(Accommodation::isOffering)
+            .map(Accommodation::getBeds)
+            .reduce(0, Integer::sum);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
