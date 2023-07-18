@@ -21,6 +21,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.INamedParameters.Type;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -104,7 +105,6 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
         add(new Label("declined"));
         add(new Label("carCount"));
         add(new Label("carSeatCount"));
-        add(new Label("accommodationSingerCount", PropertyModel.of(getModel(), "acceptedSum")));
         add(new Label("cateringSingerCount", new PropertyModel<>(getModel(), "acceptedSum")));
         add(new Label("carSingerCount", new PropertyModel<>(getModel(), "acceptedSum")));
 
@@ -119,7 +119,8 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
     }
 
     protected Component accommodationDemand(String wicketId) {
-        return new Label(wicketId);
+        IModel<?> model = new StringResourceModel("event.participant.accommodation.demand", getModel());
+        return new Label(wicketId, model);
     }
 
     private void navigate(EventDetails event) {
