@@ -13,6 +13,7 @@ import de.vinado.wicket.participate.ui.event.EventsPage;
 import de.vinado.wicket.participate.ui.event.details.ParticipantFilterIntent;
 import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateIntent;
 import de.vinado.wicket.participate.ui.pages.ParticipatePage;
+import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
@@ -93,7 +94,7 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
         add(new Label("altoCount"));
         add(new Label("tenorCount"));
         add(new Label("bassCount"));
-        add(new Label("accommodationCount"));
+        add(accommodationDemand("accommodationCount"));
         add(new Label("cateringCount"));
         add(new Label("sopranos"));
         add(new Label("altos"));
@@ -115,6 +116,10 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
         listPanel.add(new UpdateOnEventBehavior<>(ParticipantTableUpdateIntent.class));
         listPanel.setOutputMarkupId(true);
         add(listPanel);
+    }
+
+    protected Component accommodationDemand(String wicketId) {
+        return new Label(wicketId);
     }
 
     private void navigate(EventDetails event) {
