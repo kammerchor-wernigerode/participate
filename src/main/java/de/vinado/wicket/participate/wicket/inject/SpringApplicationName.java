@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SpringApplicationName implements ApplicationName {
 
-    @Value("${spring.application.name}")
+    @Value("${spring.application.name:Participate}")
     private String applicationName;
 
     @Override
