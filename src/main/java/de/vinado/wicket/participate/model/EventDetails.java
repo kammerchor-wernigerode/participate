@@ -25,8 +25,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import static com.google.common.primitives.Ints.saturatedCast;
-
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
@@ -168,11 +166,12 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
 
     @Transient
     public int getAccommodationCount() {
-        long count = participants.stream()
-            .map(Participant::isAccommodation)
-            .filter(Boolean::booleanValue)
-            .count();
-        return saturatedCast(count);
+        return participants.stream()
+            .filter(Participant::isConsiderable)
+            .map(Participant::accommodation)
+            .filter(Accommodation::isSearching)
+            .map(Accommodation::getBeds)
+            .reduce(0, Integer::sum);
     }
 
     @Override

@@ -1,12 +1,20 @@
 package de.vinado.wicket.participate.model;
 
+import de.vinado.wicket.participate.model.Accommodation.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static de.vinado.wicket.participate.model.Accommodation.Status.SEARCHING;
 import static java.lang.Math.abs;
+import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AccommodationTests {
@@ -58,6 +66,42 @@ class AccommodationTests {
         Integer beds = accommodation.getBeds();
 
         assertEquals(BEDS, beds);
+    }
+
+    @ParameterizedTest
+    @MethodSource("searching")
+    void accommodation_shouldProvideSearching(Status status) {
+        accommodation = new Accommodation(status, BEDS);
+
+        boolean result = accommodation.isSearching();
+
+        assertTrue(result);
+    }
+
+    private static Stream<Arguments> searching() {
+        return Arrays.stream(Status.values())
+            .filter(searchingPredicate())
+            .map(Arguments::of);
+    }
+
+    @ParameterizedTest
+    @MethodSource("notSearching")
+    void accommodation_shouldNotProvideSearching(Status status) {
+        accommodation = new Accommodation(status, BEDS);
+
+        boolean result = accommodation.isSearching();
+
+        assertFalse(result);
+    }
+
+    private static Stream<Arguments> notSearching() {
+        return Arrays.stream(Status.values())
+            .filter(not(searchingPredicate()))
+            .map(Arguments::of);
+    }
+
+    private static Predicate<Status> searchingPredicate() {
+        return SEARCHING::equals;
     }
 
     private static Integer randomInteger() {

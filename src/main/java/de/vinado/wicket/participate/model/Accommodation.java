@@ -15,6 +15,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Transient;
 
+import static de.vinado.wicket.participate.model.Accommodation.Status.SEARCHING;
+
 @Data
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -46,6 +48,11 @@ public class Accommodation implements Serializable {
     @Transient
     public boolean isQuantifiable() {
         return status.quantifiable;
+    }
+
+    @Transient
+    public boolean isSearching() {
+        return SEARCHING.equals(status);
     }
 
 

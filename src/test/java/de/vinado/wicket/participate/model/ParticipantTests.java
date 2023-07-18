@@ -1,10 +1,15 @@
 package de.vinado.wicket.participate.model;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static de.vinado.wicket.participate.model.Accommodation.Status.NO_NEED;
 import static de.vinado.wicket.participate.model.Accommodation.Status.OFFERING;
 import static de.vinado.wicket.participate.model.Accommodation.Status.SEARCHING;
+import static de.vinado.wicket.participate.model.InvitationStatus.DECLINED;
+import static de.vinado.wicket.participate.model.InvitationStatus.PENDING;
 import static de.vinado.wicket.participate.model.InvitationStatus.UNINVITED;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.*;
