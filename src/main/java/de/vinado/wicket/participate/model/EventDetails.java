@@ -165,7 +165,7 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
     }
 
     @Transient
-    public int getAccommodationCount() {
+    public int getAccommodationDemand() {
         return participants.stream()
             .filter(Participant::isConsiderable)
             .map(Participant::getAccommodation)

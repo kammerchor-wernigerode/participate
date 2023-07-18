@@ -17,7 +17,7 @@ class EventDetailsTests {
         EventDetails event = new EventDetails();
         event.setParticipants(emptyList());
 
-        int result = event.getAccommodationCount();
+        int result = event.getAccommodationDemand();
 
         assertEquals(0, result);
     }
@@ -32,7 +32,7 @@ class EventDetailsTests {
         when(participant.isConsiderable()).thenReturn(true);
         when(participant.getAccommodation()).thenReturn(accommodation);
 
-        int result = event.getAccommodationCount();
+        int result = event.getAccommodationDemand();
 
         assertEquals(0, result);
     }
@@ -48,7 +48,7 @@ class EventDetailsTests {
         when(participant.getAccommodation()).thenReturn(accommodation);
         when(participant.isConsiderable()).thenReturn(true);
 
-        int result = event.getAccommodationCount();
+        int result = event.getAccommodationDemand();
 
         assertEquals(1, result);
     }
@@ -65,7 +65,7 @@ class EventDetailsTests {
         when(participant.getAccommodation()).thenReturn(accommodation);
         when(participant.isConsiderable()).thenReturn(true);
 
-        int result = event.getAccommodationCount();
+        int result = event.getAccommodationDemand();
 
         assertEquals(beds, result);
     }
@@ -87,7 +87,7 @@ class EventDetailsTests {
         when(participant2.getAccommodation()).thenReturn(accommodation2);
         when(participant2.isConsiderable()).thenReturn(true);
 
-        int result = event.getAccommodationCount();
+        int result = event.getAccommodationDemand();
 
         assertEquals(2, result);
     }

@@ -95,7 +95,7 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
         add(new Label("altoCount"));
         add(new Label("tenorCount"));
         add(new Label("bassCount"));
-        add(accommodationDemand("accommodationCount"));
+        add(accommodationDemand("accommodationDemand"));
         add(new Label("cateringCount"));
         add(new Label("sopranos"));
         add(new Label("altos"));
