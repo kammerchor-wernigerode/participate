@@ -22,6 +22,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import static de.vinado.wicket.participate.model.InvitationStatus.ACCEPTED;
 import static de.vinado.wicket.participate.model.InvitationStatus.DECLINED;
@@ -139,5 +140,10 @@ public class Participant implements Identifiable<Long>, Invitable {
 
     public boolean isAccommodation() {
         return Accommodation.Status.SEARCHING.equals(accommodation.getStatus());
+    }
+
+    @Transient
+    public Accommodation accommodation() {
+        return accommodation;
     }
 }
