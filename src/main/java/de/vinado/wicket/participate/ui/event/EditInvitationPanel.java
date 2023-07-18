@@ -6,6 +6,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal.Size;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.select.BootstrapSelect;
+import de.vinado.app.participate.event.ui.AccommodationModel;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
@@ -18,10 +19,12 @@ import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.common.ParticipateUtils;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
+import de.vinado.wicket.participate.model.Accommodation;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
+import de.vinado.wicket.participate.wicket.form.ui.AccommodationFormGroup;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -124,8 +127,8 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
         });
         form.add(cateringCb);
 
-        final CheckBox accommodationCb = new CheckBox("accommodation");
-        accommodationCb.add(BootstrapHorizontalFormDecorator.decorate());
+        IModel<Accommodation> model = AccommodationModel.compatible(getModel(), ParticipantDTO::isAccommodation, ParticipantDTO::setAccommodation);
+        AccommodationFormGroup accommodationCb = new AccommodationFormGroup("accommodation", model);
         accommodationCb.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
