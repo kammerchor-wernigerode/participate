@@ -51,7 +51,7 @@ public class AccommodationFormGroup extends FormComponentPanel<Accommodation> {
         add(status = status("status"));
         add(beds = beds("beds"));
 
-        add(validator());
+        add(new Validator());
     }
 
     private FormComponent<Status> status(String wicketId) {
@@ -121,27 +121,6 @@ public class AccommodationFormGroup extends FormComponentPanel<Accommodation> {
             .orElseGet(getModelObject()::getStatus);
     }
 
-    private static IValidator<Accommodation> validator() {
-        return validatable -> {
-            Accommodation accommodation = validatable.getValue();
-            if (accommodation.isQuantifiable()) {
-                assertNotNull(validatable);
-            }
-        };
-    }
-
-    private static void assertNotNull(IValidatable<Accommodation> validatable) {
-        Accommodation accommodation = validatable.getValue();
-        Integer beds = accommodation.getBeds();
-        if (null == beds) {
-            validatable.error((IValidationError) source -> {
-                Map<String, Object> vars = Collections.emptyMap();
-                String key = "event.participant.form.validation.accommodation.beds";
-                return source.getMessage(key, vars);
-            });
-        }
-    }
-
     @Override
     public void convertInput() {
         Status status = this.status.getConvertedInput();
@@ -152,5 +131,29 @@ public class AccommodationFormGroup extends FormComponentPanel<Accommodation> {
         accommodation.setBeds(beds);
 
         setConvertedInput(accommodation);
+    }
+
+
+    public static class Validator implements IValidator<Accommodation> {
+
+        @Override
+        public void validate(IValidatable<Accommodation> validatable) {
+            Accommodation accommodation = validatable.getValue();
+            if (accommodation.isQuantifiable()) {
+                assertNotNull(validatable);
+            }
+        }
+
+        private static void assertNotNull(IValidatable<Accommodation> validatable) {
+            Accommodation accommodation = validatable.getValue();
+            Integer beds = accommodation.getBeds();
+            if (null == beds) {
+                validatable.error((IValidationError) source -> {
+                    Map<String, Object> vars = Collections.emptyMap();
+                    String key = "event.participant.form.validation.accommodation.beds";
+                    return source.getMessage(key, vars);
+                });
+            }
+        }
     }
 }
