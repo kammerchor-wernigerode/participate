@@ -6,7 +6,6 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal.Size;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.select.BootstrapSelect;
-import de.vinado.app.participate.event.ui.AccommodationModel;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
@@ -36,6 +35,7 @@ import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -127,7 +127,7 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
         });
         form.add(cateringCb);
 
-        IModel<Accommodation> model = AccommodationModel.compatible(getModel(), ParticipantDTO::isAccommodation, ParticipantDTO::setAccommodation);
+        IModel<Accommodation> model = LambdaModel.of(getModel(), ParticipantDTO::getAccommodation, ParticipantDTO::setAccommodation);
         AccommodationFormGroup accommodationCb = new AccommodationFormGroup("accommodation", model);
         accommodationCb.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override

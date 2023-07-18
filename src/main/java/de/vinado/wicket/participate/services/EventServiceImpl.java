@@ -189,16 +189,10 @@ public class EventServiceImpl extends DataService implements EventService {
         loadedParticipant.setFromDate(dto.getFromDate());
         loadedParticipant.setToDate(dto.getToDate());
         loadedParticipant.setCatering(dto.isCatering());
-        loadedParticipant.setAccommodation(createAccommodation(dto));
+        loadedParticipant.setAccommodation(dto.getAccommodation());
         loadedParticipant.setCarSeatCount(dto.isCar() ? dto.getCarSeatCount() : -1);
         loadedParticipant.setComment(dto.getComment());
         return save(loadedParticipant);
-    }
-
-    private Accommodation createAccommodation(ParticipantDTO dto) {
-        return dto.isAccommodation()
-            ? new Accommodation(Accommodation.Status.SEARCHING, 1)
-            : new Accommodation(Accommodation.Status.NO_NEED, null);
     }
 
     /**
@@ -225,7 +219,7 @@ public class EventServiceImpl extends DataService implements EventService {
         dto.setFromDate(null);
         dto.setToDate(null);
         dto.setCatering(false);
-        dto.setAccommodation(false);
+        dto.setAccommodation(Accommodation.noNeed());
         dto.setCar(false);
         dto.setCarSeatCount((short) 0);
         return saveParticipant(dto);

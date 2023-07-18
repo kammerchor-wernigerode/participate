@@ -4,7 +4,6 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
 import de.agilecoders.wicket.jquery.Key;
-import de.vinado.app.participate.event.ui.AccommodationModel;
 import de.vinado.wicket.bt4.button.BootstrapAjaxButton;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
@@ -32,6 +31,7 @@ import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 
 import java.util.Date;
@@ -84,7 +84,7 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
         cateringCb.add(BootstrapHorizontalFormDecorator.decorate());
         add(cateringCb);
 
-        IModel<Accommodation> model = AccommodationModel.compatible(getModel(), ParticipantDTO::isAccommodation, ParticipantDTO::setAccommodation);
+        IModel<Accommodation> model = LambdaModel.of(getModel(), ParticipantDTO::getAccommodation, ParticipantDTO::setAccommodation);
         add(new AccommodationFormGroup("accommodation", model).add(new AccommodationFormGroup.Validator()));
 
         NumberTextField<Short> carSeatCountTf = new NumberTextField<>("carSeatCount") {
