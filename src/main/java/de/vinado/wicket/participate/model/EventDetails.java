@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -166,20 +167,19 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
 
     @Transient
     public int getAccommodationDemand() {
-        return participants.stream()
-            .filter(Participant::isConsiderable)
-            .map(Participant::getAccommodation)
-            .filter(Accommodation::isSearching)
-            .map(Accommodation::getBeds)
-            .reduce(0, Integer::sum);
+        return bedsWhere(Accommodation::isSearching);
     }
 
     @Transient
     public int getAccommodationSupply() {
+        return bedsWhere(Accommodation::isOffering);
+    }
+
+    private Integer bedsWhere(Predicate<Accommodation> predicate) {
         return participants.stream()
             .filter(Participant::isConsiderable)
             .map(Participant::getAccommodation)
-            .filter(Accommodation::isOffering)
+            .filter(predicate)
             .map(Accommodation::getBeds)
             .reduce(0, Integer::sum);
     }
