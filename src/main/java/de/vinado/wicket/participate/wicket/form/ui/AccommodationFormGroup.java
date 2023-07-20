@@ -46,7 +46,7 @@ public class AccommodationFormGroup extends FormComponentPanel<Accommodation> {
         add(status = status("status"));
         add(beds = beds("beds"));
 
-        add(new Validator());
+        add(Validator.getInstance());
     }
 
     private FormComponent<Status> status(String wicketId) {
@@ -130,7 +130,11 @@ public class AccommodationFormGroup extends FormComponentPanel<Accommodation> {
     }
 
 
-    public static class Validator implements IValidator<Accommodation> {
+    private static class Validator implements IValidator<Accommodation> {
+
+        public static Validator getInstance() {
+            return Holder.INSTANCE;
+        }
 
         @Override
         public void validate(IValidatable<Accommodation> validatable) {
@@ -163,6 +167,12 @@ public class AccommodationFormGroup extends FormComponentPanel<Accommodation> {
                     return source.getMessage(key, vars);
                 });
             }
+        }
+
+
+        private static final class Holder {
+
+            private static final Validator INSTANCE = new Validator();
         }
     }
 }
