@@ -117,7 +117,7 @@ public class AccommodationFormGroup extends FormComponentPanel<Accommodation> {
 
     private Optional<Status> status() {
         return Optional.ofNullable(this.status.getConvertedInput())
-            .or(() -> Optional.ofNullable(getModelObject().getStatus()));
+            .or(() -> Optional.ofNullable(getModelObject()).map(Accommodation::getStatus));
     }
 
     @Override
@@ -125,7 +125,8 @@ public class AccommodationFormGroup extends FormComponentPanel<Accommodation> {
         Status status = this.status.getConvertedInput();
         Integer beds = this.beds.getConvertedInput();
 
-        Accommodation accommodation = getModelObject();
+        Accommodation accommodation = Optional.ofNullable(getModelObject())
+            .orElseGet(Accommodation::new);
         accommodation.setStatus(status);
         accommodation.setBeds(beds);
 

@@ -9,6 +9,7 @@ import org.apache.wicket.util.lang.Objects;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
+import java.util.Optional;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
@@ -44,7 +45,9 @@ public class Accommodation implements Serializable {
 
     @Transient
     public boolean isQuantifiable() {
-        return Objects.defaultIfNull(status.quantifiable, false);
+        return Optional.ofNullable(status)
+            .map(Status::isQuantifiable)
+            .orElse(false);
     }
 
     @Transient
