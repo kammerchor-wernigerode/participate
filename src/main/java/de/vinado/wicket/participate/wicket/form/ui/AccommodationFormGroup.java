@@ -59,7 +59,6 @@ public class AccommodationFormGroup extends FormComponentPanel<Accommodation> {
         BootstrapRadioChoice<Status> control = new BootstrapRadioChoice<>(wicketId, model, choices, renderer);
         control.setOutputMarkupId(true);
         control.setInline(true);
-        control.setRequired(true);
         control.setLabel(new ResourceModel("event.participant.form.control.accommodation.status"));
         control.setLabelPosition(AbstractChoice.LabelPosition.AFTER);
         control.add(new AjaxFormChoiceComponentUpdatingBehavior() {
@@ -139,8 +138,21 @@ public class AccommodationFormGroup extends FormComponentPanel<Accommodation> {
         @Override
         public void validate(IValidatable<Accommodation> validatable) {
             Accommodation accommodation = validatable.getValue();
+            assertStatusNotNull(validatable);
             if (accommodation.isQuantifiable()) {
                 assertNotNull(validatable);
+            }
+        }
+
+        private static void assertStatusNotNull(IValidatable<Accommodation> validatable) {
+            Accommodation accommodation = validatable.getValue();
+            Status status = accommodation.getStatus();
+            if (null == status) {
+                validatable.error(source -> {
+                    Map<String, Object> vars = Collections.emptyMap();
+                    String key = "event.participant.form.validation.accommodation.status";
+                    return source.getMessage(key, vars);
+                });
             }
         }
 
