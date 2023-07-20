@@ -140,7 +140,7 @@ public class AccommodationFormGroup extends FormComponentPanel<Accommodation> {
             Accommodation accommodation = validatable.getValue();
             assertStatusNotNull(validatable);
             if (accommodation.isQuantifiable()) {
-                assertNotNull(validatable);
+                assertBedsNotNull(validatable);
             }
         }
 
@@ -156,7 +156,7 @@ public class AccommodationFormGroup extends FormComponentPanel<Accommodation> {
             }
         }
 
-        private static void assertNotNull(IValidatable<Accommodation> validatable) {
+        private static void assertBedsNotNull(IValidatable<Accommodation> validatable) {
             Accommodation accommodation = validatable.getValue();
             Integer beds = accommodation.getBeds();
             if (null == beds) {
