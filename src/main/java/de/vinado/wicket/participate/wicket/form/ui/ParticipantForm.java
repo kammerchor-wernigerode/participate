@@ -131,11 +131,13 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 ParticipantForm.this.getModelObject().setInvitationStatus(InvitationStatus.DECLINED);
+                ParticipantForm.this.getModelObject().setAccommodation(new Accommodation());
                 onDeclineEvent(target);
                 target.add(ParticipantForm.this);
             }
         };
         declineBtn.setLabel(new ResourceModel("decline", "Decline"));
+        declineBtn.setDefaultFormProcessing(false);
         add(declineBtn);
 
         add(new BootstrapAjaxButton("acceptTentatively", Buttons.Type.Warning) {
