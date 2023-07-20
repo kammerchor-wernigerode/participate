@@ -110,13 +110,14 @@ public class AccommodationFormGroup extends FormComponentPanel<Accommodation> {
     }
 
     private boolean isQuantifiable() {
-        Status status = status();
-        return status.isQuantifiable();
+        return status()
+            .map(Status::isQuantifiable)
+            .orElse(false);
     }
 
-    private Status status() {
+    private Optional<Status> status() {
         return Optional.ofNullable(this.status.getConvertedInput())
-            .orElseGet(getModelObject()::getStatus);
+            .or(() -> Optional.ofNullable(getModelObject().getStatus()));
     }
 
     @Override

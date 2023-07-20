@@ -2,10 +2,10 @@ package de.vinado.wicket.participate.model;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.apache.wicket.util.lang.Objects;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
@@ -20,7 +20,7 @@ import static de.vinado.wicket.participate.model.Accommodation.Status.SEARCHING;
 
 @Data
 @Embeddable
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Accommodation implements Serializable {
 
     @Column
@@ -42,13 +42,9 @@ public class Accommodation implements Serializable {
         }
     }
 
-    public static Accommodation noNeed() {
-        return new Accommodation(Status.NO_NEED, null);
-    }
-
     @Transient
     public boolean isQuantifiable() {
-        return status.quantifiable;
+        return Objects.defaultIfNull(status.quantifiable, false);
     }
 
     @Transient
@@ -70,7 +66,10 @@ public class Accommodation implements Serializable {
         NO_NEED(false),
         ;
 
-        @Getter
         private final boolean quantifiable;
+
+        public boolean isQuantifiable() {
+            return Objects.defaultIfNull(quantifiable, false);
+        }
     }
 }

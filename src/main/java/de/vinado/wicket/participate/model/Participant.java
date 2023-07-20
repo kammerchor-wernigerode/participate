@@ -86,7 +86,7 @@ public class Participant implements Identifiable<Long>, Invitable {
         @AttributeOverride(name = "status", column = @Column(name = "accommodation_status")),
         @AttributeOverride(name = "beds", column = @Column(name = "accommodation_bed_count")),
     })
-    private Accommodation accommodation;
+    private Accommodation accommodation = new Accommodation();
 
     /**
      * @param event            {@link Event}
@@ -115,7 +115,7 @@ public class Participant implements Identifiable<Long>, Invitable {
 
     public Participant(final Event event, final Singer singer, final String token,
                        final InvitationStatus invitationStatus) {
-        this(event, singer, token, invitationStatus, null, null, false, Accommodation.noNeed(), (short) -1, null);
+        this(event, singer, token, invitationStatus, null, null, false, new Accommodation(), (short) -1, null);
     }
 
     public boolean isUninvited() {

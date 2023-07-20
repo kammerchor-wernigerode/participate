@@ -219,7 +219,7 @@ public class EventServiceImpl extends DataService implements EventService {
         dto.setFromDate(null);
         dto.setToDate(null);
         dto.setCatering(false);
-        dto.setAccommodation(Accommodation.noNeed());
+        dto.setAccommodation(new Accommodation());
         dto.setCar(false);
         dto.setCarSeatCount((short) 0);
         return saveParticipant(dto);
