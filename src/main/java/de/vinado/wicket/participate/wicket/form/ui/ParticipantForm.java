@@ -130,7 +130,7 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
         BootstrapAjaxButton declineBtn = new BootstrapAjaxButton("decline", Buttons.Type.Default) {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
-                ParticipantForm.this.getModelObject().setInvitationStatus(InvitationStatus.ACCEPTED);
+                ParticipantForm.this.getModelObject().setInvitationStatus(InvitationStatus.DECLINED);
                 onDeclineEvent(target);
                 target.add(ParticipantForm.this);
             }
