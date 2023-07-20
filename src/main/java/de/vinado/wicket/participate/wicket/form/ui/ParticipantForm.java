@@ -1,6 +1,7 @@
 package de.vinado.wicket.participate.wicket.form.ui;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
 import de.agilecoders.wicket.jquery.Key;
@@ -27,6 +28,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponentLabel;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
@@ -49,6 +51,8 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
         WicketTagIdentifier.registerWellKnownTagName(TAG_NAME);
     }
 
+    private FeedbackPanel feedback;
+
     public ParticipantForm(String id, IModel<ParticipantDTO> model) {
         super(id, model);
     }
@@ -62,6 +66,9 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
         Event event = getModelObject().getEvent();
         DatetimePickerConfig fromConfig = createDatetimePickerConfig(event);
         DatetimePickerConfig toConfig = createDatetimePickerConfig(event);
+
+        add(feedback = feedback("feedback"));
+        feedback.setOutputMarkupId(true);
 
         add(new Label("singer.displayName"));
 
@@ -123,6 +130,13 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
                 onAcceptEvent(target);
                 target.add(ParticipantForm.this);
             }
+
+            @Override
+            protected void onError(AjaxRequestTarget target) {
+                super.onError(target);
+
+                target.add(feedback);
+            }
         };
         submitBtn.setLabel(new ResourceModel("save", "Save"));
         add(submitBtn);
@@ -135,6 +149,13 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
                 onDeclineEvent(target);
                 target.add(ParticipantForm.this);
             }
+
+            @Override
+            protected void onError(AjaxRequestTarget target) {
+                super.onError(target);
+
+                target.add(feedback);
+            }
         };
         declineBtn.setLabel(new ResourceModel("decline", "Decline"));
         declineBtn.setDefaultFormProcessing(false);
@@ -146,6 +167,13 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
                 ParticipantForm.this.getModelObject().setInvitationStatus(InvitationStatus.TENTATIVE);
                 onAcceptTentatively(target);
                 target.add(ParticipantForm.this);
+            }
+
+            @Override
+            protected void onError(AjaxRequestTarget target) {
+                super.onError(target);
+
+                target.add(feedback);
             }
         }.setLabel(new ResourceModel("tentative", "Tentative")));
     }
@@ -179,6 +207,10 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
     protected abstract void onDeclineEvent(AjaxRequestTarget target);
 
     protected abstract void onAcceptTentatively(AjaxRequestTarget target);
+
+    protected FeedbackPanel feedback(String wicketId) {
+        return new NotificationPanel(wicketId, this);
+    }
 
     @Override
     protected IMarkupSourcingStrategy newMarkupSourcingStrategy() {
