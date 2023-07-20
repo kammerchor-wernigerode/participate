@@ -35,6 +35,7 @@ public class AccommodationBadge extends GenericPanel<AccommodationBadge.ViewMode
         add(new CssClassNameAppender(getModel().map(ViewModel::getColor)));
         add(tooltip());
 
+        add(icon("icon"));
         add(beds("beds"));
     }
 
@@ -47,6 +48,11 @@ public class AccommodationBadge extends GenericPanel<AccommodationBadge.ViewMode
         return new TooltipBehavior(label);
     }
 
+    protected Component icon(String wicketId) {
+        IModel<Accommodation> model = getModel().map(ViewModel::getModel);
+        return new AccommodationIcon(wicketId, model);
+    }
+
     protected Component beds(String wicketId) {
         IModel<Integer> model = getModel().map(ViewModel::getBeds);
         return new Label(wicketId, model);
@@ -56,6 +62,8 @@ public class AccommodationBadge extends GenericPanel<AccommodationBadge.ViewMode
     @Value
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ViewModel implements Serializable {
+
+        Accommodation model;
 
         String color;
         int beds;
@@ -72,15 +80,15 @@ public class AccommodationBadge extends GenericPanel<AccommodationBadge.ViewMode
                 case NO_NEED:
                     String noNeed = "no-need";
                     String noNeedTooltipKey = tooltipNamespace + noNeed;
-                    return new ViewModel("badge-transparent text-muted", beds(model), noNeedTooltipKey);
+                    return new ViewModel(model, "badge-transparent text-muted", beds(model), noNeedTooltipKey);
                 case SEARCHING:
                     String searching = "searching";
                     String searchingTooltipKey = tooltipNamespace + searching;
-                    return new ViewModel("badge-warning", beds(model), searchingTooltipKey);
+                    return new ViewModel(model, "badge-warning", beds(model), searchingTooltipKey);
                 case OFFERING:
                     String offering = "offering";
                     String offeringTooltipKey = tooltipNamespace + offering;
-                    return new ViewModel("badge-info", beds(model), offeringTooltipKey);
+                    return new ViewModel(model, "badge-info", beds(model), offeringTooltipKey);
                 default:
                     throw new IllegalArgumentException();
             }
