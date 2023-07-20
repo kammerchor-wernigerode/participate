@@ -85,7 +85,7 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
         add(cateringCb);
 
         IModel<Accommodation> model = LambdaModel.of(getModel(), ParticipantDTO::getAccommodation, ParticipantDTO::setAccommodation);
-        add(new AccommodationFormGroup("accommodation", model).add(new AccommodationFormGroup.Validator()));
+        add(new AccommodationFormGroup("accommodation", model));
 
         NumberTextField<Short> carSeatCountTf = new NumberTextField<>("carSeatCount") {
             @Override

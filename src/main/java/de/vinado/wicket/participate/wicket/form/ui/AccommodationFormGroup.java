@@ -50,6 +50,8 @@ public class AccommodationFormGroup extends FormComponentPanel<Accommodation> {
 
         add(status = status("status"));
         add(beds = beds("beds"));
+
+        add(new Validator());
     }
 
     private FormComponent<Status> status(String wicketId) {
