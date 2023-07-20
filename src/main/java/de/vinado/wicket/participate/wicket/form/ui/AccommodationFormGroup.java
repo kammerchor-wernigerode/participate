@@ -40,11 +40,6 @@ public class AccommodationFormGroup extends FormComponentPanel<Accommodation> {
     }
 
     @Override
-    protected void onConfigure() {
-        super.onConfigure();
-    }
-
-    @Override
     protected void onInitialize() {
         super.onInitialize();
 
