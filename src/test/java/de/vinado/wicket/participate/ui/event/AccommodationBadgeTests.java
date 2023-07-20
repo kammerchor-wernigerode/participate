@@ -9,14 +9,14 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 import static org.mockito.Mockito.*;
 
-class AccommodationIconTests extends SpringEnabledWicketTestCase {
+class AccommodationBadgeTests extends SpringEnabledWicketTestCase {
 
     @BeforeEach
     void setUp() {
         tester.getApplication()
             .getResourceSettings()
             .getStringResourceLoaders()
-            .add(new ClassStringResourceLoader(AccommodationIcon.class));
+            .add(new ClassStringResourceLoader(AccommodationBadge.class));
     }
 
     @ParameterizedTest
@@ -25,9 +25,9 @@ class AccommodationIconTests extends SpringEnabledWicketTestCase {
         Accommodation accommodation = mock(Accommodation.class, RETURNS_DEEP_STUBS);
         when(accommodation.getStatus()).thenReturn(status);
 
-        AccommodationIcon component = new AccommodationIcon("icon", () -> accommodation);
+        AccommodationBadge component = new AccommodationBadge("icon", () -> accommodation);
         tester.startComponentInPage(component);
 
-        tester.assertComponent("icon", AccommodationIcon.class);
+        tester.assertComponent("icon", AccommodationBadge.class);
     }
 }

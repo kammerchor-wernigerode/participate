@@ -20,10 +20,10 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
 
 import java.io.Serializable;
 
-public class AccommodationIcon extends GenericPanel<AccommodationIcon.ViewModel> {
+public class AccommodationBadge extends GenericPanel<AccommodationBadge.ViewModel> {
 
-    public AccommodationIcon(String id, IModel<Accommodation> model) {
-        super(id, model.map(AccommodationIcon::translate));
+    public AccommodationBadge(String id, IModel<Accommodation> model) {
+        super(id, model.map(AccommodationBadge::translate));
     }
 
     private static ViewModel translate(Accommodation accommodation) {
@@ -91,7 +91,7 @@ public class AccommodationIcon extends GenericPanel<AccommodationIcon.ViewModel>
         public ViewModel create(@NonNull Accommodation model) {
             Accommodation.Status status = model.getStatus();
             String labelNamespace = "icon.label.event.participant.accommodation.";
-            String tooltipNamespace = "icon.tooltip.event.participant.accommodation.";
+            String tooltipNamespace = "badge.tooltip.event.participant.accommodation.";
             switch (status) {
                 case NO_NEED:
                     String noNeed = "no-need";
