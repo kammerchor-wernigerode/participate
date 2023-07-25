@@ -15,6 +15,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import java.io.Serializable;
+import java.util.Objects;
+
+import static de.vinado.wicket.participate.model.Accommodation.Status.NO_NEED;
 
 public class AccommodationBadge extends GenericPanel<AccommodationBadge.ViewModel> {
 
@@ -74,7 +77,7 @@ public class AccommodationBadge extends GenericPanel<AccommodationBadge.ViewMode
     public static class ViewModelFactory {
 
         public ViewModel create(@NonNull Accommodation model) {
-            Accommodation.Status status = model.getStatus();
+            Accommodation.Status status = Objects.requireNonNullElse(model.getStatus(), NO_NEED);
             String tooltipNamespace = "badge.tooltip.event.participant.accommodation.";
             switch (status) {
                 case NO_NEED:

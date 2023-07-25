@@ -15,6 +15,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import java.io.Serializable;
+import java.util.Objects;
+
+import static de.vinado.wicket.participate.model.Accommodation.Status.NO_NEED;
 
 public class AccommodationIcon extends GenericPanel<AccommodationIcon.ViewModel> {
 
@@ -66,8 +69,9 @@ public class AccommodationIcon extends GenericPanel<AccommodationIcon.ViewModel>
     private static class ViewModelFactory {
 
         public ViewModel create(Accommodation model) {
+            Accommodation.Status status = Objects.requireNonNullElse(model.getStatus(), NO_NEED);
             BedIcon bedIcon = new BedIcon("fas fa-bed", "shrink-3 down-2 left-4");
-            switch (model.getStatus()) {
+            switch (status) {
                 case NO_NEED:
                     return new ViewModel(model, bedIcon, StatusIcon.invisible());
                 case SEARCHING:
@@ -125,6 +129,7 @@ public class AccommodationIcon extends GenericPanel<AccommodationIcon.ViewModel>
     }
 
     private static String resourceKey(Accommodation model) {
-        return ICON_LABEL_PREFIX + "." + model.getStatus().name();
+        Accommodation.Status status = Objects.requireNonNullElse(model.getStatus(), NO_NEED);
+        return ICON_LABEL_PREFIX + "." + status.name();
     }
 }
