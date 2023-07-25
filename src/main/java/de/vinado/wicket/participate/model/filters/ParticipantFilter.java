@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.model.filters;
 
+import de.vinado.wicket.participate.model.Accommodation;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Voice;
@@ -23,7 +24,7 @@ public class ParticipantFilter implements SerializablePredicate<Participant> {
     private Voice voice;
     private Date fromDate;
     private Date toDate;
-    private boolean accommodation;
+    private Accommodation.Status accommodation;
     private boolean catering;
     private boolean notInvited;
 
@@ -69,10 +70,7 @@ public class ParticipantFilter implements SerializablePredicate<Participant> {
     }
 
     private boolean matchesAccommodation(Participant participant) {
-        if (accommodation) {
-            return participant.isAccommodation();
-        }
-        return true;
+        return null == accommodation || accommodation.equals(participant.getAccommodation().getStatus());
     }
 
     private boolean matchesCatering(Participant participant) {

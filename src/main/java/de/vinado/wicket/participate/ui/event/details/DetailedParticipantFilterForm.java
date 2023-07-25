@@ -6,17 +6,21 @@ import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
+import de.vinado.wicket.participate.model.Accommodation;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.ui.event.ParticipantFilterForm;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
 
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -66,8 +70,11 @@ public abstract class DetailedParticipantFilterForm extends ParticipantFilterFor
         return field;
     }
 
-    protected FormComponent<Boolean> accommodationInput(String id) {
-        return new CheckBox(id);
+    protected FormComponent<Accommodation.Status> accommodationInput(String id) {
+        DropDownChoice<Accommodation.Status> select = new DropDownChoice<>(id,
+            Arrays.asList(Accommodation.Status.values()), new EnumChoiceRenderer<>(this));
+        select.setLabel(new ResourceModel("filter.participant.form.control.accommodation", "Accommodation"));
+        return select;
     }
 
     protected FormComponent<Boolean> cateringInput(String id) {

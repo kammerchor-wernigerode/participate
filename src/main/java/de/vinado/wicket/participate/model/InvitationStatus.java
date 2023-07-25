@@ -16,14 +16,15 @@ import java.util.stream.Stream;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum InvitationStatus implements Sorted {
-    ACCEPTED(2),
-    DECLINED(3),
-    PENDING(4),
-    UNINVITED(0),
-    TENTATIVE(1),
+    ACCEPTED(2, true),
+    DECLINED(3, false),
+    PENDING(4, false),
+    UNINVITED(0, false),
+    TENTATIVE(1, true),
     ;
 
     private final int sortOrder;
+    private final boolean considerable;
 
     public static Predicate<Invitable> by(InvitationStatus invitationStatus) {
         return invitable -> Objects.equals(invitable.getInvitationStatus(), invitationStatus);

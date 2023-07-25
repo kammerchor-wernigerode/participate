@@ -13,6 +13,7 @@ import de.vinado.wicket.participate.ui.event.EventsPage;
 import de.vinado.wicket.participate.ui.event.details.ParticipantFilterIntent;
 import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateIntent;
 import de.vinado.wicket.participate.ui.pages.ParticipatePage;
+import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
@@ -20,6 +21,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.INamedParameters.Type;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -93,7 +95,8 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
         add(new Label("altoCount"));
         add(new Label("tenorCount"));
         add(new Label("bassCount"));
-        add(new Label("accommodationCount"));
+        add(accommodationDemand("accommodationDemand"));
+        add(accommodationSupply("accommodationSupply"));
         add(new Label("cateringCount"));
         add(new Label("sopranos"));
         add(new Label("altos"));
@@ -103,7 +106,6 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
         add(new Label("declined"));
         add(new Label("carCount"));
         add(new Label("carSeatCount"));
-        add(new Label("accommodationSingerCount", PropertyModel.of(getModel(), "acceptedSum")));
         add(new Label("cateringSingerCount", new PropertyModel<>(getModel(), "acceptedSum")));
         add(new Label("carSingerCount", new PropertyModel<>(getModel(), "acceptedSum")));
 
@@ -115,6 +117,16 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
         listPanel.add(new UpdateOnEventBehavior<>(ParticipantTableUpdateIntent.class));
         listPanel.setOutputMarkupId(true);
         add(listPanel);
+    }
+
+    protected Component accommodationDemand(String wicketId) {
+        IModel<?> model = new StringResourceModel("event.participant.accommodation.demand", getModel());
+        return new Label(wicketId, model);
+    }
+
+    protected Component accommodationSupply(String wicketId) {
+        IModel<?> model = new StringResourceModel("event.participant.accommodation.supply", getModel());
+        return new Label(wicketId, model);
     }
 
     private void navigate(EventDetails event) {

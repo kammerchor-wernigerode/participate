@@ -87,7 +87,7 @@ public class ParticipantDataProvider extends FilterableDataProvider<Participant>
                 participant.getFromDate(),
                 participant.getToDate(),
                 participant.isCatering(),
-                participant.isAccommodation(),
+                participant.getAccommodation(),
                 participant.getCarSeatCount(),
                 participant.getComment()
             );

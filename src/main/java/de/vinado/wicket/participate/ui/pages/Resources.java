@@ -1,13 +1,12 @@
 package de.vinado.wicket.participate.ui.pages;
 
 import de.agilecoders.wicket.core.markup.html.references.BootlintHeaderItem;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5CssReference;
+import de.vinado.app.participate.wicket.icon.FontAwesome5JsReference;
 import de.vinado.wicket.participate.resources.css.ParticipateCssResourceReference;
 import de.vinado.wicket.participate.resources.js.BusyIndicatorJsResourceReference;
 import de.vinado.wicket.participate.resources.js.ParticipateJsResourceReference;
 import lombok.experimental.UtilityClass;
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.CssReferenceHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -40,7 +39,7 @@ public final class Resources {
         if (!host.getRequest().getRequestParameters().getParameterValue("bootlint").isNull()) {
             response.render(BootlintHeaderItem.INSTANCE);
         }
-        response.render(CssHeaderItem.forReference(FontAwesome5CssReference.instance()));
+        response.render(JavaScriptReferenceHeaderItem.forReference(FontAwesome5JsReference.getInstance()));
         response.render(CssReferenceHeaderItem.forReference(ParticipateCssResourceReference.INSTANCE));
         response.render(JavaScriptReferenceHeaderItem.forReference(BusyIndicatorJsResourceReference.INSTANCE));
     }
