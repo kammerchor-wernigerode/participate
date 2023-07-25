@@ -23,5 +23,8 @@
         <dropColumn tableName="participants">
             <column name="need_accommodation"/>
         </dropColumn>
+        <dropColumn tableName="participants">
+            <column name="need_catering"/>
+        </dropColumn>
     </changeSet>
 </databaseChangeLog>

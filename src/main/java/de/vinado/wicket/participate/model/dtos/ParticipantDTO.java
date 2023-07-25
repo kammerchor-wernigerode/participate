@@ -28,7 +28,6 @@ public class ParticipantDTO implements Serializable, Invitable {
     private Date fromDate;
     private Date toDate;
     private InvitationStatus invitationStatus;
-    private boolean catering;
     private Accommodation accommodation;
     private boolean car;
     private short carSeatCount = 0;
@@ -42,7 +41,6 @@ public class ParticipantDTO implements Serializable, Invitable {
         this.fromDate = participant.getFromDate();
         this.toDate = participant.getToDate();
         this.invitationStatus = participant.getInvitationStatus();
-        this.catering = participant.isCatering();
         this.accommodation = participant.getAccommodation();
         this.car = participant.getCarSeatCount() >= 0;
         this.carSeatCount = participant.getCarSeatCount() < 0 ? 0 : participant.getCarSeatCount();

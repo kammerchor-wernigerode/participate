@@ -25,7 +25,6 @@ public class ParticipantFilter implements SerializablePredicate<Participant> {
     private Date fromDate;
     private Date toDate;
     private Accommodation.Status accommodation;
-    private boolean catering;
     private boolean notInvited;
 
     @Override
@@ -37,7 +36,6 @@ public class ParticipantFilter implements SerializablePredicate<Participant> {
             && matchesFromDate(participant)
             && matchesToDate(participant)
             && matchesAccommodation(participant)
-            && matchesCatering(participant)
             && matchesNotInvited(participant);
     }
 
@@ -71,13 +69,6 @@ public class ParticipantFilter implements SerializablePredicate<Participant> {
 
     private boolean matchesAccommodation(Participant participant) {
         return null == accommodation || accommodation.equals(participant.getAccommodation().getStatus());
-    }
-
-    private boolean matchesCatering(Participant participant) {
-        if (catering) {
-            return participant.isCatering();
-        }
-        return true;
     }
 
     private boolean matchesNotInvited(Participant participant) {

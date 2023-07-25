@@ -72,9 +72,6 @@ public class Participant implements Identifiable<Long>, Invitable {
     @Column
     private Date toDate;
 
-    @Column(name = "need_catering")
-    private boolean catering;
-
     @Column(name = "car_seat_count")
     private Short carSeatCount;
 
@@ -93,13 +90,12 @@ public class Participant implements Identifiable<Long>, Invitable {
      * @param singer           {@link Singer}
      * @param token            Identifier token
      * @param invitationStatus {@link de.vinado.wicket.participate.model.InvitationStatus}
-     * @param catering         Whether the participant wants to participate the restaurant
      * @param accommodation    Whether the participant needs an accommodation
      * @param comment          Comment overall
      */
     public Participant(final Event event, final Singer singer, final String token,
                        final InvitationStatus invitationStatus, final Date fromDate, final Date toDate,
-                       final boolean catering, final Accommodation accommodation, short carSeatCount,
+                       final Accommodation accommodation, short carSeatCount,
                        final String comment) {
         this.event = event;
         this.singer = singer;
@@ -107,7 +103,6 @@ public class Participant implements Identifiable<Long>, Invitable {
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.invitationStatus = invitationStatus;
-        this.catering = catering;
         this.accommodation = accommodation;
         this.carSeatCount = carSeatCount;
         this.comment = comment;
@@ -115,7 +110,7 @@ public class Participant implements Identifiable<Long>, Invitable {
 
     public Participant(final Event event, final Singer singer, final String token,
                        final InvitationStatus invitationStatus) {
-        this(event, singer, token, invitationStatus, null, null, false, new Accommodation(), (short) -1, null);
+        this(event, singer, token, invitationStatus, null, null, new Accommodation(), (short) -1, null);
     }
 
     public boolean isUninvited() {

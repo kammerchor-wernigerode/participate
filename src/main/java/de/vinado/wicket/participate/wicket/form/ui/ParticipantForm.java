@@ -23,7 +23,6 @@ import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponentLabel;
 import org.apache.wicket.markup.html.form.NumberTextField;
@@ -86,10 +85,6 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
         toDtP.setOutputMarkupId(true);
         toDtP.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
         add(toDtP, new FormComponentLabel("toDateLabel", toDtP));
-
-        CheckBox cateringCb = new CheckBox("catering");
-        cateringCb.add(BootstrapHorizontalFormDecorator.decorate());
-        add(cateringCb);
 
         IModel<Accommodation> model = LambdaModel.of(getModel(), ParticipantDTO::getAccommodation, ParticipantDTO::setAccommodation);
         add(new AccommodationFormGroup("accommodation", model));

@@ -97,7 +97,6 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
         add(new Label("bassCount"));
         add(accommodationDemand("accommodationDemand"));
         add(accommodationSupply("accommodationSupply"));
-        add(new Label("cateringCount"));
         add(new Label("sopranos"));
         add(new Label("altos"));
         add(new Label("tenors"));
@@ -106,7 +105,6 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
         add(new Label("declined"));
         add(new Label("carCount"));
         add(new Label("carSeatCount"));
-        add(new Label("cateringSingerCount", new PropertyModel<>(getModel(), "acceptedSum")));
         add(new Label("carSingerCount", new PropertyModel<>(getModel(), "acceptedSum")));
 
         // Unterer Bereich

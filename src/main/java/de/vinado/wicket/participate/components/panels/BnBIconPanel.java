@@ -1,8 +1,6 @@
 package de.vinado.wicket.participate.components.panels;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
-import de.vinado.wicket.participate.components.TextAlign;
 import de.vinado.wicket.participate.model.Accommodation;
 import de.vinado.wicket.participate.model.Accommodation.Status;
 import de.vinado.wicket.participate.model.Participant;
@@ -23,13 +21,6 @@ public class BnBIconPanel extends Panel {
 
     public BnBIconPanel(final String id, final IModel<Participant> model) {
         super(id, model);
-
-        add(new IconPanel(
-            "catering",
-            FontAwesome5IconType.utensils_s,
-            model.getObject().isCatering() ? IconPanel.Color.SUCCESS : IconPanel.Color.DANGER,
-            TextAlign.CENTER).setDisplay(IconPanel.Display.INLINE)
-        );
 
         add(new AccommodationBadge("accommodation", accommodationModel(model)));
 

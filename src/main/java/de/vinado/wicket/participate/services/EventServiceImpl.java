@@ -188,7 +188,6 @@ public class EventServiceImpl extends DataService implements EventService {
         loadedParticipant.setInvitationStatus(dto.getInvitationStatus());
         loadedParticipant.setFromDate(dto.getFromDate());
         loadedParticipant.setToDate(dto.getToDate());
-        loadedParticipant.setCatering(dto.isCatering());
         loadedParticipant.setAccommodation(dto.getAccommodation());
         loadedParticipant.setCarSeatCount(dto.isCar() ? dto.getCarSeatCount() : -1);
         loadedParticipant.setComment(dto.getComment());
@@ -218,7 +217,6 @@ public class EventServiceImpl extends DataService implements EventService {
         dto.setInvitationStatus(InvitationStatus.DECLINED);
         dto.setFromDate(null);
         dto.setToDate(null);
-        dto.setCatering(false);
         dto.setAccommodation(new Accommodation());
         dto.setCar(false);
         dto.setCarSeatCount((short) 0);

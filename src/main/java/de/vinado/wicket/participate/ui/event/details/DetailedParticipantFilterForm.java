@@ -11,7 +11,6 @@ import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.ui.event.ParticipantFilterForm;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -39,7 +38,6 @@ public abstract class DetailedParticipantFilterForm extends ParticipantFilterFor
     protected void onInitialize() {
         add(commentInput("comment"));
         add(accommodationInput("accommodation"));
-        add(cateringInput("catering"));
 
         DatetimePickerConfig toDateConfig = createDatetimePickerConfig();
         add(toDateInput("toDate", toDateConfig));
@@ -75,10 +73,6 @@ public abstract class DetailedParticipantFilterForm extends ParticipantFilterFor
             Arrays.asList(Accommodation.Status.values()), new EnumChoiceRenderer<>(this));
         select.setLabel(new ResourceModel("filter.participant.form.control.accommodation", "Accommodation"));
         return select;
-    }
-
-    protected FormComponent<Boolean> cateringInput(String id) {
-        return new CheckBox(id);
     }
 
     protected DatetimePickerConfig createDatetimePickerConfig() {

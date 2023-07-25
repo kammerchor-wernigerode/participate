@@ -30,7 +30,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -116,16 +115,6 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
             }
         });
         form.add(toDtP);
-
-        final CheckBox cateringCb = new CheckBox("catering");
-        cateringCb.add(BootstrapHorizontalFormDecorator.decorate());
-        cateringCb.add(new AjaxFormComponentUpdatingBehavior("change") {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-
-            }
-        });
-        form.add(cateringCb);
 
         IModel<Accommodation> model = LambdaModel.of(getModel(), ParticipantDTO::getAccommodation, ParticipantDTO::setAccommodation);
         AccommodationFormGroup accommodationCb = new AccommodationFormGroup("accommodation", model);
