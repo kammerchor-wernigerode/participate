@@ -4,6 +4,8 @@ spring:
 
   profiles:
     default: metrics
+    group:
+      keycloak: oidc
 
   jpa:
     hibernate:

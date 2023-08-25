@@ -18,7 +18,7 @@ public class Oauth2WebSecurityConfiguration {
             .csrf(AbstractHttpConfigurer::disable)
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> authorize
-                .antMatchers("/_/**").authenticated()
+                .antMatchers("/_/**").hasAnyRole("admin", "organizer")
                 .anyRequest().permitAll())
             .oauth2Login()
         ;

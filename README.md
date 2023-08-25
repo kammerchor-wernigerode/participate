@@ -104,6 +104,9 @@ The cron expression and the offset are configurable.
 Keycloak is an authorization provider that implements the OAuth2 and OpenID Connect protocols. It manages software
 clients, users, their roles and claims for the project.
 
+Authorization via OpenID Connect is deactivated by default. Add `keycloak` to the list of active Spring profiles to
+enable this feature.
+
 ### Users
 
 Keycloak is preconfigured with a variety of users that are more or less useful. The username-password-combination
