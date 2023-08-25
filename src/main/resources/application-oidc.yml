@@ -1,0 +1,12 @@
+spring.security.oauth2.client:
+  provider:
+    keycloak:
+      issuer-uri: http://localhost:8180/realms/local
+      user-name-attribute: preferred_username
+  registration:
+    keycloak:
+      client-name: Keycloak
+      client-id: participate
+      client-secret: 1YMLyEsEjFSYz26LwDDN0PQb6rP5h9EV
+      authorization-grant-type: authorization_code
+      scope: openid

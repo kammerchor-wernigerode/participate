@@ -1,7 +1,3 @@
-server:
-  servlet:
-    session.cookie.path: /_
-
 spring:
   application:
     name: ${APPLICATION_NAME:Participate}
