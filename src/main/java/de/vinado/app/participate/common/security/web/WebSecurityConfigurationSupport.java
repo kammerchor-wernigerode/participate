@@ -1,30 +1,26 @@
-package de.vinado.app.participate.managment.security;
+package de.vinado.app.participate.common.security.web;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Profile("oauth2")
-@Configuration
-@EnableWebSecurity
-public class Oauth2WebSecurityConfiguration {
+public class WebSecurityConfigurationSupport {
 
     @Bean
-    public SecurityFilterChain managmentSecurityFilterChain(HttpSecurity http) throws Exception {
-        http
+    public SecurityFilterChain rootFilterChain(HttpSecurity http) throws Exception {
+        http.antMatcher("/**")
             .csrf(AbstractHttpConfigurer::disable)
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> authorize
-                .antMatchers("/_/**").hasAnyRole("admin", "organizer")
                 .anyRequest().permitAll())
-            .oauth2Login()
         ;
 
+        configure(http);
         return http.build();
+    }
+
+    protected void configure(HttpSecurity http) throws Exception {
     }
 }
