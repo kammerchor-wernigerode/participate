@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate.ui.event;
 
+import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.wicket.common.OnEventBehavior;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
-import de.vinado.wicket.participate.ManagementSession;
 import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;

@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate;
+package de.vinado.app.participate.management.wicket;
 
 import de.vinado.app.participate.common.wicket.utils.Holder;
 import de.vinado.app.participate.management.security.AuthenticationResolver;

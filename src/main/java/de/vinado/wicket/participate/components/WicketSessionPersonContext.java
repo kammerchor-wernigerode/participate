@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.components;
 
-import de.vinado.wicket.participate.ManagementSession;
+import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.User;
 import org.apache.wicket.Session;

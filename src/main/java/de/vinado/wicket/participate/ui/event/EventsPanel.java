@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
-import de.vinado.wicket.participate.ManagementSession;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.model.Event;
