@@ -21,6 +21,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -59,8 +60,17 @@ public class ParticipateSession extends AbstractAuthenticatedWebSession {
 
     private User resolveUser() {
         AuthenticationResolver authenticationResolver = this.authenticationResolver.service();
-        AuthenticatedPrincipal principal = authenticationResolver.getAuthenticatedPrincipal();
+        AuthenticatedPrincipal principal = principal(authenticationResolver)
+            .orElseThrow(IllegalArgumentException::new);
         return convertFrom(principal);
+    }
+
+    private Optional<AuthenticatedPrincipal> principal(AuthenticationResolver resolver) {
+        try {
+            return Optional.of(resolver.getAuthenticatedPrincipal());
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
     }
 
     private User convertFrom(AuthenticatedPrincipal principal) {
