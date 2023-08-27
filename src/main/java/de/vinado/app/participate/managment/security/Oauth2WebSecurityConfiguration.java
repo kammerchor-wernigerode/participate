@@ -18,7 +18,6 @@ public class Oauth2WebSecurityConfiguration {
     public SecurityFilterChain managmentSecurityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
-            .cors(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> authorize
                 .antMatchers("/_/**").hasAnyRole("admin", "organizer")
                 .anyRequest().permitAll())
