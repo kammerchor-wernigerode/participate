@@ -8,7 +8,6 @@ import de.vinado.wicket.participate.resources.js.SnackbarJsResourceReference;
 import de.vinado.wicket.participate.wicket.inject.ApplicationName;
 import lombok.Getter;
 import org.apache.wicket.Component;
-import org.apache.wicket.Session;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
@@ -41,7 +40,7 @@ public abstract class BasePage extends WebPage {
     }
 
     private Component html(String id) {
-        HtmlTag tag = new HtmlTag(id, Session.get().getLocale());
+        HtmlTag tag = new HtmlTag(id, getLocale());
         tag.add(new CssClassNameAppender("h-100"));
         return tag;
     }

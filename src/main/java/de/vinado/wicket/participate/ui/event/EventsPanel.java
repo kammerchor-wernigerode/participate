@@ -48,7 +48,7 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
         return new EventFilterForm("filter", getModel()) {
             @Override
             protected void onApply() {
-                ParticipateSession.get().setMetaData(ParticipateSession.eventFilter, getModelObject());
+                getSession().setMetaData(ParticipateSession.eventFilter, getModelObject());
                 send(EventsPanel.this, Broadcast.BREADTH, new EventFilterIntent(getModelObject()));
             }
         };

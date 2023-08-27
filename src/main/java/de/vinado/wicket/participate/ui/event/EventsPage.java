@@ -12,6 +12,7 @@ import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.pages.ParticipatePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
+import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
@@ -78,10 +79,10 @@ public class EventsPage extends ParticipatePage implements IGenericComponent<Eve
                 .map(eventService::getEventDetails)
                 .or(this::eventDetails)
                 .ifPresentOrElse(details -> {
-                    ParticipateSession.get().setMetaData(ParticipateSession.event, details.getEvent());
+                    getSession().setMetaData(ParticipateSession.event, details.getEvent());
                     getModel().setObject(details);
                 }, () -> {
-                    ParticipateSession.get().setMetaData(ParticipateSession.event, null);
+                    getSession().setMetaData(ParticipateSession.event, null);
                     setModelObject(null);
                 });
 
@@ -91,7 +92,7 @@ public class EventsPage extends ParticipatePage implements IGenericComponent<Eve
     }
 
     private Optional<EventDetails> eventDetails() {
-        ParticipateSession session = ParticipateSession.get();
+        Session session = getSession();
         Event state = session.getMetaData(ParticipateSession.event);
 
         if (null == state) {
@@ -109,7 +110,7 @@ public class EventsPage extends ParticipatePage implements IGenericComponent<Eve
     }
 
     private IModel<EventFilter> eventFilterModel() {
-        EventFilter existing = ParticipateSession.get().getMetaData(ParticipateSession.eventFilter);
+        EventFilter existing = getSession().getMetaData(ParticipateSession.eventFilter);
         return new CompoundPropertyModel<>(null == existing ? new EventFilter() : existing);
     }
 

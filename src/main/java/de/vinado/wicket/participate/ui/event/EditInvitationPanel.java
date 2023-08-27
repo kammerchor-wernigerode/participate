@@ -26,6 +26,7 @@ import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.wicket.form.ui.AccommodationFormGroup;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -166,7 +167,7 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
             : new ResourceModel("email.send.invitation", "Send Invitation")) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                eventService.inviteParticipant(EditInvitationPanel.this.getModelObject().getParticipant(), ParticipateSession.get().getMetaData(ParticipateSession.user));
+                eventService.inviteParticipant(EditInvitationPanel.this.getModelObject().getParticipant(), Session.get().getMetaData(ParticipateSession.user));
                 Optional.ofNullable(EditInvitationPanel.this.findParent(ModalAnchor.class))
                     .ifPresent(anchor -> anchor.close(target));
                 if (!InvitationStatus.UNINVITED.equals(EditInvitationPanel.this.getModelObject().getInvitationStatus())) {

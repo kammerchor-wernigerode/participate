@@ -31,6 +31,7 @@ import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateInten
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import de.vinado.wicket.participate.ui.pages.ParticipatePage;
 import org.apache.wicket.Component;
+import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.markup.html.basic.DefaultLinkParser;
@@ -207,7 +208,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     }
 
     private void invite(AjaxRequestTarget target) {
-        final User organizer = ParticipateSession.get().getMetaData(ParticipateSession.user);
+        final User organizer = getSession().getMetaData(ParticipateSession.user);
 
         final List<Participant> participants = eventService.getParticipants(getModelObject().getEvent(), false);
         final int count = eventService.inviteParticipants(participants, organizer);
@@ -220,7 +221,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     }
 
     private void remind(AjaxRequestTarget target) {
-        final User organizer = ParticipateSession.get().getMetaData(ParticipateSession.user);
+        final User organizer = getSession().getMetaData(ParticipateSession.user);
         final Event event = getModelObject().getEvent();
         if (!eventService.hasParticipant(event)) {
             Snackbar.show(target, "Es wurde noch niemand eingeladen!");
@@ -269,7 +270,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
 
     private void populateSender(UriComponentsBuilder builder) {
         ApplicationProperties.Mail mailProperties = applicationProperties.getMail();
-        ParticipateSession session = ParticipateSession.get();
+        Session session = getSession();
         Optional.ofNullable(session.getMetaData(ParticipateSession.user))
             .map(User::getPerson)
             .map(Person::getEmail)

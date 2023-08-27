@@ -9,8 +9,8 @@ import de.agilecoders.wicket.extensions.javascript.YuiCssCompressor;
 import de.vinado.wicket.http.HttpError;
 import de.vinado.wicket.participate.ui.pages.ErrorPage;
 import de.vinado.wicket.participate.ui.pages.ExpiredPage;
+import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
-import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.RoleAuthorizationStrategy;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.core.request.handler.PageProvider;
@@ -111,7 +111,7 @@ public abstract class AuthenticatedBootstrapWebApplication extends Authenticated
     }
 
     private boolean authorized(Roles roles) {
-        return AuthenticatedWebSession.get()
+        return AbstractAuthenticatedWebSession.get()
             .getRoles()
             .hasAnyRole(roles);
     }

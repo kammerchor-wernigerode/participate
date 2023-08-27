@@ -217,7 +217,7 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
         if (edit) {
             if (remove) {
                 eventService.removeEvent(dto.getEvent());
-                ParticipateSession.get().setMetaData(ParticipateSession.event, null);
+                getSession().setMetaData(ParticipateSession.event, null);
                 send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(null));
                 Snackbar.show(target, new ResourceModel("event.remove.success", "The event has been removed"));
                 return;
