@@ -1,4 +1,4 @@
-package de.vinado.app.participate.managment.security;
+package de.vinado.app.participate.management.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

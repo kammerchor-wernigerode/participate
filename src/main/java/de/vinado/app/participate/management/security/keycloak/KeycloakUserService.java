@@ -1,4 +1,4 @@
-package de.vinado.app.participate.managment.security.keycloak;
+package de.vinado.app.participate.management.security.keycloak;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.GrantedAuthority;
