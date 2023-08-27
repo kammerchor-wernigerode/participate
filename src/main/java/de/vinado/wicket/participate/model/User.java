@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.security.core.AuthenticatedPrincipal;
 
 import java.util.Objects;
 import javax.persistence.Column;
@@ -16,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * User
@@ -28,7 +30,7 @@ import javax.persistence.Table;
 @Setter
 @NoArgsConstructor
 @ToString
-public class User implements Identifiable<Long>, Hideable {
+public class User implements Identifiable<Long>, Hideable, AuthenticatedPrincipal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -79,5 +81,11 @@ public class User implements Identifiable<Long>, Hideable {
     @Override
     public int hashCode() {
         return 7;
+    }
+
+    @Transient
+    @Override
+    public String getName() {
+        return username;
     }
 }

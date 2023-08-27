@@ -2,6 +2,7 @@ package de.vinado.wicket.participate;
 
 import de.vinado.app.participate.common.wicket.utils.Holder;
 import de.vinado.app.participate.management.security.AuthenticationResolver;
+import de.vinado.app.participate.management.wicket.security.ManagementWicketSecurityProperties;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.filters.EventFilter;
@@ -40,6 +41,9 @@ public class ParticipateSession extends AbstractAuthenticatedWebSession {
     @SpringBean
     private EventService eventService;
 
+    @SpringBean
+    private ManagementWicketSecurityProperties securityProperties;
+
     public ParticipateSession(Request request) {
         super(request);
         Injector.get().inject(this);
@@ -61,6 +65,7 @@ public class ParticipateSession extends AbstractAuthenticatedWebSession {
     private User resolveUser() {
         AuthenticationResolver authenticationResolver = this.authenticationResolver.service();
         AuthenticatedPrincipal principal = principal(authenticationResolver)
+            .or(this::resolveFromProperty)
             .orElseThrow(IllegalArgumentException::new);
         return convertFrom(principal);
     }
@@ -71,6 +76,11 @@ public class ParticipateSession extends AbstractAuthenticatedWebSession {
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }
+    }
+
+    private Optional<User> resolveFromProperty() {
+        return Optional.ofNullable(securityProperties.getImpersonateUsername())
+            .map(userService::getUser);
     }
 
     private User convertFrom(AuthenticatedPrincipal principal) {
