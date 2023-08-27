@@ -12,6 +12,7 @@ import de.vinado.wicket.participate.ui.pages.ExpiredPage;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.RoleAuthorizationStrategy;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.csp.ContentSecurityPolicySettings;
@@ -105,9 +106,14 @@ public abstract class AuthenticatedBootstrapWebApplication extends Authenticated
     }
 
     protected void configureSecurity(SecuritySettings securitySettings) {
-        RoleAuthorizationStrategy strategy = new RoleAuthorizationStrategy(roles ->
-            AuthenticatedWebSession.get().getRoles().hasAnyRole(roles));
+        RoleAuthorizationStrategy strategy = new RoleAuthorizationStrategy(this::authorized);
         securitySettings.setAuthorizationStrategy(strategy);
+    }
+
+    private boolean authorized(Roles roles) {
+        return AuthenticatedWebSession.get()
+            .getRoles()
+            .hasAnyRole(roles);
     }
 
     protected void configureResourceManagement(ResourceSettings resourceSettings) {
