@@ -7,6 +7,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Profile("oauth2")
@@ -22,6 +23,8 @@ public class Oauth2WebSecurityConfiguration {
                 .antMatchers("/_/**").hasAnyRole("admin", "organizer")
                 .anyRequest().permitAll())
             .oauth2Login(Customizer.withDefaults())
+            .headers(headers -> headers
+                .frameOptions(FrameOptionsConfig::disable))
         ;
 
         return http.build();
