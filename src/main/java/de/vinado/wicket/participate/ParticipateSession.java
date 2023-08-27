@@ -79,6 +79,10 @@ public class ParticipateSession extends AbstractAuthenticatedWebSession {
     }
 
     private Optional<User> resolveFromProperty() {
+        if (getApplication().usesDeploymentConfig()) {
+            return Optional.empty();
+        }
+
         return Optional.ofNullable(securityProperties.getImpersonateUsername())
             .map(userService::getUser);
     }
