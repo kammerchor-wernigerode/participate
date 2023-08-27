@@ -14,15 +14,15 @@ import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class AuthenticationResolverTests {
+class SpringSecurityAuthenticationResolverTests {
 
-    AuthenticationResolver.AuthenticationHolder authenticationHolder;
-    AuthenticationResolver authenticationResolver;
+    SpringSecurityAuthenticationResolver.AuthenticationHolder authenticationHolder;
+    SpringSecurityAuthenticationResolver authenticationResolver;
 
     @BeforeEach
     void setUp() {
-        authenticationHolder = mock(AuthenticationResolver.AuthenticationHolder.class);
-        authenticationResolver = new AuthenticationResolver(authenticationHolder);
+        authenticationHolder = mock(SpringSecurityAuthenticationResolver.AuthenticationHolder.class);
+        authenticationResolver = new SpringSecurityAuthenticationResolver(authenticationHolder);
     }
 
     @Test
