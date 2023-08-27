@@ -1,17 +1,30 @@
 package de.vinado.wicket.participate;
 
+import de.vinado.app.participate.common.wicket.utils.Holder;
+import de.vinado.app.participate.management.security.AuthenticationResolver;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.UserService;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
+import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.springframework.security.core.AuthenticatedPrincipal;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Custom {@link AuthenticatedWebSession}. This class based on a username and password, and a method implementation that
@@ -19,11 +32,14 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  *
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
  */
-public class ParticipateSession extends AuthenticatedWebSession {
+public class ParticipateSession extends AbstractAuthenticatedWebSession {
 
     public static MetaDataKey<User> user = new MetaDataKey<>() { };
     public static MetaDataKey<Event> event = new MetaDataKey<>() { };
     public static MetaDataKey<EventFilter> eventFilter = new MetaDataKey<>() { };
+
+    @SpringBean
+    private Holder<AuthenticationResolver> authenticationResolver;
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -39,6 +55,10 @@ public class ParticipateSession extends AuthenticatedWebSession {
     public ParticipateSession(final Request request) {
         super(request);
         Injector.get().inject(this);
+
+        setMetaData(event, eventService.getLatestEvent());
+        setMetaData(eventFilter, new EventFilter());
+        setMetaData(user, resolveUser());
     }
 
     /**
@@ -48,40 +68,60 @@ public class ParticipateSession extends AuthenticatedWebSession {
         return (ParticipateSession) Session.get();
     }
 
-    public void clearSessionData() {
+    @Override
+    public void onInvalidate() {
+        super.onInvalidate();
+
         setMetaData(event, eventService.getLatestEvent());
         setMetaData(eventFilter, new EventFilter());
-        setMetaData(user, userService.getUser(getMetaData(user).getUsername()));
+        setMetaData(user, resolveUser());
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean authenticate(final String usernameOrEmail, final String plainPassword) {
-        final User user = userService.getUser(usernameOrEmail, plainPassword);
-        if (null != user) {
-            setMetaData(ParticipateSession.user, user);
-            if (eventService.hasUpcomingEvents()) {
-                setMetaData(event, eventService.getLatestEvent());
-            }
-
-            return true;
-        }
-        return false;
+    private User resolveUser() {
+        AuthenticationResolver authenticationResolver = this.authenticationResolver.service();
+        AuthenticatedPrincipal principal = authenticationResolver.getAuthenticatedPrincipal();
+        return convertFrom(principal);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    private User convertFrom(AuthenticatedPrincipal principal) {
+        return userService.getUser(principal.getName());
+    }
+
     @Override
     public Roles getRoles() {
-        final Roles roles = new Roles();
+        if (!isSignedIn()) {
+            return new Roles();
+        }
 
-        if (isSignedIn())
-            roles.add(Roles.USER);
-        if (getMetaData(user).isAdmin())
-            roles.add(Roles.ADMIN);
-        return roles;
+        return SecurityContextHolder.getContext().getAuthentication()
+            .getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .filter(byPrefix("ROLE_"))
+            .map(ParticipateSession::leadingRoleAbsent)
+            .map(String::toUpperCase)
+            .collect(Collectors.collectingAndThen(Collectors.joining(","), Roles::new));
+    }
+
+    private static String leadingRoleAbsent(String authority) {
+        return authority.replaceFirst("^ROLE_", "");
+    }
+
+    private Predicate<String> byPrefix(String prefix) {
+        return self -> self.startsWith(prefix);
+    }
+
+    @Override
+    public boolean isSignedIn() {
+        return true;
+    }
+
+
+    @Getter
+    @Component
+    @RequiredArgsConstructor
+    static class AuthenticationResolverHolder implements Holder<AuthenticationResolver> {
+
+        @Accessors(fluent = true)
+        private final AuthenticationResolver service;
     }
 }
