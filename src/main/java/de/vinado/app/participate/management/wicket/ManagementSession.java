@@ -70,6 +70,10 @@ public class ManagementSession extends AbstractAuthenticatedWebSession {
         return convertFrom(principal);
     }
 
+    private User convertFrom(AuthenticatedPrincipal principal) {
+        return userService.getUser(principal.getName());
+    }
+
     private Optional<AuthenticatedPrincipal> principal(AuthenticationResolver resolver) {
         try {
             return Optional.of(resolver.getAuthenticatedPrincipal());
@@ -85,10 +89,6 @@ public class ManagementSession extends AbstractAuthenticatedWebSession {
 
         return Optional.ofNullable(securityProperties.getImpersonateUsername())
             .map(userService::getUser);
-    }
-
-    private User convertFrom(AuthenticatedPrincipal principal) {
-        return userService.getUser(principal.getName());
     }
 
     @Override
