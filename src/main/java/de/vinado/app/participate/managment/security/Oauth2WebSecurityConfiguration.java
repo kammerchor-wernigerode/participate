@@ -21,7 +21,7 @@ public class Oauth2WebSecurityConfiguration {
             .authorizeHttpRequests(authorize -> authorize
                 .antMatchers("/_/**").hasAnyRole("admin", "organizer")
                 .anyRequest().permitAll())
-            .oauth2Login()
+            .oauth2Login(Customizer.withDefaults())
         ;
 
         return http.build();
