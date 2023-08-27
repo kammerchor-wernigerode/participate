@@ -128,7 +128,7 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
     }
 
     private void navigate(EventDetails event) {
-        ParticipateSession.get().setEvent(event.getEvent());
+        ParticipateSession.get().setMetaData(ParticipateSession.event, event.getEvent());
         PageParameters pageParameters = new PageParameters(getPageParameters());
         pageParameters.set("event", event.getId(), Type.PATH);
         setResponsePage(EventSummaryPage.class, pageParameters);

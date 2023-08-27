@@ -166,7 +166,7 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
             : new ResourceModel("email.send.invitation", "Send Invitation")) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                eventService.inviteParticipant(EditInvitationPanel.this.getModelObject().getParticipant(), ParticipateSession.get().getUser());
+                eventService.inviteParticipant(EditInvitationPanel.this.getModelObject().getParticipant(), ParticipateSession.get().getMetaData(ParticipateSession.user));
                 Optional.ofNullable(EditInvitationPanel.this.findParent(ModalAnchor.class))
                     .ifPresent(anchor -> anchor.close(target));
                 if (!InvitationStatus.UNINVITED.equals(EditInvitationPanel.this.getModelObject().getInvitationStatus())) {

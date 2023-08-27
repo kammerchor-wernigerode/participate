@@ -78,10 +78,10 @@ public class EventsPage extends ParticipatePage implements IGenericComponent<Eve
                 .map(eventService::getEventDetails)
                 .or(this::eventDetails)
                 .ifPresentOrElse(details -> {
-                    ParticipateSession.get().setEvent(details.getEvent());
+                    ParticipateSession.get().setMetaData(ParticipateSession.event, details.getEvent());
                     getModel().setObject(details);
                 }, () -> {
-                    ParticipateSession.get().setEvent(null);
+                    ParticipateSession.get().setMetaData(ParticipateSession.event, null);
                     setModelObject(null);
                 });
 
@@ -92,24 +92,24 @@ public class EventsPage extends ParticipatePage implements IGenericComponent<Eve
 
     private Optional<EventDetails> eventDetails() {
         ParticipateSession session = ParticipateSession.get();
-        Event state = session.getEvent();
+        Event state = session.getMetaData(ParticipateSession.event);
 
         if (null == state) {
             EventDetails next = eventService.getLatestEventDetails();
-            session.setEvent(null == next ? null : next.getEvent());
+            session.setMetaData(ParticipateSession.event, null == next ? null : next.getEvent());
             return Optional.ofNullable(next);
         }
 
         EventDetails details = eventService.getEventDetails(state);
         if (null != details) {
-            session.setEvent(details.getEvent());
+            session.setMetaData(ParticipateSession.event, details.getEvent());
         }
 
         return Optional.ofNullable(details);
     }
 
     private IModel<EventFilter> eventFilterModel() {
-        EventFilter existing = ParticipateSession.get().getEventFilter();
+        EventFilter existing = ParticipateSession.get().getMetaData(ParticipateSession.eventFilter);
         return new CompoundPropertyModel<>(null == existing ? new EventFilter() : existing);
     }
 

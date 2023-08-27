@@ -16,7 +16,7 @@ public class WicketSessionPersonContext implements PersonContext {
     @Override
     public Person get() {
         ParticipateSession session = ParticipateSession.get();
-        User user = session.getUser();
+        User user = session.getMetaData(ParticipateSession.user);
         return user.getPerson();
     }
 }

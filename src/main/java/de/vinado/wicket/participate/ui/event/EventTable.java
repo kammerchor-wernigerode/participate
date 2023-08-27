@@ -138,7 +138,7 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
     @Override
     protected Item<EventDetails> newRowItem(String id, int index, IModel<EventDetails> model) {
         final Item<EventDetails> item = super.newRowItem(id, index, model);
-        final Long sessionEventId = ParticipateSession.get().getEvent().getId();
+        final Long sessionEventId = ParticipateSession.get().getMetaData(ParticipateSession.event).getId();
         if (null != sessionEventId && model.getObject().getId().equals(sessionEventId))
             item.add(new CssClassNameAppender("table-primary"));
         return item;

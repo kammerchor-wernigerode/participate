@@ -85,7 +85,7 @@ public class ParticipatePage extends BasePage {
                     menuButtons.add(new AjaxLink<Void>(buttonMarkupId) {
                         @Override
                         public void onClick(final AjaxRequestTarget target) {
-                            final User user = ParticipateSession.get().getUser();
+                            final User user = ParticipateSession.get().getMetaData(ParticipateSession.user);
                             final Person person = user.getPerson();
                             Singer singer = null;
                             if (null != person) {
@@ -97,7 +97,7 @@ public class ParticipatePage extends BasePage {
                                 new EditAccountDTO(user, user.getPerson(), singer))) {
                                 @Override
                                 protected void onConfirm(final User user, final AjaxRequestTarget target) {
-                                    ParticipateSession.get().setUser(user);
+                                    ParticipateSession.get().setMetaData(ParticipateSession.user, user);
                                     Application.get().getSecuritySettings().getAuthenticationStrategy().remove();
                                     target.add(navbar);
                                     Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
@@ -106,7 +106,7 @@ public class ParticipatePage extends BasePage {
                             modal.show(target);
                         }
                     }.setBody(new ResourceModel("account.edit", "Edit Account")));
-                    if (null != ParticipateSession.get().getUser() && ParticipateSession.get().getRoles().hasRole(Roles.ADMIN)) {
+                    if (null != ParticipateSession.get().getMetaData(ParticipateSession.user) && ParticipateSession.get().getRoles().hasRole(Roles.ADMIN)) {
                         menuButtons.add(new BookmarkablePageLink(buttonMarkupId, AdminPage.class)
                             .setBody(new ResourceModel("administration", "Administration")));
                     }
@@ -143,7 +143,7 @@ public class ParticipatePage extends BasePage {
         @Override
         public String getObject() {
             ParticipateSession session = ParticipateSession.get();
-            return Optional.ofNullable(session.getUser())
+            return Optional.ofNullable(session.getMetaData(ParticipateSession.user))
                 .map(User::getPerson)
                 .map(Person::getDisplayName)
                 .or(username(session))
@@ -151,7 +151,7 @@ public class ParticipatePage extends BasePage {
         }
 
         private static Supplier<Optional<String>> username(ParticipateSession session) {
-            return () -> Optional.ofNullable(session.getUser()).map(User::getUsername);
+            return () -> Optional.ofNullable(session.getMetaData(ParticipateSession.user)).map(User::getUsername);
         }
     }
 }
