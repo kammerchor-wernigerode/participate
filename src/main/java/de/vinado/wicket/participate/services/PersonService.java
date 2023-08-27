@@ -6,7 +6,6 @@ import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.dtos.PersonDTO;
 import de.vinado.wicket.participate.model.dtos.SingerDTO;
-import de.vinado.wicket.participate.model.filters.SingerFilter;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;

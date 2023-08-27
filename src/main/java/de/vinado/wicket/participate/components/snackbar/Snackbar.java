@@ -2,7 +2,6 @@ package de.vinado.wicket.participate.components.snackbar;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 
 /**
  * A simple feedback which shows up, when you append it on a {@link org.apache.wicket.ajax.AjaxRequestTarget}.<br>

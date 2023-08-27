@@ -2,9 +2,9 @@ package de.vinado.wicket.participate.email;
 
 import de.vinado.wicket.participate.model.Person;
 
-import javax.mail.internet.InternetAddress;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import javax.mail.internet.InternetAddress;
 
 /**
  * @author Vincent Nadoll

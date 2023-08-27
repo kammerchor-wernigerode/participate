@@ -6,11 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.wicketstuff.select2.ChoiceProvider;
 import org.wicketstuff.select2.Response;
 
-import javax.mail.internet.InternetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.mail.internet.InternetAddress;
 
 /**
  * Provides a list of persons for a substring of their {@code email} address.

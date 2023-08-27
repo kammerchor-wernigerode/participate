@@ -11,9 +11,9 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5I
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
+import de.vinado.wicket.bt4.form.decorator.BootstrapInlineFormDecorator;
 import de.vinado.wicket.bt4.tooltip.TooltipBehavior;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
-import de.vinado.wicket.bt4.form.decorator.BootstrapInlineFormDecorator;
 import de.vinado.wicket.participate.model.filters.EventFilter;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;

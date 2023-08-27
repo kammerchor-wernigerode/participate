@@ -4,14 +4,14 @@ import de.vinado.wicket.participate.model.Hideable;
 import de.vinado.wicket.participate.model.Identifiable;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * Database server

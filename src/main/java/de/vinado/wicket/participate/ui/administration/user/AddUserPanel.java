@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.ui.administration.user;
 
-import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.bt4.modal.FormModal;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.common.FocusBehavior;

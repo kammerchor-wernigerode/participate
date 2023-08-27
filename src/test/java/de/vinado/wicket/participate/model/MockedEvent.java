@@ -4,8 +4,7 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.Date;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Vincent Nadoll

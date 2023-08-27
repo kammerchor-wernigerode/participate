@@ -7,8 +7,8 @@ import de.vinado.wicket.participate.model.Voice;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.annotation.Nullable;
 import java.io.Serializable;
+import javax.annotation.Nullable;
 
 /**
  * @author Vincent Nadoll (vincent.nadoll@gmail.com)
