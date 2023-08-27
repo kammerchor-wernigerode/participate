@@ -5,15 +5,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
-import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Collection;
 import java.util.Map;
@@ -32,9 +32,17 @@ public class KeycloakUserService extends OidcUserService {
         OidcUser oidcUser = super.loadUser(userRequest);
 
         Set<GrantedAuthority> authorities = authorities(userRequest, oidcUser);
-        OidcIdToken idToken = oidcUser.getIdToken();
         OidcUserInfo userInfo = oidcUser.getUserInfo();
-        return new DefaultOidcUser(authorities, idToken, userInfo, StandardClaimNames.PREFERRED_USERNAME);
+        return getUser(userRequest, userInfo, authorities);
+    }
+
+    private OidcUser getUser(OidcUserRequest userRequest, OidcUserInfo userInfo, Set<GrantedAuthority> authorities) {
+        ClientRegistration.ProviderDetails providerDetails = userRequest.getClientRegistration().getProviderDetails();
+        String userNameAttributeName = providerDetails.getUserInfoEndpoint().getUserNameAttributeName();
+        if (StringUtils.hasText(userNameAttributeName)) {
+            return new DefaultOidcUser(authorities, userRequest.getIdToken(), userInfo, userNameAttributeName);
+        }
+        return new DefaultOidcUser(authorities, userRequest.getIdToken(), userInfo);
     }
 
     private Set<GrantedAuthority> authorities(OAuth2UserRequest userRequest, OAuth2User oauth2User) {
