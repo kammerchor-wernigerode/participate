@@ -14,7 +14,7 @@ import de.vinado.wicket.bt4.modal.FormModal;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.form.AutosizeBehavior;
-import de.vinado.wicket.participate.ParticipateSession;
+import de.vinado.wicket.participate.ManagementSession;
 import de.vinado.wicket.participate.common.ParticipateUtils;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
@@ -167,7 +167,7 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
             : new ResourceModel("email.send.invitation", "Send Invitation")) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                eventService.inviteParticipant(EditInvitationPanel.this.getModelObject().getParticipant(), Session.get().getMetaData(ParticipateSession.user));
+                eventService.inviteParticipant(EditInvitationPanel.this.getModelObject().getParticipant(), Session.get().getMetaData(ManagementSession.user));
                 Optional.ofNullable(EditInvitationPanel.this.findParent(ModalAnchor.class))
                     .ifPresent(anchor -> anchor.close(target));
                 if (!InvitationStatus.UNINVITED.equals(EditInvitationPanel.this.getModelObject().getInvitationStatus())) {

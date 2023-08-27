@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.ui.event;
 
 import de.vinado.wicket.common.OnEventBehavior;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
-import de.vinado.wicket.participate.ParticipateSession;
+import de.vinado.wicket.participate.ManagementSession;
 import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
@@ -79,10 +79,10 @@ public class EventsPage extends ParticipatePage implements IGenericComponent<Eve
                 .map(eventService::getEventDetails)
                 .or(this::eventDetails)
                 .ifPresentOrElse(details -> {
-                    getSession().setMetaData(ParticipateSession.event, details.getEvent());
+                    getSession().setMetaData(ManagementSession.event, details.getEvent());
                     getModel().setObject(details);
                 }, () -> {
-                    getSession().setMetaData(ParticipateSession.event, null);
+                    getSession().setMetaData(ManagementSession.event, null);
                     setModelObject(null);
                 });
 
@@ -93,24 +93,24 @@ public class EventsPage extends ParticipatePage implements IGenericComponent<Eve
 
     private Optional<EventDetails> eventDetails() {
         Session session = getSession();
-        Event state = session.getMetaData(ParticipateSession.event);
+        Event state = session.getMetaData(ManagementSession.event);
 
         if (null == state) {
             EventDetails next = eventService.getLatestEventDetails();
-            session.setMetaData(ParticipateSession.event, null == next ? null : next.getEvent());
+            session.setMetaData(ManagementSession.event, null == next ? null : next.getEvent());
             return Optional.ofNullable(next);
         }
 
         EventDetails details = eventService.getEventDetails(state);
         if (null != details) {
-            session.setMetaData(ParticipateSession.event, details.getEvent());
+            session.setMetaData(ManagementSession.event, details.getEvent());
         }
 
         return Optional.ofNullable(details);
     }
 
     private IModel<EventFilter> eventFilterModel() {
-        EventFilter existing = getSession().getMetaData(ParticipateSession.eventFilter);
+        EventFilter existing = getSession().getMetaData(ManagementSession.eventFilter);
         return new CompoundPropertyModel<>(null == existing ? new EventFilter() : existing);
     }
 

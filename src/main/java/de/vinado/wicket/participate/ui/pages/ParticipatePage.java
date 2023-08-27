@@ -7,7 +7,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarComponents;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarDropDownButton;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
-import de.vinado.wicket.participate.ParticipateSession;
+import de.vinado.wicket.participate.ManagementSession;
 import de.vinado.wicket.participate.components.panels.EditAccountPanel;
 import de.vinado.wicket.participate.components.panels.Footer;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
@@ -87,7 +87,7 @@ public class ParticipatePage extends BasePage {
                     menuButtons.add(new AjaxLink<Void>(buttonMarkupId) {
                         @Override
                         public void onClick(final AjaxRequestTarget target) {
-                            final User user = getSession().getMetaData(ParticipateSession.user);
+                            final User user = getSession().getMetaData(ManagementSession.user);
                             final Person person = user.getPerson();
                             Singer singer = null;
                             if (null != person) {
@@ -99,7 +99,7 @@ public class ParticipatePage extends BasePage {
                                 new EditAccountDTO(user, user.getPerson(), singer))) {
                                 @Override
                                 protected void onConfirm(final User user, final AjaxRequestTarget target) {
-                                    getSession().setMetaData(ParticipateSession.user, user);
+                                    getSession().setMetaData(ManagementSession.user, user);
                                     Application.get().getSecuritySettings().getAuthenticationStrategy().remove();
                                     target.add(navbar);
                                     Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
@@ -108,7 +108,7 @@ public class ParticipatePage extends BasePage {
                             modal.show(target);
                         }
                     }.setBody(new ResourceModel("account.edit", "Edit Account")));
-                    if (null != getSession().getMetaData(ParticipateSession.user) && AbstractAuthenticatedWebSession.get().getRoles().hasRole(Roles.ADMIN)) {
+                    if (null != getSession().getMetaData(ManagementSession.user) && AbstractAuthenticatedWebSession.get().getRoles().hasRole(Roles.ADMIN)) {
                         menuButtons.add(new BookmarkablePageLink(buttonMarkupId, AdminPage.class)
                             .setBody(new ResourceModel("administration", "Administration")));
                     }
@@ -145,7 +145,7 @@ public class ParticipatePage extends BasePage {
         @Override
         public String getObject() {
             Session session = Session.get();
-            return Optional.ofNullable(session.getMetaData(ParticipateSession.user))
+            return Optional.ofNullable(session.getMetaData(ManagementSession.user))
                 .map(User::getPerson)
                 .map(Person::getDisplayName)
                 .or(username(session))
@@ -153,7 +153,7 @@ public class ParticipatePage extends BasePage {
         }
 
         private static Supplier<Optional<String>> username(Session session) {
-            return () -> Optional.ofNullable(session.getMetaData(ParticipateSession.user)).map(User::getUsername);
+            return () -> Optional.ofNullable(session.getMetaData(ManagementSession.user)).map(User::getUsername);
         }
     }
 }

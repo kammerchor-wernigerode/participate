@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class ParticipateSession extends AbstractAuthenticatedWebSession {
+public class ManagementSession extends AbstractAuthenticatedWebSession {
 
     public static MetaDataKey<User> user = new MetaDataKey<>() { };
     public static MetaDataKey<Event> event = new MetaDataKey<>() { };
@@ -44,7 +44,7 @@ public class ParticipateSession extends AbstractAuthenticatedWebSession {
     @SpringBean
     private ManagementWicketSecurityProperties securityProperties;
 
-    public ParticipateSession(Request request) {
+    public ManagementSession(Request request) {
         super(request);
         Injector.get().inject(this);
 
@@ -101,7 +101,7 @@ public class ParticipateSession extends AbstractAuthenticatedWebSession {
             .getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .filter(byPrefix("ROLE_"))
-            .map(ParticipateSession::leadingRoleAbsent)
+            .map(ManagementSession::leadingRoleAbsent)
             .map(String::toUpperCase)
             .collect(Collectors.collectingAndThen(Collectors.joining(","), Roles::new));
     }

@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.components;
 
-import de.vinado.wicket.participate.ParticipateSession;
+import de.vinado.wicket.participate.ManagementSession;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.User;
 import org.apache.wicket.Session;
@@ -17,7 +17,7 @@ public class WicketSessionPersonContext implements PersonContext {
     @Override
     public Person get() {
         Session session = Session.get();
-        User user = session.getMetaData(ParticipateSession.user);
+        User user = session.getMetaData(ManagementSession.user);
         return user.getPerson();
     }
 }

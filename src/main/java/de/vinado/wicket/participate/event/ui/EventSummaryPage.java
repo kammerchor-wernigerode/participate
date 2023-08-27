@@ -5,7 +5,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmark
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
-import de.vinado.wicket.participate.ParticipateSession;
+import de.vinado.wicket.participate.ManagementSession;
 import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
@@ -128,7 +128,7 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
     }
 
     private void navigate(EventDetails event) {
-        getSession().setMetaData(ParticipateSession.event, event.getEvent());
+        getSession().setMetaData(ManagementSession.event, event.getEvent());
         PageParameters pageParameters = new PageParameters(getPageParameters());
         pageParameters.set("event", event.getId(), Type.PATH);
         setResponsePage(EventSummaryPage.class, pageParameters);

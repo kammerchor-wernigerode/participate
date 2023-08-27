@@ -62,7 +62,7 @@ public class ManagementApplication extends AuthenticatedBootstrapWebApplication 
 
     @Override
     protected Class<? extends AbstractAuthenticatedWebSession> getWebSessionClass() {
-        return ParticipateSession.class;
+        return ManagementSession.class;
     }
 
     @Override

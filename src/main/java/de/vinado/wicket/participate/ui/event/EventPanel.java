@@ -5,7 +5,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5I
 import de.vinado.wicket.bt4.modal.ConfirmationModal;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
-import de.vinado.wicket.participate.ParticipateSession;
+import de.vinado.wicket.participate.ManagementSession;
 import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
@@ -208,7 +208,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     }
 
     private void invite(AjaxRequestTarget target) {
-        final User organizer = getSession().getMetaData(ParticipateSession.user);
+        final User organizer = getSession().getMetaData(ManagementSession.user);
 
         final List<Participant> participants = eventService.getParticipants(getModelObject().getEvent(), false);
         final int count = eventService.inviteParticipants(participants, organizer);
@@ -221,7 +221,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     }
 
     private void remind(AjaxRequestTarget target) {
-        final User organizer = getSession().getMetaData(ParticipateSession.user);
+        final User organizer = getSession().getMetaData(ManagementSession.user);
         final Event event = getModelObject().getEvent();
         if (!eventService.hasParticipant(event)) {
             Snackbar.show(target, "Es wurde noch niemand eingeladen!");
@@ -271,7 +271,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     private void populateSender(UriComponentsBuilder builder) {
         ApplicationProperties.Mail mailProperties = applicationProperties.getMail();
         Session session = getSession();
-        Optional.ofNullable(session.getMetaData(ParticipateSession.user))
+        Optional.ofNullable(session.getMetaData(ManagementSession.user))
             .map(User::getPerson)
             .map(Person::getEmail)
             .ifPresentOrElse(email -> builder.queryParam("to", email), () -> builder.queryParam("to", mailProperties.getSender()));
