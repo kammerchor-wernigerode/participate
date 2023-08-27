@@ -11,9 +11,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.Session;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
-import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.request.Request;
@@ -26,12 +24,6 @@ import org.springframework.stereotype.Component;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-/**
- * Custom {@link AuthenticatedWebSession}. This class based on a username and password, and a method implementation that
- * gets the Roles.
- *
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class ParticipateSession extends AbstractAuthenticatedWebSession {
 
     public static MetaDataKey<User> user = new MetaDataKey<>() { };
@@ -41,31 +33,19 @@ public class ParticipateSession extends AbstractAuthenticatedWebSession {
     @SpringBean
     private Holder<AuthenticationResolver> authenticationResolver;
 
-    @SuppressWarnings("unused")
     @SpringBean
     private UserService userService;
 
-    @SuppressWarnings("unused")
     @SpringBean
     private EventService eventService;
 
-    /**
-     * @param request {@link Request}
-     */
-    public ParticipateSession(final Request request) {
+    public ParticipateSession(Request request) {
         super(request);
         Injector.get().inject(this);
 
         setMetaData(event, eventService.getLatestEvent());
         setMetaData(eventFilter, new EventFilter());
         setMetaData(user, resolveUser());
-    }
-
-    /**
-     * @return Returns the custom session
-     */
-    public static ParticipateSession get() {
-        return (ParticipateSession) Session.get();
     }
 
     @Override
