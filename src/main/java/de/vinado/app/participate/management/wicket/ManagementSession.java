@@ -46,7 +46,7 @@ public class ManagementSession extends AbstractAuthenticatedWebSession {
 
         setMetaData(event, eventService.getLatestEvent());
         setMetaData(eventFilter, new EventFilter());
-        setMetaData(user, resolveUser());
+        setMetaData(user, resolveUser().orElseThrow(IllegalArgumentException::new));
     }
 
     @Override
@@ -55,14 +55,13 @@ public class ManagementSession extends AbstractAuthenticatedWebSession {
 
         setMetaData(event, eventService.getLatestEvent());
         setMetaData(eventFilter, new EventFilter());
-        setMetaData(user, resolveUser());
+        setMetaData(user, resolveUser().orElseThrow(IllegalArgumentException::new));
     }
 
-    private User resolveUser() {
-        AuthenticatedPrincipal principal = principal(authenticationResolver)
+    private Optional<User> resolveUser() {
+        return principal(authenticationResolver)
             .or(this::resolveFromProperty)
-            .orElseThrow(IllegalArgumentException::new);
-        return convertFrom(principal);
+            .map(this::convertFrom);
     }
 
     private User convertFrom(AuthenticatedPrincipal principal) {
