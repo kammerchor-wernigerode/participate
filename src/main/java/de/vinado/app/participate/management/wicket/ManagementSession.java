@@ -7,6 +7,7 @@ import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.UserService;
+import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
@@ -77,6 +78,10 @@ public class ManagementSession extends AbstractAuthenticatedWebSession {
     }
 
     private Optional<User> resolveFromProperty() {
+        if (!Application.exists()) {
+            return Optional.empty();
+        }
+
         if (getApplication().usesDeploymentConfig()) {
             return Optional.empty();
         }
