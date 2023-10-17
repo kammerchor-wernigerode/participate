@@ -55,7 +55,7 @@ public class ManagementSession extends AbstractAuthenticatedWebSession {
 
         setMetaData(event, eventService.getLatestEvent());
         setMetaData(eventFilter, new EventFilter());
-        setMetaData(user, resolveUser().orElseThrow(IllegalArgumentException::new));
+        setMetaData(user, resolveUser().orElse(null));
     }
 
     private Optional<User> resolveUser() {
