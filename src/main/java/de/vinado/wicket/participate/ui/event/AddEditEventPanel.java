@@ -6,12 +6,12 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal.Size;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.bt4.modal.FormModal;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.common.AjaxFocusBehavior;
 import de.vinado.wicket.form.AutosizeBehavior;
-import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
@@ -217,7 +217,7 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
         if (edit) {
             if (remove) {
                 eventService.removeEvent(dto.getEvent());
-                ParticipateSession.get().setEvent(null);
+                getSession().setMetaData(ManagementSession.event, null);
                 send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(null));
                 Snackbar.show(target, new ResourceModel("event.remove.success", "The event has been removed"));
                 return;

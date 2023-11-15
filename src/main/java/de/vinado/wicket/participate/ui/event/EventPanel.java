@@ -2,10 +2,10 @@ package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.wicket.bt4.modal.ConfirmationModal;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
-import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
@@ -31,6 +31,7 @@ import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateInten
 import de.vinado.wicket.participate.ui.pages.BasePage;
 import de.vinado.wicket.participate.ui.pages.ParticipatePage;
 import org.apache.wicket.Component;
+import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.markup.html.basic.DefaultLinkParser;
@@ -207,7 +208,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     }
 
     private void invite(AjaxRequestTarget target) {
-        final User organizer = ParticipateSession.get().getUser();
+        final User organizer = getSession().getMetaData(ManagementSession.user);
 
         final List<Participant> participants = eventService.getParticipants(getModelObject().getEvent(), false);
         final int count = eventService.inviteParticipants(participants, organizer);
@@ -220,7 +221,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     }
 
     private void remind(AjaxRequestTarget target) {
-        final User organizer = ParticipateSession.get().getUser();
+        final User organizer = getSession().getMetaData(ManagementSession.user);
         final Event event = getModelObject().getEvent();
         if (!eventService.hasParticipant(event)) {
             Snackbar.show(target, "Es wurde noch niemand eingeladen!");
@@ -269,8 +270,8 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
 
     private void populateSender(UriComponentsBuilder builder) {
         ApplicationProperties.Mail mailProperties = applicationProperties.getMail();
-        ParticipateSession session = ParticipateSession.get();
-        Optional.ofNullable(session.getUser())
+        Session session = getSession();
+        Optional.ofNullable(session.getMetaData(ManagementSession.user))
             .map(User::getPerson)
             .map(Person::getEmail)
             .ifPresentOrElse(email -> builder.queryParam("to", email), () -> builder.queryParam("to", mailProperties.getSender()));

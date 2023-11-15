@@ -1,13 +1,14 @@
 package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
+import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.wicket.bt4.tooltip.TooltipBehavior;
 import de.vinado.wicket.bt4.tooltip.TooltipConfig;
 import de.vinado.wicket.bt4.tooltip.TooltipConfig.Boundary;
-import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.components.panels.AjaxLinkPanel;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.model.EventDetails;
+import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
@@ -138,7 +139,7 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
     @Override
     protected Item<EventDetails> newRowItem(String id, int index, IModel<EventDetails> model) {
         final Item<EventDetails> item = super.newRowItem(id, index, model);
-        final Long sessionEventId = ParticipateSession.get().getEvent().getId();
+        final Long sessionEventId = Session.get().getMetaData(ManagementSession.event).getId();
         if (null != sessionEventId && model.getObject().getId().equals(sessionEventId))
             item.add(new CssClassNameAppender("table-primary"));
         return item;

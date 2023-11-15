@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.apache.wicket.Component;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
+import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.feedback.FeedbackMessage;
@@ -84,7 +85,7 @@ public class FormSignInPanel extends Panel {
     }
 
     private boolean isSignedIn() {
-        return AuthenticatedWebSession.get().isSignedIn();
+        return AbstractAuthenticatedWebSession.get().isSignedIn();
     }
 
     private boolean signIn(String email, String password) {

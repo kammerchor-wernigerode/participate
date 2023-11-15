@@ -13,7 +13,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
+import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
@@ -102,7 +102,7 @@ public class FormPage extends BasePage implements IGenericComponent<ParticipantD
     }
 
     private void requireAuthentication() {
-        if (AuthenticatedWebSession.get().isSignedIn()) return;
+        if (AbstractAuthenticatedWebSession.get().isSignedIn()) return;
 
         PageParameters parameters = new PageParameters(getPageParameters());
         throw new RestartResponseAtInterceptPageException(FormSignInPage.class, parameters);

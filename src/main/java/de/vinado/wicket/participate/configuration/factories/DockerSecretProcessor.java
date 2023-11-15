@@ -28,6 +28,7 @@ public class DockerSecretProcessor extends SecretsEnvironmentPostProcessor {
         properties.put("spring.mail.password", "SMTP_PASSWORD_FILE");
         properties.put("app.crypto.session-secret", "CRYPTO_SESSION_SECRET_FILE");
         properties.put("app.crypto.pbe-salt", "CRYPTO_PBE_SALT_FILE");
+        properties.put("spring.security.oauth2.client.registration.keycloak.client-secret", "SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT_SECRET_FILE");
 
         return PropertyIndexSupplier.from(properties)
             .substituteValues(environment);

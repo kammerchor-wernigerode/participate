@@ -1,6 +1,7 @@
 package de.vinado.wicket.participate;
 
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
+import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.app.participate.wicket.crypto.CryptFactory;
 import de.vinado.wicket.bt4.AuthenticatedBootstrapWebApplication;
 import de.vinado.wicket.participate.ui.event.EventsPage;
@@ -62,7 +63,7 @@ public class ManagementApplication extends AuthenticatedBootstrapWebApplication 
 
     @Override
     protected Class<? extends AbstractAuthenticatedWebSession> getWebSessionClass() {
-        return ParticipateSession.class;
+        return ManagementSession.class;
     }
 
     @Override

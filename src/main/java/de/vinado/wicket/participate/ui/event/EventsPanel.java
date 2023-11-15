@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
-import de.vinado.wicket.participate.ParticipateSession;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.model.Event;
@@ -48,7 +48,7 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
         return new EventFilterForm("filter", getModel()) {
             @Override
             protected void onApply() {
-                ParticipateSession.get().setEventFilter(getModelObject());
+                getSession().setMetaData(ManagementSession.eventFilter, getModelObject());
                 send(EventsPanel.this, Broadcast.BREADTH, new EventFilterIntent(getModelObject()));
             }
         };
