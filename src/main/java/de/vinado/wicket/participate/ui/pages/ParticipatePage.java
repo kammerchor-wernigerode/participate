@@ -31,6 +31,7 @@ import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -113,13 +114,8 @@ public class ParticipatePage extends BasePage {
                             .setBody(new ResourceModel("administration", "Administration")));
                     }
                     menuButtons.add(new MenuDivider());
-                    menuButtons.add(new AjaxLink<Void>(buttonMarkupId) {
-                        @Override
-                        public void onClick(final AjaxRequestTarget target) {
-                            getSession().invalidate();
-                            setResponsePage(getApplication().getHomePage());
-                        }
-                    }.setBody(new ResourceModel("logout", "Logout")));
+                    menuButtons.add(new ExternalLink(buttonMarkupId, "/logout")
+                        .setBody(new ResourceModel("logout", "Logout")));
                     return menuButtons;
                 }
             }));
