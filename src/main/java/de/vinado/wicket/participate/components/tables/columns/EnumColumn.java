@@ -9,21 +9,21 @@ import org.apache.wicket.model.PropertyModel;
 
 public class EnumColumn<T, S, E extends Enum<E>> extends PropertyColumn<T, S> {
 
-    public EnumColumn(final IModel<String> displayModel, final S sortProperty, final String propertyExpression) {
+    public EnumColumn(IModel<String> displayModel, S sortProperty, String propertyExpression) {
         super(displayModel, sortProperty, propertyExpression);
     }
 
-    public EnumColumn(final IModel<String> displayModel, final String propertyExpression) {
+    public EnumColumn(IModel<String> displayModel, String propertyExpression) {
         super(displayModel, propertyExpression);
     }
 
     @Override
-    public void populateItem(final Item<ICellPopulator<T>> item, final String componentId, final IModel<T> rowModel) {
+    public void populateItem(Item<ICellPopulator<T>> item, String componentId, IModel<T> rowModel) {
         item.add(new EnumLabel<E>(componentId, getDataModel(rowModel)));
     }
 
     @Override
-    public IModel<E> getDataModel(final IModel<T> rowModel) {
+    public IModel<E> getDataModel(IModel<T> rowModel) {
         return new PropertyModel<>(rowModel, getPropertyExpression());
     }
 }

@@ -12,17 +12,17 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 public class BootstrapAjaxNavigationToolbar extends BootstrapNavigationToolbar {
 
 
-    public BootstrapAjaxNavigationToolbar(final DataTable<?, ?> table) {
+    public BootstrapAjaxNavigationToolbar(DataTable<?, ?> table) {
         super(table);
     }
 
-    public BootstrapAjaxNavigationToolbar(final DataTable<?, ?> table, Size size) {
+    public BootstrapAjaxNavigationToolbar(DataTable<?, ?> table, Size size) {
         super(table, size);
     }
 
     @Override
-    protected BootstrapPagingNavigator newPagingNavigator(final String navigatorId,
-                                                          final DataTable<?, ?> table, final Size size) {
+    protected BootstrapPagingNavigator newPagingNavigator(String navigatorId,
+                                                          DataTable<?, ?> table, Size size) {
         return new BootstrapAjaxPagingNavigator(navigatorId, table) {
             @Override
             public Size getSize() {

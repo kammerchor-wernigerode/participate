@@ -57,7 +57,7 @@ public class UserRecoveryToken implements Identifiable<Long> {
      * @param token     Recovery token
      * @param validDate Date, the token expires
      */
-    public UserRecoveryToken(final User user, final String token, final Date validDate) {
+    public UserRecoveryToken(User user, String token, Date validDate) {
         this.user = user;
         this.token = token;
         this.validDate = validDate;

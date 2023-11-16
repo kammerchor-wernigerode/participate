@@ -78,7 +78,7 @@ public class IconPanel extends Panel {
         this.display = Display.DEFAULT;
 
         cssClassNameModel = Model.of(type.cssClassName());
-        final Label label = new Label("label", Model.of(""));
+        Label label = new Label("label", Model.of(""));
         label.add(new CssClassNameAppender(cssClassNameModel));
         label.setOutputMarkupId(true);
         add(label);
@@ -99,7 +99,7 @@ public class IconPanel extends Panel {
      * @param type IconType
      * @return {@link IconPanel}
      */
-    public IconPanel setType(final IconType type) {
+    public IconPanel setType(IconType type) {
         this.type = type;
         return this;
     }
@@ -119,7 +119,7 @@ public class IconPanel extends Panel {
      * @param color Color
      * @return {@link IconPanel}
      */
-    public IconPanel setColor(final Color color) {
+    public IconPanel setColor(Color color) {
         this.color = color;
         return this;
     }
@@ -139,7 +139,7 @@ public class IconPanel extends Panel {
      * @param textAlign {@link TextAlign}
      * @return {@link IconPanel}
      */
-    public IconPanel setTextAlign(final TextAlign textAlign) {
+    public IconPanel setTextAlign(TextAlign textAlign) {
         this.textAlign = textAlign;
         return this;
     }
@@ -159,7 +159,7 @@ public class IconPanel extends Panel {
      * @param display {@link Display}
      * @return {@link IconPanel}
      */
-    public IconPanel setDisplay(final Display display) {
+    public IconPanel setDisplay(Display display) {
         this.display = display;
         return this;
     }
@@ -170,9 +170,9 @@ public class IconPanel extends Panel {
      * @param tag {@link ComponentTag}
      */
     @Override
-    protected void onComponentTag(final ComponentTag tag) {
+    protected void onComponentTag(ComponentTag tag) {
         super.onComponentTag(tag);
-        final CssClassNames.Builder builder = CssClassNames.newBuilder();
+        CssClassNames.Builder builder = CssClassNames.newBuilder();
         builder.add(textAlign.cssClassName());
         builder.add(color.cssClassName());
         builder.add(display.cssClassName());
@@ -210,7 +210,7 @@ public class IconPanel extends Panel {
          *
          * @param cssClassName Css class name
          */
-        Color(final String cssClassName) {
+        Color(String cssClassName) {
             this.cssClassName = cssClassName;
         }
 
@@ -232,7 +232,7 @@ public class IconPanel extends Panel {
 
         private final String cssClassName;
 
-        Display(final String cssClassName) {
+        Display(String cssClassName) {
             this.cssClassName = cssClassName;
         }
 

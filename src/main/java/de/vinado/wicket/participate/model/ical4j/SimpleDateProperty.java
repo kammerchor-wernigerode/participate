@@ -22,7 +22,7 @@ public class SimpleDateProperty extends Property {
         super(type.toString(), new Factory(type));
     }
 
-    public SimpleDateProperty(final Type type, final Date date) {
+    public SimpleDateProperty(Type type, Date date) {
         super(type.toString(), new Factory(type));
 
         if (type.equals(Type.DTEND)) {
@@ -38,9 +38,9 @@ public class SimpleDateProperty extends Property {
     }
 
     @Override
-    public void setValue(final String aValue) throws ParseException {
+    public void setValue(String aValue) throws ParseException {
 
-        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         this.date = simpleDateFormat.parse(aValue);
     }
 
@@ -60,7 +60,7 @@ public class SimpleDateProperty extends Property {
 
         private String type;
 
-        Type(final String type) {
+        Type(String type) {
             this.type = type;
         }
 

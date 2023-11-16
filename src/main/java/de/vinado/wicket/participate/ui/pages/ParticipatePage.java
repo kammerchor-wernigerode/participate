@@ -83,13 +83,13 @@ public class ParticipatePage extends BasePage {
             Navbar.ComponentPosition.RIGHT,
             new NavbarDropDownButton(new UsernameModel(), Model.of(FontAwesome5IconType.user_s)) {
                 @Override
-                protected List<AbstractLink> newSubMenuButtons(final String buttonMarkupId) {
-                    final List<AbstractLink> menuButtons = new ArrayList<>();
+                protected List<AbstractLink> newSubMenuButtons(String buttonMarkupId) {
+                    List<AbstractLink> menuButtons = new ArrayList<>();
                     menuButtons.add(new AjaxLink<Void>(buttonMarkupId) {
                         @Override
-                        public void onClick(final AjaxRequestTarget target) {
-                            final User user = getSession().getMetaData(ManagementSession.user);
-                            final Person person = user.getPerson();
+                        public void onClick(AjaxRequestTarget target) {
+                            User user = getSession().getMetaData(ManagementSession.user);
+                            Person person = user.getPerson();
                             Singer singer = null;
                             if (null != person) {
                                 singer = personService.hasSinger(person) ? personService.getSinger(person) : null;
@@ -99,7 +99,7 @@ public class ParticipatePage extends BasePage {
                             modal.setContent(new EditAccountPanel(modal, new CompoundPropertyModel<>(
                                 new EditAccountDTO(user, user.getPerson(), singer))) {
                                 @Override
-                                protected void onConfirm(final User user, final AjaxRequestTarget target) {
+                                protected void onConfirm(User user, AjaxRequestTarget target) {
                                     getSession().setMetaData(ManagementSession.user, user);
                                     Application.get().getSecuritySettings().getAuthenticationStrategy().remove();
                                     target.add(navbar);

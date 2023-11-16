@@ -217,7 +217,7 @@ public class Modal<T> extends GenericPanel<T> {
             }.type(type);
         }
 
-        public AjaxAction type(final Type type) {
+        public AjaxAction type(Type type) {
             buttonBehavior.setType(type);
             return this;
         }

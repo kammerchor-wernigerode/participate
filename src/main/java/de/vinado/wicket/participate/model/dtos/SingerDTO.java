@@ -26,7 +26,7 @@ public class SingerDTO implements Serializable {
     private String lastName;
     private String email;
 
-    public SingerDTO(final Singer singer) {
+    public SingerDTO(Singer singer) {
         this.singer = singer;
         this.voice = singer.getVoice();
         this.email = singer.getFirstName();

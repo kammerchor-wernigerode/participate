@@ -36,13 +36,13 @@ public abstract class AddEditPersonPanel extends FormModal<PersonDTO> {
     protected void onInitialize() {
         super.onInitialize();
 
-        final RequiredTextField firstNameTf = new RequiredTextField("firstName");
+        RequiredTextField firstNameTf = new RequiredTextField("firstName");
         form.add(firstNameTf);
 
-        final RequiredTextField lastNameTf = new RequiredTextField("lastName");
+        RequiredTextField lastNameTf = new RequiredTextField("lastName");
         form.add(lastNameTf);
 
-        final EmailTextField emailTf = new EmailTextField("email");
+        EmailTextField emailTf = new EmailTextField("email");
         emailTf.setRequired(true);
         emailTf.add(new ConditionalValidator<>(this::ensureUnique,
             new ResourceModel("unique.email", "A person with this e-mail address already exists")));
@@ -52,7 +52,7 @@ public abstract class AddEditPersonPanel extends FormModal<PersonDTO> {
     }
 
     @Override
-    protected void onSubmit(final AjaxRequestTarget target) {
+    protected void onSubmit(AjaxRequestTarget target) {
         if (edit) {
             personService.savePerson(getModelObject());
         } else {
@@ -65,5 +65,5 @@ public abstract class AddEditPersonPanel extends FormModal<PersonDTO> {
         return StringUtils.equalsIgnoreCase(email, getModelObject().getEmail()) || !personService.hasPerson(email);
     }
 
-    protected abstract void onUpdate(final AjaxRequestTarget target);
+    protected abstract void onUpdate(AjaxRequestTarget target);
 }

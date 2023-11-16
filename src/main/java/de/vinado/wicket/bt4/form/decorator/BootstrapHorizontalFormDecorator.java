@@ -18,21 +18,21 @@ public class BootstrapHorizontalFormDecorator extends AbstractBootstrapFormDecor
 
     private IModel<String> helperBlock;
 
-    private BootstrapHorizontalFormDecorator(final IModel<String> labelModel, final IModel<String> helperBlock) {
+    private BootstrapHorizontalFormDecorator(IModel<String> labelModel, IModel<String> helperBlock) {
         this.labelModel = labelModel;
         this.helperBlock = helperBlock;
     }
 
-    public static BootstrapHorizontalFormDecorator decorate(final IModel<String> labelModel,
-                                                            final IModel<String> helperText) {
+    public static BootstrapHorizontalFormDecorator decorate(IModel<String> labelModel,
+                                                            IModel<String> helperText) {
         return new BootstrapHorizontalFormDecorator(labelModel, helperText);
     }
 
-    public static BootstrapHorizontalFormDecorator decorate(final IModel<String> labelModel) {
+    public static BootstrapHorizontalFormDecorator decorate(IModel<String> labelModel) {
         return new BootstrapHorizontalFormDecorator(labelModel, null);
     }
 
-    public static BootstrapHorizontalFormDecorator decorateWithHelperBlock(final IModel<String> helperText) {
+    public static BootstrapHorizontalFormDecorator decorateWithHelperBlock(IModel<String> helperText) {
         return new BootstrapHorizontalFormDecorator(null, helperText);
     }
 
@@ -49,22 +49,22 @@ public class BootstrapHorizontalFormDecorator extends AbstractBootstrapFormDecor
     }
 
     @Override
-    public void bind(final Component component) {
+    public void bind(Component component) {
         component.setOutputMarkupPlaceholderTag(true);
     }
 
     @Override
-    public void beforeRender(final Component component) {
-        final FormComponent<?> fc = (FormComponent<?>) component;
-        final Response r = component.getResponse();
+    public void beforeRender(Component component) {
+        FormComponent<?> fc = (FormComponent<?>) component;
+        Response r = component.getResponse();
         String namespace = fc.getMarkup().getMarkupResourceStream().getWicketNamespace();
         boolean wicketAttributes = stripWicketTags();
 
-        final String defaultLabel = null == fc.getLabel() ? fc.getDefaultLabel() : fc.getLabel().getObject();
-        final String label = null == labelModel ? defaultLabel : labelModel.getObject();
+        String defaultLabel = null == fc.getLabel() ? fc.getDefaultLabel() : fc.getLabel().getObject();
+        String label = null == labelModel ? defaultLabel : labelModel.getObject();
 
-        final boolean required = fc.isRequired();
-        final boolean checkBox = fc instanceof CheckBox;
+        boolean required = fc.isRequired();
+        boolean checkBox = fc instanceof CheckBox;
 
         r.write("<div id=\"" + getAjaxRegionMarkupId(component) + "\" class=\"form-group row\">");
 
@@ -92,17 +92,17 @@ public class BootstrapHorizontalFormDecorator extends AbstractBootstrapFormDecor
     }
 
     @Override
-    public void afterRender(final Component component) {
-        final FormComponent<?> fc = (FormComponent<?>) component;
-        final Response r = component.getResponse();
+    public void afterRender(Component component) {
+        FormComponent<?> fc = (FormComponent<?>) component;
+        Response r = component.getResponse();
         boolean wicketAttributes = stripWicketTags();
         String namespace = fc.getMarkup().getMarkupResourceStream().getWicketNamespace();
 
-        final String defaultLabel = null == fc.getLabel() ? fc.getDefaultLabel() : fc.getLabel().getObject();
-        final String label = null == getLabelModel() ? defaultLabel : getLabelModel().getObject();
+        String defaultLabel = null == fc.getLabel() ? fc.getDefaultLabel() : fc.getLabel().getObject();
+        String label = null == getLabelModel() ? defaultLabel : getLabelModel().getObject();
 
-        final boolean required = fc.isRequired();
-        final boolean checkBox = fc instanceof CheckBox;
+        boolean required = fc.isRequired();
+        boolean checkBox = fc instanceof CheckBox;
 
         ComponentTag close = new ComponentTag("div", TagType.CLOSE);
         if (checkBox) {

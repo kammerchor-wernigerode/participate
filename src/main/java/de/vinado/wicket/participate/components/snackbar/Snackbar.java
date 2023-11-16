@@ -19,12 +19,12 @@ public class Snackbar {
     private static SnackbarConfig snackbarConfig = new SnackbarConfig()
         .withShowAction(false);
 
-    public static void show(final AjaxRequestTarget target, final String content) {
+    public static void show(AjaxRequestTarget target, String content) {
         String json = snackbarConfig.withText(content).toJsonString();
         target.appendJavaScript("Snackbar.show(" + json + ");");
     }
 
-    public static void show(final AjaxRequestTarget target, final IModel<String> contentModel) {
+    public static void show(AjaxRequestTarget target, IModel<String> contentModel) {
         String json = snackbarConfig.withText(contentModel.getObject()).toJsonString();
         target.appendJavaScript("Snackbar.show(" + json + ");");
     }
@@ -35,7 +35,7 @@ public class Snackbar {
      * @param snackbarConfig Snackbar configuration
      * @return Returns itself
      */
-    public Snackbar withConfig(final SnackbarConfig snackbarConfig) {
+    public Snackbar withConfig(SnackbarConfig snackbarConfig) {
         Snackbar.snackbarConfig = snackbarConfig;
         return this;
     }

@@ -22,12 +22,12 @@ public class AjaxFocusBehavior extends AbstractDefaultAjaxBehavior {
     }
 
     @Override
-    protected void respond(final AjaxRequestTarget target) {
+    protected void respond(AjaxRequestTarget target) {
         target.focusComponent(getComponent());
     }
 
     @Override
-    public void renderHead(final Component component, final IHeaderResponse response) {
+    public void renderHead(Component component, IHeaderResponse response) {
         super.renderHead(component, response);
         response.render(OnLoadHeaderItem.forScript(getCallbackScript().toString()));
     }

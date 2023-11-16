@@ -81,7 +81,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
 
     private final Form form;
 
-    public EventPanel(final String id, final IModel<EventDetails> model, final boolean editable, PersonContext personContext, IModel<ParticipantFilter> filterModel) {
+    public EventPanel(String id, IModel<EventDetails> model, boolean editable, PersonContext personContext, IModel<ParticipantFilter> filterModel) {
         super(id, model);
         setOutputMarkupPlaceholderTag(true);
 
@@ -91,7 +91,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         form = new Form("form");
         add(form);
 
-        final WebMarkupContainer wmc = new WebMarkupContainer("wmc");
+        WebMarkupContainer wmc = new WebMarkupContainer("wmc");
         wmc.setOutputMarkupId(true);
         wmc.add(new UpdateOnEventBehavior<>(ParticipantFilterIntent.class));
         wmc.add(new UpdateOnEventBehavior<>(ParticipantTableUpdateIntent.class));
@@ -119,7 +119,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
             }
         });
 
-        final ParticipantFilterPanel filterPanel = new ParticipantFilterPanel("filterPanel", filterModel) {
+        ParticipantFilterPanel filterPanel = new ParticipantFilterPanel("filterPanel", filterModel) {
             @Override
             protected Component getScope() {
                 return wmc;
@@ -147,10 +147,10 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     }
 
     private void edit(AjaxRequestTarget target, IModel<Participant> rowModel) {
-        final ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
+        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
         modal.setContent(new EditInvitationPanel(modal, new CompoundPropertyModel<>(new ParticipantDTO(rowModel.getObject()))) {
             @Override
-            protected void onSubmit(final AjaxRequestTarget target) {
+            protected void onSubmit(AjaxRequestTarget target) {
                 eventService.saveParticipant(getModelObject());
                 Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
                 send(getWebPage(), Broadcast.BREADTH, new EventTableUpdateIntent());
@@ -161,7 +161,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     }
 
     private void email(AjaxRequestTarget target, IModel<Participant> rowModel) {
-        final Person person = rowModel.getObject().getSinger();
+        Person person = rowModel.getObject().getSinger();
         Email mailData = emailBuilderFactory.create()
             .to(person)
             .build();
@@ -207,10 +207,10 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     }
 
     private void invite(AjaxRequestTarget target) {
-        final User organizer = getSession().getMetaData(ManagementSession.user);
+        User organizer = getSession().getMetaData(ManagementSession.user);
 
-        final List<Participant> participants = eventService.getParticipants(getModelObject().getEvent(), false);
-        final int count = eventService.inviteParticipants(participants, organizer);
+        List<Participant> participants = eventService.getParticipants(getModelObject().getEvent(), false);
+        int count = eventService.inviteParticipants(participants, organizer);
 
         send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
         Snackbar.show(target, "Einladung wurde an "
@@ -220,8 +220,8 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     }
 
     private void remind(AjaxRequestTarget target) {
-        final User organizer = getSession().getMetaData(ManagementSession.user);
-        final Event event = getModelObject().getEvent();
+        User organizer = getSession().getMetaData(ManagementSession.user);
+        Event event = getModelObject().getEvent();
         if (!eventService.hasParticipant(event)) {
             Snackbar.show(target, "Es wurde noch niemand eingeladen!");
             return;
@@ -233,9 +233,9 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
 
             @Override
             protected void onConfirm(AjaxRequestTarget target) {
-                final List<Participant> participants = eventService.getParticipants(event, InvitationStatus.PENDING);
+                List<Participant> participants = eventService.getParticipants(event, InvitationStatus.PENDING);
                 participants.addAll(eventService.getParticipants(event, InvitationStatus.TENTATIVE));
-                final int count = eventService.inviteParticipants(participants, organizer);
+                int count = eventService.inviteParticipants(participants, organizer);
 
                 Snackbar.show(target, "Erinnerung wurde an "
                     + count
@@ -289,7 +289,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         modal.setContent(new AddEditEventPanel(modal, new ResourceModel("event.edit", "Edit Event"),
             new CompoundPropertyModel<>(new EventDTO(event))) {
             @Override
-            public void onUpdate(final Event savedEvent, final AjaxRequestTarget target) {
+            public void onUpdate(Event savedEvent, AjaxRequestTarget target) {
                 EventPanel.this.setModelObject(eventService.getEventDetails(savedEvent));
                 send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(savedEvent));
                 Snackbar.show(target, new ResourceModel("event.edit.success", "The event was successfully edited"));

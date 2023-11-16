@@ -47,7 +47,7 @@ public class FreemarkerTemplateService implements TemplateService {
      * @throws TemplateException
      */
     @Override
-    public String processTemplate(final String templateReference, final Map<String, Object> model, final MultipartType type)
+    public String processTemplate(String templateReference, Map<String, Object> model, MultipartType type)
         throws IOException, TemplateException {
         String templateFileName = StringUtils.trim(templateReference);
 
@@ -59,12 +59,12 @@ public class FreemarkerTemplateService implements TemplateService {
             ? templateFileName
             : (templateFileName + "." + templateExtensions(type));
 
-        final Locale locale = getDefault();
+        Locale locale = getDefault();
         log.trace("Try to find template {} using locale {} and {} encoding", templateFileName, locale, UTF_8);
-        final Template template = freeMarkerConfiguration.getTemplate(templateFileName, locale, UTF_8);
+        Template template = freeMarkerConfiguration.getTemplate(templateFileName, locale, UTF_8);
         log.trace("Found.");
 
-        final String message = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+        String message = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
         log.trace("Processed template w/ name={} and model", templateReference);
 
         return message;
@@ -77,7 +77,7 @@ public class FreemarkerTemplateService implements TemplateService {
      * @return
      */
     @Override
-    public String templateExtensions(final MultipartType type) {
+    public String templateExtensions(MultipartType type) {
         switch (type) {
             case PLAIN:
             case HTML:

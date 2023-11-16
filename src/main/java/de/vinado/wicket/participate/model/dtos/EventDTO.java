@@ -26,7 +26,7 @@ public class EventDTO implements Serializable {
     private Date endDate;
     private String location;
 
-    public EventDTO(final Event event) {
+    public EventDTO(Event event) {
         this.event = event;
         this.description = event.getDescription();
         this.eventType = event.getEventType();

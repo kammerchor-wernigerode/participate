@@ -20,7 +20,7 @@ public class PersonDTO implements Serializable {
     private String lastName;
     private String email;
 
-    public PersonDTO(final Person person) {
+    public PersonDTO(Person person) {
         this.person = person;
         this.firstName = person.getFirstName();
         this.lastName = person.getLastName();

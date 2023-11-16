@@ -54,7 +54,7 @@ public class UserServiceImpl extends DataService implements UserService {
 
     @Override
     @PersistenceContext
-    public void setEntityManager(final EntityManager entityManager) {
+    public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
@@ -62,7 +62,7 @@ public class UserServiceImpl extends DataService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public User createUser(final AddUserDTO dto) {
+    public User createUser(AddUserDTO dto) {
         return save(new User(dto.getUsername(), dto.getPassword(), false, true));
     }
 
@@ -70,7 +70,7 @@ public class UserServiceImpl extends DataService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public User saveUser(final AddUserDTO dto) {
+    public User saveUser(AddUserDTO dto) {
         User loadedUser = load(User.class, dto.getUser().getId());
         loadedUser.setUsername(dto.getUsername());
         if (!Strings.isEmpty(dto.getPassword())) {
@@ -86,7 +86,7 @@ public class UserServiceImpl extends DataService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public User assignPerson(final AddUserDTO dto) {
+    public User assignPerson(AddUserDTO dto) {
         User user = dto.getUser();
         if (null == user) {
             log.error("User must not be null");
@@ -100,7 +100,7 @@ public class UserServiceImpl extends DataService implements UserService {
             if (personService.hasPerson(dto.getEmail())) {
                 person = personService.getPerson(dto.getEmail());
             } else {
-                final PersonDTO personDTO = new PersonDTO();
+                PersonDTO personDTO = new PersonDTO();
                 personDTO.setFirstName(dto.getFirstName());
                 personDTO.setLastName(dto.getLastName());
                 personDTO.setEmail(dto.getEmail());
@@ -119,7 +119,7 @@ public class UserServiceImpl extends DataService implements UserService {
      * @param validDuration Duration of validity in days.
      * @return Saved {@link UserRecoveryToken}
      */
-    protected UserRecoveryToken createUserRecoveryToken(final User user, final int validDuration) {
+    protected UserRecoveryToken createUserRecoveryToken(User user, int validDuration) {
         return save(new UserRecoveryToken(user, generateRecoveryToken(), DateTime.now().plusDays(validDuration).toDate()));
     }
 
@@ -128,9 +128,9 @@ public class UserServiceImpl extends DataService implements UserService {
      */
     @Override
     public List<User> getUsers() {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-        final Root<User> root = criteriaQuery.from(User.class);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+        Root<User> root = criteriaQuery.from(User.class);
         criteriaQuery.where(forActive(criteriaBuilder, root));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
@@ -139,11 +139,11 @@ public class UserServiceImpl extends DataService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public List<User> findUsers(final String term) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-        final Root<User> root = criteriaQuery.from(User.class);
-        final Predicate forTerm = criteriaBuilder.like(
+    public List<User> findUsers(String term) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+        Root<User> root = criteriaQuery.from(User.class);
+        Predicate forTerm = criteriaBuilder.like(
             criteriaBuilder.lower(root.get("username")),
             "%" + term.toLowerCase().trim() + "%");
         criteriaQuery.where(forTerm, forActive(criteriaBuilder, root));
@@ -154,7 +154,7 @@ public class UserServiceImpl extends DataService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public User getUser(final Long id) {
+    public User getUser(Long id) {
         return load(User.class, id);
     }
 
@@ -162,15 +162,15 @@ public class UserServiceImpl extends DataService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public User getUser(final String username) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-        final Root<User> root = criteriaQuery.from(User.class);
-        final Predicate forUsername = criteriaBuilder.equal(root.<String>get("username"), username);
+    public User getUser(String username) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+        Root<User> root = criteriaQuery.from(User.class);
+        Predicate forUsername = criteriaBuilder.equal(root.<String>get("username"), username);
         criteriaQuery.where(forUsername);
         try {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (final NoResultException e) {
+        } catch (NoResultException e) {
             log.trace("Could not find User for username={}", username);
             return null;
         }
@@ -180,15 +180,15 @@ public class UserServiceImpl extends DataService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public User getUser(final Person person) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-        final Root<User> root = criteriaQuery.from(User.class);
-        final Predicate forPerson = criteriaBuilder.equal(root.get("person"), person);
+    public User getUser(Person person) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+        Root<User> root = criteriaQuery.from(User.class);
+        Predicate forPerson = criteriaBuilder.equal(root.get("person"), person);
         criteriaQuery.where(forPerson, forActive(criteriaBuilder, root));
         try {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (final NoResultException e) {
+        } catch (NoResultException e) {
             log.trace("Could not find User for Person /w id={}", person.getId());
             return null;
         }
@@ -198,17 +198,17 @@ public class UserServiceImpl extends DataService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public User getUser(final String usernameOrEmail, final String plainPassword) {
-        final String passwordSha256 = DigestUtils.sha256Hex(plainPassword);
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-        final Root<User> root = criteriaQuery.from(User.class);
-        final Predicate forActive = forActive(criteriaBuilder, root);
-        final Predicate forEnabled = criteriaBuilder.equal(root.get("enabled"), true);
-        final Predicate forUsername = criteriaBuilder.equal(root.get("username"), usernameOrEmail);
-        final Predicate forPassword = criteriaBuilder.equal(root.get("passwordSha256"), passwordSha256);
-        final Join<User, Person> personJoin = root.join("person", JoinType.LEFT);
-        final Predicate forEmail = criteriaBuilder.equal(criteriaBuilder.lower(personJoin.get("email")), usernameOrEmail.toLowerCase());
+    public User getUser(String usernameOrEmail, String plainPassword) {
+        String passwordSha256 = DigestUtils.sha256Hex(plainPassword);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+        Root<User> root = criteriaQuery.from(User.class);
+        Predicate forActive = forActive(criteriaBuilder, root);
+        Predicate forEnabled = criteriaBuilder.equal(root.get("enabled"), true);
+        Predicate forUsername = criteriaBuilder.equal(root.get("username"), usernameOrEmail);
+        Predicate forPassword = criteriaBuilder.equal(root.get("passwordSha256"), passwordSha256);
+        Join<User, Person> personJoin = root.join("person", JoinType.LEFT);
+        Predicate forEmail = criteriaBuilder.equal(criteriaBuilder.lower(personJoin.get("email")), usernameOrEmail.toLowerCase());
         criteriaQuery.where(criteriaBuilder.and(forActive, forEnabled, forPassword), criteriaBuilder.or(forUsername, forEmail));
         try {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
@@ -222,10 +222,10 @@ public class UserServiceImpl extends DataService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public boolean hasUser(final String username) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        final Root<User> root = criteriaQuery.from(User.class);
+    public boolean hasUser(String username) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<User> root = criteriaQuery.from(User.class);
         criteriaQuery.where(criteriaBuilder.equal(root.<String>get("username"), username));
         criteriaQuery.select(criteriaBuilder.count(root));
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
@@ -235,10 +235,10 @@ public class UserServiceImpl extends DataService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public boolean hasUser(final Person person) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        final Root<User> root = criteriaQuery.from(User.class);
+    public boolean hasUser(Person person) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<User> root = criteriaQuery.from(User.class);
         criteriaQuery.select(criteriaBuilder.count(root));
         criteriaQuery.where(criteriaBuilder.equal(root.get("person"), person));
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
@@ -248,10 +248,10 @@ public class UserServiceImpl extends DataService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public boolean hasUserRecoveryToken(final String token) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        final Root<UserRecoveryToken> root = criteriaQuery.from(UserRecoveryToken.class);
+    public boolean hasUserRecoveryToken(String token) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<UserRecoveryToken> root = criteriaQuery.from(UserRecoveryToken.class);
         criteriaQuery.select(criteriaBuilder.count(root.get("token")));
         criteriaQuery.where(criteriaBuilder.equal(root.get("token"), token));
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
@@ -261,27 +261,27 @@ public class UserServiceImpl extends DataService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public boolean startPasswordReset(final String usernameOrEmail, boolean initial) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-        final Root<User> root = criteriaQuery.from(User.class);
-        final Join<User, Person> personJoin = root.join("person");
-        final Predicate forUsername = criteriaBuilder.equal(root.get("username"), usernameOrEmail);
-        final Expression<String> emailExpr = criteriaBuilder.lower(personJoin.get("email"));
-        final Predicate forEmail = criteriaBuilder.equal(emailExpr, usernameOrEmail.toLowerCase());
+    public boolean startPasswordReset(String usernameOrEmail, boolean initial) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+        Root<User> root = criteriaQuery.from(User.class);
+        Join<User, Person> personJoin = root.join("person");
+        Predicate forUsername = criteriaBuilder.equal(root.get("username"), usernameOrEmail);
+        Expression<String> emailExpr = criteriaBuilder.lower(personJoin.get("email"));
+        Predicate forEmail = criteriaBuilder.equal(emailExpr, usernameOrEmail.toLowerCase());
         criteriaQuery.where(criteriaBuilder.or(forUsername, forEmail));
         try {
-            final User user = entityManager.createQuery(criteriaQuery).getSingleResult();
+            User user = entityManager.createQuery(criteriaQuery).getSingleResult();
 
-            final Person person = user.getPerson();
+            Person person = user.getPerson();
 
-            final int validDuration = initial ? 30 : 7;
-            final UserRecoveryToken token = createUserRecoveryToken(user, validDuration);
+            int validDuration = initial ? 30 : 7;
+            UserRecoveryToken token = createUserRecoveryToken(user, validDuration);
 
             URL baseUrl = requestUrl.get();
-            final List<String> urlSegments = new ArrayList<>();
+            List<String> urlSegments = new ArrayList<>();
             urlSegments.add("resetPassword");
-            final Url passwordRecoveryLink = new Url();
+            Url passwordRecoveryLink = new Url();
             passwordRecoveryLink.setProtocol(baseUrl.getProtocol());
             passwordRecoveryLink.setHost(baseUrl.getHost());
             if (80 != baseUrl.getPort() && 443 != baseUrl.getPort())
@@ -314,22 +314,22 @@ public class UserServiceImpl extends DataService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public boolean finishPasswordReset(final String recoveryToken, final String newPlainPassword) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<UserRecoveryToken> criteriaQuery = criteriaBuilder.createQuery(UserRecoveryToken.class);
-        final Root<UserRecoveryToken> root = criteriaQuery.from(UserRecoveryToken.class);
-        final Predicate forRecoveryToken = criteriaBuilder.equal(root.get("token"), recoveryToken);
+    public boolean finishPasswordReset(String recoveryToken, String newPlainPassword) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<UserRecoveryToken> criteriaQuery = criteriaBuilder.createQuery(UserRecoveryToken.class);
+        Root<UserRecoveryToken> root = criteriaQuery.from(UserRecoveryToken.class);
+        Predicate forRecoveryToken = criteriaBuilder.equal(root.get("token"), recoveryToken);
         criteriaQuery.where(criteriaBuilder.and(forRecoveryToken));
         try {
-            final UserRecoveryToken token = entityManager.createQuery(criteriaQuery).getSingleResult();
+            UserRecoveryToken token = entityManager.createQuery(criteriaQuery).getSingleResult();
 
-            final User user = token.getUser();
+            User user = token.getUser();
             user.setPasswordSha256(DigestUtils.sha256Hex(newPlainPassword));
             save(user);
 
             remove(token);
 
-            final Person person = user.getPerson();
+            Person person = user.getPerson();
 
             Email email = emailBuilderFactory.create()
                 .to(person)
@@ -363,7 +363,7 @@ public class UserServiceImpl extends DataService implements UserService {
      * @see #hasUserRecoveryToken(String)
      */
     private String generateRecoveryToken() {
-        final String recoveryToken = RandomStringUtils.randomAlphanumeric(20);
+        String recoveryToken = RandomStringUtils.randomAlphanumeric(20);
 
         if (hasUserRecoveryToken(recoveryToken)) {
             return generateRecoveryToken();

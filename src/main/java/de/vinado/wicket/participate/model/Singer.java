@@ -41,7 +41,7 @@ public class Singer extends Person implements Hideable {
      * @param email     The singers email address
      * @param voice     The singers voice group
      */
-    public Singer(final String firstName, final String lastName, final String email, final Voice voice) {
+    public Singer(String firstName, String lastName, String email, Voice voice) {
         super(firstName, lastName, email);
         this.voice = voice;
         this.active = true;

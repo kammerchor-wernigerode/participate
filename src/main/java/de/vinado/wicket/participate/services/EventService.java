@@ -186,7 +186,7 @@ public interface EventService {
      * @param invited Whether the {@link Participant} is not invited.
      * @return The list of ordered {@link Participant}.
      */
-    default List<Participant> getParticipants(final Event event, final boolean invited) {
+    default List<Participant> getParticipants(Event event, boolean invited) {
         return invited ? getInvitedParticipants(event) : getUninvitedParticipants(event);
     }
 

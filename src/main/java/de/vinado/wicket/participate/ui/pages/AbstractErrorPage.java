@@ -25,16 +25,16 @@ public abstract class AbstractErrorPage extends org.apache.wicket.markup.html.pa
         this(new PageParameters());
     }
 
-    public AbstractErrorPage(final PageParameters parameters) {
+    public AbstractErrorPage(PageParameters parameters) {
         super(parameters);
 
-        final BootstrapBookmarkablePageLink<String> homePageLink = new BootstrapBookmarkablePageLink<>("homePageLink",
+        BootstrapBookmarkablePageLink<String> homePageLink = new BootstrapBookmarkablePageLink<>("homePageLink",
             getApplication().getHomePage(), Buttons.Type.Primary);
         homePageLink.setIconType(FontAwesome5IconType.home_s);
         homePageLink.setLabel(new ResourceModel("navigate.homepage", "Goto Homepage"));
         addHomePageLink(homePageLink);
 
-        final Footer footer = new Footer("footer");
+        Footer footer = new Footer("footer");
         footer.setVisible(showFooter());
         add(footer);
 
@@ -53,7 +53,7 @@ public abstract class AbstractErrorPage extends org.apache.wicket.markup.html.pa
         return tag;
     }
 
-    protected abstract void addHomePageLink(final AbstractLink homePageLink);
+    protected abstract void addHomePageLink(AbstractLink homePageLink);
 
     protected abstract int getStatusCode();
 
@@ -62,7 +62,7 @@ public abstract class AbstractErrorPage extends org.apache.wicket.markup.html.pa
     }
 
     @Override
-    protected void setHeaders(final WebResponse response) {
+    protected void setHeaders(WebResponse response) {
         super.setHeaders(response);
         response.setStatus(getStatusCode());
     }
@@ -73,7 +73,7 @@ public abstract class AbstractErrorPage extends org.apache.wicket.markup.html.pa
     }
 
     @Override
-    public void renderHead(final IHeaderResponse response) {
+    public void renderHead(IHeaderResponse response) {
         Resources.render(response, this);
     }
 }

@@ -29,12 +29,12 @@ public class EditAccountDTO implements Serializable {
     private String email;
     private Voice voice;
 
-    public EditAccountDTO(final User user) {
+    public EditAccountDTO(User user) {
         this.user = user;
         this.username = user.getUsername();
     }
 
-    public EditAccountDTO(final User user, @Nullable final Person person) {
+    public EditAccountDTO(User user, @Nullable final Person person) {
         this.user = user;
         this.person = person;
         this.username = user.getUsername();
@@ -45,7 +45,7 @@ public class EditAccountDTO implements Serializable {
         }
     }
 
-    public EditAccountDTO(final User user, @Nullable final Person person, @Nullable final Singer singer) {
+    public EditAccountDTO(User user, @Nullable final Person person, @Nullable final Singer singer) {
         this.user = user;
         this.person = person;
         this.singer = singer;

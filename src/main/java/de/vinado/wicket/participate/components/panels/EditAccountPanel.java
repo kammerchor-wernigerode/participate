@@ -52,7 +52,7 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
     @SuppressWarnings("unused")
     private PersonService personService;
 
-    public EditAccountPanel(final ModalAnchor modal, final IModel<EditAccountDTO> model) {
+    public EditAccountPanel(ModalAnchor modal, IModel<EditAccountDTO> model) {
         super(modal, model);
 
         title(new ResourceModel("account.edit", "Edit Account"));
@@ -62,17 +62,17 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
     protected void onInitialize() {
         super.onInitialize();
 
-        final List<ITab> tabs = new ArrayList<>();
+        List<ITab> tabs = new ArrayList<>();
         tabs.add(new AbstractTab(new ResourceModel("account.user", "User Account")) {
             @Override
-            public Panel getPanel(final String panelId) {
+            public Panel getPanel(String panelId) {
                 return new EditUserPanel(panelId, getModel());
             }
         });
         if (null != getModelObject().getPerson()) {
             tabs.add(new AbstractTab(new ResourceModel("account.personal-details", "Personal Details")) {
                 @Override
-                public Panel getPanel(final String panelId) {
+                public Panel getPanel(String panelId) {
                     return new EditPersonPanel(panelId, getModel());
                 }
             });
@@ -84,76 +84,76 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
             }
         });*/
 
-        final AjaxBootstrapTabbedPanel tabbedPanel = new AjaxBootstrapTabbedPanel<>("tabs", tabs);
+        AjaxBootstrapTabbedPanel tabbedPanel = new AjaxBootstrapTabbedPanel<>("tabs", tabs);
         form.add(tabbedPanel);
     }
 
     @Override
-    protected void onSubmit(final AjaxRequestTarget target) {
-        final EditAccountDTO modelObject = getModelObject();
+    protected void onSubmit(AjaxRequestTarget target) {
+        EditAccountDTO modelObject = getModelObject();
 
         if (null != modelObject.getSinger()) {
-            final PersonDTO personDTO = new PersonDTO(modelObject.getPerson());
+            PersonDTO personDTO = new PersonDTO(modelObject.getPerson());
             personDTO.setFirstName(modelObject.getFirstName());
             personDTO.setLastName(modelObject.getLastName());
             personDTO.setEmail(modelObject.getEmail());
             personService.savePerson(personDTO);
             if (null != modelObject.getSinger()) {
-                final Singer singer = modelObject.getSinger();
-                final SingerDTO singerDTO = new SingerDTO();
+                Singer singer = modelObject.getSinger();
+                SingerDTO singerDTO = new SingerDTO();
                 singerDTO.setVoice(modelObject.getVoice());
                 personService.saveSinger(singerDTO);
             }
         }
 
-        final AddUserDTO userDTO = new AddUserDTO(modelObject.getUser());
+        AddUserDTO userDTO = new AddUserDTO(modelObject.getUser());
         userDTO.setUsername(modelObject.getUsername());
         userDTO.setPassword(modelObject.getPassword());
         onConfirm(userService.saveUser(userDTO), target);
     }
 
-    protected abstract void onConfirm(final User user, final AjaxRequestTarget target);
+    protected abstract void onConfirm(User user, AjaxRequestTarget target);
 
     private class EditUserPanel extends Panel {
 
-        public EditUserPanel(final String id, final IModel<EditAccountDTO> model) {
+        public EditUserPanel(String id, IModel<EditAccountDTO> model) {
             super(id, model);
 
-            final TextField usernameTf = new TextField("username");
+            TextField usernameTf = new TextField("username");
             usernameTf.add(BootstrapHorizontalFormDecorator.decorate());
             usernameTf.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
-                protected void onUpdate(final AjaxRequestTarget target) {
+                protected void onUpdate(AjaxRequestTarget target) {
                 }
             });
             add(usernameTf);
 
-            final PasswordTextField oldPasswordTf = new PasswordTextField("oldPassword");
+            PasswordTextField oldPasswordTf = new PasswordTextField("oldPassword");
             oldPasswordTf.add(BootstrapHorizontalFormDecorator.decorate());
             oldPasswordTf.setRequired(false);
             oldPasswordTf.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
-                protected void onUpdate(final AjaxRequestTarget target) {
+                protected void onUpdate(AjaxRequestTarget target) {
                 }
             });
             add(oldPasswordTf);
 
-            final PasswordTextField passwordTf = new PasswordTextField("password");
+            PasswordTextField passwordTf = new PasswordTextField("password");
             passwordTf.setRequired(false);
             passwordTf.add(BootstrapHorizontalFormDecorator.decorate());
             passwordTf.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
-                protected void onUpdate(final AjaxRequestTarget target) {
+                protected void onUpdate(AjaxRequestTarget target) {
                 }
             });
             add(passwordTf);
 
-            final PasswordTextField confirmPasswordTf = new PasswordTextField("confirmPassword");
+            PasswordTextField confirmPasswordTf = new PasswordTextField("confirmPassword");
             confirmPasswordTf.setRequired(false);
             confirmPasswordTf.add(BootstrapHorizontalFormDecorator.decorate());
             confirmPasswordTf.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
-                protected void onUpdate(final AjaxRequestTarget target) {
+                protected void onUpdate(AjaxRequestTarget target) {
                 }
             });
             add(confirmPasswordTf);
@@ -166,7 +166,7 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
                 }
 
                 @Override
-                public void validate(final Form<?> form) {
+                public void validate(Form<?> form) {
                     if (!Strings.isEmpty(passwordTf.getConvertedInput())) {
                         if (!Strings.isEmpty(oldPasswordTf.getConvertedInput())) {
                             oldPasswordTf.error((IValidationError) messageSource -> new ResourceModel("account.password.error", "Your input does not match your current password"));
@@ -181,37 +181,37 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
 
     private class EditPersonPanel extends Panel {
 
-        public EditPersonPanel(final String id, final IModel<EditAccountDTO> model) {
+        public EditPersonPanel(String id, IModel<EditAccountDTO> model) {
             super(id, model);
 
-            final TextField firstNameTf = new TextField("firstName");
+            TextField firstNameTf = new TextField("firstName");
             firstNameTf.add(BootstrapHorizontalFormDecorator.decorate());
             firstNameTf.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
-                protected void onUpdate(final AjaxRequestTarget target) {
+                protected void onUpdate(AjaxRequestTarget target) {
                 }
             });
             add(firstNameTf);
 
-            final TextField lastNameTf = new TextField("lastName");
+            TextField lastNameTf = new TextField("lastName");
             lastNameTf.add(BootstrapHorizontalFormDecorator.decorate());
             lastNameTf.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
-                protected void onUpdate(final AjaxRequestTarget target) {
+                protected void onUpdate(AjaxRequestTarget target) {
                 }
             });
             add(lastNameTf);
 
-            final EmailTextField emailTf = new EmailTextField("email");
+            EmailTextField emailTf = new EmailTextField("email");
             emailTf.add(BootstrapHorizontalFormDecorator.decorate());
             emailTf.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
-                protected void onUpdate(final AjaxRequestTarget target) {
+                protected void onUpdate(AjaxRequestTarget target) {
                 }
             });
             add(emailTf);
 
-            final DropDownChoice<Voice> voiceDd = new DropDownChoice<Voice>("voice",
+            DropDownChoice<Voice> voiceDd = new DropDownChoice<Voice>("voice",
                 Collections.unmodifiableList(Arrays.asList(Voice.values())), new EnumChoiceRenderer<>()) {
                 @Override
                 protected void onConfigure() {
@@ -222,7 +222,7 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
             voiceDd.add(BootstrapHorizontalFormDecorator.decorate());
             voiceDd.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
-                protected void onUpdate(final AjaxRequestTarget target) {
+                protected void onUpdate(AjaxRequestTarget target) {
                 }
             });
             add(voiceDd);
@@ -231,7 +231,7 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
 
     private class EditPersonInformationPanel extends Panel {
 
-        public EditPersonInformationPanel(final String id, final IModel<EditAccountDTO> model) {
+        public EditPersonInformationPanel(String id, IModel<EditAccountDTO> model) {
             super(id, model);
 
 

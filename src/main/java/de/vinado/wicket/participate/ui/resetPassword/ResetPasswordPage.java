@@ -9,7 +9,7 @@ public class ResetPasswordPage extends BasePage {
     protected void onInitialize() {
         super.onInitialize();
 
-        final String tokenParameter = getPageParameters().get("token").to(String.class);
+        String tokenParameter = getPageParameters().get("token").to(String.class);
 
         add(new ResetPasswordPanel("resetPasswordPanel", tokenParameter));
         add(new BookmarkablePageLink("goHomeLink", getApplication().getHomePage()));

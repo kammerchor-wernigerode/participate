@@ -62,7 +62,7 @@ public abstract class SimpleDataProvider<T, S> extends SortableDataProvider<T, S
      */
     public abstract S getDefaultSort();
 
-    protected List<T> filter(final List<T> list) {
+    protected List<T> filter(List<T> list) {
         return list;
     }
 
@@ -101,7 +101,7 @@ public abstract class SimpleDataProvider<T, S> extends SortableDataProvider<T, S
      * @return Model of given object
      */
     @Override
-    public IModel<T> model(final T object) {
+    public IModel<T> model(T object) {
         return new CompoundPropertyModel<T>(object);
     }
 
@@ -125,7 +125,7 @@ public abstract class SimpleDataProvider<T, S> extends SortableDataProvider<T, S
          * @return Result
          */
         @SuppressWarnings("rawtypes,unchecked")
-        public int compare(final T o1, final T o2) {
+        public int compare(T o1, T o2) {
             PropertyModel<Comparable> model1 = new PropertyModel<Comparable>(o1, getSort().getProperty().toString());
             PropertyModel<Comparable> model2 = new PropertyModel<Comparable>(o2, getSort().getProperty().toString());
 

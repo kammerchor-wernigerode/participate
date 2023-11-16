@@ -45,11 +45,11 @@ public class SendEmailPanel extends FormModal<Email> {
     protected void onInitialize() {
         super.onInitialize();
 
-        final TextField<String> fromTf = new TextField<>("from");
+        TextField<String> fromTf = new TextField<>("from");
         fromTf.setEnabled(false);
         form.add(fromTf);
 
-        final Select2MultiChoice<InternetAddress> toTf = new Select2MultiChoice<>("to", new Select2EmailAddressProvider(personService));
+        Select2MultiChoice<InternetAddress> toTf = new Select2MultiChoice<>("to", new Select2EmailAddressProvider(personService));
         toTf.getSettings().setLanguage(getLocale().getLanguage());
         toTf.getSettings().setCloseOnSelect(true);
         toTf.getSettings().setTheme(new Select2BootstrapTheme(true));
@@ -58,10 +58,10 @@ public class SendEmailPanel extends FormModal<Email> {
         toTf.setLabel(new ResourceModel("email.recipient", "Recipient"));
         form.add(toTf);
 
-        final TextField<String> subjectTf = new TextField<>("subject");
+        TextField<String> subjectTf = new TextField<>("subject");
         form.add(subjectTf);
 
-        final TextArea<String> messageTa = new TextArea<>("message");
+        TextArea<String> messageTa = new TextArea<>("message");
         form.add(messageTa);
 
         addBootstrapFormDecorator(form);

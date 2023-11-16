@@ -22,10 +22,10 @@ public class ExpiredPage extends AbstractErrorPage {
     public ExpiredPage() {
     }
 
-    public ExpiredPage(final PageParameters parameters) {
+    public ExpiredPage(PageParameters parameters) {
         super(parameters);
 
-        final Model<Integer> model = new Model<Integer>() {
+        Model<Integer> model = new Model<Integer>() {
             public Integer getObject() {
                 return COUNTDOWN--;
             }
@@ -33,11 +33,11 @@ public class ExpiredPage extends AbstractErrorPage {
 
         add(new Heading("heading", new ResourceModel("page.error.expired.session", "The session is expired")));
 
-        final Label message = new Label("message", new StringResourceModel("page.error.expired.message").setParameters(model.getObject()));
+        Label message = new Label("message", new StringResourceModel("page.error.expired.message").setParameters(model.getObject()));
         message.setOutputMarkupId(true);
         message.add(new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
             @Override
-            protected void onTimer(final AjaxRequestTarget target) {
+            protected void onTimer(AjaxRequestTarget target) {
                 target.add(message);
                 if (COUNTDOWN == 0) {
                     setResponsePage(Application.get().getHomePage());
@@ -48,7 +48,7 @@ public class ExpiredPage extends AbstractErrorPage {
     }
 
     @Override
-    protected void addHomePageLink(final AbstractLink homePageLink) {
+    protected void addHomePageLink(AbstractLink homePageLink) {
         this.add(homePageLink);
     }
 

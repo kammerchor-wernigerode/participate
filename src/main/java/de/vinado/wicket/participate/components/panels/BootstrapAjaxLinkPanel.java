@@ -31,7 +31,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
      * @param type       {@link Buttons.Type}
      * @param labelModel Label
      */
-    public BootstrapAjaxLinkPanel(final String id, final Buttons.Type type, final IModel<String> labelModel) {
+    public BootstrapAjaxLinkPanel(String id, Buttons.Type type, IModel<String> labelModel) {
         this(id, type, Buttons.Size.Small, labelModel, null, null);
     }
 
@@ -43,7 +43,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
      * @param size       {@link Buttons.Size}
      * @param labelModel Label
      */
-    public BootstrapAjaxLinkPanel(final String id, final Buttons.Type type, final Buttons.Size size, final IModel<String> labelModel) {
+    public BootstrapAjaxLinkPanel(String id, Buttons.Type type, Buttons.Size size, IModel<String> labelModel) {
         this(id, type, size, labelModel, null, null);
     }
 
@@ -55,7 +55,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
      * @param labelModel Label
      * @param icon       {@link IconType}
      */
-    public BootstrapAjaxLinkPanel(final String id, final Buttons.Type type, final IModel<String> labelModel, final IconType icon) {
+    public BootstrapAjaxLinkPanel(String id, Buttons.Type type, IModel<String> labelModel, IconType icon) {
         this(id, type, Buttons.Size.Small, labelModel, icon, null);
     }
 
@@ -66,7 +66,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
      * @param type {@link Buttons.Type}
      * @param icon {@link IconType}
      */
-    public BootstrapAjaxLinkPanel(final String id, final Buttons.Type type, final IconType icon) {
+    public BootstrapAjaxLinkPanel(String id, Buttons.Type type, IconType icon) {
         this(id, type, Buttons.Size.Small, null, icon, null);
     }
 
@@ -78,7 +78,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
      * @param icon       {@link IconType}
      * @param titleModel Label
      */
-    public BootstrapAjaxLinkPanel(final String id, final Buttons.Type type, final IconType icon, final IModel<String> titleModel) {
+    public BootstrapAjaxLinkPanel(String id, Buttons.Type type, IconType icon, IModel<String> titleModel) {
         this(id, type, Buttons.Size.Small, null, icon, titleModel);
     }
 
@@ -92,7 +92,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
      * @param icon       {@link IconType}
      * @param titleModel Title for {@link TooltipBehavior Tooltip}
      */
-    public BootstrapAjaxLinkPanel(final String id, final Buttons.Type type, final Buttons.Size size, final IModel<String> labelModel, final IconType icon, final IModel<String> titleModel) {
+    public BootstrapAjaxLinkPanel(String id, Buttons.Type type, Buttons.Size size, IModel<String> labelModel, IconType icon, IModel<String> titleModel) {
         super(id, labelModel);
         this.type = type;
         this.size = size;
@@ -102,7 +102,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
 
         ajaxLink = new BootstrapAjaxLink<>("link", type) {
             @Override
-            public void onClick(final AjaxRequestTarget target) {
+            public void onClick(AjaxRequestTarget target) {
                 BootstrapAjaxLinkPanel.this.onClick(target);
             }
         };
@@ -122,7 +122,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
      *
      * @param target {@link AjaxRequestTarget}
      */
-    public abstract void onClick(final AjaxRequestTarget target);
+    public abstract void onClick(AjaxRequestTarget target);
 
     public BootstrapAjaxLink getLink() {
         return ajaxLink;
@@ -132,7 +132,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
         return type;
     }
 
-    public void setType(final Buttons.Type type) {
+    public void setType(Buttons.Type type) {
         this.type = type;
     }
 
@@ -140,7 +140,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
         return size;
     }
 
-    public void setSize(final Buttons.Size size) {
+    public void setSize(Buttons.Size size) {
         this.size = size;
     }
 
@@ -148,7 +148,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
         return labelModel;
     }
 
-    public void setLabelModel(final IModel<String> labelModel) {
+    public void setLabelModel(IModel<String> labelModel) {
         this.labelModel = labelModel;
     }
 
@@ -156,7 +156,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
         return titleModel;
     }
 
-    public void setTitleModel(final IModel<String> titleModel) {
+    public void setTitleModel(IModel<String> titleModel) {
         this.titleModel = titleModel;
     }
 
@@ -164,7 +164,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
         return icon;
     }
 
-    public void setIcon(final IconType icon) {
+    public void setIcon(IconType icon) {
         this.icon = icon;
     }
 }

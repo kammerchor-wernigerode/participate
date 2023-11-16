@@ -62,7 +62,7 @@ public class User implements Identifiable<Long>, Hideable, AuthenticatedPrincipa
      * @param admin         Whether is administrator
      * @param enabled       Whether is enabled and permitted to use the application
      */
-    public User(final String username, final String plainPassword, final boolean admin, final boolean enabled) {
+    public User(String username, String plainPassword, boolean admin, boolean enabled) {
         this.username = username;
         this.passwordSha256 = null != plainPassword ? DigestUtils.sha256Hex(plainPassword) : null;
         this.admin = admin;

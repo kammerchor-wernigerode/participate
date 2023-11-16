@@ -75,7 +75,7 @@ public abstract class AuthenticatedBootstrapWebApplication extends Authenticated
     protected void configureRequestCycleListeners(RequestCycleListenerCollection listeners) {
         listeners.add(new IRequestCycleListener() {
             @Override
-            public IRequestHandler onException(final RequestCycle cycle, final Exception ex) {
+            public IRequestHandler onException(RequestCycle cycle, Exception ex) {
                 ErrorPage page;
                 if (ex instanceof HttpError) {
                     page = new ErrorPage(ex, ((HttpError) ex).getStatus());

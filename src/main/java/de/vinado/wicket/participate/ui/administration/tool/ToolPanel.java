@@ -47,7 +47,7 @@ public class ToolPanel extends Panel {
     @SpringBean
     private ApplicationProperties applicationProperties;
 
-    public ToolPanel(final String id) {
+    public ToolPanel(String id) {
         super(id);
 
         add(accordion("collapsible"));
@@ -68,7 +68,7 @@ public class ToolPanel extends Panel {
 
     private class PasswordPanel extends Panel {
 
-        private PasswordPanel(final String id) {
+        private PasswordPanel(String id) {
             super(id);
 
             add(new Label("password", applicationProperties.getParticipatePassword()));
@@ -79,26 +79,26 @@ public class ToolPanel extends Panel {
 
         private FileUpload file;
 
-        private ImportExportPersonCSVPanel(final String id) {
+        private ImportExportPersonCSVPanel(String id) {
             super(id);
 
-            final NotificationPanel feedback = new NotificationPanel("feedback");
+            NotificationPanel feedback = new NotificationPanel("feedback");
             add(feedback);
 
-            final Form importForm = new Form("importForm", new CompoundPropertyModel(this));
+            Form importForm = new Form("importForm", new CompoundPropertyModel(this));
             add(importForm);
 
-            final WebMarkupContainer importWmc = new WebMarkupContainer("importWmc");
+            WebMarkupContainer importWmc = new WebMarkupContainer("importWmc");
             importWmc.setOutputMarkupId(true);
             importForm.add(importWmc);
 
-            final FileUploadField fileUpload = new FileUploadField("file");
+            FileUploadField fileUpload = new FileUploadField("file");
             importWmc.add(fileUpload);
 
-            final BootstrapAjaxButton submitBtn = new BootstrapAjaxButton("submitBtn", new ResourceModel("import", "Import"),
+            BootstrapAjaxButton submitBtn = new BootstrapAjaxButton("submitBtn", new ResourceModel("import", "Import"),
                 Buttons.Type.Primary) {
                 @Override
-                protected void onSubmit(final AjaxRequestTarget target) {
+                protected void onSubmit(AjaxRequestTarget target) {
                     if (null != file) {
                         personService.importPersons(file);
                     }
@@ -113,18 +113,18 @@ public class ToolPanel extends Panel {
             submitBtn.setSize(Buttons.Size.Small);
             importWmc.add(submitBtn);
 
-            final Form exportForm = new Form("exportForm", new CompoundPropertyModel(this));
+            Form exportForm = new Form("exportForm", new CompoundPropertyModel(this));
             add(exportForm);
 
-            final WebMarkupContainer exportWmc = new WebMarkupContainer("exportWmc");
+            WebMarkupContainer exportWmc = new WebMarkupContainer("exportWmc");
             exportForm.setOutputMarkupId(true);
             exportForm.add(exportWmc);
 
-            final AjaxDownload export = new AjaxDownload();
+            AjaxDownload export = new AjaxDownload();
 
-            final BootstrapAjaxButton exportBtn = new BootstrapAjaxButton("exportBtn", new ResourceModel("export", "Export"), Buttons.Type.Primary) {
+            BootstrapAjaxButton exportBtn = new BootstrapAjaxButton("exportBtn", new ResourceModel("export", "Export"), Buttons.Type.Primary) {
                 @Override
-                protected void onSubmit(final AjaxRequestTarget target) {
+                protected void onSubmit(AjaxRequestTarget target) {
                     export.go(target, personService.exportSingers(), "singer-export.csv");
                     target.add(exportForm);
                 }
@@ -144,7 +144,7 @@ public class ToolPanel extends Panel {
             return file;
         }
 
-        public void setFile(final FileUpload file) {
+        public void setFile(FileUpload file) {
             this.file = file;
         }
     }

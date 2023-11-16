@@ -93,10 +93,10 @@ public class Participant implements Identifiable<Long>, Invitable {
      * @param accommodation    Whether the participant needs an accommodation
      * @param comment          Comment overall
      */
-    public Participant(final Event event, final Singer singer, final String token,
-                       final InvitationStatus invitationStatus, final Date fromDate, final Date toDate,
-                       final Accommodation accommodation, short carSeatCount,
-                       final String comment) {
+    public Participant(Event event, Singer singer, String token,
+                       InvitationStatus invitationStatus, Date fromDate, Date toDate,
+                       Accommodation accommodation, short carSeatCount,
+                       String comment) {
         this.event = event;
         this.singer = singer;
         this.token = token;
@@ -108,8 +108,8 @@ public class Participant implements Identifiable<Long>, Invitable {
         this.comment = comment;
     }
 
-    public Participant(final Event event, final Singer singer, final String token,
-                       final InvitationStatus invitationStatus) {
+    public Participant(Event event, Singer singer, String token,
+                       InvitationStatus invitationStatus) {
         this(event, singer, token, invitationStatus, null, null, new Accommodation(), (short) -1, null);
     }
 

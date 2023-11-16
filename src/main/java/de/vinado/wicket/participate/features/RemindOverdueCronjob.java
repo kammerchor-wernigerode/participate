@@ -47,8 +47,8 @@ public class RemindOverdueCronjob {
     public void run() {
         log.info("Enter overdue invitation job");
 
-        final Set<Long> eventIds = new HashSet<>();
-        final List<Participant> participants = eventService.getUpcomingEvents()
+        Set<Long> eventIds = new HashSet<>();
+        List<Participant> participants = eventService.getUpcomingEvents()
             .stream()
             .filter(this::filter)
             .peek(event -> eventIds.add(event.getId()))
@@ -59,7 +59,7 @@ public class RemindOverdueCronjob {
 
         eventService.inviteParticipants(participants, null);
 
-        final int eventAmount = eventIds.size();
+        int eventAmount = eventIds.size();
         log.info("Ran overdue job for {} event{} /w ids=[{}]", eventAmount, 1 == eventAmount ? "" : "s", StringUtils.join(eventIds, ", "));
     }
 

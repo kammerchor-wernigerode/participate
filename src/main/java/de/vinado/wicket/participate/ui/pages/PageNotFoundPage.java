@@ -17,7 +17,7 @@ public class PageNotFoundPage extends AbstractErrorPage {
     }
 
     @Override
-    protected void addHomePageLink(final AbstractLink homePageLink) {
+    protected void addHomePageLink(AbstractLink homePageLink) {
         this.add(homePageLink);
     }
 

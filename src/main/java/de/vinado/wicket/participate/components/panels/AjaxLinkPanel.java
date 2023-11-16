@@ -22,12 +22,12 @@ public abstract class AjaxLinkPanel extends Panel {
      * @param id         Wicket ID
      * @param labelModel Label
      */
-    public AjaxLinkPanel(final String id, final IModel<String> labelModel) {
+    public AjaxLinkPanel(String id, IModel<String> labelModel) {
         super(id, labelModel);
 
         ajaxLink = new AjaxLink<Void>("link") {
             @Override
-            public void onClick(final AjaxRequestTarget target) {
+            public void onClick(AjaxRequestTarget target) {
                 AjaxLinkPanel.this.onClick(target);
             }
         };
@@ -45,5 +45,5 @@ public abstract class AjaxLinkPanel extends Panel {
      *
      * @param target {@link AjaxRequestTarget}
      */
-    public abstract void onClick(final AjaxRequestTarget target);
+    public abstract void onClick(AjaxRequestTarget target);
 }

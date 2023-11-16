@@ -13,7 +13,7 @@ import org.apache.wicket.markup.html.link.AbstractLink;
 public class FocusBehavior extends Behavior {
 
     @Override
-    public void bind(final Component component) {
+    public void bind(Component component) {
         if (!(component instanceof FormComponent) && !(component instanceof AbstractLink)) {
             throw new IllegalArgumentException("FocusBehavior: Component must be instanceof FormComponent or instanceof AbstractLink.");
         }
@@ -21,7 +21,7 @@ public class FocusBehavior extends Behavior {
     }
 
     @Override
-    public void renderHead(final Component component, final IHeaderResponse response) {
+    public void renderHead(Component component, IHeaderResponse response) {
         response.render(OnLoadHeaderItem.forScript("document.getElementById('" + component.getMarkupId() + "').focus();"));
     }
 }

@@ -19,11 +19,11 @@ public abstract class BootstrapAjaxLinkColumn<T, S> extends AbstractColumn<T, S>
 
     private IModel<String> tooltipModel;
 
-    public BootstrapAjaxLinkColumn(final IconType iconType) {
+    public BootstrapAjaxLinkColumn(IconType iconType) {
         this(iconType, null);
     }
 
-    public BootstrapAjaxLinkColumn(final IconType iconType, final IModel<String> tooltipModel) {
+    public BootstrapAjaxLinkColumn(IconType iconType, IModel<String> tooltipModel) {
         super(Model.of(""));
 
         this.iconType = iconType;
@@ -31,10 +31,10 @@ public abstract class BootstrapAjaxLinkColumn<T, S> extends AbstractColumn<T, S>
     }
 
     @Override
-    public void populateItem(final Item<ICellPopulator<T>> cellItem, final String componentId, final IModel<T> rowModel) {
-        final BootstrapAjaxLinkPanel link = new BootstrapAjaxLinkPanel(componentId, Buttons.Type.Link, iconType, tooltipModel) {
+    public void populateItem(Item<ICellPopulator<T>> cellItem, String componentId, IModel<T> rowModel) {
+        BootstrapAjaxLinkPanel link = new BootstrapAjaxLinkPanel(componentId, Buttons.Type.Link, iconType, tooltipModel) {
             @Override
-            public void onClick(final AjaxRequestTarget target) {
+            public void onClick(AjaxRequestTarget target) {
                 BootstrapAjaxLinkColumn.this.onClick(target, rowModel);
             }
         };
@@ -47,5 +47,5 @@ public abstract class BootstrapAjaxLinkColumn<T, S> extends AbstractColumn<T, S>
         return "width-fix-30";
     }
 
-    public abstract void onClick(final AjaxRequestTarget target, final IModel<T> rowModel);
+    public abstract void onClick(AjaxRequestTarget target, IModel<T> rowModel);
 }

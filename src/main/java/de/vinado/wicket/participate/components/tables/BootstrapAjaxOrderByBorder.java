@@ -48,5 +48,5 @@ public abstract class BootstrapAjaxOrderByBorder<S> extends BootstrapOrderByBord
     protected void onSortChanged() {
     }
 
-    protected abstract void onAjaxClick(final AjaxRequestTarget target);
+    protected abstract void onAjaxClick(AjaxRequestTarget target);
 }

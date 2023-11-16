@@ -89,7 +89,7 @@ public class EventServiceImpl extends DataService implements EventService {
 
     @Override
     @PersistenceContext
-    public void setEntityManager(final EntityManager entityManager) {
+    public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
@@ -97,7 +97,7 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public Event createEvent(final EventDTO dto) {
+    public Event createEvent(EventDTO dto) {
         if (Strings.isEmpty(dto.getName())) {
             dto.setName(ParticipateUtils.getGenericEventName(dto));
         }
@@ -125,8 +125,8 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public Event saveEvent(final EventDTO dto) {
-        final Event loadedEvent = load(Event.class, dto.getEvent().getId());
+    public Event saveEvent(EventDTO dto) {
+        Event loadedEvent = load(Event.class, dto.getEvent().getId());
 
         if (Strings.isEmpty(dto.getName())) {
             dto.setName(ParticipateUtils.getGenericEventName(dto));
@@ -148,8 +148,8 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public void removeEvent(final Event event) {
-        final Event loadedEvent = load(Event.class, event.getId());
+    public void removeEvent(Event event) {
+        Event loadedEvent = load(Event.class, event.getId());
         loadedEvent.setActive(false);
         save(loadedEvent);
     }
@@ -158,8 +158,8 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public Participant createParticipant(final Event event, final Singer singer) {
-        final Participant participant = new Participant(event, singer, generateEventToken(20), InvitationStatus.UNINVITED);
+    public Participant createParticipant(Event event, Singer singer) {
+        Participant participant = new Participant(event, singer, generateEventToken(20), InvitationStatus.UNINVITED);
         return save(participant);
     }
 
@@ -169,8 +169,8 @@ public class EventServiceImpl extends DataService implements EventService {
      * @param length the length of the token to generate
      * @return an unique token
      */
-    private String generateEventToken(final int length) {
-        final String accessToken = RandomStringUtils.randomAlphanumeric(length);
+    private String generateEventToken(int length) {
+        String accessToken = RandomStringUtils.randomAlphanumeric(length);
 
         if (hasToken(accessToken)) {
             return generateEventToken(length);
@@ -183,8 +183,8 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public Participant saveParticipant(final ParticipantDTO dto) {
-        final Participant loadedParticipant = load(Participant.class, dto.getParticipant().getId());
+    public Participant saveParticipant(ParticipantDTO dto) {
+        Participant loadedParticipant = load(Participant.class, dto.getParticipant().getId());
         loadedParticipant.setInvitationStatus(dto.getInvitationStatus());
         loadedParticipant.setFromDate(dto.getFromDate());
         loadedParticipant.setToDate(dto.getToDate());
@@ -198,7 +198,7 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public Participant acceptEvent(final ParticipantDTO dto) {
+    public Participant acceptEvent(ParticipantDTO dto) {
         dto.setInvitationStatus(InvitationStatus.ACCEPTED);
         return saveParticipant(dto);
     }
@@ -213,7 +213,7 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public Participant declineEvent(final ParticipantDTO dto) {
+    public Participant declineEvent(ParticipantDTO dto) {
         dto.setInvitationStatus(InvitationStatus.DECLINED);
         dto.setFromDate(null);
         dto.setToDate(null);
@@ -227,10 +227,10 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public boolean hasToken(final String token) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
+    public boolean hasToken(String token) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Participant> root = criteriaQuery.from(Participant.class);
         criteriaQuery.select(criteriaBuilder.count(root));
         criteriaQuery.where(criteriaBuilder.equal(root.get("token"), token));
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
@@ -241,9 +241,9 @@ public class EventServiceImpl extends DataService implements EventService {
      */
     @Override
     public boolean hasUpcomingEvents() {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        final Root<Event> root = criteriaQuery.from(Event.class);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Event> root = criteriaQuery.from(Event.class);
         criteriaQuery.select(criteriaBuilder.count(root));
         criteriaQuery.where(forActive(criteriaBuilder, root), forUpcomingDate(criteriaBuilder, root));
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
@@ -253,12 +253,12 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public Participant getLatestParticipant(final Singer singer) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Join<Participant, Event> eventJoin = root.join("event");
-        final Predicate forSinger = criteriaBuilder.equal(root.get("singer"), singer);
+    public Participant getLatestParticipant(Singer singer) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
+        Root<Participant> root = criteriaQuery.from(Participant.class);
+        Join<Participant, Event> eventJoin = root.join("event");
+        Predicate forSinger = criteriaBuilder.equal(root.get("singer"), singer);
         criteriaQuery.where(forSinger, forUpcomingDate(criteriaBuilder, eventJoin), forActive(criteriaBuilder, eventJoin));
         criteriaQuery.orderBy(criteriaBuilder.asc(eventJoin.get("startDate")));
         try {
@@ -274,9 +274,9 @@ public class EventServiceImpl extends DataService implements EventService {
      */
     @Override
     public EventDetails getLatestEventDetails() {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
-        final Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
+        Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
         criteriaQuery.where(forUpcomingDate(criteriaBuilder, root), forActive(criteriaBuilder, root));
         try {
             return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
@@ -291,9 +291,9 @@ public class EventServiceImpl extends DataService implements EventService {
      */
     @Override
     public Event getLatestEvent() {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Event> criteriaQuery = criteriaBuilder.createQuery(Event.class);
-        final Root<Event> root = criteriaQuery.from(Event.class);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Event> criteriaQuery = criteriaBuilder.createQuery(Event.class);
+        Root<Event> root = criteriaQuery.from(Event.class);
         criteriaQuery.where(forUpcomingDate(criteriaBuilder, root), forActive(criteriaBuilder, root));
         criteriaQuery.orderBy(criteriaBuilder.asc(root.get("startDate")));
         try {
@@ -308,13 +308,13 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public EventDetails getSuccessor(final EventDetails eventDetails) {
-        final Date startDate = load(EventDetails.class, eventDetails.getId()).getStartDate();
+    public EventDetails getSuccessor(EventDetails eventDetails) {
+        Date startDate = load(EventDetails.class, eventDetails.getId()).getStartDate();
 
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
-        final Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
-        final Predicate forStartDate = criteriaBuilder.greaterThan(root.get("startDate"), startDate);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
+        Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
+        Predicate forStartDate = criteriaBuilder.greaterThan(root.get("startDate"), startDate);
         criteriaQuery.where(forUpcomingDate(criteriaBuilder, root), forStartDate);
         try {
             return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
@@ -328,13 +328,13 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public EventDetails getPredecessor(final EventDetails eventDetails) {
-        final Date startDate = load(EventDetails.class, eventDetails.getId()).getStartDate();
+    public EventDetails getPredecessor(EventDetails eventDetails) {
+        Date startDate = load(EventDetails.class, eventDetails.getId()).getStartDate();
 
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
-        final Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
-        final Predicate forStartDate = criteriaBuilder.lessThan(root.get("startDate"), startDate);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
+        Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
+        Predicate forStartDate = criteriaBuilder.lessThan(root.get("startDate"), startDate);
         criteriaQuery.where(forUpcomingDate(criteriaBuilder, root), forStartDate);
         criteriaQuery.orderBy(criteriaBuilder.desc(root.get("startDate")));
         try {
@@ -350,9 +350,9 @@ public class EventServiceImpl extends DataService implements EventService {
      */
     @Override
     public List<Event> getUpcomingEvents() {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Event> criteriaQuery = criteriaBuilder.createQuery(Event.class);
-        final Root<Event> root = criteriaQuery.from(Event.class);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Event> criteriaQuery = criteriaBuilder.createQuery(Event.class);
+        Root<Event> root = criteriaQuery.from(Event.class);
         criteriaQuery.orderBy(criteriaBuilder.asc(root.<Event>get("startDate")));
         criteriaQuery.where(forUpcomingDate(criteriaBuilder, root));
         return entityManager.createQuery(criteriaQuery).getResultList();
@@ -363,10 +363,10 @@ public class EventServiceImpl extends DataService implements EventService {
      */
     @Override
     public List<EventDetails> getUpcomingEventDetails() {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
-        final Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
-        final Join<EventDetails, Event> eventJoin = root.join("event");
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
+        Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
+        Join<EventDetails, Event> eventJoin = root.join("event");
         criteriaQuery.where(forActive(criteriaBuilder, eventJoin), forUpcomingDate(criteriaBuilder, eventJoin));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
@@ -376,9 +376,9 @@ public class EventServiceImpl extends DataService implements EventService {
      */
     @Override
     public List<String> getEventTypes() {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<String> criteriaQuery = criteriaBuilder.createQuery(String.class);
-        final Root<Event> root = criteriaQuery.from(Event.class);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<String> criteriaQuery = criteriaBuilder.createQuery(String.class);
+        Root<Event> root = criteriaQuery.from(Event.class);
         criteriaQuery.select(root.get("eventType"));
         criteriaQuery.groupBy(root.<String>get("eventType"));
         return entityManager.createQuery(criteriaQuery).getResultList();
@@ -389,9 +389,9 @@ public class EventServiceImpl extends DataService implements EventService {
      */
     @Override
     public List<String> getLocationList() {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<String> criteriaQuery = criteriaBuilder.createQuery(String.class);
-        final Root<Event> root = criteriaQuery.from(Event.class);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<String> criteriaQuery = criteriaBuilder.createQuery(String.class);
+        Root<Event> root = criteriaQuery.from(Event.class);
         criteriaQuery.select(root.get("location"));
         criteriaQuery.groupBy(root.<String>get("location"));
         return entityManager.createQuery(criteriaQuery).getResultList();
@@ -401,10 +401,10 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public EventDetails getEventDetails(final Event event) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
-        final Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
+    public EventDetails getEventDetails(Event event) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
+        Root<EventDetails> root = criteriaQuery.from(EventDetails.class);
         criteriaQuery.where(criteriaBuilder.equal(root.get("event"), event));
         try {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
@@ -418,10 +418,10 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public List<Participant> getParticipants(final Event event) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
+    public List<Participant> getParticipants(Event event) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
+        Root<Participant> root = criteriaQuery.from(Participant.class);
         criteriaQuery.where(criteriaBuilder.equal(root.<Event>get("event"), event));
         criteriaQuery.orderBy(criteriaBuilder.asc(root.join("singer").get("lastName")));
         return entityManager.createQuery(criteriaQuery).getResultList();
@@ -431,12 +431,12 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public List<Participant> getInvitedParticipants(final Event event) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Predicate forEvent = criteriaBuilder.equal(root.<Event>get("event"), event);
-        final Predicate forInvitationStatus = criteriaBuilder.notEqual(root.get("invitationStatus"), InvitationStatus.UNINVITED);
+    public List<Participant> getInvitedParticipants(Event event) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
+        Root<Participant> root = criteriaQuery.from(Participant.class);
+        Predicate forEvent = criteriaBuilder.equal(root.<Event>get("event"), event);
+        Predicate forInvitationStatus = criteriaBuilder.notEqual(root.get("invitationStatus"), InvitationStatus.UNINVITED);
         criteriaQuery.where(forEvent, forInvitationStatus);
         criteriaQuery.orderBy(criteriaBuilder.asc(root.join("singer").get("lastName")));
         return entityManager.createQuery(criteriaQuery).getResultList();
@@ -446,7 +446,7 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public List<Participant> getUninvitedParticipants(final Event event) {
+    public List<Participant> getUninvitedParticipants(Event event) {
         return getParticipants(event, InvitationStatus.UNINVITED);
     }
 
@@ -454,12 +454,12 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public List<Participant> getParticipants(final Event event, final InvitationStatus invitationStatus) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Predicate forEvent = criteriaBuilder.equal(root.<Event>get("event"), event);
-        final Predicate forInvitationStatus = criteriaBuilder.equal(root.get("invitationStatus"), invitationStatus);
+    public List<Participant> getParticipants(Event event, InvitationStatus invitationStatus) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
+        Root<Participant> root = criteriaQuery.from(Participant.class);
+        Predicate forEvent = criteriaBuilder.equal(root.<Event>get("event"), event);
+        Predicate forInvitationStatus = criteriaBuilder.equal(root.get("invitationStatus"), invitationStatus);
         criteriaQuery.where(forEvent, forInvitationStatus);
         criteriaQuery.orderBy(criteriaBuilder.asc(root.join("singer").get("lastName")));
         return entityManager.createQuery(criteriaQuery).getResultList();
@@ -469,12 +469,12 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public boolean hasParticipant(final Event event) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Predicate forEvent = criteriaBuilder.equal(root.get("event"), event);
-        final Predicate forInvited = criteriaBuilder.notEqual(root.get("invitationStatus"), InvitationStatus.UNINVITED);
+    public boolean hasParticipant(Event event) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Participant> root = criteriaQuery.from(Participant.class);
+        Predicate forEvent = criteriaBuilder.equal(root.get("event"), event);
+        Predicate forInvited = criteriaBuilder.notEqual(root.get("invitationStatus"), InvitationStatus.UNINVITED);
         criteriaQuery.select(criteriaBuilder.count(root));
         criteriaQuery.where(forInvited, forEvent);
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
@@ -484,10 +484,10 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public Participant getParticipant(final String token) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
+    public Participant getParticipant(String token) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
+        Root<Participant> root = criteriaQuery.from(Participant.class);
         criteriaQuery.where(criteriaBuilder.equal(root.<String>get("token"), token));
         try {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
@@ -501,12 +501,12 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public List<Participant> getParticipants(final Singer singer) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Predicate forSinger = criteriaBuilder.equal(root.get("singer"), singer);
-        final Join<Participant, Event> eventJoin = root.join("event");
+    public List<Participant> getParticipants(Singer singer) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
+        Root<Participant> root = criteriaQuery.from(Participant.class);
+        Predicate forSinger = criteriaBuilder.equal(root.get("singer"), singer);
+        Join<Participant, Event> eventJoin = root.join("event");
         criteriaQuery.where(forSinger, forActive(criteriaBuilder, eventJoin), forUpcomingDate(criteriaBuilder, eventJoin));
         criteriaQuery.orderBy(
             criteriaBuilder.asc(eventJoin.get("startDate")),
@@ -518,12 +518,12 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public String getToken(final Singer singer, final Event event) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<String> criteriaQuery = criteriaBuilder.createQuery(String.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
-        final Predicate forSinger = criteriaBuilder.equal(root.get("singer"), singer);
-        final Predicate forEvent = criteriaBuilder.equal(root.get("event"), event);
+    public String getToken(Singer singer, Event event) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<String> criteriaQuery = criteriaBuilder.createQuery(String.class);
+        Root<Participant> root = criteriaQuery.from(Participant.class);
+        Predicate forSinger = criteriaBuilder.equal(root.get("singer"), singer);
+        Predicate forEvent = criteriaBuilder.equal(root.get("event"), event);
         criteriaQuery.select(root.get("token"));
         criteriaQuery.where(forSinger, forEvent);
         try {
@@ -538,11 +538,11 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public int inviteParticipants(final List<Participant> participants, final User organizer) {
-        final Stream<Email> invitations = participants
+    public int inviteParticipants(List<Participant> participants, User organizer) {
+        Stream<Email> invitations = participants
             .stream()
             .map(participant -> {
-                final Singer singer = participant.getSinger();
+                Singer singer = participant.getSinger();
                 int offset = 1 - applicationProperties.getDeadlineOffset();
                 Date deadline = DateUtils.addDays(participant.getEvent().getStartDate(), offset);
 
@@ -557,7 +557,7 @@ public class EventServiceImpl extends DataService implements EventService {
                     .build();
 
                 if (InvitationStatus.UNINVITED.equals(participant.getInvitationStatus())) {
-                    final Participant loadedParticipant = load(Participant.class, participant.getId());
+                    Participant loadedParticipant = load(Participant.class, participant.getId());
                     loadedParticipant.setInvitationStatus(InvitationStatus.PENDING);
                     save(loadedParticipant);
                 }
@@ -574,7 +574,7 @@ public class EventServiceImpl extends DataService implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public void inviteParticipant(final Participant participant, final User organizer) {
+    public void inviteParticipant(Participant participant, User organizer) {
         inviteParticipants(Collections.singletonList(participant), organizer);
     }
 
@@ -584,10 +584,10 @@ public class EventServiceImpl extends DataService implements EventService {
      * @param event the {@link Event} with information used in the attachment
      * @return a new {@link EmailAttachment}
      */
-    private EmailAttachment newEventAttachment(final Event event, final User organizer) {
-        final String eventName = event.getEventType() + " in " + event.getLocation();
+    private EmailAttachment newEventAttachment(Event event, User organizer) {
+        String eventName = event.getEventType() + " in " + event.getLocation();
 
-        final net.fortuna.ical4j.model.Calendar cal = new net.fortuna.ical4j.model.Calendar();
+        net.fortuna.ical4j.model.Calendar cal = new net.fortuna.ical4j.model.Calendar();
         cal.getProperties().add(new ProdId(String.format(
             "-//%s//%s %s//DE",
             applicationProperties.getCustomer(),
@@ -598,8 +598,8 @@ public class EventServiceImpl extends DataService implements EventService {
         cal.getProperties().add(CalScale.GREGORIAN);
         cal.getProperties().add(Method.REQUEST);
 
-        final UUID uuid = UUID.randomUUID();
-        final VEvent vEvent = new VEvent();
+        UUID uuid = UUID.randomUUID();
+        VEvent vEvent = new VEvent();
         vEvent.getProperties().add(new Uid(uuid.toString()));
         vEvent.getProperties().add(new Summary(eventName));
         vEvent.getProperties().add(new Description(event.getDescription()));
@@ -658,7 +658,7 @@ public class EventServiceImpl extends DataService implements EventService {
         }
     }
 
-    private static Predicate forUpcomingDate(final CriteriaBuilder criteriaBuilder, final Path<? extends Terminable> eventPath) {
+    private static Predicate forUpcomingDate(CriteriaBuilder criteriaBuilder, Path<? extends Terminable> eventPath) {
         return criteriaBuilder.greaterThanOrEqualTo(eventPath.get("endDate"), new Date());
     }
 }

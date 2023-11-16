@@ -53,7 +53,7 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
 
     private IModel<Boolean> severalDays;
 
-    public AddEditEventPanel(final ModalAnchor modal, final IModel<String> titleModel, final IModel<EventDTO> model) {
+    public AddEditEventPanel(ModalAnchor modal, IModel<String> titleModel, IModel<EventDTO> model) {
         super(modal, model);
 
         size(Size.Large);
@@ -68,31 +68,31 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
 
         severalDays = new CompoundPropertyModel<>(edit ? getModelObject().isSeveralDays() : Boolean.TRUE);
 
-        final DateTextFieldConfig startDateConfig = new DateTextFieldConfig();
+        DateTextFieldConfig startDateConfig = new DateTextFieldConfig();
         startDateConfig.withLanguage("de");
         startDateConfig.withFormat("dd.MM.yyyy");
         startDateConfig.withStartDate(new DateTime());
         startDateConfig.autoClose(true);
 
-        final DateTextFieldConfig endDateConfig = new DateTextFieldConfig();
+        DateTextFieldConfig endDateConfig = new DateTextFieldConfig();
         endDateConfig.withLanguage("de");
         endDateConfig.withFormat("dd.MM.yyyy");
         endDateConfig.withStartDate(new DateTime());
         endDateConfig.autoClose(true);
 
-        final TextField<String> nameTf = new TextField<>("name");
+        TextField<String> nameTf = new TextField<>("name");
         nameTf.setLabel(new ResourceModel("event.name", "Event Name"));
         nameTf.add(BootstrapHorizontalFormDecorator.decorate());
         nameTf.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
-            protected void onUpdate(final AjaxRequestTarget target) {
+            protected void onUpdate(AjaxRequestTarget target) {
             }
         });
         form.add(nameTf);
 
-        final AjaxCheckBox isSeveralDaysCb = new AjaxCheckBox("isSeveralDays", severalDays) {
+        AjaxCheckBox isSeveralDaysCb = new AjaxCheckBox("isSeveralDays", severalDays) {
             @Override
-            protected void onUpdate(final AjaxRequestTarget target) {
+            protected void onUpdate(AjaxRequestTarget target) {
                 target.add(form);
             }
         };
@@ -100,7 +100,7 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
         isSeveralDaysCb.add(BootstrapHorizontalFormDecorator.decorate());
         form.add(isSeveralDaysCb);
 
-        final Select2Choice<String> eventTypeS2c = new Select2Choice<>("eventType",
+        Select2Choice<String> eventTypeS2c = new Select2Choice<>("eventType",
             new Select2StringProvider(eventService::getEventTypes));
         eventTypeS2c.add(new AjaxFocusBehavior());
         eventTypeS2c.setLabel(new ResourceModel("event", "Event"));
@@ -117,7 +117,7 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
         });
         form.add(eventTypeS2c);
 
-        final DateTextField endDateTf = new DateTextField("endDate", endDateConfig) {
+        DateTextField endDateTf = new DateTextField("endDate", endDateConfig) {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
@@ -125,7 +125,7 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
             }
         };
 
-        final DateTextField startDateTf = new DateTextField("startDate", startDateConfig) {
+        DateTextField startDateTf = new DateTextField("startDate", startDateConfig) {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
@@ -136,7 +136,7 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
         };
         startDateTf.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
-            protected void onUpdate(final AjaxRequestTarget target) {
+            protected void onUpdate(AjaxRequestTarget target) {
                 endDateConfig.withStartDate(DateTime.parse(startDateTf.getValue(), DateTimeFormat.forPattern("dd.MM.yyyy")));
                 target.add(endDateTf);
             }
@@ -150,12 +150,12 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
         endDateTf.setRequired(true);
         endDateTf.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
-            protected void onUpdate(final AjaxRequestTarget target) {
+            protected void onUpdate(AjaxRequestTarget target) {
             }
         });
         form.add(endDateTf);
 
-        final Select2Choice<String> locationS2c = new Select2Choice<>("location",
+        Select2Choice<String> locationS2c = new Select2Choice<>("location",
             new Select2StringProvider(eventService::getLocationList));
         locationS2c.setLabel(new ResourceModel("location", "Location"));
         locationS2c.add(BootstrapHorizontalFormDecorator.decorate());
@@ -165,22 +165,22 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
         locationS2c.getSettings().setDropdownParent(form.getMarkupId());
         locationS2c.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
-            protected void onUpdate(final AjaxRequestTarget target) {
+            protected void onUpdate(AjaxRequestTarget target) {
             }
         });
         form.add(locationS2c);
 
-        final TextArea<String> descriptionTa = new TextArea<>("description");
+        TextArea<String> descriptionTa = new TextArea<>("description");
         descriptionTa.add(BootstrapHorizontalFormDecorator.decorate());
         descriptionTa.add(new AutosizeBehavior());
         descriptionTa.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
-            protected void onUpdate(final AjaxRequestTarget target) {
+            protected void onUpdate(AjaxRequestTarget target) {
             }
         });
         form.add(descriptionTa);
 
-        final BootstrapAjaxLink<Void> removeBtn = new BootstrapAjaxLink<>("removeBtn", Buttons.Type.Link) {
+        BootstrapAjaxLink<Void> removeBtn = new BootstrapAjaxLink<>("removeBtn", Buttons.Type.Link) {
             @Override
             protected void onInitialize() {
                 super.onInitialize();
@@ -188,7 +188,7 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
             }
 
             @Override
-            public void onClick(final AjaxRequestTarget target) {
+            public void onClick(AjaxRequestTarget target) {
                 remove = !remove;
                 if (remove) {
                     setLabel(new ResourceModel("event.remove.hint", "Event will be removed"));
@@ -228,5 +228,5 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
         }
     }
 
-    public abstract void onUpdate(final Event savedEvent, final AjaxRequestTarget target);
+    public abstract void onUpdate(Event savedEvent, AjaxRequestTarget target);
 }

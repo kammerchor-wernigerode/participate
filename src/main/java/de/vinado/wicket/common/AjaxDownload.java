@@ -21,11 +21,11 @@ public class AjaxDownload extends AbstractAjaxBehavior {
         this(true);
     }
 
-    public AjaxDownload(final boolean antiCache) {
+    public AjaxDownload(boolean antiCache) {
         this.antiCache = antiCache;
     }
 
-    public void go(final AjaxRequestTarget target, final IResourceStream resourceStream, final String fileName) {
+    public void go(AjaxRequestTarget target, IResourceStream resourceStream, String fileName) {
         this.resourceStream = resourceStream;
         this.fileName = fileName;
 
@@ -41,7 +41,7 @@ public class AjaxDownload extends AbstractAjaxBehavior {
 
     @Override
     public void onRequest() {
-        final ResourceStreamRequestHandler handler = new ResourceStreamRequestHandler(resourceStream, fileName);
+        ResourceStreamRequestHandler handler = new ResourceStreamRequestHandler(resourceStream, fileName);
         handler.setContentDisposition(ContentDisposition.ATTACHMENT);
         getComponent().getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
     }

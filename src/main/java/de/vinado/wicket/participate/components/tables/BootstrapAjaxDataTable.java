@@ -27,8 +27,8 @@ public class BootstrapAjaxDataTable<T, S> extends DataTable<T, S> {
      * @param dataProvider data provider
      * @param rowsPerPage  Rows per page
      */
-    public BootstrapAjaxDataTable(final String id, final List<? extends IColumn<T, S>> iColumns,
-                                  final ISortableDataProvider<T, S> dataProvider, final int rowsPerPage) {
+    public BootstrapAjaxDataTable(String id, List<? extends IColumn<T, S>> iColumns,
+                                  ISortableDataProvider<T, S> dataProvider, int rowsPerPage) {
         super(id, iColumns, dataProvider, rowsPerPage);
 
         add(tableBehavior = new TableBehavior());
@@ -40,7 +40,7 @@ public class BootstrapAjaxDataTable<T, S> extends DataTable<T, S> {
     }
 
     @Override
-    protected Item<T> newRowItem(final String id, final int index, final IModel<T> model) {
+    protected Item<T> newRowItem(String id, int index, IModel<T> model) {
         return new OddEvenItem<>(id, index, model);
     }
 

@@ -77,8 +77,8 @@ public class Event implements Identifiable<Long>, Hideable, Terminable {
      * @param startDate   Start date of Event
      * @param endDate     End date of Event
      */
-    public Event(final String name, final String eventType, final String location, final String description,
-                 final Date startDate, final Date endDate) {
+    public Event(String name, String eventType, String location, String description,
+                 Date startDate, Date endDate) {
         this.name = name;
         this.eventType = eventType;
         this.location = location;
@@ -93,7 +93,7 @@ public class Event implements Identifiable<Long>, Hideable, Terminable {
     }
 
     public String getDisplayDate() {
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         if (isSeveralDays()) {
             return dateFormat.format(startDate) + " - " + dateFormat.format(endDate);
         } else {

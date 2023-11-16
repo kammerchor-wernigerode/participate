@@ -31,7 +31,7 @@ public class Footer extends Panel {
     @SpringBean
     private WicketProperties wicketProperties;
 
-    public Footer(final String id) {
+    public Footer(String id) {
         super(id);
 
         add(new Label("developmentMode", "Development Mode") {
@@ -43,8 +43,8 @@ public class Footer extends Panel {
         });
         add(new AjaxLink<Void>("feedback") {
             @Override
-            public void onClick(final AjaxRequestTarget target) {
-                final ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
+            public void onClick(AjaxRequestTarget target) {
+                ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
                 modal.setContent(new SendFeedbackPanel(modal, new CompoundPropertyModel<>(new SendFeedbackDTO())));
                 modal.show(target);
             }

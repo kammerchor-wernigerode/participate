@@ -78,7 +78,7 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
         ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
         modal.setContent(new AddEditEventPanel(modal, new ResourceModel("event.add", "Add Event"), new CompoundPropertyModel<>(new EventDTO())) {
             @Override
-            public void onUpdate(final Event savedEvent, final AjaxRequestTarget target) {
+            public void onUpdate(Event savedEvent, AjaxRequestTarget target) {
                 send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(savedEvent));
                 Snackbar.show(target, new ResourceModel("event.add.success", "A new event has been added"));
             }

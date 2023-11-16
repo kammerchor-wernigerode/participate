@@ -16,19 +16,19 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 public abstract class AbstractBootstrapFormDecorator extends BootstrapBaseBehavior implements IAjaxRegionMarkupIdProvider {
 
     @Override
-    public void onComponentTag(final Component component, final ComponentTag tag) {
-        final FormComponent<?> fc = (FormComponent<?>) component;
+    public void onComponentTag(Component component, ComponentTag tag) {
+        FormComponent<?> fc = (FormComponent<?>) component;
 
-        final boolean checkBox = fc instanceof CheckBox;
-        final boolean radioGroup = fc instanceof RadioGroup;
-        final boolean checkGroup = fc instanceof CheckGroup;
+        boolean checkBox = fc instanceof CheckBox;
+        boolean radioGroup = fc instanceof RadioGroup;
+        boolean checkGroup = fc instanceof CheckGroup;
 
         tag.put("class", checkBox || radioGroup || checkGroup ? "form-check-input" : "form-control");
         tag.put("class", tag.getAttribute("class") + (fc.isValid() ? "" : " is-invalid"));
     }
 
     @Override
-    public String getAjaxRegionMarkupId(final Component component) {
+    public String getAjaxRegionMarkupId(Component component) {
         return component.getMarkupId() + "_" + getMarkupSuffix();
     }
 

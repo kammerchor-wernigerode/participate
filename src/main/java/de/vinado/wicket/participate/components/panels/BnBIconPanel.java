@@ -19,7 +19,7 @@ import org.apache.wicket.model.IModel;
  */
 public class BnBIconPanel extends Panel {
 
-    public BnBIconPanel(final String id, final IModel<Participant> model) {
+    public BnBIconPanel(String id, IModel<Participant> model) {
         super(id, model);
 
         add(new AccommodationBadge("accommodation", accommodationModel(model)));

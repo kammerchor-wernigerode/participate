@@ -16,11 +16,11 @@ public class BootstrapInlineFormDecorator extends AbstractBootstrapFormDecorator
 
     private IModel<String> placeholderModel;
 
-    public BootstrapInlineFormDecorator(final IModel<String> placeholderModel) {
+    public BootstrapInlineFormDecorator(IModel<String> placeholderModel) {
         this.placeholderModel = placeholderModel;
     }
 
-    public static BootstrapInlineFormDecorator decorate(final IModel<String> placeholder) {
+    public static BootstrapInlineFormDecorator decorate(IModel<String> placeholder) {
         return new BootstrapInlineFormDecorator(placeholder);
     }
 
@@ -33,19 +33,19 @@ public class BootstrapInlineFormDecorator extends AbstractBootstrapFormDecorator
     }
 
     @Override
-    public void bind(final Component component) {
+    public void bind(Component component) {
         component.setOutputMarkupPlaceholderTag(true);
     }
 
     @Override
-    public void beforeRender(final Component component) {
-        final FormComponent<?> fc = (FormComponent<?>) component;
-        final Response r = component.getResponse();
+    public void beforeRender(Component component) {
+        FormComponent<?> fc = (FormComponent<?>) component;
+        Response r = component.getResponse();
         String namespace = fc.getMarkup().getMarkupResourceStream().getWicketNamespace();
         boolean wicketAttributes = stripWicketTags();
 
-        final boolean required = fc.isRequired();
-        final boolean checkBox = fc instanceof CheckBox;
+        boolean required = fc.isRequired();
+        boolean checkBox = fc instanceof CheckBox;
 
         if (checkBox) {
             r.write("<div id=\"" + getAjaxRegionMarkupId(component) + "\" class=\"form-check mb-2 mr-sm-2\">");
@@ -65,12 +65,12 @@ public class BootstrapInlineFormDecorator extends AbstractBootstrapFormDecorator
     }
 
     @Override
-    public void onComponentTag(final Component component, final ComponentTag tag) {
+    public void onComponentTag(Component component, ComponentTag tag) {
         super.onComponentTag(component, tag);
 
-        final FormComponent<?> fc = (FormComponent<?>) component;
-        final String defaultPlaceholder = null == fc.getLabel() ? fc.getDefaultLabel() : fc.getLabel().getObject();
-        final String placeholder = null == placeholderModel ? defaultPlaceholder : placeholderModel.getObject();
+        FormComponent<?> fc = (FormComponent<?>) component;
+        String defaultPlaceholder = null == fc.getLabel() ? fc.getDefaultLabel() : fc.getLabel().getObject();
+        String placeholder = null == placeholderModel ? defaultPlaceholder : placeholderModel.getObject();
         boolean checkbox = fc instanceof CheckBox;
 
         if (!checkbox) {
@@ -83,14 +83,14 @@ public class BootstrapInlineFormDecorator extends AbstractBootstrapFormDecorator
     }
 
     @Override
-    public void afterRender(final Component component) {
-        final FormComponent<?> fc = (FormComponent<?>) component;
-        final Response r = component.getResponse();
+    public void afterRender(Component component) {
+        FormComponent<?> fc = (FormComponent<?>) component;
+        Response r = component.getResponse();
         String namespace = fc.getMarkup().getMarkupResourceStream().getWicketNamespace();
         boolean wicketAttributes = stripWicketTags();
 
-        final boolean required = fc.isRequired();
-        final boolean checkBox = fc instanceof CheckBox;
+        boolean required = fc.isRequired();
+        boolean checkBox = fc instanceof CheckBox;
 
         ComponentTag formGroup = new ComponentTag("div", XmlTag.TagType.CLOSE);
 

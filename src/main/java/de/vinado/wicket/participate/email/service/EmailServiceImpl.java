@@ -54,8 +54,8 @@ public class EmailServiceImpl implements EmailService {
      * @param email the email to send
      */
     @Override
-    public void send(final Email email) {
-        final MimeMessagePreparator message = mimeMessage -> prepareMimeMessage(mimeMessage, email);
+    public void send(Email email) {
+        MimeMessagePreparator message = mimeMessage -> prepareMimeMessage(mimeMessage, email);
         log.debug("Email prepared and ready to ship");
 
         sender.send(message);
@@ -68,8 +68,8 @@ public class EmailServiceImpl implements EmailService {
      * @param emails a stream of emails to send
      */
     @Override
-    public void send(final Collection<Email> emails) {
-        final MimeMessagePreparator[] preparedMessages = emails.stream().map(email ->
+    public void send(Collection<Email> emails) {
+        MimeMessagePreparator[] preparedMessages = emails.stream().map(email ->
             (MimeMessagePreparator) mimeMessage ->
                 prepareMimeMessage(mimeMessage, email))
             .toArray(MimeMessagePreparator[]::new);
@@ -87,8 +87,8 @@ public class EmailServiceImpl implements EmailService {
      * @param htmlTemplateFileName      the HTML template file name
      */
     @Override
-    public void send(final Email email, final String plaintextTemplateFileName, final String htmlTemplateFileName) {
-        final MimeMessagePreparator message = mimeMessage -> prepareMimeMessage(mimeMessage, email, plaintextTemplateFileName, htmlTemplateFileName);
+    public void send(Email email, String plaintextTemplateFileName, String htmlTemplateFileName) {
+        MimeMessagePreparator message = mimeMessage -> prepareMimeMessage(mimeMessage, email, plaintextTemplateFileName, htmlTemplateFileName);
         log.debug("Email prepared and ready to ship");
 
         sender.send(message);
@@ -103,8 +103,8 @@ public class EmailServiceImpl implements EmailService {
      * @param htmlTemplateFileName      the HTML template file name
      */
     @Override
-    public void send(final Collection<Email> emails, final String plaintextTemplateFileName, final String htmlTemplateFileName) {
-        final MimeMessagePreparator[] preparedMessages = emails.stream().map(email ->
+    public void send(Collection<Email> emails, String plaintextTemplateFileName, String htmlTemplateFileName) {
+        MimeMessagePreparator[] preparedMessages = emails.stream().map(email ->
             (MimeMessagePreparator) mimeMessage ->
                 prepareMimeMessage(mimeMessage, email, plaintextTemplateFileName, htmlTemplateFileName))
             .toArray(MimeMessagePreparator[]::new);
@@ -121,9 +121,9 @@ public class EmailServiceImpl implements EmailService {
      * @param email       the email to map
      * @throws MessagingException if information could not be mapped
      */
-    private void prepareMimeMessage(final MimeMessage mimeMessage, final Email email) throws MessagingException {
-        final boolean multipart = null != email.getAttachments() && !email.getAttachments().isEmpty();
-        final MimeMessageHelper helper = newMimeMessageHelper(email, mimeMessage, multipart);
+    private void prepareMimeMessage(MimeMessage mimeMessage, Email email) throws MessagingException {
+        boolean multipart = null != email.getAttachments() && !email.getAttachments().isEmpty();
+        MimeMessageHelper helper = newMimeMessageHelper(email, mimeMessage, multipart);
 
         helper.setText(email.getMessage());
     }
@@ -139,14 +139,14 @@ public class EmailServiceImpl implements EmailService {
      * @throws UnsupportedEncodingException if the encoding is not supported
      * @throws IOException                  if the template could not be parsed
      */
-    private void prepareMimeMessage(final MimeMessage mimeMessage, final Email email, final String templateFileName,
-                                    final boolean html)
+    private void prepareMimeMessage(MimeMessage mimeMessage, Email email, String templateFileName,
+                                    boolean html)
         throws MessagingException, IOException, TemplateException {
-        final boolean multipart = (null != email.getAttachments() && !email.getAttachments().isEmpty())
+        boolean multipart = (null != email.getAttachments() && !email.getAttachments().isEmpty())
             || html && isNotEmpty(email.getMessage());
-        final MimeMessageHelper helper = newMimeMessageHelper(email, mimeMessage, multipart);
+        MimeMessageHelper helper = newMimeMessageHelper(email, mimeMessage, multipart);
 
-        final String text = templateService.processTemplate(templateFileName, email.getData(), html ? HTML : PLAIN);
+        String text = templateService.processTemplate(templateFileName, email.getData(), html ? HTML : PLAIN);
         log.debug("Processed {} text email templates.", (html ? HTML : PLAIN).toString().toLowerCase());
 
         if (html) {
@@ -172,18 +172,18 @@ public class EmailServiceImpl implements EmailService {
      * @throws UnsupportedEncodingException if the encoding is not supported
      * @throws IOException                  if the template could not be parsed
      */
-    private void prepareMimeMessage(final MimeMessage mimeMessage, final Email email,
-                                    final String plaintextTemplateFileName, final String htmlTemplateFileName)
+    private void prepareMimeMessage(MimeMessage mimeMessage, Email email,
+                                    String plaintextTemplateFileName, String htmlTemplateFileName)
         throws MessagingException, IOException, TemplateException {
         if (StringUtils.isBlank(plaintextTemplateFileName)) {
             prepareMimeMessage(mimeMessage, email, htmlTemplateFileName, true);
         } else if (StringUtils.isBlank(htmlTemplateFileName)) {
             prepareMimeMessage(mimeMessage, email, plaintextTemplateFileName, false);
         } else if (StringUtils.isNotBlank(plaintextTemplateFileName) && StringUtils.isNotBlank(htmlTemplateFileName)) {
-            final MimeMessageHelper helper = newMimeMessageHelper(email, mimeMessage, true);
+            MimeMessageHelper helper = newMimeMessageHelper(email, mimeMessage, true);
 
-            final String htmlText = templateService.processTemplate(htmlTemplateFileName, email.getData(), HTML);
-            final String plainText = templateService.processTemplate(plaintextTemplateFileName, email.getData(), PLAIN);
+            String htmlText = templateService.processTemplate(htmlTemplateFileName, email.getData(), HTML);
+            String plainText = templateService.processTemplate(plaintextTemplateFileName, email.getData(), PLAIN);
             log.debug("Processed HTML and plain text email templates.");
 
             helper.setText(plainText, htmlText);
@@ -202,9 +202,9 @@ public class EmailServiceImpl implements EmailService {
      * @return new and configured helper object
      * @throws MessagingException if multipart creation failed
      */
-    private MimeMessageHelper newMimeMessageHelper(final Email email, final MimeMessage mimeMessage,
-                                                   final boolean multipart) throws MessagingException {
-        final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, multipart, UTF_8);
+    private MimeMessageHelper newMimeMessageHelper(Email email, MimeMessage mimeMessage,
+                                                   boolean multipart) throws MessagingException {
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, multipart, UTF_8);
         log.debug("A new email helper object is created. Start to map" + (multipart ? " multipart " : " ") + "email information to helper.");
 
         helper.setFrom(email.getFrom());
@@ -237,7 +237,7 @@ public class EmailServiceImpl implements EmailService {
      *
      * @param amount the amount of emails sent
      */
-    private void logSuccess(final int amount) {
+    private void logSuccess(int amount) {
         if (0 != amount) {
             log.info("Sent {} email{}", amount, 1 == amount ? "" : "s");
         }

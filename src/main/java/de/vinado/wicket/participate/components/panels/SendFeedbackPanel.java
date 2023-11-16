@@ -29,7 +29,7 @@ public class SendFeedbackPanel extends FormModal<SendFeedbackDTO> {
     @SpringBean
     private EmailBuilderFactory emailBuilderFactory;
 
-    public SendFeedbackPanel(final ModalAnchor modal, final IModel<SendFeedbackDTO> model) {
+    public SendFeedbackPanel(ModalAnchor modal, IModel<SendFeedbackDTO> model) {
         super(modal, model);
 
         title(new ResourceModel("send.feedback", "Send Feedback"));
@@ -48,7 +48,7 @@ public class SendFeedbackPanel extends FormModal<SendFeedbackDTO> {
     }
 
     @Override
-    protected void onSubmit(final AjaxRequestTarget target) {
+    protected void onSubmit(AjaxRequestTarget target) {
         SendFeedbackDTO dto = getModelObject();
         Email mailData = Email.builder("no-reply@vinado.de", dto.getName())
             .to("vincent.nadoll@gmail.com")

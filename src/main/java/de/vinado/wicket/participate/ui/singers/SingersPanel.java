@@ -158,9 +158,9 @@ public class SingersPanel extends BootstrapPanel<SingerFilter> {
         return new BootstrapAjaxLinkColumn<>(FontAwesome5IconType.pencil_alt_s,
             new ResourceModel("singer.edit", "Edit Singer")) {
             @Override
-            public void onClick(final AjaxRequestTarget target, final IModel<Singer> rowModel) {
+            public void onClick(AjaxRequestTarget target, IModel<Singer> rowModel) {
                 ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
-                final Singer singer = rowModel.getObject();
+                Singer singer = rowModel.getObject();
                 modal.setContent(new AddEditSingerPanel(modal, new ResourceModel("singer.edit", "Edit Singer"), new CompoundPropertyModel<>(
                     new SingerDTO(singer))));
                 modal.show(target);
@@ -177,8 +177,8 @@ public class SingersPanel extends BootstrapPanel<SingerFilter> {
         return new BootstrapAjaxLinkColumn<>(FontAwesome5IconType.envelope_s,
             new ResourceModel("email.send", "Send Email")) {
             @Override
-            public void onClick(final AjaxRequestTarget target, final IModel<Singer> rowModel) {
-                final Person person = rowModel.getObject();
+            public void onClick(AjaxRequestTarget target, IModel<Singer> rowModel) {
+                Person person = rowModel.getObject();
 
                 Email mailData = emailBuilderFactory.create()
                     .to(person)

@@ -56,7 +56,7 @@ public abstract class BasePage extends WebPage {
     }
 
     @Override
-    public void renderHead(final IHeaderResponse response) {
+    public void renderHead(IHeaderResponse response) {
         Resources.render(response, this);
         response.render(SnackbarCssResourceReference.asHeaderItem());
         response.render(SnackbarJsResourceReference.asHeaderItem());

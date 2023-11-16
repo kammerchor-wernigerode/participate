@@ -29,7 +29,7 @@ public class ResetPasswordPanel extends Panel {
     @SuppressWarnings("unused")
     private UserService userService;
 
-    public ResetPasswordPanel(final String id, final String recoveryToken) {
+    public ResetPasswordPanel(String id, String recoveryToken) {
         super(id);
         this.recoveryToken = recoveryToken;
 
@@ -46,7 +46,7 @@ public class ResetPasswordPanel extends Panel {
         return password;
     }
 
-    public void setPassword(final String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -54,27 +54,27 @@ public class ResetPasswordPanel extends Panel {
         return confirmPassword;
     }
 
-    public void setConfirmPassword(final String confirmPassword) {
+    public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
 
-    private boolean resetPassword(final String recoveryToken, final String password) {
+    private boolean resetPassword(String recoveryToken, String password) {
         return userService.finishPasswordReset(recoveryToken, password);
     }
 
     private class ResetPasswordForm extends StatelessForm<ResetPasswordPanel> {
 
-        public ResetPasswordForm(final String id) {
+        public ResetPasswordForm(String id) {
             super(id);
 
             setModel(new CompoundPropertyModel<>(ResetPasswordPanel.this));
 
-            final PasswordTextField passwordTf = new PasswordTextField("password");
+            PasswordTextField passwordTf = new PasswordTextField("password");
             passwordTf.setRequired(true);
             passwordTf.add(StringValidator.minimumLength(6));
             add(passwordTf);
 
-            final PasswordTextField confirmPasswordTf = new PasswordTextField("confirmPassword");
+            PasswordTextField confirmPasswordTf = new PasswordTextField("confirmPassword");
             confirmPasswordTf.setRequired(true);
             add(confirmPasswordTf);
 
@@ -83,7 +83,7 @@ public class ResetPasswordPanel extends Panel {
 
         @Override
         protected void onSubmit() {
-            final IAuthenticationStrategy strategy = getApplication().getSecuritySettings().getAuthenticationStrategy();
+            IAuthenticationStrategy strategy = getApplication().getSecuritySettings().getAuthenticationStrategy();
 
             if (resetPassword(getRecoveryToken(), getPassword())) {
                 strategy.remove();

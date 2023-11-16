@@ -69,7 +69,7 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
         super.onInitialize();
 
         Event event = getModelObject().getEvent();
-        final DatetimePickerConfig fromConfig = new DatetimePickerConfig();
+        DatetimePickerConfig fromConfig = new DatetimePickerConfig();
         fromConfig.useLocale("de");
         fromConfig.useCurrent(false);
         fromConfig.withMinDate(event.getStartDate());
@@ -78,7 +78,7 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
         fromConfig.withMinuteStepping(30);
         fromConfig.with(new DatetimePickerIconConfig());
 
-        final DatetimePickerConfig toConfig = new DatetimePickerConfig();
+        DatetimePickerConfig toConfig = new DatetimePickerConfig();
         toConfig.useLocale("de");
         toConfig.useCurrent(false);
         toConfig.withMinDate(event.getStartDate());
@@ -87,11 +87,11 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
         toConfig.withMinuteStepping(30);
         toConfig.with(new DatetimePickerIconConfig());
 
-        final BootstrapSelect<InvitationStatus> invitationStatusBs = new BootstrapSelect<>("invitationStatus",
+        BootstrapSelect<InvitationStatus> invitationStatusBs = new BootstrapSelect<>("invitationStatus",
             InvitationStatus.stream().collect(toList()), new EnumChoiceRenderer<>());
         invitationStatusBs.add(new AjaxFormComponentUpdatingBehavior("hidden.bs.select") {
             @Override
-            protected void onUpdate(final AjaxRequestTarget target) {
+            protected void onUpdate(AjaxRequestTarget target) {
                 getModelObject().setInvitationStatus(invitationStatusBs.getConvertedInput());
                 target.add(form);
             }
@@ -100,9 +100,9 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
         invitationStatusBs.add(BootstrapHorizontalFormDecorator.decorate());
         form.add(invitationStatusBs);
 
-        final DatetimePicker toDtP = new DatetimePicker("toDate", toConfig);
+        DatetimePicker toDtP = new DatetimePicker("toDate", toConfig);
 
-        final DatetimePicker fromDtP = new DatetimePicker("fromDate", fromConfig);
+        DatetimePicker fromDtP = new DatetimePicker("fromDate", fromConfig);
         fromDtP.add(new DatetimePickerResettingBehavior(toConfig::withMinDate));
         fromDtP.add(BootstrapHorizontalFormDecorator.decorate(new ResourceModel("from", "From")));
         form.add(fromDtP);
@@ -112,7 +112,7 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
         toDtP.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
         toDtP.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
-            protected void onUpdate(final AjaxRequestTarget target) {
+            protected void onUpdate(AjaxRequestTarget target) {
             }
         });
         form.add(toDtP);
@@ -150,7 +150,7 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
         };
         form.add(carCb);
 
-        final TextArea commentTa = new TextArea<>("comment");
+        TextArea commentTa = new TextArea<>("comment");
         commentTa.add(new AutosizeBehavior());
         commentTa.add(BootstrapHorizontalFormDecorator.decorate());
         commentTa.add(new AjaxFormComponentUpdatingBehavior("change") {
@@ -161,12 +161,12 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
         });
         form.add(commentTa);
 
-        final BootstrapAjaxLink<ParticipantDTO> inviteSingerBtn = new BootstrapAjaxLink<ParticipantDTO>(
+        BootstrapAjaxLink<ParticipantDTO> inviteSingerBtn = new BootstrapAjaxLink<ParticipantDTO>(
             "inviteSingerBtn", getModel(), Buttons.Type.Default, !InvitationStatus.UNINVITED.equals(getModelObject().getInvitationStatus())
             ? new ResourceModel("email.send.reminder", "Send Reminder")
             : new ResourceModel("email.send.invitation", "Send Invitation")) {
             @Override
-            public void onClick(final AjaxRequestTarget target) {
+            public void onClick(AjaxRequestTarget target) {
                 eventService.inviteParticipant(EditInvitationPanel.this.getModelObject().getParticipant(), Session.get().getMetaData(ManagementSession.user));
                 Optional.ofNullable(EditInvitationPanel.this.findParent(ModalAnchor.class))
                     .ifPresent(anchor -> anchor.close(target));

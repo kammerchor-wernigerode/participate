@@ -11,7 +11,7 @@ public enum MultipartType {
 
     private final String type;
 
-    MultipartType(final String type) {
+    MultipartType(String type) {
         this.type = type;
     }
 

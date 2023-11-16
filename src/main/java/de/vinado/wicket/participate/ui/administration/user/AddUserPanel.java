@@ -33,7 +33,7 @@ public abstract class AddUserPanel extends FormModal<AddUserDTO> {
     protected void onInitialize() {
         super.onInitialize();
 
-        final TextField<String> usernameTf = new TextField<>("username");
+        TextField<String> usernameTf = new TextField<>("username");
         usernameTf.setRequired(true);
         usernameTf.add(new FocusBehavior());
         usernameTf.add(new ConditionalValidator<>(this::ensureUnique,
@@ -52,5 +52,5 @@ public abstract class AddUserPanel extends FormModal<AddUserDTO> {
         onConfirm(userService.createUser(getModelObject()), target);
     }
 
-    protected abstract void onConfirm(final User user, final AjaxRequestTarget target);
+    protected abstract void onConfirm(User user, AjaxRequestTarget target);
 }

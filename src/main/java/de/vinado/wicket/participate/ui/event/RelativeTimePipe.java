@@ -11,12 +11,12 @@ import org.apache.wicket.markup.html.basic.Label;
 public class RelativeTimePipe extends Behavior {
 
     @Override
-    public void onComponentTag(final Component component, final ComponentTag tag) {
+    public void onComponentTag(Component component, ComponentTag tag) {
         tag.put("data-date", component.getDefaultModelObjectAsString());
     }
 
     @Override
-    public void renderHead(final Component component, final IHeaderResponse response) {
+    public void renderHead(Component component, IHeaderResponse response) {
         response.render(JavaScriptHeaderItem.forUrl("js/relative-time.pipe.js"));
 
         if (component instanceof Label) {

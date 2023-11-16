@@ -25,7 +25,7 @@ public class AddUserDTO implements Serializable {
     private String lastName;
     private String email;
 
-    public AddUserDTO(final User user) {
+    public AddUserDTO(User user) {
         this.user = user;
         this.username = user.getUsername();
     }

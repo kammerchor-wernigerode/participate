@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 @Slf4j
 public class ParticipateUtils {
 
-    public static String getGenericEventName(final EventDTO dto) {
+    public static String getGenericEventName(EventDTO dto) {
         String genericName;
         if (dto.isSeveralDays()) {
             genericName = new SimpleDateFormat("yyyy-MM.dd.-").format(dto.getStartDate())
@@ -33,10 +33,10 @@ public class ParticipateUtils {
         return genericName;
     }
 
-    public static URL generateInvitationLink(final String baseUrl, final String token) {
+    public static URL generateInvitationLink(String baseUrl, String token) {
         try {
-            final URL url = new URL(baseUrl + "/form/participant?token=" + token);
-            final URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(),
+            URL url = new URL(baseUrl + "/form/participant?token=" + token);
+            URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(),
                 url.getPath(), url.getQuery(), url.getRef());
             return uri.toURL();
         } catch (MalformedURLException | URISyntaxException e) {

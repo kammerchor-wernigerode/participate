@@ -73,20 +73,20 @@ public class ScoresManagerNotificationCronjob {
         try {
             log.info("Enter score's manager reminder job");
 
-            final String scoresManagerEmail = configuration.getScoresManagerEmail();
+            String scoresManagerEmail = configuration.getScoresManagerEmail();
             requireNonEmpty(scoresManagerEmail, "Score's manager email must not be null when NOTIFY_SCORES_MANAGER is enabled");
 
-            final Optional<Person> scoresManager = Optional.ofNullable(personService.getPerson(scoresManagerEmail));
+            Optional<Person> scoresManager = Optional.ofNullable(personService.getPerson(scoresManagerEmail));
             if (!scoresManager.isPresent()) {
                 log.info("Score's manager's name could not be determined");
             }
 
-            final InternetAddress recipient = scoresManager
+            InternetAddress recipient = scoresManager
                 .map(Person::getDisplayName)
                 .map(sneaky(name -> new InternetAddress(scoresManagerEmail, name, UTF_8.name())))
                 .orElse(new InternetAddress(scoresManagerEmail));
 
-            final Stream<Email> emails = eventService.getUpcomingEvents()
+            Stream<Email> emails = eventService.getUpcomingEvents()
                 .stream()
                 .filter(this::filter)
                 .map(event -> prepare(event, recipient))
@@ -120,7 +120,7 @@ public class ScoresManagerNotificationCronjob {
      */
     private Email prepare(Event event, InternetAddress recipient) {
         try {
-            final List<Singer> attendees = eventService.getInvitedParticipants(event)
+            List<Singer> attendees = eventService.getInvitedParticipants(event)
                 .stream()
                 .filter(Participant::isAccepted)
                 .map(Participant::getSinger)
@@ -177,7 +177,7 @@ public class ScoresManagerNotificationCronjob {
      * @return {@code string} if not empty
      * @throws IllegalArgumentException if {@code string} is empty
      */
-    private static String requireNonEmpty(final String string, final String message) throws IllegalArgumentException {
+    private static String requireNonEmpty(String string, String message) throws IllegalArgumentException {
         if (Strings.isEmpty(string)) {
             throw new IllegalArgumentException(message);
         }

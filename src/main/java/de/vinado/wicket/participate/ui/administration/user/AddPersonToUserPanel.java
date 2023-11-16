@@ -60,20 +60,20 @@ public abstract class AddPersonToUserPanel extends FormModal<AddUserDTO> {
     protected void onInitialize() {
         super.onInitialize();
 
-        final WebMarkupContainer wmc = new WebMarkupContainer("wmc");
+        WebMarkupContainer wmc = new WebMarkupContainer("wmc");
         wmc.setOutputMarkupPlaceholderTag(true);
         wmc.setOutputMarkupId(true);
         wmc.setVisible(false);
         form.add(wmc);
 
-        final RadioGroup<String> radioGroup = new RadioGroup<>("personRC", selectedModel);
+        RadioGroup<String> radioGroup = new RadioGroup<>("personRC", selectedModel);
         radioGroup.setLabel(Model.of(""));
         radioGroup.add(new Radio<>("assignPersonChoice", Model.of(SELECTED_ASSIGN_PERSON)));
         radioGroup.add(new Radio<>("createPersonChoice", Model.of(SELECTED_CREATE_PERSON)));
         radioGroup.setRenderBodyOnly(false);
         radioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
-            protected void onUpdate(final AjaxRequestTarget target) {
+            protected void onUpdate(AjaxRequestTarget target) {
                 if (SELECTED_CREATE_PERSON.equals(getSelectedModel().getObject())) {
                     wmc.setVisible(true);
                     personS2c.setVisible(false);
@@ -89,19 +89,19 @@ public abstract class AddPersonToUserPanel extends FormModal<AddUserDTO> {
         });
         form.add(radioGroup);
 
-        final TextField firstNameTf = new TextField("firstName");
+        TextField firstNameTf = new TextField("firstName");
         firstNameTf.add(BootstrapHorizontalFormDecorator.decorate());
         firstNameTf.setRequired(true);
         wmc.add(firstNameTf);
 
         // surName
-        final TextField lastNameTf = new TextField("lastName");
+        TextField lastNameTf = new TextField("lastName");
         lastNameTf.add(BootstrapHorizontalFormDecorator.decorate());
         lastNameTf.setRequired(true);
         wmc.add(lastNameTf);
 
         // email
-        final EmailTextField emailTf = new EmailTextField("email");
+        EmailTextField emailTf = new EmailTextField("email");
         emailTf.add(BootstrapHorizontalFormDecorator.decorate());
         emailTf.setRequired(true);
         emailTf.add(new ConditionalValidator<>(this::ensureUnique,
@@ -143,5 +143,5 @@ public abstract class AddPersonToUserPanel extends FormModal<AddUserDTO> {
         return selectedModel;
     }
 
-    protected abstract void onConfirm(final User user, final AjaxRequestTarget target);
+    protected abstract void onConfirm(User user, AjaxRequestTarget target);
 }

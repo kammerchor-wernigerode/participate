@@ -16,11 +16,11 @@ public class BootstrapFormDecorator extends AbstractBootstrapFormDecorator {
 
     private IModel<String> labelModel;
 
-    public BootstrapFormDecorator(final IModel<String> labelModel) {
+    public BootstrapFormDecorator(IModel<String> labelModel) {
         this.labelModel = labelModel;
     }
 
-    public static BootstrapFormDecorator decorate(final IModel<String> label) {
+    public static BootstrapFormDecorator decorate(IModel<String> label) {
         return new BootstrapFormDecorator(label);
     }
 
@@ -29,16 +29,16 @@ public class BootstrapFormDecorator extends AbstractBootstrapFormDecorator {
     }
 
     @Override
-    public void bind(final Component component) {
+    public void bind(Component component) {
         component.setOutputMarkupPlaceholderTag(true);
     }
 
     @Override
-    public void beforeRender(final Component component) {
-        final FormComponent<?> fc = (FormComponent<?>) component;
-        final Response r = component.getResponse();
+    public void beforeRender(Component component) {
+        FormComponent<?> fc = (FormComponent<?>) component;
+        Response r = component.getResponse();
 
-        final boolean checkBox = fc instanceof CheckBox;
+        boolean checkBox = fc instanceof CheckBox;
 
         r.write("<div id=\"" + getAjaxRegionMarkupId(component) + "\" class=\"form-group" + (checkBox ? " form-check" : "") + "\">");
 
@@ -48,7 +48,7 @@ public class BootstrapFormDecorator extends AbstractBootstrapFormDecorator {
     @Override
     public void afterRender(Component component) {
         Response response = component.getResponse();
-        final boolean checkBox = component instanceof CheckBox;
+        boolean checkBox = component instanceof CheckBox;
         if (checkBox) insertLabel(component);
         response.write("</div>\n");
     }

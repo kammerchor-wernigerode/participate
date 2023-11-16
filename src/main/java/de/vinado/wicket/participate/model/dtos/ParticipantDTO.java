@@ -33,7 +33,7 @@ public class ParticipantDTO implements Serializable, Invitable {
     private short carSeatCount = 0;
     private String comment;
 
-    public ParticipantDTO(final Participant participant) {
+    public ParticipantDTO(Participant participant) {
         this.participant = participant;
         this.event = participant.getEvent();
         this.singer = participant.getSinger();

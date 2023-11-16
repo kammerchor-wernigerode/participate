@@ -19,12 +19,12 @@ public class BootstrapAjaxHeadersToolbar<S> extends AjaxFallbackHeadersToolbar<S
      * @param table        data table this toolbar will be attached to
      * @param stateLocator
      */
-    public BootstrapAjaxHeadersToolbar(final DataTable<?, S> table, final ISortStateLocator<S> stateLocator) {
+    public BootstrapAjaxHeadersToolbar(DataTable<?, S> table, ISortStateLocator<S> stateLocator) {
         super(table, stateLocator);
     }
 
     @Override
-    protected WebMarkupContainer newSortableHeader(final String headerId, final S property, final ISortStateLocator<S> locator) {
+    protected WebMarkupContainer newSortableHeader(String headerId, S property, ISortStateLocator<S> locator) {
         return new BootstrapAjaxOrderByBorder<S>(headerId, property, locator) {
             @Override
             protected IconType ascendingIconType() {
@@ -42,7 +42,7 @@ public class BootstrapAjaxHeadersToolbar<S> extends AjaxFallbackHeadersToolbar<S
             }
 
             @Override
-            protected void onAjaxClick(final AjaxRequestTarget target) {
+            protected void onAjaxClick(AjaxRequestTarget target) {
                 target.add(getTable());
             }
 

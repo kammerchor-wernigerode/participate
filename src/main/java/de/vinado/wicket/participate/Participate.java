@@ -16,7 +16,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableConfigurationProperties
 public class Participate {
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         SpringApplication.run(Participate.class, args);
     }
 }

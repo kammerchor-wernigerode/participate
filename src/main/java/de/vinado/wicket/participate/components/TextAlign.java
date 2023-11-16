@@ -20,7 +20,7 @@ public enum TextAlign implements ICssClassNameProvider {
      *
      * @param cssClassName Css class name
      */
-    TextAlign(final String cssClassName) {
+    TextAlign(String cssClassName) {
         this.cssClassName = cssClassName;
     }
 

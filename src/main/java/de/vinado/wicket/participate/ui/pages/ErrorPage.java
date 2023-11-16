@@ -40,7 +40,7 @@ public class ErrorPage extends AbstractErrorPage {
         this(e, 500);
     }
 
-    public ErrorPage(final Exception exception, int status) {
+    public ErrorPage(Exception exception, int status) {
         super(new PageParameters());
         this.message = exception.getMessage();
         this.stacktrace = exception.toString();
@@ -55,7 +55,7 @@ public class ErrorPage extends AbstractErrorPage {
 
         form.add(new MultiLineLabel("message", new PropertyModel<>(this, "message")));
 
-        final WebMarkupContainer stacktraceWmc = new WebMarkupContainer("stacktraceWmc") {
+        WebMarkupContainer stacktraceWmc = new WebMarkupContainer("stacktraceWmc") {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
@@ -80,12 +80,12 @@ public class ErrorPage extends AbstractErrorPage {
         }
 
         // Create markup label
-        final MultiLineLabel markupLabel = new MultiLineLabel("markup", markup);
+        MultiLineLabel markupLabel = new MultiLineLabel("markup", markup);
         markupLabel.setEscapeModelStrings(false);
 
         // Add container with markup highlighted
-        final MarkupStream finalMarkupStream = markupStream;
-        final WebMarkupContainer markupWmc = new WebMarkupContainer("markupWmc") {
+        MarkupStream finalMarkupStream = markupStream;
+        WebMarkupContainer markupWmc = new WebMarkupContainer("markupWmc") {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
@@ -98,13 +98,13 @@ public class ErrorPage extends AbstractErrorPage {
         markupWmc.setVisible(markupStream != null);
         form.add(markupWmc);
 
-        final MultiLineLabel stacktraceLabel = new MultiLineLabel("stacktrace", new PropertyModel<>(this, "stacktrace"));
+        MultiLineLabel stacktraceLabel = new MultiLineLabel("stacktrace", new PropertyModel<>(this, "stacktrace"));
         stacktraceLabel.setOutputMarkupPlaceholderTag(true);
         stacktraceWmc.add(stacktraceLabel);
 
         form.add(new BootstrapAjaxButton("showStackTrace", new ResourceModel("show.stacktrace", "Show Stacktrace"), Buttons.Type.Primary) {
             @Override
-            protected void onSubmit(final AjaxRequestTarget target) {
+            protected void onSubmit(AjaxRequestTarget target) {
                 showStacktrace = !showStacktrace;
                 target.add(stacktraceLabel);
                 target.add(markupWmc);
@@ -122,7 +122,7 @@ public class ErrorPage extends AbstractErrorPage {
     }
 
     @Override
-    protected void addHomePageLink(final AbstractLink homePageLink) {
+    protected void addHomePageLink(AbstractLink homePageLink) {
         form = new Form("form");
         form.add(homePageLink);
         add(form);

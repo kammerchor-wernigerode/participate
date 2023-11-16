@@ -54,7 +54,7 @@ public class PersonServiceImpl extends DataService implements PersonService {
 
     @Override
     @PersistenceContext
-    public void setEntityManager(final EntityManager entityManager) {
+    public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
@@ -62,7 +62,7 @@ public class PersonServiceImpl extends DataService implements PersonService {
      * {@inheritDoc}
      */
     @Override
-    public Person createPerson(final PersonDTO dto) {
+    public Person createPerson(PersonDTO dto) {
         return save(new Person(dto.getFirstName(), dto.getLastName(), dto.getEmail()));
     }
 
@@ -70,8 +70,8 @@ public class PersonServiceImpl extends DataService implements PersonService {
      * {@inheritDoc}
      */
     @Override
-    public Person savePerson(final PersonDTO dto) {
-        final Person loadedPerson = load(Person.class, dto.getPerson().getId());
+    public Person savePerson(PersonDTO dto) {
+        Person loadedPerson = load(Person.class, dto.getPerson().getId());
         loadedPerson.setFirstName(dto.getFirstName());
         loadedPerson.setLastName(dto.getLastName());
         loadedPerson.setEmail(dto.getEmail());
@@ -82,8 +82,8 @@ public class PersonServiceImpl extends DataService implements PersonService {
      * {@inheritDoc}
      */
     @Override
-    public Singer createSinger(final SingerDTO dto) {
-        final Singer singer = save(new Singer(dto.getFirstName(), dto.getLastName(), dto.getEmail(), dto.getVoice()));
+    public Singer createSinger(SingerDTO dto) {
+        Singer singer = save(new Singer(dto.getFirstName(), dto.getLastName(), dto.getEmail(), dto.getVoice()));
 
         return singer;
     }
@@ -92,8 +92,8 @@ public class PersonServiceImpl extends DataService implements PersonService {
      * {@inheritDoc}
      */
     @Override
-    public Singer saveSinger(final SingerDTO dto) {
-        final Singer loadedSinger = load(Singer.class, dto.getSinger().getId());
+    public Singer saveSinger(SingerDTO dto) {
+        Singer loadedSinger = load(Singer.class, dto.getSinger().getId());
         loadedSinger.setFirstName(dto.getFirstName());
         loadedSinger.setLastName(dto.getLastName());
         loadedSinger.setEmail(dto.getEmail());
@@ -105,8 +105,8 @@ public class PersonServiceImpl extends DataService implements PersonService {
      * {@inheritDoc}
      */
     @Override
-    public void removeSinger(final Singer singer) {
-        final Singer loadedSinger = load(Singer.class, singer.getId());
+    public void removeSinger(Singer singer) {
+        Singer loadedSinger = load(Singer.class, singer.getId());
         loadedSinger.setActive(false);
         save(loadedSinger);
     }
@@ -115,10 +115,10 @@ public class PersonServiceImpl extends DataService implements PersonService {
      * {@inheritDoc}
      */
     @Override
-    public boolean hasPerson(final String email) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        final Root<Person> root = criteriaQuery.from(Person.class);
+    public boolean hasPerson(String email) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Person> root = criteriaQuery.from(Person.class);
         criteriaQuery.select(criteriaBuilder.count(root));
         criteriaQuery.where(criteriaBuilder.equal(criteriaBuilder.lower(root.get("email")), email.toLowerCase()));
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
@@ -128,10 +128,10 @@ public class PersonServiceImpl extends DataService implements PersonService {
      * {@inheritDoc}
      */
     @Override
-    public boolean hasSinger(final Person person) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        final Root<Singer> root = criteriaQuery.from(Singer.class);
+    public boolean hasSinger(Person person) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Singer> root = criteriaQuery.from(Singer.class);
         criteriaQuery.select(criteriaBuilder.count(root));
         criteriaQuery.where(criteriaBuilder.equal(root.get("id"), person.getId()));
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
@@ -141,10 +141,10 @@ public class PersonServiceImpl extends DataService implements PersonService {
      * {@inheritDoc}
      */
     @Override
-    public boolean hasSinger(final String email) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        final Root<Singer> root = criteriaQuery.from(Singer.class);
+    public boolean hasSinger(String email) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Singer> root = criteriaQuery.from(Singer.class);
         criteriaQuery.select(criteriaBuilder.count(root));
         criteriaQuery.where(criteriaBuilder.equal(root.get("email"), email));
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
@@ -154,7 +154,7 @@ public class PersonServiceImpl extends DataService implements PersonService {
      * {@inheritDoc}
      */
     @Override
-    public Person getPerson(final Long id) {
+    public Person getPerson(Long id) {
         return load(Person.class, id);
     }
 
@@ -162,11 +162,11 @@ public class PersonServiceImpl extends DataService implements PersonService {
      * {@inheritDoc}
      */
     @Override
-    public Person getPerson(final String email) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Person> criteriaQuery = criteriaBuilder.createQuery(Person.class);
-        final Root<Person> root = criteriaQuery.from(Person.class);
-        final Predicate forEmail = criteriaBuilder.equal(root.get("email"), email);
+    public Person getPerson(String email) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Person> criteriaQuery = criteriaBuilder.createQuery(Person.class);
+        Root<Person> root = criteriaQuery.from(Person.class);
+        Predicate forEmail = criteriaBuilder.equal(root.get("email"), email);
         criteriaQuery.where(forEmail);
         try {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
@@ -180,7 +180,7 @@ public class PersonServiceImpl extends DataService implements PersonService {
      * {@inheritDoc}
      */
     @Override
-    public Singer getSinger(final Long id) {
+    public Singer getSinger(Long id) {
         return load(Singer.class, id);
     }
 
@@ -189,9 +189,9 @@ public class PersonServiceImpl extends DataService implements PersonService {
      */
     @Override
     public List<Singer> getSingers() {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
-        final Root<Singer> root = criteriaQuery.from(Singer.class);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
+        Root<Singer> root = criteriaQuery.from(Singer.class);
         criteriaQuery.where(forActive(criteriaBuilder, root));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
@@ -200,10 +200,10 @@ public class PersonServiceImpl extends DataService implements PersonService {
      * {@inheritDoc}
      */
     @Override
-    public Singer getSinger(final Person person) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
-        final Root<Singer> root = criteriaQuery.from(Singer.class);
+    public Singer getSinger(Person person) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
+        Root<Singer> root = criteriaQuery.from(Singer.class);
         criteriaQuery.where(criteriaBuilder.equal(root.get("id"), person.getId()));
         try {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
@@ -217,10 +217,10 @@ public class PersonServiceImpl extends DataService implements PersonService {
      * {@inheritDoc}
      */
     @Override
-    public Singer getSinger(final String email) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
-        final Root<Singer> root = criteriaQuery.from(Singer.class);
+    public Singer getSinger(String email) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
+        Root<Singer> root = criteriaQuery.from(Singer.class);
         criteriaQuery.where(criteriaBuilder.equal(root.get("email"), email));
         try {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
@@ -234,11 +234,11 @@ public class PersonServiceImpl extends DataService implements PersonService {
      * {@inheritDoc}
      */
     @Override
-    public List<Person> findPersons(final String term) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Person> criteriaQuery = criteriaBuilder.createQuery(Person.class);
-        final Root<Person> root = criteriaQuery.from(Person.class);
-        final Predicate forSearchParam = criteriaBuilder.like(
+    public List<Person> findPersons(String term) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Person> criteriaQuery = criteriaBuilder.createQuery(Person.class);
+        Root<Person> root = criteriaQuery.from(Person.class);
+        Predicate forSearchParam = criteriaBuilder.like(
             criteriaBuilder.lower(root.get("searchName")),
             "%" + term.toLowerCase().trim() + "%");
         criteriaQuery.where(forSearchParam);
@@ -249,10 +249,10 @@ public class PersonServiceImpl extends DataService implements PersonService {
      * {@inheritDoc}
      */
     @Override
-    public List<Singer> getSingers(final Event event) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
-        final Root<Participant> root = criteriaQuery.from(Participant.class);
+    public List<Singer> getSingers(Event event) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
+        Root<Participant> root = criteriaQuery.from(Participant.class);
         criteriaQuery.select(root.join("singer"));
         criteriaQuery.where(criteriaBuilder.equal(root.get("event"), event));
         return entityManager.createQuery(criteriaQuery).getResultList();
@@ -262,26 +262,26 @@ public class PersonServiceImpl extends DataService implements PersonService {
      * {@inheritDoc}
      */
     @Override
-    public void importPersons(final FileUpload upload) {
+    public void importPersons(FileUpload upload) {
         try {
-            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(upload.getInputStream(), Charset.forName("UTF-8")));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(upload.getInputStream(), Charset.forName("UTF-8")));
             String line;
             while (null != (line = bufferedReader.readLine())) {
-                final String[] personCSV = line.split(",");
+                String[] personCSV = line.split(",");
 
                 if (personCSV.length == 3) {
-                    final String firstName = personCSV[1];
-                    final String lastName = personCSV[0];
-                    final String email = personCSV[2];
+                    String firstName = personCSV[1];
+                    String lastName = personCSV[0];
+                    String email = personCSV[2];
 
                     if (!hasPerson(email)) {
                         if (!Strings.isEmpty(firstName) && !Strings.isEmpty(lastName) && !Strings.isEmpty(email)) {
-                            final SingerDTO singerDTO = new SingerDTO();
+                            SingerDTO singerDTO = new SingerDTO();
                             singerDTO.setFirstName(firstName);
                             singerDTO.setLastName(lastName);
                             singerDTO.setEmail(email);
 
-                            final Singer singer = createSinger(singerDTO);
+                            Singer singer = createSinger(singerDTO);
 //                            eventService.getUpcomingEvents().forEach(event -> eventService.createParticipant(event, singer));
                         }
                     }
@@ -297,23 +297,23 @@ public class PersonServiceImpl extends DataService implements PersonService {
      */
     @Override
     public IResourceStream exportSingers() {
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        final IDataProvider<Singer> dataProvider = new SimpleDataProvider<Singer, String>(getAll(Singer.class)) {
+        IDataProvider<Singer> dataProvider = new SimpleDataProvider<Singer, String>(getAll(Singer.class)) {
             @Override
             public String getDefaultSort() {
                 return "lastName";
             }
         };
 
-        final List<IExportableColumn<Singer, ?>> columns = new ArrayList<>();
+        List<IExportableColumn<Singer, ?>> columns = new ArrayList<>();
         columns.add(new PropertyColumn<>(new ResourceModel("lastName", "Surname"), "lastName"));
         columns.add(new PropertyColumn<>(new ResourceModel("firstName", "Given Name"), "firstName"));
         columns.add(new PropertyColumn<>(new ResourceModel("email", "Email"), "email"));
         columns.add(new PropertyColumn<>(new ResourceModel("voice", "Voice"), "voice"));
         columns.add(new PropertyColumn<>(new ResourceModel("active", "Active"), "active"));
 
-        final CSVDataExporter dataExporter = new CSVDataExporter();
+        CSVDataExporter dataExporter = new CSVDataExporter();
         dataExporter.setDelimiter(';');
         dataExporter.setCharacterSet(UTF_8);
         try {

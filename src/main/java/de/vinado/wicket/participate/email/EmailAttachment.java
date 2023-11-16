@@ -47,17 +47,17 @@ public class EmailAttachment {
      * @return the media type
      */
     public MimeType getMimeType() {
-        final InputStream inputStream = new ByteArrayInputStream(data);
+        InputStream inputStream = new ByteArrayInputStream(data);
 
         return ofNullable(this.mimeType).orElseGet(sneaky(() -> {
-            final Detector detector = TikaConfig.getDefaultConfig().getDetector();
+            Detector detector = TikaConfig.getDefaultConfig().getDetector();
 
-            final TikaInputStream stream = TikaInputStream.get(inputStream);
-            final Metadata metadata = new Metadata();
+            TikaInputStream stream = TikaInputStream.get(inputStream);
+            Metadata metadata = new Metadata();
 
             metadata.add(RESOURCE_NAME_KEY, name);
 
-            final MediaType mediaType = detector.detect(requireNonNull(stream), metadata);
+            MediaType mediaType = detector.detect(requireNonNull(stream), metadata);
             return MimeType.valueOf(mediaType.toString());
         }));
     }

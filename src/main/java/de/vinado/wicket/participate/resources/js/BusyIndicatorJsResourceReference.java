@@ -20,7 +20,7 @@ public class BusyIndicatorJsResourceReference extends JavaScriptResourceReferenc
 
     @Override
     public List<HeaderItem> getDependencies() {
-        final List<HeaderItem> dependencies = super.getDependencies();
+        List<HeaderItem> dependencies = super.getDependencies();
         dependencies.add(CssHeaderItem.forReference(ParticipateCssResourceReference.INSTANCE));
 
         return dependencies;

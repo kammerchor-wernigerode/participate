@@ -28,7 +28,7 @@ public abstract class DataService {
      *
      * @param entityManager EntityManager
      */
-    public abstract void setEntityManager(final EntityManager entityManager);
+    public abstract void setEntityManager(EntityManager entityManager);
 
     /**
      * Loads all items of the provided type.
@@ -37,7 +37,7 @@ public abstract class DataService {
      * @param <T>  Object, which is implementing {@link de.vinado.wicket.participate.model.Identifiable}.
      * @return List of entities.
      */
-    public <T extends Identifiable> List<T> getAll(final Class<T> type) {
+    public <T extends Identifiable> List<T> getAll(Class<T> type) {
         return entityManager.createQuery("FROM " + type.getSimpleName(), type).getResultList();
     }
 
@@ -63,7 +63,7 @@ public abstract class DataService {
      * @param <T>  Object, which is implementing {@link de.vinado.wicket.participate.model.Identifiable}.
      * @return Loaded object.
      */
-    public <T extends Identifiable> T load(final Class<T> type, final Serializable id) {
+    public <T extends Identifiable> T load(Class<T> type, Serializable id) {
         return entityManager.find(type, id);
     }
 
@@ -74,7 +74,7 @@ public abstract class DataService {
      * @param <T>    Type of the object.
      * @return Merged Object.
      */
-    public <T extends Identifiable> T merge(final T object) {
+    public <T extends Identifiable> T merge(T object) {
         return entityManager.merge(object);
     }
 
@@ -85,7 +85,7 @@ public abstract class DataService {
      * @param <T>    Type of the object.
      */
     @Transactional
-    public <T extends Identifiable> void remove(final T object) {
+    public <T extends Identifiable> void remove(T object) {
         entityManager.remove(merge(object));
     }
 
@@ -95,10 +95,10 @@ public abstract class DataService {
      * @param identifiable The {@link Identifiable}
      * @return Whether the {@link Identifiable} exists.
      */
-    public boolean exists(final Identifiable identifiable) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        final Root<Identifiable> root = criteriaQuery.from(Identifiable.class);
+    public boolean exists(Identifiable identifiable) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Identifiable> root = criteriaQuery.from(Identifiable.class);
         criteriaQuery.select(criteriaBuilder.count(root));
         criteriaQuery.where(criteriaBuilder.equal(root.get("id"), identifiable.getId()));
         return entityManager.createQuery(criteriaQuery).getSingleResult() > 0;
@@ -111,7 +111,7 @@ public abstract class DataService {
      * @param path            {@link Path} to {@link Hideable}
      * @return {@link Predicate}
      */
-    protected static Predicate forActive(final CriteriaBuilder criteriaBuilder, final Path<? extends Hideable> path) {
+    protected static Predicate forActive(CriteriaBuilder criteriaBuilder, Path<? extends Hideable> path) {
         return criteriaBuilder.equal(path.get("active"), true);
     }
 }

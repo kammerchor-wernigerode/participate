@@ -57,29 +57,29 @@ public class AddEditSingerPanel extends FormModal<SingerDTO> {
     protected void onInitialize() {
         super.onInitialize();
 
-        final TextField<String> firstNameTf = new TextField<>("firstName");
+        TextField<String> firstNameTf = new TextField<>("firstName");
         firstNameTf.setLabel(new ResourceModel("firstName", "Given name"));
         firstNameTf.setRequired(true);
         form.add(firstNameTf);
 
-        final TextField<String> lastNameTf = new TextField<>("lastName");
+        TextField<String> lastNameTf = new TextField<>("lastName");
         lastNameTf.setLabel(new ResourceModel("lastName", "Surname"));
         lastNameTf.setRequired(true);
         form.add(lastNameTf);
 
-        final EmailTextField emailTf = new EmailTextField("email");
+        EmailTextField emailTf = new EmailTextField("email");
         emailTf.setLabel(new ResourceModel("email", "Email"));
         emailTf.setRequired(true);
         emailTf.add(new ConditionalValidator<>(this::ensureUnique,
             new ResourceModel("unique.email", "A person with this e-mail address already exists")));
         form.add(emailTf);
 
-        final DropDownChoice<Voice> voiceDd = new DropDownChoice<>("voice",
+        DropDownChoice<Voice> voiceDd = new DropDownChoice<>("voice",
             Collections.unmodifiableList(Arrays.asList(Voice.values())), new EnumChoiceRenderer<>());
         voiceDd.setLabel(new ResourceModel("voice", "Voice"));
         form.add(voiceDd);
 
-        final BootstrapAjaxLink<Void> removeBtn = new BootstrapAjaxLink<>("removeBtn", Buttons.Type.Link) {
+        BootstrapAjaxLink<Void> removeBtn = new BootstrapAjaxLink<>("removeBtn", Buttons.Type.Link) {
             @Override
             protected void onInitialize() {
                 super.onInitialize();
@@ -87,7 +87,7 @@ public class AddEditSingerPanel extends FormModal<SingerDTO> {
             }
 
             @Override
-            public void onClick(final AjaxRequestTarget target) {
+            public void onClick(AjaxRequestTarget target) {
                 remove = !remove;
                 if (remove) {
                     setLabel(new ResourceModel("singer.remove.hint", "Singer will be removed"));
@@ -125,7 +125,7 @@ public class AddEditSingerPanel extends FormModal<SingerDTO> {
             personService.saveSinger(dto);
             send(getWebPage(), Broadcast.BREADTH, new SingerUpdateEvent(target));
         } else {
-            final Singer singer = personService.createSinger(dto);
+            Singer singer = personService.createSinger(dto);
             eventService.getUpcomingEvents().forEach(event -> eventService.createParticipant(event, singer));
         }
         send(getWebPage(), Broadcast.BREADTH, new SingerUpdateEvent(target));
