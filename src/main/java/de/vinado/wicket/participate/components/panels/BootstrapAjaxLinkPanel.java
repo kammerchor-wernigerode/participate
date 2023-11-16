@@ -14,21 +14,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
 
     private Buttons.Type type;
     private Buttons.Size size;
-    private IModel<String> labelModel;
-    private IModel<String> titleModel;
     private IconType icon;
-
-    public BootstrapAjaxLinkPanel(String id, Buttons.Type type, IModel<String> labelModel) {
-        this(id, type, Buttons.Size.Small, labelModel, null, null);
-    }
-
-    public BootstrapAjaxLinkPanel(String id, Buttons.Type type, Buttons.Size size, IModel<String> labelModel) {
-        this(id, type, size, labelModel, null, null);
-    }
-
-    public BootstrapAjaxLinkPanel(String id, Buttons.Type type, IModel<String> labelModel, IconType icon) {
-        this(id, type, Buttons.Size.Small, labelModel, icon, null);
-    }
 
     public BootstrapAjaxLinkPanel(String id, Buttons.Type type, IconType icon) {
         this(id, type, Buttons.Size.Small, null, icon, null);
@@ -42,9 +28,7 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
         super(id, labelModel);
         this.type = type;
         this.size = size;
-        this.labelModel = labelModel;
         this.icon = icon;
-        this.titleModel = titleModel;
 
         ajaxLink = new BootstrapAjaxLink<>("link", type) {
             @Override
@@ -83,22 +67,6 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
 
     public void setSize(Buttons.Size size) {
         this.size = size;
-    }
-
-    public IModel<String> getLabelModel() {
-        return labelModel;
-    }
-
-    public void setLabelModel(IModel<String> labelModel) {
-        this.labelModel = labelModel;
-    }
-
-    public IModel<String> getTitleModel() {
-        return titleModel;
-    }
-
-    public void setTitleModel(IModel<String> titleModel) {
-        this.titleModel = titleModel;
     }
 
     public IconType getIcon() {

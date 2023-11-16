@@ -4,7 +4,6 @@ import de.vinado.wicket.bt4.modal.FormModal;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.email.Email;
-import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.email.service.EmailService;
 import de.vinado.wicket.participate.model.dtos.SendFeedbackDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +21,6 @@ public class SendFeedbackPanel extends FormModal<SendFeedbackDTO> {
 
     @SpringBean
     private EmailService emailService;
-
-    @SpringBean
-    private EmailBuilderFactory emailBuilderFactory;
 
     public SendFeedbackPanel(ModalAnchor modal, IModel<SendFeedbackDTO> model) {
         super(modal, model);

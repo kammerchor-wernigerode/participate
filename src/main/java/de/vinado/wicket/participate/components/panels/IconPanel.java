@@ -29,10 +29,6 @@ public class IconPanel extends Panel {
         this(id, FontAwesome5IconType.code_s, Color.DEFAULT, TextAlign.LEFT);
     }
 
-    public IconPanel(String id, IconType icon) {
-        this(id, icon, Color.DEFAULT, TextAlign.LEFT);
-    }
-
     public IconPanel(String id, IconType type, Color color, TextAlign textAlign) {
         super(id);
         this.type = type;
@@ -63,10 +59,6 @@ public class IconPanel extends Panel {
     public IconPanel setColor(Color color) {
         this.color = color;
         return this;
-    }
-
-    public TextAlign getTextAlign() {
-        return textAlign;
     }
 
     public IconPanel setTextAlign(TextAlign textAlign) {

@@ -20,18 +20,9 @@ public abstract class SimpleDataProvider<T, S> extends SortableDataProvider<T, S
 
     private SortableDataProviderComparator comparator = new SortableDataProviderComparator();
 
-    public SimpleDataProvider() {
-        this(new ArrayList<T>());
-    }
-
     public SimpleDataProvider(Collection<T> data) {
         set(data);
         setSort(this.getDefaultSort(), SortOrder.ASCENDING);
-    }
-
-    public SimpleDataProvider(Collection<T> data, boolean asc) {
-        set(data);
-        setSort(this.getDefaultSort(), asc ? SortOrder.ASCENDING : SortOrder.DESCENDING);
     }
 
     public abstract S getDefaultSort();

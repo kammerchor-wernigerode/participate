@@ -13,10 +13,6 @@ public class EnumColumn<T, S, E extends Enum<E>> extends PropertyColumn<T, S> {
         super(displayModel, sortProperty, propertyExpression);
     }
 
-    public EnumColumn(IModel<String> displayModel, String propertyExpression) {
-        super(displayModel, propertyExpression);
-    }
-
     @Override
     public void populateItem(Item<ICellPopulator<T>> item, String componentId, IModel<T> rowModel) {
         item.add(new EnumLabel<E>(componentId, getDataModel(rowModel)));

@@ -13,36 +13,20 @@ public class BootstrapHorizontalFormDecorator extends AbstractBootstrapFormDecor
 
     private IModel<String> labelModel;
 
-    private IModel<String> helperBlock;
-
-    private BootstrapHorizontalFormDecorator(IModel<String> labelModel, IModel<String> helperBlock) {
+    private BootstrapHorizontalFormDecorator(IModel<String> labelModel) {
         this.labelModel = labelModel;
-        this.helperBlock = helperBlock;
-    }
-
-    public static BootstrapHorizontalFormDecorator decorate(IModel<String> labelModel,
-                                                            IModel<String> helperText) {
-        return new BootstrapHorizontalFormDecorator(labelModel, helperText);
     }
 
     public static BootstrapHorizontalFormDecorator decorate(IModel<String> labelModel) {
-        return new BootstrapHorizontalFormDecorator(labelModel, null);
-    }
-
-    public static BootstrapHorizontalFormDecorator decorateWithHelperBlock(IModel<String> helperText) {
-        return new BootstrapHorizontalFormDecorator(null, helperText);
+        return new BootstrapHorizontalFormDecorator(labelModel);
     }
 
     public static BootstrapHorizontalFormDecorator decorate() {
-        return new BootstrapHorizontalFormDecorator(null, null);
+        return new BootstrapHorizontalFormDecorator(null);
     }
 
     public IModel<String> getLabelModel() {
         return labelModel;
-    }
-
-    public IModel<String> getHelperBlock() {
-        return helperBlock;
     }
 
     @Override

@@ -31,7 +31,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -112,23 +111,6 @@ public class UserServiceImpl extends DataService implements UserService {
     }
 
     @Override
-    public List<User> findUsers(String term) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-        Root<User> root = criteriaQuery.from(User.class);
-        Predicate forTerm = criteriaBuilder.like(
-            criteriaBuilder.lower(root.get("username")),
-            "%" + term.toLowerCase().trim() + "%");
-        criteriaQuery.where(forTerm, forActive(criteriaBuilder, root));
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    @Override
-    public User getUser(Long id) {
-        return load(User.class, id);
-    }
-
-    @Override
     public User getUser(String username) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
@@ -154,27 +136,6 @@ public class UserServiceImpl extends DataService implements UserService {
             return entityManager.createQuery(criteriaQuery).getSingleResult();
         } catch (NoResultException e) {
             log.trace("Could not find User for Person /w id={}", person.getId());
-            return null;
-        }
-    }
-
-    @Override
-    public User getUser(String usernameOrEmail, String plainPassword) {
-        String passwordSha256 = DigestUtils.sha256Hex(plainPassword);
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-        Root<User> root = criteriaQuery.from(User.class);
-        Predicate forActive = forActive(criteriaBuilder, root);
-        Predicate forEnabled = criteriaBuilder.equal(root.get("enabled"), true);
-        Predicate forUsername = criteriaBuilder.equal(root.get("username"), usernameOrEmail);
-        Predicate forPassword = criteriaBuilder.equal(root.get("passwordSha256"), passwordSha256);
-        Join<User, Person> personJoin = root.join("person", JoinType.LEFT);
-        Predicate forEmail = criteriaBuilder.equal(criteriaBuilder.lower(personJoin.get("email")), usernameOrEmail.toLowerCase());
-        criteriaQuery.where(criteriaBuilder.and(forActive, forEnabled, forPassword), criteriaBuilder.or(forUsername, forEmail));
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (NoResultException e) {
-            log.info("Login failed for {} and ****", usernameOrEmail);
             return null;
         }
     }

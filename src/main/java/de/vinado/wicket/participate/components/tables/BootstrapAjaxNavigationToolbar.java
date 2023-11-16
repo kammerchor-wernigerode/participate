@@ -9,10 +9,6 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 public class BootstrapAjaxNavigationToolbar extends BootstrapNavigationToolbar {
 
 
-    public BootstrapAjaxNavigationToolbar(DataTable<?, ?> table) {
-        super(table);
-    }
-
     public BootstrapAjaxNavigationToolbar(DataTable<?, ?> table, Size size) {
         super(table, size);
     }

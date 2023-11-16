@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.wicketstuff.select2.ChoiceProvider;
 import org.wicketstuff.select2.Response;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -14,8 +13,6 @@ import javax.mail.internet.InternetAddress;
 
 @RequiredArgsConstructor
 public class Select2EmailAddressProvider extends ChoiceProvider<InternetAddress> {
-
-    private static final String UTF_8 = StandardCharsets.UTF_8.name();
 
     private final PersonService personService;
 

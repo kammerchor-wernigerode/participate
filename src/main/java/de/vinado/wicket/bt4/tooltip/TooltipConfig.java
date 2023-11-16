@@ -8,19 +8,7 @@ import static de.vinado.wicket.bt4.tooltip.TooltipConfig.Boundary.scrollParent;
 
 public class TooltipConfig extends de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig {
 
-    private static final IKey<String> Container = newKey("container", Boolean.FALSE.toString());
-    private static final IKey<Long> Offset = newKey("offset", 0L);
     private static final IKey<String> Boundary = newKey("boundary", scrollParent.name());
-
-    public TooltipConfig withContainer(String container) {
-        put(Container, container);
-        return this;
-    }
-
-    public TooltipConfig withOffset(Long offset) {
-        put(Offset, offset);
-        return this;
-    }
 
     public TooltipConfig withBoundary(Boundary boundary) {
         put(Boundary, boundary.name());

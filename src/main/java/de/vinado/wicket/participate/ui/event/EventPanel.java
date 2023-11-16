@@ -24,7 +24,6 @@ import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
-import de.vinado.wicket.participate.services.PersonService;
 import de.vinado.wicket.participate.ui.event.details.ParticipantDataProvider;
 import de.vinado.wicket.participate.ui.event.details.ParticipantFilterIntent;
 import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateIntent;
@@ -66,9 +65,6 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
 
     @SpringBean
     private EmailBuilderFactory emailBuilderFactory;
-
-    @SpringBean
-    private PersonService personService;
 
     @SpringBean
     private ApplicationProperties applicationProperties;

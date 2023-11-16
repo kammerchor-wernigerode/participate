@@ -201,33 +201,6 @@ public class EventServiceImpl extends DataService implements EventService {
     }
 
     @Override
-    public boolean hasUpcomingEvents() {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        Root<Event> root = criteriaQuery.from(Event.class);
-        criteriaQuery.select(criteriaBuilder.count(root));
-        criteriaQuery.where(forActive(criteriaBuilder, root), forUpcomingDate(criteriaBuilder, root));
-        return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
-    }
-
-    @Override
-    public Participant getLatestParticipant(Singer singer) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Participant> criteriaQuery = criteriaBuilder.createQuery(Participant.class);
-        Root<Participant> root = criteriaQuery.from(Participant.class);
-        Join<Participant, Event> eventJoin = root.join("event");
-        Predicate forSinger = criteriaBuilder.equal(root.get("singer"), singer);
-        criteriaQuery.where(forSinger, forUpcomingDate(criteriaBuilder, eventJoin), forActive(criteriaBuilder, eventJoin));
-        criteriaQuery.orderBy(criteriaBuilder.asc(eventJoin.get("startDate")));
-        try {
-            return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
-        } catch (NoResultException e) {
-            log.trace("Could not find Participant of latest event for Singer /w id={}", singer.getId());
-            return null;
-        }
-    }
-
-    @Override
     public EventDetails getLatestEventDetails() {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<EventDetails> criteriaQuery = criteriaBuilder.createQuery(EventDetails.class);
@@ -422,23 +395,6 @@ public class EventServiceImpl extends DataService implements EventService {
             criteriaBuilder.asc(eventJoin.get("startDate")),
             criteriaBuilder.asc(root.join("singer").get("lastName")));
         return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    @Override
-    public String getToken(Singer singer, Event event) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<String> criteriaQuery = criteriaBuilder.createQuery(String.class);
-        Root<Participant> root = criteriaQuery.from(Participant.class);
-        Predicate forSinger = criteriaBuilder.equal(root.get("singer"), singer);
-        Predicate forEvent = criteriaBuilder.equal(root.get("event"), event);
-        criteriaQuery.select(root.get("token"));
-        criteriaQuery.where(forSinger, forEvent);
-        try {
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } catch (NoResultException e) {
-            log.trace("Could not find Participant for Singer /w id={} and Event /w id={}", singer, event);
-            return null;
-        }
     }
 
     @Override

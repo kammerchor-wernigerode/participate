@@ -25,10 +25,6 @@ public class BootstrapInlineFormDecorator extends AbstractBootstrapFormDecorator
         return new BootstrapInlineFormDecorator(null);
     }
 
-    public IModel<String> getPlaceholderModel() {
-        return placeholderModel;
-    }
-
     @Override
     public void bind(Component component) {
         component.setOutputMarkupPlaceholderTag(true);

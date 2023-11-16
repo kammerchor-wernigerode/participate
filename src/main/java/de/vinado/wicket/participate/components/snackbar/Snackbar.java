@@ -17,9 +17,4 @@ public class Snackbar {
         String json = snackbarConfig.withText(contentModel.getObject()).toJsonString();
         target.appendJavaScript("Snackbar.show(" + json + ");");
     }
-
-    public Snackbar withConfig(SnackbarConfig snackbarConfig) {
-        Snackbar.snackbarConfig = snackbarConfig;
-        return this;
-    }
 }

@@ -133,8 +133,6 @@ public class ShortenedMultilineLabel extends GenericPanel<String> {
 
     public static final class Limit implements Serializable {
 
-        public static final Limit NONE = new Limit(Integer.MAX_VALUE);
-
         private static final String ABBREVIATION_MARKER = "…";
         private static final int MINIMUM_LIMIT_VALUE = ABBREVIATION_MARKER.length() + 1;
 

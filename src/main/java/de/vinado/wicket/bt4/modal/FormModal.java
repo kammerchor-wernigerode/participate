@@ -5,7 +5,6 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.vinado.wicket.bt4.form.decorator.BootstrapFormDecorator;
 import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
-import de.vinado.wicket.bt4.form.decorator.BootstrapInlineFormDecorator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.apache.wicket.AttributeModifier;
@@ -76,16 +75,6 @@ public abstract class FormModal<T> extends Modal<T> {
         form.visitChildren(FormComponent.class, (component, visit) -> {
             if (!(component instanceof Button) && !(component instanceof CheckGroup) && !(component instanceof RadioGroup)) {
                 component.add(BootstrapFormDecorator.decorate());
-            }
-            visit.dontGoDeeper();
-        });
-    }
-
-    protected void addBootstrapInlineFormDecorator(Form<T> form) {
-        form.add(new AttributeModifier("class", "form-inline"));
-        form.visitChildren(FormComponent.class, (component, visit) -> {
-            if (!(component instanceof Button) && !(component instanceof CheckGroup) && !(component instanceof RadioGroup)) {
-                component.add(BootstrapInlineFormDecorator.decorate());
             }
             visit.dontGoDeeper();
         });

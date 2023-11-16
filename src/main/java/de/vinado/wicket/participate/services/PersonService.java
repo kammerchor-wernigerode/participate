@@ -1,14 +1,11 @@
 package de.vinado.wicket.participate.services;
 
-import de.vinado.wicket.participate.model.Event;
-import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.dtos.PersonDTO;
 import de.vinado.wicket.participate.model.dtos.SingerDTO;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.StringResourceStream;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -44,8 +41,6 @@ public interface PersonService {
     Singer getSinger(String email);
 
     List<Person> findPersons(String term);
-
-    List<Singer> getSingers(Event event);
 
     void importPersons(FileUpload upload);
 

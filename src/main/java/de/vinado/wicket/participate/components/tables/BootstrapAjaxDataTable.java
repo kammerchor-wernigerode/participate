@@ -22,7 +22,6 @@ public class BootstrapAjaxDataTable<T, S> extends DataTable<T, S> {
 
         add(tableBehavior = new TableBehavior());
 
-//        addTopToolbar(new BootstrapAjaxNavigationToolbar(this));
         addTopToolbar(new BootstrapAjaxHeadersToolbar<S>(this, dataProvider));
         addBottomToolbar(new BootstrapAjaxNavigationToolbar(this, BootstrapPagingNavigator.Size.Small));
         addBottomToolbar(new NoRecordsToolbar(this));
@@ -33,18 +32,8 @@ public class BootstrapAjaxDataTable<T, S> extends DataTable<T, S> {
         return new OddEvenItem<>(id, index, model);
     }
 
-    public BootstrapAjaxDataTable striped() {
-        tableBehavior.striped();
-        return this;
-    }
-
     public BootstrapAjaxDataTable condensed() {
         tableBehavior.sm();
-        return this;
-    }
-
-    public BootstrapAjaxDataTable bordered() {
-        tableBehavior.bordered();
         return this;
     }
 

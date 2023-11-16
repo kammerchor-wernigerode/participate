@@ -26,22 +26,6 @@ public class EditAccountDTO implements Serializable {
     private String email;
     private Voice voice;
 
-    public EditAccountDTO(User user) {
-        this.user = user;
-        this.username = user.getUsername();
-    }
-
-    public EditAccountDTO(User user, @Nullable final Person person) {
-        this.user = user;
-        this.person = person;
-        this.username = user.getUsername();
-        if (null != person) {
-            this.firstName = person.getFirstName();
-            this.lastName = person.getLastName();
-            this.email = person.getEmail();
-        }
-    }
-
     public EditAccountDTO(User user, @Nullable final Person person, @Nullable final Singer singer) {
         this.user = user;
         this.person = person;

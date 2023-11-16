@@ -4,7 +4,6 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.tabs.AjaxBootstrapTabbed
 import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.bt4.modal.FormModal;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
-import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.AddUserDTO;
@@ -74,12 +73,6 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
                 }
             });
         }
-        /*tabs.add(new AbstractTab(Model.of("Informationen")) {
-            @Override
-            public Panel getPanel(final String panelId) {
-                return new EditPersonInformationPanel(panelId, model);
-            }
-        });*/
 
         AjaxBootstrapTabbedPanel tabbedPanel = new AjaxBootstrapTabbedPanel<>("tabs", tabs);
         form.add(tabbedPanel);
@@ -96,7 +89,6 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
             personDTO.setEmail(modelObject.getEmail());
             personService.savePerson(personDTO);
             if (null != modelObject.getSinger()) {
-                Singer singer = modelObject.getSinger();
                 SingerDTO singerDTO = new SingerDTO();
                 singerDTO.setVoice(modelObject.getVoice());
                 personService.saveSinger(singerDTO);
@@ -223,15 +215,6 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
                 }
             });
             add(voiceDd);
-        }
-    }
-
-    private class EditPersonInformationPanel extends Panel {
-
-        public EditPersonInformationPanel(String id, IModel<EditAccountDTO> model) {
-            super(id, model);
-
-
         }
     }
 }

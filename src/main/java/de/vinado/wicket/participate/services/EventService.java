@@ -4,7 +4,6 @@ import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
-import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
@@ -33,10 +32,6 @@ public interface EventService {
     Participant declineEvent(ParticipantDTO dto);
 
     boolean hasToken(String token);
-
-    boolean hasUpcomingEvents();
-
-    Participant getLatestParticipant(Singer singer);
 
     EventDetails getLatestEventDetails();
 
@@ -73,8 +68,6 @@ public interface EventService {
     Participant getParticipant(String token);
 
     List<Participant> getParticipants(Singer singer);
-
-    String getToken(Singer singer, Event event);
 
     int inviteParticipants(List<Participant> participants, User organizer);
 

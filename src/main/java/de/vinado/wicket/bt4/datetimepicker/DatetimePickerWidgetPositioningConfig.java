@@ -5,13 +5,7 @@ import de.agilecoders.wicket.jquery.IKey;
 
 public class DatetimePickerWidgetPositioningConfig extends AbstractConfig {
 
-    private static final IKey<String> Horizontal = newKey("horizontal", "auto");
     private static final IKey<String> Vertical = newKey("vertical", "auto");
-
-    public DatetimePickerWidgetPositioningConfig withHorizontalPositioning(String positioning) {
-        put(Horizontal, positioning);
-        return this;
-    }
 
     public DatetimePickerWidgetPositioningConfig withVerticalPositioning(String positioning) {
         put(Vertical, positioning);

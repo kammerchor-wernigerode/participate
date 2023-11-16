@@ -1,7 +1,5 @@
 package de.vinado.wicket.participate.services;
 
-import de.vinado.wicket.participate.model.Event;
-import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.dtos.PersonDTO;
@@ -196,16 +194,6 @@ public class PersonServiceImpl extends DataService implements PersonService {
     }
 
     @Override
-    public List<Singer> getSingers(Event event) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Singer> criteriaQuery = criteriaBuilder.createQuery(Singer.class);
-        Root<Participant> root = criteriaQuery.from(Participant.class);
-        criteriaQuery.select(root.join("singer"));
-        criteriaQuery.where(criteriaBuilder.equal(root.get("event"), event));
-        return entityManager.createQuery(criteriaQuery).getResultList();
-    }
-
-    @Override
     public void importPersons(FileUpload upload) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(upload.getInputStream(), Charset.forName("UTF-8")));
@@ -225,8 +213,7 @@ public class PersonServiceImpl extends DataService implements PersonService {
                             singerDTO.setLastName(lastName);
                             singerDTO.setEmail(email);
 
-                            Singer singer = createSinger(singerDTO);
-//                            eventService.getUpcomingEvents().forEach(event -> eventService.createParticipant(event, singer));
+                            createSinger(singerDTO);
                         }
                     }
                 }

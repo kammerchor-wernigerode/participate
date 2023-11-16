@@ -16,10 +16,6 @@ public abstract class BootstrapAjaxLinkColumn<T, S> extends AbstractColumn<T, S>
 
     private IModel<String> tooltipModel;
 
-    public BootstrapAjaxLinkColumn(IconType iconType) {
-        this(iconType, null);
-    }
-
     public BootstrapAjaxLinkColumn(IconType iconType, IModel<String> tooltipModel) {
         super(Model.of(""));
 
