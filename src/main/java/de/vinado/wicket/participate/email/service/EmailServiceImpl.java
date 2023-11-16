@@ -178,12 +178,12 @@ public class EmailServiceImpl implements EmailService {
     }
 
     /**
-     * Maps information of an email object to an new {@link MimeMessageHelper}. {@link MimeMessageHelper#setText} is not
+     * Maps information of an email object to a new {@link MimeMessageHelper}. {@link MimeMessageHelper#setText} is not
      * called.
      *
      * @param email       the email to map
      * @param mimeMessage the object to map on
-     * @param multipart   whether the email will contains multiple parts like HTML part and alternative plaintext part.
+     * @param multipart   whether the email will contain multiple parts like HTML part and alternative plaintext part.
      * @return new and configured helper object
      * @throws MessagingException if multipart creation failed
      */
