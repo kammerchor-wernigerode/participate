@@ -32,7 +32,7 @@ public class EmailAttachment {
     // @formatter:off
     private @Getter @NonNull String name;
     private MimeType mimeType;
-    private @Getter @NonNull byte[] data;
+    private @Getter byte[] data;
     // @formatter:on
 
     /**
