@@ -40,8 +40,6 @@ public class SingerDataProvider extends FilterableDataProvider<Singer> {
 
     private static final class SingerModel extends Model<Singer> {
 
-        private static final long serialVersionUID = 4702909842661604922L;
-
         public SingerModel(Singer singer) {
             super(singer);
         }

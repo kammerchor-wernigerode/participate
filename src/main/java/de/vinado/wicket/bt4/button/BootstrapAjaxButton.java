@@ -11,8 +11,6 @@ import org.apache.wicket.model.IModel;
  */
 public class BootstrapAjaxButton extends de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxButton {
 
-    private static final long serialVersionUID = -2401274183769762849L;
-
     public BootstrapAjaxButton(String componentId, Buttons.Type type) {
         super(componentId, type);
     }

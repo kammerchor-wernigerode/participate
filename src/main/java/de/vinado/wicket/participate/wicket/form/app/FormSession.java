@@ -25,8 +25,6 @@ import java.util.function.Predicate;
  */
 public class FormSession extends AuthenticatedWebSession {
 
-    private static final long serialVersionUID = 5348944390546979934L;
-
     @SpringBean
     private FormAuthenticator authenticator;
 

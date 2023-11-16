@@ -20,8 +20,6 @@ import java.util.Optional;
 
 public class AdminPage extends ParticipatePage implements IGenericComponent<Integer, AdminPage> {
 
-    private static final long serialVersionUID = 1365961032818332554L;
-
     @Override
     protected void onInitialize() {
         super.onInitialize();

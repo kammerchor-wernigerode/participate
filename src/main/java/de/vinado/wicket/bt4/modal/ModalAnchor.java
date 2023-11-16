@@ -13,8 +13,6 @@ import org.apache.wicket.markup.repeater.AbstractRepeater;
  */
 public class ModalAnchor extends Panel {
 
-    private static final long serialVersionUID = 1162928640803249713L;
-
     public static final String MODAL_ID = "modal";
 
     public ModalAnchor(String id) {

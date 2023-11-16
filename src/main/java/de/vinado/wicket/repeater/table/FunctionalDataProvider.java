@@ -14,8 +14,6 @@ import java.util.stream.Stream;
  */
 public abstract class FunctionalDataProvider<T> extends SortableDataProvider<T, SerializableFunction<T, ?>> {
 
-    private static final long serialVersionUID = 2983444954650161772L;
-
     @Override
     public Iterator<? extends T> iterator(long first, long count) {
         return load()

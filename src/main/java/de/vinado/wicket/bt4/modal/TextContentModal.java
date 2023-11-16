@@ -9,8 +9,6 @@ import org.apache.wicket.model.ResourceModel;
  */
 public class TextContentModal extends Modal<String> {
 
-    private static final long serialVersionUID = 621172236591531218L;
-
     public TextContentModal(ModalAnchor anchor, IModel<String> model) {
         super(anchor, model);
     }

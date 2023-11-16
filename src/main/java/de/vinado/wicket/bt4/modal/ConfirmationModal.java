@@ -13,8 +13,6 @@ import java.util.Optional;
  */
 public abstract class ConfirmationModal extends Modal<String> {
 
-    private static final long serialVersionUID = 4302314305456195972L;
-
     public ConfirmationModal(ModalAnchor anchor, IModel<String> model) {
         super(anchor, model);
     }

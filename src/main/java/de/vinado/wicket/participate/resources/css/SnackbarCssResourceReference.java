@@ -9,8 +9,6 @@ import org.apache.wicket.markup.head.HeaderItem;
  */
 public class SnackbarCssResourceReference extends WebjarsCssResourceReference {
 
-    private static final long serialVersionUID = 4407525623180747946L;
-
     private SnackbarCssResourceReference() {
         super("node-snackbar/current/snackbar.css");
     }

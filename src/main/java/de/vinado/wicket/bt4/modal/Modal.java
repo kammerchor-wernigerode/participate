@@ -40,8 +40,6 @@ import static java.util.function.Predicate.not;
  */
 public class Modal<T> extends GenericPanel<T> {
 
-    private static final long serialVersionUID = -4774467039791105874L;
-
     private final ModalAnchor anchor;
     private final MarkupContainer header;
     private final MarkupContainer footer;
@@ -120,7 +118,6 @@ public class Modal<T> extends GenericPanel<T> {
 
     private WebMarkupContainer createDialog(String id) {
         return new TransparentWebMarkupContainer(id) {
-            private static final long serialVersionUID = 2975593510466191122L;
 
             @Override
             protected void onComponentTag(ComponentTag tag) {
@@ -174,8 +171,6 @@ public class Modal<T> extends GenericPanel<T> {
 
     public static abstract class AbstractAction extends AbstractItem {
 
-        private static final long serialVersionUID = 797042267239974024L;
-
         public AbstractAction(String id, IModel<String> labelModel) {
             super(id, labelModel);
         }
@@ -198,8 +193,6 @@ public class Modal<T> extends GenericPanel<T> {
 
     public static abstract class AjaxAction extends AbstractAction {
 
-        private static final long serialVersionUID = -4122441341035826201L;
-
         @Getter(AccessLevel.PROTECTED)
         private final ButtonBehavior buttonBehavior;
 
@@ -216,7 +209,6 @@ public class Modal<T> extends GenericPanel<T> {
         public static SerializableFunction<String, AbstractAction> create(IModel<String> labelModel, Type type,
                                                                           SerializableConsumer<AjaxRequestTarget> clickHandler) {
             return id -> new AjaxAction(id, labelModel) {
-                private static final long serialVersionUID = 7161307146962533749L;
 
                 @Override
                 protected void onClick(AjaxRequestTarget target) {
@@ -232,7 +224,6 @@ public class Modal<T> extends GenericPanel<T> {
 
         protected AbstractLink link(String id) {
             return new AjaxLink<Void>(id) {
-                private static final long serialVersionUID = 7318225697752576684L;
 
                 @Override
                 protected void onInitialize() {
@@ -252,8 +243,6 @@ public class Modal<T> extends GenericPanel<T> {
 
     public final class CloseAction extends AjaxAction {
 
-        private static final long serialVersionUID = 6727872478542782744L;
-
         public CloseAction(String id, IModel<String> labelModel) {
             super(id, labelModel);
         }
@@ -261,7 +250,6 @@ public class Modal<T> extends GenericPanel<T> {
         @Override
         protected AbstractLink link(String id) {
             return new AjaxLink<String>(id) {
-                private static final long serialVersionUID = -7938933072865616536L;
 
                 @Override
                 protected void onInitialize() {

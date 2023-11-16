@@ -103,7 +103,6 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         wmc.add(new Label("creationDateTimeIso").add(new RelativeTimePipe()));
         wmc.add(new Label("location"));
         wmc.add(new SmartLinkMultiLineLabel("description", model.map(EventDetails::getDescription)) {
-            private static final long serialVersionUID = 2045612009711043821L;
 
             @Override
             protected void onConfigure() {
@@ -231,7 +230,6 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         ModalAnchor anchor = ((ParticipatePage) getWebPage()).getModalAnchor();
         anchor.setContent(new ConfirmationModal(anchor,
             new ResourceModel("email.send.reminder.question", "Some singers have already received an invitation. Should they be remembered?")) {
-            private static final long serialVersionUID = -5430900540362229987L;
 
             @Override
             protected void onConfirm(AjaxRequestTarget target) {

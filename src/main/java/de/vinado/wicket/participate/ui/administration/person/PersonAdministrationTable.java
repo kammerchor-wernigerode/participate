@@ -12,8 +12,6 @@ import java.util.List;
 
 public class PersonAdministrationTable extends BootstrapAjaxDataTable<Person, SerializableFunction<Person, ?>> {
 
-    private static final long serialVersionUID = -8173386174805574030L;
-
     public PersonAdministrationTable(String id,
                                      List<? extends IColumn<Person, SerializableFunction<Person, ?>>> columns,
                                      FunctionalDataProvider<Person> dataProvider) {

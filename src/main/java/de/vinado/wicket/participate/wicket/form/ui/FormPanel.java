@@ -28,8 +28,6 @@ import java.util.Map;
  */
 public class FormPanel extends GenericPanel<ParticipantDTO> {
 
-    private static final long serialVersionUID = -4658203310953434812L;
-
     @SpringBean
     private EventService eventService;
 
@@ -49,7 +47,6 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
 
     protected Form<ParticipantDTO> form(String id) {
         return new ParticipantForm(id, getModel()) {
-            private static final long serialVersionUID = -5239389150709200472L;
 
             @Override
             protected void onAcceptEvent(AjaxRequestTarget target) {

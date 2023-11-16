@@ -9,8 +9,6 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
  */
 public class AutosizeJsReference extends WebjarsJavaScriptResourceReference {
 
-    private static final long serialVersionUID = -8664316625908594163L;
-
     private AutosizeJsReference() {
         super("autosize/current/dist/autosize.min.js");
     }

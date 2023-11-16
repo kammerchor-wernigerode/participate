@@ -69,8 +69,6 @@ public class ParticipantDataProvider extends FilterableDataProvider<Participant>
 
     private static final class ParticipantModel extends Model<Participant> {
 
-        private static final long serialVersionUID = -7306487774730058888L;
-
         public ParticipantModel(Participant participant) {
             super(participant);
         }

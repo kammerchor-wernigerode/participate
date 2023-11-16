@@ -8,8 +8,6 @@ import org.apache.wicket.WicketRuntimeException;
  */
 public abstract class HttpError extends WicketRuntimeException {
 
-    private static final long serialVersionUID = -2485604828307287351L;
-
     @Getter
     private final int status;
 

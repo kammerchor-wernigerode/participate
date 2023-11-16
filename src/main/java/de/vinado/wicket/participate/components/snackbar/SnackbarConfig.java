@@ -9,8 +9,6 @@ import org.apache.wicket.util.lang.Args;
  */
 public class SnackbarConfig extends AbstractConfig {
 
-    private static final long serialVersionUID = -3917542944781559481L;
-
     private final IKey<String> text = newKey("text", "");
     private final IKey<Integer> duration = newKey("duration", -1);
     private final IKey<Boolean> showAction = newKey("showAction", true);

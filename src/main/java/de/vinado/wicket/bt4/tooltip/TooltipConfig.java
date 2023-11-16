@@ -11,8 +11,6 @@ import static de.vinado.wicket.bt4.tooltip.TooltipConfig.Boundary.scrollParent;
  */
 public class TooltipConfig extends de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig {
 
-    private static final long serialVersionUID = -1740123643194263948L;
-
     private static final IKey<String> Container = newKey("container", Boolean.FALSE.toString());
     private static final IKey<Long> Offset = newKey("offset", 0L);
     private static final IKey<String> Boundary = newKey("boundary", scrollParent.name());

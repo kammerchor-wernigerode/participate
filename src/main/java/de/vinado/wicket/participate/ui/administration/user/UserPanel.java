@@ -54,8 +54,6 @@ import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAw
  */
 public class UserPanel extends BootstrapPanel<Void> {
 
-    private static final long serialVersionUID = 5028845161437005582L;
-
     @SpringBean
     private UserService userService;
 
@@ -90,7 +88,6 @@ public class UserPanel extends BootstrapPanel<Void> {
     private void add(AjaxRequestTarget target) {
         ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
         modal.setContent(new AddUserPanel(modal, new CompoundPropertyModel<>(new AddUserDTO())) {
-            private static final long serialVersionUID = 6551074441910829456L;
 
             @Override
             protected void onConfirm(User user, AjaxRequestTarget target) {
@@ -117,7 +114,6 @@ public class UserPanel extends BootstrapPanel<Void> {
 
     private IColumn<User, SerializableFunction<User, ?>> idColumn() {
         return new PropertyColumn<>(new ResourceModel("user.id", "User ID"), with(User::getId).andThen(repeat('0')), "id") {
-            private static final long serialVersionUID = 2132151562223169362L;
 
             @Override
             public String getCssClass() {
@@ -128,7 +124,6 @@ public class UserPanel extends BootstrapPanel<Void> {
 
     private IColumn<User, SerializableFunction<User, ?>> usernameColumn() {
         return new PropertyColumn<>(new ResourceModel("username", "Username"), with(User::getUsername), "username") {
-            private static final long serialVersionUID = -1788327911824676386L;
 
             @Override
             public String getCssClass() {
@@ -139,7 +134,6 @@ public class UserPanel extends BootstrapPanel<Void> {
 
     private IColumn<User, SerializableFunction<User, ?>> adminColumn() {
         return new PropertyColumn<>(new ResourceModel("administrator", "Administrator"), with(User::isAdmin), "admin") {
-            private static final long serialVersionUID = 7642461449043114551L;
 
             @Override
             public void populateItem(Item<ICellPopulator<User>> item, String componentId, IModel<User> rowModel) {
@@ -158,7 +152,6 @@ public class UserPanel extends BootstrapPanel<Void> {
 
     private IColumn<User, SerializableFunction<User, ?>> enabledColumn() {
         return new PropertyColumn<>(new ResourceModel("enabled", "Enabled"), with(User::isEnabled), "enabled") {
-            private static final long serialVersionUID = -8696329134470155291L;
 
             @Override
             public void populateItem(Item<ICellPopulator<User>> item, String componentId, IModel<User> rowModel) {
@@ -177,7 +170,6 @@ public class UserPanel extends BootstrapPanel<Void> {
 
     private IColumn<User, SerializableFunction<User, ?>> assignColumn() {
         return new AbstractColumn<>(Model.of()) {
-            private static final long serialVersionUID = 5176790588541594370L;
 
             @Override
             public void populateItem(Item<ICellPopulator<User>> item, String componentId, IModel<User> rowModel) {
@@ -185,7 +177,6 @@ public class UserPanel extends BootstrapPanel<Void> {
                     ? trash_alt_s
                     : plus_s;
                 BootstrapAjaxLinkPanel button = new BootstrapAjaxLinkPanel(componentId, Buttons.Type.Link, icon) {
-                    private static final long serialVersionUID = -6826823482858265333L;
 
                     @Override
                     public void onClick(AjaxRequestTarget target) {
@@ -199,7 +190,6 @@ public class UserPanel extends BootstrapPanel<Void> {
                     private Modal<?> unassociate(ModalAnchor modal) {
                         return new ConfirmationModal(modal,
                             new ResourceModel("user.remove.person.question", "Are you sure you want to remove the user-person association?")) {
-                            private static final long serialVersionUID = -605522102516900817L;
 
                             @Override
                             protected void onConfirm(AjaxRequestTarget target) {
@@ -218,7 +208,6 @@ public class UserPanel extends BootstrapPanel<Void> {
 
                     private Modal<?> associate(ModalAnchor modal) {
                         return new AddPersonToUserPanel(modal, new CompoundPropertyModel<>(new AddUserDTO(rowModel.getObject()))) {
-                            private static final long serialVersionUID = 3840640492287193820L;
 
                             @Override
                             protected void onConfirm(User savedUser, AjaxRequestTarget target) {
@@ -261,7 +250,6 @@ public class UserPanel extends BootstrapPanel<Void> {
 
     private IColumn<User, SerializableFunction<User, ?>> personIdColumn() {
         return new PropertyColumn<>(new ResourceModel("person.id", "Person ID"), withPerson().andThen(nullSafe(Person::getId)), "person.id") {
-            private static final long serialVersionUID = -4159473368585061731L;
 
             @Override
             public String getCssClass() {
@@ -272,7 +260,6 @@ public class UserPanel extends BootstrapPanel<Void> {
 
     private IColumn<User, SerializableFunction<User, ?>> nameColumn() {
         return new PropertyColumn<>(new ResourceModel("name", "Name"), withPerson().andThen(nullSafe(Person::getSortName)), "person.sortName") {
-            private static final long serialVersionUID = 709281182909369853L;
 
             @Override
             public String getCssClass() {
@@ -283,7 +270,6 @@ public class UserPanel extends BootstrapPanel<Void> {
 
     private IColumn<User, SerializableFunction<User, ?>> emailColumn() {
         return new PropertyColumn<>(new ResourceModel("email", "Email"), withPerson().andThen(nullSafe(Person::getEmail)), "person.email") {
-            private static final long serialVersionUID = -2317159592224046374L;
 
             @Override
             public String getCssClass() {
@@ -294,7 +280,6 @@ public class UserPanel extends BootstrapPanel<Void> {
 
     private IColumn<User, SerializableFunction<User, ?>> editColumn() {
         return new AbstractColumn<>(Model.of("")) {
-            private static final long serialVersionUID = -8510195545095544937L;
 
             @Override
             public void populateItem(Item<ICellPopulator<User>> item, String componentId, IModel<User> rowModel) {
@@ -305,7 +290,6 @@ public class UserPanel extends BootstrapPanel<Void> {
                 }
 
                 item.add(new BootstrapAjaxLinkPanel(componentId, Buttons.Type.Link, edit_s) {
-                    private static final long serialVersionUID = 2005591948991246327L;
 
                     @Override
                     public void onClick(AjaxRequestTarget target) {
@@ -317,7 +301,6 @@ public class UserPanel extends BootstrapPanel<Void> {
                     private AddEditPersonPanel editPerson(ModalAnchor modal) {
                         return new AddEditPersonPanel(modal, new ResourceModel("person.edit", "Edit Person"),
                             new CompoundPropertyModel<>(new PersonDTO(person))) {
-                            private static final long serialVersionUID = -6604742782366424705L;
 
                             @Override
                             protected void onUpdate(AjaxRequestTarget target) {

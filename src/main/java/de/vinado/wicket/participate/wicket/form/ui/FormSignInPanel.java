@@ -39,8 +39,6 @@ import java.util.List;
 @Setter
 public class FormSignInPanel extends Panel {
 
-    private static final long serialVersionUID = 8628206186642582897L;
-
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     @SpringBean
@@ -127,8 +125,6 @@ public class FormSignInPanel extends Panel {
     private Component feedback() {
         return new NotificationPanel("feedback", this) {
 
-            private static final long serialVersionUID = 4302364850707994223L;
-
             @Override
             protected Component newMessageDisplayComponent(String markupId, FeedbackMessage message) {
                 Component component = super.newMessageDisplayComponent(markupId, message);
@@ -144,8 +140,6 @@ public class FormSignInPanel extends Panel {
 
 
     private final class SignInForm extends StatelessForm<FormSignInPanel> {
-
-        private static final long serialVersionUID = 7276726225898679025L;
 
         public SignInForm(String id) {
             super(id);

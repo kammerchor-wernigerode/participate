@@ -16,8 +16,6 @@ import org.apache.wicket.markup.html.form.FormComponent;
  */
 public class AutosizeBehavior extends Behavior {
 
-    private static final long serialVersionUID = 7299149810131799098L;
-
     @Override
     public void bind(Component component) {
         super.bind(component);

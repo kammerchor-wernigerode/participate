@@ -9,8 +9,6 @@ import org.apache.wicket.model.IModel;
 
 public class SingersPage extends ParticipatePage {
 
-    private static final long serialVersionUID = -865631168773605240L;
-
     @Override
     protected void onInitialize() {
         super.onInitialize();

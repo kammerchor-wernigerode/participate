@@ -30,8 +30,6 @@ import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAw
 
 public class PersonAdministrationPanel extends Panel {
 
-    private static final long serialVersionUID = 2120435783576012933L;
-
     @SpringBean
     private PersonRepository personRepository;
 
@@ -109,8 +107,6 @@ public class PersonAdministrationPanel extends Panel {
     @RequiredArgsConstructor
     private static class PersonDataProvider extends FunctionalDataProvider<Person> {
 
-        private static final long serialVersionUID = 8241723874342037449L;
-
         private final PersonRepository repository;
 
         @Override
@@ -124,8 +120,6 @@ public class PersonAdministrationPanel extends Panel {
         }
 
         private static class PersonModel extends Model<Person> {
-
-            private static final long serialVersionUID = -2205664904469033653L;
 
             public PersonModel(Person person) {
                 super(person);

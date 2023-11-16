@@ -17,8 +17,6 @@ import java.util.Date;
  */
 public class DatetimePickerResettingBehavior extends AjaxFormComponentUpdatingBehavior {
 
-    private static final long serialVersionUID = 5240265517363577034L;
-
     private final SerializableConsumer<Date> currentValue;
 
     public DatetimePickerResettingBehavior(SerializableConsumer<Date> currentValue) {

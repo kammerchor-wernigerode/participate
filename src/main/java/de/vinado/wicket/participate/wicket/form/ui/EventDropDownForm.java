@@ -34,7 +34,6 @@ public abstract class EventDropDownForm extends NavbarForm<Participant> {
         ChoiceRenderer<Participant> renderer = new ChoiceRenderer<>("event.name");
         add(new BootstrapSelect<>("event", getModel(), choiceModel(), renderer)
             .add(new AjaxFormSubmitBehavior(this, "hidden.bs.select") {
-                private static final long serialVersionUID = -3833360531341280253L;
 
                 @Override
                 protected void onSubmit(AjaxRequestTarget target) {

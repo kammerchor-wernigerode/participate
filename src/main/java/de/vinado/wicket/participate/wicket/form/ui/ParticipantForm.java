@@ -42,8 +42,6 @@ import java.util.Date;
  */
 public abstract class ParticipantForm extends Form<ParticipantDTO> {
 
-    private static final long serialVersionUID = -2198624824622093618L;
-
     private static final String TAG_NAME = "participantForm";
 
     static {

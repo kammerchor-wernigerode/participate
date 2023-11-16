@@ -16,8 +16,6 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class UserDataProvider extends FunctionalDataProvider<User> {
 
-    private static final long serialVersionUID = -7222948700443699490L;
-
     private final UserService userService;
 
     @Override
@@ -32,8 +30,6 @@ public class UserDataProvider extends FunctionalDataProvider<User> {
 
 
     private static final class UserModel extends Model<User> {
-
-        private static final long serialVersionUID = 1268287923639115228L;
 
         public UserModel(User user) {
             super(user);

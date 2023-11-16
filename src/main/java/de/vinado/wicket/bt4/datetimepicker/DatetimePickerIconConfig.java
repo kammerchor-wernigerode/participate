@@ -7,8 +7,6 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5I
  */
 public class DatetimePickerIconConfig extends de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerIconConfig {
 
-    private static final long serialVersionUID = -3492365248363088690L;
-
     public DatetimePickerIconConfig() {
         useTimeIcon(FontAwesome5IconType.clock_r);
         useDateIcon(FontAwesome5IconType.calendar_r);

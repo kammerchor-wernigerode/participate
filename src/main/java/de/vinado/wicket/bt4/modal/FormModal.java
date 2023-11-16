@@ -30,8 +30,6 @@ import java.util.Optional;
  */
 public abstract class FormModal<T> extends Modal<T> {
 
-    private static final long serialVersionUID = -1686181807165719605L;
-
     protected static final String FORM_ID = "form";
     protected static final String FEEDBACK_ID = "feedback";
 
@@ -109,8 +107,6 @@ public abstract class FormModal<T> extends Modal<T> {
 
     public static abstract class AjaxSubmitAction<T> extends AbstractAction {
 
-        private static final long serialVersionUID = -8731687167073501915L;
-
         private final Form<T> form;
 
         @Getter(AccessLevel.PROTECTED)
@@ -125,7 +121,6 @@ public abstract class FormModal<T> extends Modal<T> {
         public static <T> SerializableFunction<String, AbstractAction> create(IModel<String> labelModel, Form<T> form,
                                                                               SerializableConsumer<AjaxRequestTarget> clickHandler) {
             return id -> new AjaxSubmitAction<>(id, labelModel, form) {
-                private static final long serialVersionUID = -8512147121981227699L;
 
                 @Override
                 protected void onSubmit(AjaxRequestTarget target) {
@@ -139,7 +134,6 @@ public abstract class FormModal<T> extends Modal<T> {
         @Override
         protected AbstractLink link(String id) {
             AjaxSubmitLink link = new AjaxSubmitLink(id, form) {
-                private static final long serialVersionUID = -96187706316648756L;
 
                 @Override
                 protected void onInitialize() {

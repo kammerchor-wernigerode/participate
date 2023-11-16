@@ -35,8 +35,6 @@ import static de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons.Ty
 
 public class EventSummaryPage extends ParticipatePage implements IGenericComponent<EventDetails, EventSummaryPage> {
 
-    private static final long serialVersionUID = -8832389184392838952L;
-
     @SpringBean
     private EventService eventService;
 
@@ -54,7 +52,6 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
         add(new Label("eventName", new PropertyModel<>(getModel(), "name")));
 
         BootstrapAjaxLink<EventDetails> previousEventBtn = new BootstrapAjaxLink<>("previousEventBtn", getModel(), Link) {
-            private static final long serialVersionUID = 3628286607583728681L;
 
             @Override
             public void onClick(AjaxRequestTarget target) {
@@ -74,7 +71,6 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
         add(backBtn);
 
         BootstrapAjaxLink<EventDetails> nextEventBtn = new BootstrapAjaxLink<>("nextEventBtn", getModel(), Link) {
-            private static final long serialVersionUID = -9162722205669928604L;
 
             @Override
             public void onClick(AjaxRequestTarget target) {

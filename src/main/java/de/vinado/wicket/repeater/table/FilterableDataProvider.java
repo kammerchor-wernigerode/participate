@@ -11,8 +11,6 @@ import org.danekja.java.util.function.serializable.SerializablePredicate;
 @RequiredArgsConstructor
 public abstract class FilterableDataProvider<T> extends FunctionalDataProvider<T> {
 
-    private static final long serialVersionUID = 168347101843221031L;
-
     @Getter
     private final IModel<? extends SerializablePredicate<? super T>> filter;
 

@@ -21,8 +21,6 @@ public class FormSignInPage extends BasePage implements IGenericComponent<Partic
     @SpringBean
     private EventService eventService;
 
-    private static final long serialVersionUID = 2300708725396474529L;
-
     @Override
     protected void onInitialize() {
         super.onInitialize();
@@ -60,8 +58,6 @@ public class FormSignInPage extends BasePage implements IGenericComponent<Partic
 
 
     private static final class MissingTokenException extends BadRequest {
-
-        private static final long serialVersionUID = -3079760926120422921L;
 
         public MissingTokenException() {
             super("Required parameter 'token' is not present or malformed");

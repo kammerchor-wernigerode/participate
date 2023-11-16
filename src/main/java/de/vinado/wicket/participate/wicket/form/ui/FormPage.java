@@ -27,8 +27,6 @@ import java.util.Optional;
 
 public class FormPage extends BasePage implements IGenericComponent<ParticipantDTO, FormPage> {
 
-    private static final long serialVersionUID = -8963400167069618982L;
-
     @SpringBean
     private EventService eventService;
 
@@ -53,12 +51,10 @@ public class FormPage extends BasePage implements IGenericComponent<ParticipantD
             .setBrandName(Model.of())
             .setPosition(Navbar.Position.TOP)
             .addComponents(new AbstractNavbarComponent(Navbar.ComponentPosition.RIGHT) {
-                private static final long serialVersionUID = -3984063505376572594L;
 
                 @Override
                 public Component create(String markupId) {
                     return new EventDropDownForm(markupId, LambdaModel.of(getModel(), ParticipantDTO::getParticipant, ParticipantDTO::setParticipant)) {
-                        private static final long serialVersionUID = 7137415331187027778L;
 
                         @Override
                         protected void onSelect(AjaxRequestTarget target) {
@@ -82,7 +78,6 @@ public class FormPage extends BasePage implements IGenericComponent<ParticipantD
 
         return new EventPanel("eventPanel", new CompoundPropertyModel<>(eventModel),
             false, personContext, participantFilter) {
-            private static final long serialVersionUID = -7117624285946973330L;
 
             @Override
             protected void addQuickAccessAction(SerializableFunction<String, AbstractAction> constructor) {

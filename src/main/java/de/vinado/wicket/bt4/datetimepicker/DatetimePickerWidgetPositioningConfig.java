@@ -8,8 +8,6 @@ import de.agilecoders.wicket.jquery.IKey;
  */
 public class DatetimePickerWidgetPositioningConfig extends AbstractConfig {
 
-    private static final long serialVersionUID = -2867685352511530316L;
-
     private static final IKey<String> Horizontal = newKey("horizontal", "auto");
     private static final IKey<String> Vertical = newKey("vertical", "auto");
 

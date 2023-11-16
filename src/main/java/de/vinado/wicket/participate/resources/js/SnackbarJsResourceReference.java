@@ -13,8 +13,6 @@ import java.util.List;
  */
 public class SnackbarJsResourceReference extends WebjarsJavaScriptResourceReference {
 
-    private static final long serialVersionUID = 3397036326573568596L;
-
     private SnackbarJsResourceReference() {
         super("node-snackbar/current/snackbar.js");
     }

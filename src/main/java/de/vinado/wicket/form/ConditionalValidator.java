@@ -11,8 +11,6 @@ import org.danekja.java.util.function.serializable.SerializablePredicate;
  */
 public class ConditionalValidator<T> implements IValidator<T> {
 
-    private static final long serialVersionUID = 3523756055291241981L;
-
     private final SerializablePredicate<T> condition;
     private final IModel<String> errorMessage;
 

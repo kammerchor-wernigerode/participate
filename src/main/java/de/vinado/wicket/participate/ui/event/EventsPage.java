@@ -27,8 +27,6 @@ import java.util.function.Consumer;
 
 public class EventsPage extends ParticipatePage implements IGenericComponent<EventDetails, EventsPage> {
 
-    private static final long serialVersionUID = -4123194846716920977L;
-
     @SpringBean
     private EventService eventService;
 
@@ -121,8 +119,6 @@ public class EventsPage extends ParticipatePage implements IGenericComponent<Eve
 
 
     private final class ReplaceOnEventBehavior extends OnEventBehavior<EventPanelUpdateIntent> {
-
-        private static final long serialVersionUID = 5243751166057373448L;
 
         public ReplaceOnEventBehavior() {
             super(EventPanelUpdateIntent.class);
