@@ -7,9 +7,6 @@ import org.apache.wicket.Session;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
-/**
- * @author Vincent Nadoll
- */
 @Component
 public class WicketSessionPersonContext implements PersonContext {
 

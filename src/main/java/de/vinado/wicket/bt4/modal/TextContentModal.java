@@ -4,9 +4,6 @@ import org.apache.wicket.extensions.markup.html.basic.SmartLinkMultiLineLabel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 
-/**
- * @author Vincent Nadoll
- */
 public class TextContentModal extends Modal<String> {
 
     public TextContentModal(ModalAnchor anchor, IModel<String> model) {

@@ -25,9 +25,6 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
 
 import java.util.Optional;
 
-/**
- * @author Vincent Nadoll
- */
 public abstract class FormModal<T> extends Modal<T> {
 
     protected static final String FORM_ID = "form";

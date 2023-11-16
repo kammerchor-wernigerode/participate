@@ -10,11 +10,6 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-/**
- * Provides a list of persons for a substring of their {@code searchName}.
- *
- * @author Vincent Nadoll
- */
 @RequiredArgsConstructor
 public class Select2PersonProvider extends ChoiceProvider<Person> {
 

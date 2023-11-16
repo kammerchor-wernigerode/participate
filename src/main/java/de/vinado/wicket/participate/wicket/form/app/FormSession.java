@@ -20,9 +20,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-/**
- * @author Vincent Nadoll
- */
 public class FormSession extends AuthenticatedWebSession {
 
     @SpringBean

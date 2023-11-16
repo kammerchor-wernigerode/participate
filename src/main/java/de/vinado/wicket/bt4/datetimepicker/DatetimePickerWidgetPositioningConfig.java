@@ -3,9 +3,6 @@ package de.vinado.wicket.bt4.datetimepicker;
 import de.agilecoders.wicket.jquery.AbstractConfig;
 import de.agilecoders.wicket.jquery.IKey;
 
-/**
- * @author Vincent Nadoll
- */
 public class DatetimePickerWidgetPositioningConfig extends AbstractConfig {
 
     private static final IKey<String> Horizontal = newKey("horizontal", "auto");

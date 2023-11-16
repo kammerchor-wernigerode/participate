@@ -33,11 +33,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2Choice;
 
-/**
- * Panel for creation of a new {@link de.vinado.wicket.participate.model.Event}
- *
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public abstract class AddEditEventPanel extends FormModal<EventDTO> {
 
     @SpringBean

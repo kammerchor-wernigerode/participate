@@ -35,11 +35,6 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-/**
- * Provides interaction with the database. This service takes care of {@link User} and user related objects.
- *
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Primary
 @Service
 @Transactional
@@ -58,17 +53,11 @@ public class UserServiceImpl extends DataService implements UserService {
         this.entityManager = entityManager;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public User createUser(AddUserDTO dto) {
         return save(new User(dto.getUsername(), dto.getPassword(), false, true));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public User saveUser(AddUserDTO dto) {
         User loadedUser = load(User.class, dto.getUser().getId());
@@ -82,9 +71,6 @@ public class UserServiceImpl extends DataService implements UserService {
         return save(loadedUser);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public User assignPerson(AddUserDTO dto) {
         User user = dto.getUser();
@@ -112,20 +98,10 @@ public class UserServiceImpl extends DataService implements UserService {
         return save(user);
     }
 
-    /**
-     * Creates a new {@link UserRecoveryToken}.
-     *
-     * @param user          {@link User}
-     * @param validDuration Duration of validity in days.
-     * @return Saved {@link UserRecoveryToken}
-     */
     protected UserRecoveryToken createUserRecoveryToken(User user, int validDuration) {
         return save(new UserRecoveryToken(user, generateRecoveryToken(), DateTime.now().plusDays(validDuration).toDate()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<User> getUsers() {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -135,9 +111,6 @@ public class UserServiceImpl extends DataService implements UserService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<User> findUsers(String term) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -150,17 +123,11 @@ public class UserServiceImpl extends DataService implements UserService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public User getUser(Long id) {
         return load(User.class, id);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public User getUser(String username) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -176,9 +143,6 @@ public class UserServiceImpl extends DataService implements UserService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public User getUser(Person person) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -194,9 +158,6 @@ public class UserServiceImpl extends DataService implements UserService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public User getUser(String usernameOrEmail, String plainPassword) {
         String passwordSha256 = DigestUtils.sha256Hex(plainPassword);
@@ -218,9 +179,6 @@ public class UserServiceImpl extends DataService implements UserService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasUser(String username) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -231,9 +189,6 @@ public class UserServiceImpl extends DataService implements UserService {
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasUser(Person person) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -244,9 +199,6 @@ public class UserServiceImpl extends DataService implements UserService {
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasUserRecoveryToken(String token) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -257,9 +209,6 @@ public class UserServiceImpl extends DataService implements UserService {
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean startPasswordReset(String usernameOrEmail, boolean initial) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -310,9 +259,6 @@ public class UserServiceImpl extends DataService implements UserService {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean finishPasswordReset(String recoveryToken, String newPlainPassword) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -347,21 +293,11 @@ public class UserServiceImpl extends DataService implements UserService {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<User> getAll() {
         return getAll(User.class);
     }
 
-    /**
-     * Generates a new alphanumeric {@link UserRecoveryToken#getToken()} with a length of 20 chars. If the token already
-     * exists the function calls itself .
-     *
-     * @return Password reset token
-     * @see #hasUserRecoveryToken(String)
-     */
     private String generateRecoveryToken() {
         String recoveryToken = RandomStringUtils.randomAlphanumeric(20);
 

@@ -6,9 +6,6 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
 
 import java.util.List;
 
-/**
- * @author Vincent Nadoll
- */
 @FunctionalInterface
 public interface ParticipantColumnsFactory {
 

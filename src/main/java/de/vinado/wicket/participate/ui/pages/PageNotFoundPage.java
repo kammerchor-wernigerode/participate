@@ -2,9 +2,6 @@ package de.vinado.wicket.participate.ui.pages;
 
 import org.apache.wicket.markup.html.link.AbstractLink;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class PageNotFoundPage extends AbstractErrorPage {
 
 

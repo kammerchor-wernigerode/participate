@@ -19,12 +19,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-/**
- * Entity of an Event
- *
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- * @see de.vinado.wicket.participate.services.EventService
- */
 @Entity
 @Table(name = "events")
 @Getter
@@ -69,14 +63,6 @@ public class Event implements Identifiable<Long>, Hideable, Terminable {
     @Column(name = "is_active", nullable = false)
     private boolean active;
 
-    /**
-     * @param name        Event name
-     * @param eventType   Event type
-     * @param location    Event location
-     * @param description More information
-     * @param startDate   Start date of Event
-     * @param endDate     End date of Event
-     */
     public Event(String name, String eventType, String location, String description,
                  Date startDate, Date endDate) {
         this.name = name;

@@ -1,8 +1,5 @@
 package de.vinado.wicket.http;
 
-/**
- * @author Vincent Nadoll
- */
 public class BadRequest extends HttpError {
 
     public BadRequest() {

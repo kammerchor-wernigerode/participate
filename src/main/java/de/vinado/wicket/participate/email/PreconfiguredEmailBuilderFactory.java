@@ -3,9 +3,6 @@ package de.vinado.wicket.participate.email;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import org.springframework.stereotype.Component;
 
-/**
- * @author Vincent Nadoll
- */
 @Component
 public class PreconfiguredEmailBuilderFactory implements EmailBuilderFactory {
 

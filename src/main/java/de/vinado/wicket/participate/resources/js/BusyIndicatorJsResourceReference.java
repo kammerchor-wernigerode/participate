@@ -7,9 +7,6 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import java.util.List;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class BusyIndicatorJsResourceReference extends JavaScriptResourceReference {
 
     public static final BusyIndicatorJsResourceReference INSTANCE = new BusyIndicatorJsResourceReference();

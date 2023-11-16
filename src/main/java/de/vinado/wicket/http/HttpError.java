@@ -3,9 +3,6 @@ package de.vinado.wicket.http;
 import lombok.Getter;
 import org.apache.wicket.WicketRuntimeException;
 
-/**
- * @author Vincent Nadoll
- */
 public abstract class HttpError extends WicketRuntimeException {
 
     @Getter

@@ -6,22 +6,10 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
-
-/**
- * Link Panel, to provide the functionality to use a link in a {@link org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable}.
- *
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public abstract class AjaxLinkPanel extends Panel {
 
     private AjaxLink ajaxLink;
 
-    /**
-     * Construct.
-     *
-     * @param id         Wicket ID
-     * @param labelModel Label
-     */
     public AjaxLinkPanel(String id, IModel<String> labelModel) {
         super(id, labelModel);
 
@@ -40,10 +28,5 @@ public abstract class AjaxLinkPanel extends Panel {
         return ajaxLink;
     }
 
-    /**
-     * What happens, when you click the link.
-     *
-     * @param target {@link AjaxRequestTarget}
-     */
     public abstract void onClick(AjaxRequestTarget target);
 }

@@ -12,9 +12,6 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.StringValidator;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class ResetPasswordPanel extends Panel {
 
     private static final String RESET_PASSWORD_FORM = "resetPasswordForm";

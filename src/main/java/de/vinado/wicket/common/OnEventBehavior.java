@@ -7,9 +7,6 @@ import org.apache.wicket.event.IEvent;
 
 import java.util.Optional;
 
-/**
- * @author Vincent Nadoll
- */
 @RequiredArgsConstructor
 public abstract class OnEventBehavior<T> extends Behavior {
 

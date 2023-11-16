@@ -6,9 +6,6 @@ import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.danekja.java.util.function.serializable.SerializablePredicate;
 
-/**
- * @author Vincent Nadoll
- */
 public class ConditionalValidator<T> implements IValidator<T> {
 
     private final SerializablePredicate<T> condition;

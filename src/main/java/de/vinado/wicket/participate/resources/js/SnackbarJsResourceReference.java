@@ -8,9 +8,6 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 
 import java.util.List;
 
-/**
- * @author Vincent Nadoll
- */
 public class SnackbarJsResourceReference extends WebjarsJavaScriptResourceReference {
 
     private SnackbarJsResourceReference() {

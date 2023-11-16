@@ -22,9 +22,6 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Vincent Nadoll
- */
 public class BasicParticipantColumnPreset extends ParticipantColumnListDecorator implements ParticipantColumnList {
 
     public BasicParticipantColumnPreset() {

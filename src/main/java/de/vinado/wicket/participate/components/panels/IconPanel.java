@@ -13,63 +13,26 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-/**
- * Icon panel, to provide an icon for eg. table columns.
- *
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class IconPanel extends Panel {
 
-    /**
-     * {@link IconType}
-     */
     private IconType type;
 
-    /**
-     * {@link Color}
-     */
     private Color color;
 
-    /**
-     * {@link de.vinado.wicket.participate.components.TextAlign}
-     */
     private TextAlign textAlign;
 
-    /**
-     * {@link Display}
-     */
     private Display display;
 
-    /**
-     * Css class
-     */
     private IModel<String> cssClassNameModel;
 
-    /**
-     * Construct.
-     *
-     * @param id Wicket ID.
-     */
     public IconPanel(String id) {
         this(id, FontAwesome5IconType.code_s, Color.DEFAULT, TextAlign.LEFT);
     }
 
-    /**
-     * @param id   Wicket ID
-     * @param icon {@link IconType}
-     */
     public IconPanel(String id, IconType icon) {
         this(id, icon, Color.DEFAULT, TextAlign.LEFT);
     }
 
-    /**
-     * Construct.
-     *
-     * @param id        Wicket ID
-     * @param type      {@link IconType}
-     * @param color     {@link Color}
-     * @param textAlign {@link TextAlign}
-     */
     public IconPanel(String id, IconType type, Color color, TextAlign textAlign) {
         super(id);
         this.type = type;
@@ -84,91 +47,42 @@ public class IconPanel extends Panel {
         add(label);
     }
 
-    /**
-     * Returns the {@link IconType} of the panel
-     *
-     * @return IconType
-     */
     public IconType getType() {
         return type;
     }
 
-    /**
-     * Sets the {@link IconType}
-     *
-     * @param type IconType
-     * @return {@link IconPanel}
-     */
     public IconPanel setType(IconType type) {
         this.type = type;
         return this;
     }
 
-    /**
-     * Returns the {@link Color} of the panel.
-     *
-     * @return Color
-     */
     public Color getColor() {
         return color;
     }
 
-    /**
-     * Sets the {@link Color} and returns this object
-     *
-     * @param color Color
-     * @return {@link IconPanel}
-     */
     public IconPanel setColor(Color color) {
         this.color = color;
         return this;
     }
 
-    /**
-     * Returns the {@link TextAlign} of the panel icon
-     *
-     * @return TextAlign
-     */
     public TextAlign getTextAlign() {
         return textAlign;
     }
 
-    /**
-     * Sets the {@link TextAlign} of the icon panel
-     *
-     * @param textAlign {@link TextAlign}
-     * @return {@link IconPanel}
-     */
     public IconPanel setTextAlign(TextAlign textAlign) {
         this.textAlign = textAlign;
         return this;
     }
 
-    /**
-     * Returns the {@link Display} style of the panel icon
-     *
-     * @return TextAlign
-     */
     public Display getDisplay() {
         return display;
     }
 
-    /**
-     * Sets the {@link Display} style of the icon panel
-     *
-     * @param display {@link Display}
-     * @return {@link IconPanel}
-     */
     public IconPanel setDisplay(Display display) {
         this.display = display;
         return this;
     }
 
-    /**
-     * Puts the configured attribute, like {@link TextAlign} onto the {@link org.apache.wicket.Component}
-     *
-     * @param tag {@link ComponentTag}
-     */
     @Override
     protected void onComponentTag(ComponentTag tag) {
         super.onComponentTag(tag);
@@ -179,18 +93,12 @@ public class IconPanel extends Panel {
         Attributes.addClass(tag, builder.asString());
     }
 
-    /**
-     * Refreshes the {@link IconPanel} on configure.
-     */
     @Override
     protected void onConfigure() {
         super.onConfigure();
         cssClassNameModel.setObject(type.cssClassName());
     }
 
-    /**
-     * Icon color
-     */
     public enum Color implements ICssClassNameProvider {
         DEFAULT(""),
         MUTED("text-muted"),
@@ -200,24 +108,12 @@ public class IconPanel extends Panel {
         WARNING("text-warning"),
         DANGER("text-danger");
 
-        /**
-         * Css class name
-         */
         private final String cssClassName;
 
-        /**
-         * Construct.
-         *
-         * @param cssClassName Css class name
-         */
         Color(String cssClassName) {
             this.cssClassName = cssClassName;
         }
 
-        /**
-         * @return class
-         * @see #toString()
-         */
         @Override
         public String cssClassName() {
             return cssClassName;

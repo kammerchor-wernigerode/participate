@@ -9,9 +9,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class BootstrapInlineFormDecorator extends AbstractBootstrapFormDecorator {
 
     private IModel<String> placeholderModel;

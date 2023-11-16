@@ -26,9 +26,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Entity
 @Table(name = "v_event_details")
 @Getter

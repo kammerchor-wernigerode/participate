@@ -2,9 +2,6 @@ package de.vinado.wicket.bt4.datetimepicker;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 
-/**
- * @author Vincent Nadoll
- */
 public class DatetimePickerIconConfig extends de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerIconConfig {
 
     public DatetimePickerIconConfig() {

@@ -8,11 +8,6 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Event data transfer object
- *
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Getter
 @Setter
 @RequiredArgsConstructor

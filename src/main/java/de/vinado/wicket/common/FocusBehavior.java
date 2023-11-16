@@ -7,9 +7,6 @@ import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.link.AbstractLink;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class FocusBehavior extends Behavior {
 
     @Override

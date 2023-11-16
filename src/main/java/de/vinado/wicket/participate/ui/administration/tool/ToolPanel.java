@@ -27,9 +27,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class ToolPanel extends Panel {
 
     @SuppressWarnings("unused")

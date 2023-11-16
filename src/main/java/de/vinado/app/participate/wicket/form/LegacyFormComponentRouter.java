@@ -17,9 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import static de.vinado.app.participate.wicket.form.FormConfiguration.APP_ROOT;
 
-/**
- * @author Vincent Nadoll
- */
 @Slf4j
 @Component
 @WebFilter(filterName = "legacy-form-router", urlPatterns = {"/participate"})

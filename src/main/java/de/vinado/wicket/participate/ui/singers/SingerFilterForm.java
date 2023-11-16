@@ -30,9 +30,6 @@ import org.apache.wicket.util.visit.IVisitor;
 
 import java.util.Arrays;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public abstract class SingerFilterForm extends Form<SingerFilter> {
 
     private static final String TAG_NAME = "singerFilterForm";

@@ -22,9 +22,6 @@ import static de.vinado.app.participate.wicket.management.ManagementConfiguratio
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
-/**
- * @author Vincent Nadoll
- */
 @Slf4j
 @Component
 @WebFilter(filterName = "legacy-management-router",

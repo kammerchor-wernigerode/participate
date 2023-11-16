@@ -18,9 +18,6 @@ import org.apache.wicket.model.Model;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class BootstrapPanel<T> extends GenericPanel<T> {
 
 

@@ -20,9 +20,6 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-/**
- * @author Vincent Nadoll
- */
 public class PasswordResetForm extends StatelessForm<PasswordResetForm> {
 
     @SpringBean

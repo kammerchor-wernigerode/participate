@@ -6,9 +6,6 @@ import org.springframework.boot.web.server.ErrorPageRegistry;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-/**
- * @author Vincent Nadoll
- */
 @Component
 public class WicketErrorPageRegistrar implements ErrorPageRegistrar {
 

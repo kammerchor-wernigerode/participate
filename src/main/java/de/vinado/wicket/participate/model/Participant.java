@@ -30,11 +30,6 @@ import static de.vinado.wicket.participate.model.InvitationStatus.PENDING;
 import static de.vinado.wicket.participate.model.InvitationStatus.TENTATIVE;
 import static de.vinado.wicket.participate.model.InvitationStatus.UNINVITED;
 
-/**
- * Entity of mapping between {@link Event} and {@link Singer}
- *
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Entity
 @Table(name = "participants")
 @Getter
@@ -85,14 +80,6 @@ public class Participant implements Identifiable<Long>, Invitable {
     })
     private Accommodation accommodation = new Accommodation();
 
-    /**
-     * @param event            {@link Event}
-     * @param singer           {@link Singer}
-     * @param token            Identifier token
-     * @param invitationStatus {@link de.vinado.wicket.participate.model.InvitationStatus}
-     * @param accommodation    Whether the participant needs an accommodation
-     * @param comment          Comment overall
-     */
     public Participant(Event event, Singer singer, String token,
                        InvitationStatus invitationStatus, Date fromDate, Date toDate,
                        Accommodation accommodation, short carSeatCount,

@@ -9,9 +9,6 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
 
 import java.util.List;
 
-/**
- * @author Vincent Nadoll
- */
 @RequiredArgsConstructor
 public abstract class ParticipantColumnListDecorator implements ParticipantColumnList {
 

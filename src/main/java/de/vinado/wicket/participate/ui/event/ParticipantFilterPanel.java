@@ -8,9 +8,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public abstract class ParticipantFilterPanel extends GenericPanel<ParticipantFilter> {
 
     public ParticipantFilterPanel(String id, IModel<ParticipantFilter> filterModel) {

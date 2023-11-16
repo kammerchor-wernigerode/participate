@@ -4,9 +4,6 @@ import de.agilecoders.wicket.jquery.AbstractConfig;
 import de.agilecoders.wicket.jquery.IKey;
 import org.apache.wicket.util.lang.Args;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class SnackbarConfig extends AbstractConfig {
 
     private final IKey<String> text = newKey("text", "");

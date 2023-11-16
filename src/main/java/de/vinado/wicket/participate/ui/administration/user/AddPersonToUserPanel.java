@@ -28,9 +28,6 @@ import org.wicketstuff.select2.Select2Choice;
 
 import static de.vinado.util.SerializablePredicates.not;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public abstract class AddPersonToUserPanel extends FormModal<AddUserDTO> {
 
     public static final String SELECTED_ASSIGN_PERSON = "person.assign";

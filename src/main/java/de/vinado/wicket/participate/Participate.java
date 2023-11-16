@@ -5,9 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-/**
- * @author Vincent Nadoll
- */
 @SpringBootApplication(scanBasePackages = {
     "de.vinado.wicket.participate",
     "de.vinado.app.participate"

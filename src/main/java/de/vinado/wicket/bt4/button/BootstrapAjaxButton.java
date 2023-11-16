@@ -6,9 +6,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 
-/**
- * @author Vincent Nadoll
- */
 public class BootstrapAjaxButton extends de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxButton {
 
     public BootstrapAjaxButton(String componentId, Buttons.Type type) {

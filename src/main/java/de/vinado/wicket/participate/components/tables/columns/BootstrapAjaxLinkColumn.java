@@ -10,9 +10,6 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public abstract class BootstrapAjaxLinkColumn<T, S> extends AbstractColumn<T, S> {
 
     private IconType iconType;

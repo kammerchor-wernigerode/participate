@@ -10,9 +10,6 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import java.util.List;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class ParticipateJsResourceReference extends JavaScriptResourceReference {
 
     public static final ParticipateJsResourceReference INSTANCE = new ParticipateJsResourceReference();

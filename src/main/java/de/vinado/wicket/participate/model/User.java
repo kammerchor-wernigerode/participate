@@ -19,11 +19,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-/**
- * User
- *
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Entity
 @Table(name = "users")
 @Getter
@@ -56,12 +51,6 @@ public class User implements Identifiable<Long>, Hideable, AuthenticatedPrincipa
     @JoinColumn(name = "person_id")
     private Person person;
 
-    /**
-     * @param username      Username
-     * @param plainPassword Password in plaintext
-     * @param admin         Whether is administrator
-     * @param enabled       Whether is enabled and permitted to use the application
-     */
     public User(String username, String plainPassword, boolean admin, boolean enabled) {
         this.username = username;
         this.passwordSha256 = null != plainPassword ? DigestUtils.sha256Hex(plainPassword) : null;

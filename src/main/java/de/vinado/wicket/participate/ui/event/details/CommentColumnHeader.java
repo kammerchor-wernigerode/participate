@@ -21,9 +21,6 @@ import static de.vinado.wicket.participate.components.ShortenedMultilineLabel.St
 import static de.vinado.wicket.participate.components.ShortenedMultilineLabel.State.COLLAPSED;
 import static de.vinado.wicket.participate.components.ShortenedMultilineLabel.State.EXPANDED;
 
-/**
- * @author Vincent Nadoll
- */
 public abstract class CommentColumnHeader extends GenericPanel<String> {
 
     public CommentColumnHeader(String id, IModel<String> model) {

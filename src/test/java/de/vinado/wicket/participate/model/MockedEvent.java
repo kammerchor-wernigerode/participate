@@ -6,9 +6,6 @@ import java.util.Date;
 
 import static org.mockito.Mockito.*;
 
-/**
- * @author Vincent Nadoll
- */
 public class MockedEvent {
 
     private static final Date NOW = new Date();

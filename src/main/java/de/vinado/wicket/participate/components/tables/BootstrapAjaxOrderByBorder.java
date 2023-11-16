@@ -7,17 +7,8 @@ import org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort.AjaxOrde
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public abstract class BootstrapAjaxOrderByBorder<S> extends BootstrapOrderByBorder<S> {
 
-
-    /**
-     * @param id           the component id
-     * @param property     the property to be sorted on
-     * @param stateLocator the state locator
-     */
     public BootstrapAjaxOrderByBorder(String id, S property, ISortStateLocator<S> stateLocator) {
         super(id, property, stateLocator);
     }

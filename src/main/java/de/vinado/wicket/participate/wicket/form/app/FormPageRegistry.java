@@ -15,9 +15,6 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-/**
- * @author Vincent Nadoll
- */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FormPageRegistry implements PageRegistry {
 

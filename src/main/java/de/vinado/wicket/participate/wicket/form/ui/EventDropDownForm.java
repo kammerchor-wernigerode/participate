@@ -13,9 +13,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.List;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public abstract class EventDropDownForm extends NavbarForm<Participant> {
 
     @SpringBean

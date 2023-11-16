@@ -16,9 +16,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.Locale;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public abstract class AbstractErrorPage extends org.apache.wicket.markup.html.pages.AbstractErrorPage {
 
     public AbstractErrorPage() {

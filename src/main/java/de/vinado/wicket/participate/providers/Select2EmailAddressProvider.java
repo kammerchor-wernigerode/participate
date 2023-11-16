@@ -12,11 +12,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.mail.internet.InternetAddress;
 
-/**
- * Provides a list of persons for a substring of their {@code email} address.
- *
- * @author Vincent Nadoll
- */
 @RequiredArgsConstructor
 public class Select2EmailAddressProvider extends ChoiceProvider<InternetAddress> {
 

@@ -37,9 +37,6 @@ import java.util.function.Supplier;
 
 import static org.apache.wicket.request.mapper.parameter.INamedParameters.Type.QUERY_STRING;
 
-/**
- * @author Vincent Nadoll
- */
 @Component
 @RequiredArgsConstructor
 public class FormApplication extends AuthenticatedBootstrapWebApplication implements ApplicationContextAware {

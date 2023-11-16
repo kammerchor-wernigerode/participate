@@ -32,9 +32,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.List;
 
-/**
- * @author Vincent Nadoll
- */
 @Getter
 @Setter
 public class FormSignInPanel extends Panel {

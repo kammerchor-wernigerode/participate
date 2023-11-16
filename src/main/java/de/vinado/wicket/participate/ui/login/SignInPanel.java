@@ -6,9 +6,6 @@ import de.vinado.wicket.common.FocusBehavior;
 import org.apache.wicket.Component;
 import org.apache.wicket.feedback.FeedbackMessage;
 
-/**
- * @author Vincent Nadoll
- */
 public class SignInPanel extends org.apache.wicket.authroles.authentication.panel.SignInPanel {
 
     public SignInPanel(String id) {

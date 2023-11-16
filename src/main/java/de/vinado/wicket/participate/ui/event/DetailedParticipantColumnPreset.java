@@ -17,9 +17,6 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
 
 import java.text.SimpleDateFormat;
 
-/**
- * @author Vincent Nadoll
- */
 public class DetailedParticipantColumnPreset extends BasicParticipantColumnPreset {
 
     public DetailedParticipantColumnPreset() {

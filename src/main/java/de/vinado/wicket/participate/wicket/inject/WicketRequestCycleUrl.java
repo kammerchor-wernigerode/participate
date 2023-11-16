@@ -8,9 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 
-/**
- * @author Vincent Nadoll
- */
 @Component
 public class WicketRequestCycleUrl implements RequestUrl {
 

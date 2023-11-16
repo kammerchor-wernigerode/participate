@@ -17,9 +17,6 @@ import static de.vinado.wicket.participate.model.MockedEvent.mockEvent;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-/**
- * @author Vincent Nadoll
- */
 class EventServiceTest {
 
     private static final Date NOW = new Date();

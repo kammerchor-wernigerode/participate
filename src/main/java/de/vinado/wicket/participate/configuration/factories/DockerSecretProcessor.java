@@ -8,11 +8,6 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Reads Docker Secret files from the local system and passes their values to the configured Spring properties.
- *
- * @author Vincent Nadoll
- */
 public class DockerSecretProcessor extends SecretsEnvironmentPostProcessor {
 
     public DockerSecretProcessor(DeferredLogFactory logFactory) {

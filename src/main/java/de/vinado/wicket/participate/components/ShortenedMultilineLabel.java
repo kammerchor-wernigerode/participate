@@ -25,9 +25,6 @@ import java.io.Serializable;
 import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.angle_double_down_s;
 import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.angle_double_up_s;
 
-/**
- * @author Vincent Nadoll
- */
 public class ShortenedMultilineLabel extends GenericPanel<String> {
 
     private final Limit limit;

@@ -34,9 +34,6 @@ import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 
-/**
- * @author Vincent Nadoll
- */
 public abstract class AuthenticatedBootstrapWebApplication extends AuthenticatedWebApplication {
 
     @Override

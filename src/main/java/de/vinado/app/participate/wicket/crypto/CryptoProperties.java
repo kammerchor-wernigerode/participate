@@ -9,9 +9,6 @@ import org.springframework.util.StringUtils;
 
 import static org.springframework.util.Assert.isTrue;
 
-/**
- * @author Vincent Nadoll
- */
 @Getter
 @Setter
 @ConfigurationProperties("app.crypto")

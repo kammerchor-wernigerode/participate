@@ -14,9 +14,6 @@ import org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import org.apache.wicket.model.IModel;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 
-/**
- * @author Vincent Nadoll
- */
 public class ParticipantTable extends BootstrapAjaxDataTable<Participant, SerializableFunction<Participant, ?>> {
 
     private final PersonContext personContext;

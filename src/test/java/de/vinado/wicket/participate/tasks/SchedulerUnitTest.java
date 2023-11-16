@@ -10,9 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * @author Vincent Nadoll
- */
 @Slf4j
 class SchedulerUnitTest {
 

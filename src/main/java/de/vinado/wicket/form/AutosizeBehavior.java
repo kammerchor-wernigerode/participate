@@ -11,9 +11,6 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.FormComponent;
 
-/**
- * @author Vincent Nadoll
- */
 public class AutosizeBehavior extends Behavior {
 
     @Override

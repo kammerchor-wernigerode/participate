@@ -5,9 +5,6 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Getter
 @Setter
 public class SendFeedbackDTO implements Serializable {

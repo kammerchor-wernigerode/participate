@@ -18,9 +18,6 @@ import java.util.List;
 import static de.vinado.wicket.participate.model.InvitationStatus.*;
 import static org.mockito.Mockito.*;
 
-/**
- * @author Vincent Nadoll
- */
 class RemindOverdueCronjobTest {
 
     private static final Date NOW = new Date();

@@ -20,11 +20,6 @@ import javax.mail.internet.InternetAddress;
 import static de.vinado.wicket.participate.email.InternetAddressFactory.create;
 import static lombok.AccessLevel.PRIVATE;
 
-/**
- * Mail data wrapper object
- *
- * @author Vincent Nadoll
- */
 @Getter
 @AllArgsConstructor(access = PRIVATE)
 public class Email implements Serializable {

@@ -22,9 +22,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.mail.internet.InternetAddress;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Slf4j
 public class SendEmailPanel extends FormModal<Email> {
 

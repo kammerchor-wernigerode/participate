@@ -11,9 +11,6 @@ import org.danekja.java.util.function.serializable.SerializablePredicate;
 
 import java.util.Date;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Getter
 @Setter
 public class ParticipantFilter implements SerializablePredicate<Participant> {

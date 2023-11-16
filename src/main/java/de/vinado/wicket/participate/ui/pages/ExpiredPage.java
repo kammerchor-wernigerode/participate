@@ -12,9 +12,6 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.time.Duration;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class ExpiredPage extends AbstractErrorPage {
 
     private int COUNTDOWN = 3;

@@ -23,11 +23,6 @@ import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 import static org.apache.tika.metadata.TikaCoreProperties.RESOURCE_NAME_KEY;
 
-/**
- * Email attachment wrapper object
- *
- * @author Vincent Nadoll
- */
 @Builder
 @ToString(exclude = "data")
 @EqualsAndHashCode
@@ -62,9 +57,6 @@ public class EmailAttachment {
         }));
     }
 
-    /**
-     * @return the byte array resource of the data
-     */
     public InputStreamSource getInputStream() {
         return new ByteArrayResource(data);
     }

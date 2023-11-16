@@ -13,9 +13,6 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Getter
 @Setter
 @RequiredArgsConstructor

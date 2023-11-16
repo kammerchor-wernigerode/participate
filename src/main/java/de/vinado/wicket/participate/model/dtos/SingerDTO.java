@@ -9,12 +9,6 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
-/**
- * DTO for a {@link Singer}
- *
- * @author Julius Felchow (julius.felchow@gmail.com)
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Getter
 @Setter
 @RequiredArgsConstructor

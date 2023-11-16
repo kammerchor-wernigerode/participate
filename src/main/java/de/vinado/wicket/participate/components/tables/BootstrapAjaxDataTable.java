@@ -12,21 +12,10 @@ import org.apache.wicket.model.IModel;
 
 import java.util.List;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class BootstrapAjaxDataTable<T, S> extends DataTable<T, S> {
 
     private final TableBehavior tableBehavior;
 
-    /**
-     * Constructor
-     *
-     * @param id           component id
-     * @param iColumns     list of columns
-     * @param dataProvider data provider
-     * @param rowsPerPage  Rows per page
-     */
     public BootstrapAjaxDataTable(String id, List<? extends IColumn<T, S>> iColumns,
                                   ISortableDataProvider<T, S> dataProvider, int rowsPerPage) {
         super(id, iColumns, dataProvider, rowsPerPage);
@@ -44,42 +33,21 @@ public class BootstrapAjaxDataTable<T, S> extends DataTable<T, S> {
         return new OddEvenItem<>(id, index, model);
     }
 
-
-    /**
-     * adds the "striped" style to table
-     *
-     * @return this instance for chaining
-     */
     public BootstrapAjaxDataTable striped() {
         tableBehavior.striped();
         return this;
     }
 
-    /**
-     * adds the "condensed" style to table
-     *
-     * @return this instance for chaining
-     */
     public BootstrapAjaxDataTable condensed() {
         tableBehavior.sm();
         return this;
     }
 
-    /**
-     * adds the "bordered" style to table
-     *
-     * @return this instance for chaining
-     */
     public BootstrapAjaxDataTable bordered() {
         tableBehavior.bordered();
         return this;
     }
 
-    /**
-     * adds the "hover" flag to table
-     *
-     * @return this instance for chaining
-     */
     public BootstrapAjaxDataTable hover() {
         tableBehavior.hover();
         return this;

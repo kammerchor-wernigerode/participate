@@ -11,11 +11,6 @@ import java.net.URL;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-/**
- * Reads the properties from "classpath:/application.properties"
- *
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Configuration
 @ConfigurationProperties("app")
 @Getter

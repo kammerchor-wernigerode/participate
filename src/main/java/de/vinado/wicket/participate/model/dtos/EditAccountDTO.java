@@ -10,9 +10,6 @@ import lombok.Setter;
 import java.io.Serializable;
 import javax.annotation.Nullable;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Getter
 @Setter
 public class EditAccountDTO implements Serializable {

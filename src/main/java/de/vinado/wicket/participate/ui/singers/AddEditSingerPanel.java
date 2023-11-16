@@ -27,11 +27,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import java.util.Arrays;
 import java.util.Collections;
 
-/**
- * Panel for administration of {@link Singer}s
- *
- * @author Julius Felchow (julius.felchow@gmail.com)
- */
 public class AddEditSingerPanel extends FormModal<SingerDTO> {
 
     @SpringBean

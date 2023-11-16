@@ -40,11 +40,6 @@ import javax.persistence.criteria.Root;
 
 import static org.apache.commons.codec.CharEncoding.UTF_8;
 
-/**
- * Provides interaction with the database. This service takes care of {@link Singer} and singer related objects.
- *
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Primary
 @Service
 @Transactional
@@ -58,17 +53,11 @@ public class PersonServiceImpl extends DataService implements PersonService {
         this.entityManager = entityManager;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Person createPerson(PersonDTO dto) {
         return save(new Person(dto.getFirstName(), dto.getLastName(), dto.getEmail()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Person savePerson(PersonDTO dto) {
         Person loadedPerson = load(Person.class, dto.getPerson().getId());
@@ -78,9 +67,6 @@ public class PersonServiceImpl extends DataService implements PersonService {
         return save(loadedPerson);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Singer createSinger(SingerDTO dto) {
         Singer singer = save(new Singer(dto.getFirstName(), dto.getLastName(), dto.getEmail(), dto.getVoice()));
@@ -88,9 +74,6 @@ public class PersonServiceImpl extends DataService implements PersonService {
         return singer;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Singer saveSinger(SingerDTO dto) {
         Singer loadedSinger = load(Singer.class, dto.getSinger().getId());
@@ -101,9 +84,6 @@ public class PersonServiceImpl extends DataService implements PersonService {
         return save(loadedSinger);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void removeSinger(Singer singer) {
         Singer loadedSinger = load(Singer.class, singer.getId());
@@ -111,9 +91,6 @@ public class PersonServiceImpl extends DataService implements PersonService {
         save(loadedSinger);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasPerson(String email) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -124,9 +101,6 @@ public class PersonServiceImpl extends DataService implements PersonService {
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasSinger(Person person) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -137,9 +111,6 @@ public class PersonServiceImpl extends DataService implements PersonService {
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasSinger(String email) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -150,17 +121,11 @@ public class PersonServiceImpl extends DataService implements PersonService {
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Person getPerson(Long id) {
         return load(Person.class, id);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Person getPerson(String email) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -176,17 +141,11 @@ public class PersonServiceImpl extends DataService implements PersonService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Singer getSinger(Long id) {
         return load(Singer.class, id);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Singer> getSingers() {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -196,9 +155,6 @@ public class PersonServiceImpl extends DataService implements PersonService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Singer getSinger(Person person) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -213,9 +169,6 @@ public class PersonServiceImpl extends DataService implements PersonService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Singer getSinger(String email) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -230,9 +183,6 @@ public class PersonServiceImpl extends DataService implements PersonService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Person> findPersons(String term) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -245,9 +195,6 @@ public class PersonServiceImpl extends DataService implements PersonService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Singer> getSingers(Event event) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -258,9 +205,6 @@ public class PersonServiceImpl extends DataService implements PersonService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void importPersons(FileUpload upload) {
         try {
@@ -292,9 +236,6 @@ public class PersonServiceImpl extends DataService implements PersonService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public IResourceStream exportSingers() {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

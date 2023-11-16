@@ -17,11 +17,6 @@ import java.util.Map;
 
 import static java.util.Locale.getDefault;
 
-/**
- * Service implementation for the FreeMarker template engine.
- *
- * @author Vincent Nadoll
- */
 @Slf4j
 @Primary
 @Service
@@ -33,18 +28,18 @@ public class FreemarkerTemplateService implements TemplateService {
     private final Configuration freeMarkerConfiguration;
 
     /**
-     * {@inheritDoc}
+     * Calls the template engine to process the given templateReference with the given model object.
      *
-     * @param templateReference the templateReference file to be processed. The name must be complaint with the position
-     *                          of the template your your resources folder. Usually, files in {@code
-     *                          resources/templates} are resolved by passing the sole file name. Subfolders of {@code
+     * @param templateReference the templateReference file to be processed. The name must be compliant with the position
+     *                          of the template your resources' folder. Usually, files in {@code
+     *                          resources/templates} are resolved by passing the sole file name. Sub-folders of {@code
      *                          resources/templates} must be explicitly reported.
      * @param model             the model object to process the templateReference
      * @param type              the type of the template
-     * @return
+     * @return the processed template
      *
-     * @throws IOException
-     * @throws TemplateException
+     * @throws IOException       if the template reference file is not found or could not be accessed
+     * @throws TemplateException if the template could not be processed
      */
     @Override
     public String processTemplate(String templateReference, Map<String, Object> model, MultipartType type)
@@ -70,12 +65,6 @@ public class FreemarkerTemplateService implements TemplateService {
         return message;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param type the type of the template
-     * @return
-     */
     @Override
     public String templateExtensions(MultipartType type) {
         switch (type) {

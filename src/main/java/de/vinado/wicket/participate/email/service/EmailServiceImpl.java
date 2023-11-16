@@ -26,11 +26,6 @@ import static de.vinado.wicket.participate.email.service.MultipartType.PLAIN;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-/**
- * Default mail service implementation that uses Spring's {@link JavaMailSender} client.
- *
- * @author Vincent Nadoll
- */
 @Slf4j
 @Primary
 @Service
@@ -48,11 +43,6 @@ public class EmailServiceImpl implements EmailService {
         this.mailProperties = applicationProperties.getMail();
     }
 
-    /**
-     * Sends an email.
-     *
-     * @param email the email to send
-     */
     @Override
     public void send(Email email) {
         MimeMessagePreparator message = mimeMessage -> prepareMimeMessage(mimeMessage, email);
@@ -62,11 +52,6 @@ public class EmailServiceImpl implements EmailService {
         logSuccess(1);
     }
 
-    /**
-     * Sends multiple emails.
-     *
-     * @param emails a stream of emails to send
-     */
     @Override
     public void send(Collection<Email> emails) {
         MimeMessagePreparator[] preparedMessages = emails.stream().map(email ->
@@ -232,11 +217,6 @@ public class EmailServiceImpl implements EmailService {
         return helper;
     }
 
-    /**
-     * Logs the success of emailing to the console.
-     *
-     * @param amount the amount of emails sent
-     */
     private void logSuccess(int amount) {
         if (0 != amount) {
             log.info("Sent {} email{}", amount, 1 == amount ? "" : "s");

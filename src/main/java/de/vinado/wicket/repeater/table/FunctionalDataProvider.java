@@ -9,9 +9,6 @@ import java.util.Iterator;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-/**
- * @author Vincent Nadoll
- */
 public abstract class FunctionalDataProvider<T> extends SortableDataProvider<T, SerializableFunction<T, ?>> {
 
     @Override

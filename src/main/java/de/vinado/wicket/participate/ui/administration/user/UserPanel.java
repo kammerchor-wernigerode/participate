@@ -49,9 +49,6 @@ import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAw
 import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.times_s;
 import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.trash_alt_s;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class UserPanel extends BootstrapPanel<Void> {
 
     @SpringBean

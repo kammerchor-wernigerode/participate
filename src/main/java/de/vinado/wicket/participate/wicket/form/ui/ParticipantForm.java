@@ -37,9 +37,6 @@ import org.apache.wicket.model.ResourceModel;
 
 import java.util.Date;
 
-/**
- * @author Vincent Nadoll
- */
 public abstract class ParticipantForm extends Form<ParticipantDTO> {
 
     private static final String TAG_NAME = "participantForm";

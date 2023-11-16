@@ -11,9 +11,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class SimpleDateProperty extends Property {
 
     private Date date;

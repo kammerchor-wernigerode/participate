@@ -58,9 +58,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class EventPanel extends BootstrapPanel<EventDetails> {
 
     @SpringBean

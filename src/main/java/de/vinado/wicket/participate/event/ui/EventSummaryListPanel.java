@@ -29,9 +29,6 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class EventSummaryListPanel extends BootstrapPanel<Event> {
 
     @SuppressWarnings("unused")

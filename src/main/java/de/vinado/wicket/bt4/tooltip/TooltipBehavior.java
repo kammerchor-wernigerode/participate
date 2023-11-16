@@ -11,9 +11,6 @@ import org.apache.wicket.model.IModel;
 
 import static de.agilecoders.wicket.jquery.JQuery.$;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class TooltipBehavior extends de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior {
 
     public TooltipBehavior(IModel<String> label) {

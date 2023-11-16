@@ -8,17 +8,8 @@ import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLoc
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class BootstrapAjaxHeadersToolbar<S> extends AjaxFallbackHeadersToolbar<S> {
 
-    /**
-     * Constructor
-     *
-     * @param table        data table this toolbar will be attached to
-     * @param stateLocator
-     */
     public BootstrapAjaxHeadersToolbar(DataTable<?, S> table, ISortStateLocator<S> stateLocator) {
         super(table, stateLocator);
     }

@@ -10,9 +10,6 @@ import org.apache.wicket.model.Model;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-/**
- * @author Vincent Nadoll
- */
 @RequiredArgsConstructor
 public class UserDataProvider extends FunctionalDataProvider<User> {
 

@@ -10,10 +10,5 @@ import java.io.Serializable;
  */
 public interface Identifiable<T extends Serializable> extends Serializable {
 
-    /**
-     * Returns the database id
-     *
-     * @return ID
-     */
     T getId();
 }

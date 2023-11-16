@@ -4,9 +4,6 @@ import org.danekja.java.util.function.serializable.SerializablePredicate;
 
 import java.util.Objects;
 
-/**
- * @author Vincent Nadoll
- */
 public final class SerializablePredicates {
 
     private SerializablePredicates() {

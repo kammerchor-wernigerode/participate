@@ -2,9 +2,6 @@ package de.vinado.wicket.participate.common;
 
 import java.util.Objects;
 
-/**
- * @author Vincent Nadoll
- */
 @FunctionalInterface
 public interface Sorted {
 

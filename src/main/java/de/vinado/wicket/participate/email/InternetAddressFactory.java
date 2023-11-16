@@ -6,9 +6,6 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import javax.mail.internet.InternetAddress;
 
-/**
- * @author Vincent Nadoll
- */
 public final class InternetAddressFactory {
 
     private static final String UTF_8 = StandardCharsets.UTF_8.name();

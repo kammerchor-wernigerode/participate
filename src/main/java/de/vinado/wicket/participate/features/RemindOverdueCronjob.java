@@ -26,11 +26,6 @@ import static de.vinado.wicket.participate.features.RemindOverdueCronjob.Configu
 import static de.vinado.wicket.participate.features.RemindOverdueCronjob.Configuration.FEATURE_ENABLED;
 import static java.time.temporal.ChronoUnit.DAYS;
 
-/**
- * Sets up a Cronjob which reminds participants about upcoming events.
- *
- * @author Vincent Nadoll
- */
 @Slf4j
 @Component
 @ConditionalOnExpression(FEATURE_ENABLED)
@@ -40,9 +35,6 @@ public class RemindOverdueCronjob {
     private final Configuration configuration;
     private final EventService eventService;
 
-    /**
-     * Searches for upcoming events and their pending invitations. Overdue participants receive an email notification.
-     */
     @Scheduled(cron = CRON_EXPRESSION)
     public void run() {
         log.info("Enter overdue invitation job");
@@ -63,10 +55,6 @@ public class RemindOverdueCronjob {
         log.info("Ran overdue job for {} event{} /w ids=[{}]", eventAmount, 1 == eventAmount ? "" : "s", StringUtils.join(eventIds, ", "));
     }
 
-    /**
-     * @param event the event to filter
-     * @return {@code true} if the event's start date is between now and the configured day; {@code false} otherwise
-     */
     private boolean filter(Event event) {
         LocalDate now = LocalDate.now();
         LocalDate startDate = toLocalDate(event.getStartDate());
@@ -75,9 +63,6 @@ public class RemindOverdueCronjob {
         return future && inScope;
     }
 
-    /**
-     * Configuration class for the {@link RemindOverdueCronjob} feature.
-     */
     @Getter
     @Setter
     @org.springframework.context.annotation.Configuration

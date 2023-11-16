@@ -16,9 +16,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-/**
- * @author Vincent Nadoll
- */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ManagementPageRegistry implements PageRegistry {
 

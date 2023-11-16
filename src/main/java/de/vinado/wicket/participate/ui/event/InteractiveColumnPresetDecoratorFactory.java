@@ -5,9 +5,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
-/**
- * @author Vincent Nadoll
- */
 public class InteractiveColumnPresetDecoratorFactory implements ParticipantColumnListDecoratorFactory {
 
     private final boolean visible;

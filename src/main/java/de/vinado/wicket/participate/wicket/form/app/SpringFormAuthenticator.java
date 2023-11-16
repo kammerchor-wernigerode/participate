@@ -17,9 +17,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-/**
- * @author Vincent Nadoll
- */
 @Service
 @RequiredArgsConstructor
 public class SpringFormAuthenticator implements FormAuthenticator {

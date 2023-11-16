@@ -1,10 +1,5 @@
 package de.vinado.wicket.participate.email.service;
 
-/**
- * Defines the accepted types of a multipart mime message.
- *
- * @author Vincent Nadoll
- */
 public enum MultipartType {
     PLAIN("plain"),
     HTML("html");

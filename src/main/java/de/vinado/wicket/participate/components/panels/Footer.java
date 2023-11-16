@@ -17,9 +17,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class Footer extends Panel {
 
     @SpringBean

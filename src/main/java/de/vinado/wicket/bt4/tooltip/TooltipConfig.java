@@ -6,9 +6,6 @@ import java.time.Duration;
 
 import static de.vinado.wicket.bt4.tooltip.TooltipConfig.Boundary.scrollParent;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class TooltipConfig extends de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig {
 
     private static final IKey<String> Container = newKey("container", Boolean.FALSE.toString());

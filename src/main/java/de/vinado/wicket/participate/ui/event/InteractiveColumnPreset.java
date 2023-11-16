@@ -12,9 +12,6 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
 
 import java.util.Optional;
 
-/**
- * @author Vincent Nadoll
- */
 public class InteractiveColumnPreset extends ParticipantColumnListDecorator {
 
     public InteractiveColumnPreset(ParticipantColumnList delegate,

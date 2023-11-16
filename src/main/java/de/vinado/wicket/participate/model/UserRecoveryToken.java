@@ -20,9 +20,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Entity
 @Table(name = "user_rec_tokens")
 @Getter
@@ -52,11 +49,6 @@ public class UserRecoveryToken implements Identifiable<Long> {
     @Column(nullable = false)
     private Date validDate;
 
-    /**
-     * @param user      The associated {@link User}
-     * @param token     Recovery token
-     * @param validDate Date, the token expires
-     */
     public UserRecoveryToken(User user, String token, Date validDate) {
         this.user = user;
         this.token = token;

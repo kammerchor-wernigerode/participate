@@ -20,11 +20,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
-/**
- * Person
- *
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "persons")
@@ -68,11 +63,6 @@ public class Person implements Identifiable<Long> {
     @Setter(AccessLevel.NONE)
     private String searchName;
 
-    /**
-     * @param firstName The persons given name
-     * @param lastName  The persons surname
-     * @param email     The persons email address
-     */
     public Person(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;

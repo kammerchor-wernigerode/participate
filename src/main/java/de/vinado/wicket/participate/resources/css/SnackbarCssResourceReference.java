@@ -4,9 +4,6 @@ import de.agilecoders.wicket.webjars.request.resource.WebjarsCssResourceReferenc
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.HeaderItem;
 
-/**
- * @author Vincent Nadoll
- */
 public class SnackbarCssResourceReference extends WebjarsCssResourceReference {
 
     private SnackbarCssResourceReference() {

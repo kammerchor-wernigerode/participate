@@ -45,9 +45,6 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
 
     @SuppressWarnings("unused")

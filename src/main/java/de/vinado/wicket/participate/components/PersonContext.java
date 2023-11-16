@@ -5,9 +5,6 @@ import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 
-/**
- * @author Vincent Nadoll
- */
 @FunctionalInterface
 public interface PersonContext extends Serializable {
 

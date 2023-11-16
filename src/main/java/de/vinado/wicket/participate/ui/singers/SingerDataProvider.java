@@ -11,9 +11,6 @@ import org.apache.wicket.model.Model;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class SingerDataProvider extends FilterableDataProvider<Singer> {
 
     private final IModel<SingerFilter> filterModel;

@@ -37,9 +37,6 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class SingersPanel extends BootstrapPanel<SingerFilter> {
 
     private static final int ROWS_PER_PAGE = 20;

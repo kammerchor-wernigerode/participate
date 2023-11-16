@@ -22,9 +22,6 @@ import org.danekja.java.util.function.serializable.SerializableConsumer;
 import java.util.Arrays;
 import java.util.Date;
 
-/**
- * @author Vincent Nadoll
- */
 public abstract class DetailedParticipantFilterForm extends ParticipantFilterForm {
 
     private final IModel<Event> eventModel;

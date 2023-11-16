@@ -13,11 +13,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
-/**
- * A model that represents a processed template string.
- *
- * @author Vincent Nadoll
- */
 public class TemplateModel implements IModel<String> {
 
     @SpringBean
@@ -31,28 +26,14 @@ public class TemplateModel implements IModel<String> {
         this(templateName, Collections.emptyMap());
     }
 
-    /**
-     * @param templateName the template to be processed
-     * @param data         the model object to process the template
-     */
     public TemplateModel(String templateName, Map<String, Object> data) {
         this(templateName, (IModel<String>) null, data);
     }
 
-    /**
-     * @param templateName the template to be processed
-     * @param defaultValue value that will be returned if template doesn't exist
-     * @param data         the model object to process the template
-     */
     public TemplateModel(String templateName, String defaultValue, Map<String, Object> data) {
         this(templateName, Model.of(defaultValue), data);
     }
 
-    /**
-     * @param templateName the template to be processed
-     * @param defaultValue value that will be returned if template doesn't exist
-     * @param data         the model object to process the template
-     */
     public TemplateModel(String templateName, IModel<String> defaultValue, Map<String, Object> data) {
         this.templateName = templateName;
         this.defaultValue = defaultValue;

@@ -10,9 +10,6 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RadioGroup;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public abstract class AbstractBootstrapFormDecorator extends BootstrapBaseBehavior implements IAjaxRegionMarkupIdProvider {
 
     @Override

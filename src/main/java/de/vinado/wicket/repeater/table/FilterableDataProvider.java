@@ -5,9 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.wicket.model.IModel;
 import org.danekja.java.util.function.serializable.SerializablePredicate;
 
-/**
- * @author Vincent Nadoll
- */
 @RequiredArgsConstructor
 public abstract class FilterableDataProvider<T> extends FunctionalDataProvider<T> {
 

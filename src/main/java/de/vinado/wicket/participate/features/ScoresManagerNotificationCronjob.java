@@ -46,11 +46,6 @@ import static de.vinado.wicket.participate.features.ScoresManagerNotificationCro
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.temporal.ChronoUnit.DAYS;
 
-/**
- * Sets up a Cronjob which sends an email to the club's score's manager about accepted invitations.
- *
- * @author Vincent Nadoll
- */
 @Slf4j
 @Component
 @ConditionalOnExpression(FEATURE_ENABLED)
@@ -64,10 +59,6 @@ public class ScoresManagerNotificationCronjob {
     private final @NonNull PersonService personService;
     private final @NonNull EmailService emailService;
 
-    /**
-     * Searches for upcoming events and their accepted invitations to send the singers name to the club's score's
-     * manager.
-     */
     @Scheduled(cron = CRON_EXPRESSION)
     public void run() {
         try {
@@ -99,10 +90,6 @@ public class ScoresManagerNotificationCronjob {
         }
     }
 
-    /**
-     * @param event the event to filter
-     * @return {@code true} if the event's start date is between now and the configured day; {@code false} otherwise
-     */
     private boolean filter(Event event) {
         LocalDate now = LocalDate.now();
         LocalDate startDate = toLocalDate(event.getStartDate());
@@ -111,13 +98,6 @@ public class ScoresManagerNotificationCronjob {
         return future && inScope;
     }
 
-    /**
-     * Maps the given event's participants to an email, with a participation list attached.
-     *
-     * @param event     the upcoming event
-     * @param recipient the scores manager email address
-     * @return a prepared email with the participation list attached.
-     */
     private Email prepare(Event event, InternetAddress recipient) {
         try {
             List<Singer> attendees = eventService.getInvitedParticipants(event)
@@ -169,14 +149,6 @@ public class ScoresManagerNotificationCronjob {
         }
     }
 
-    /**
-     * Checks that the string is empty and throws a customized {@link IllegalArgumentException} if it is.
-     *
-     * @param string  the string to check for emptiness
-     * @param message detail message to be used in the event that a {@code IllegalArgumentException} is thrown
-     * @return {@code string} if not empty
-     * @throws IllegalArgumentException if {@code string} is empty
-     */
     private static String requireNonEmpty(String string, String message) throws IllegalArgumentException {
         if (Strings.isEmpty(string)) {
             throw new IllegalArgumentException(message);
@@ -185,9 +157,6 @@ public class ScoresManagerNotificationCronjob {
         return string;
     }
 
-    /**
-     * Configuration class for the {@link ScoresManagerNotificationCronjob} feature.
-     */
     @Getter
     @Setter
     @ConfigurationProperties("app.features.scores-manager-notification")

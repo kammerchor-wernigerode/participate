@@ -10,9 +10,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Slf4j
 public class ParticipateUtils {
 

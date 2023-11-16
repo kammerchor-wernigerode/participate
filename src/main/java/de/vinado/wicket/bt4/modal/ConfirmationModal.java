@@ -8,9 +8,6 @@ import org.apache.wicket.model.ResourceModel;
 
 import java.util.Optional;
 
-/**
- * @author Vincent Nadoll
- */
 public abstract class ConfirmationModal extends Modal<String> {
 
     public ConfirmationModal(ModalAnchor anchor, IModel<String> model) {

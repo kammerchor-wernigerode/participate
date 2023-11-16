@@ -17,9 +17,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Slf4j
 public class SendFeedbackPanel extends FormModal<SendFeedbackDTO> {
 

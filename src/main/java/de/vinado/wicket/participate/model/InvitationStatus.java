@@ -10,9 +10,6 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum InvitationStatus implements Sorted {

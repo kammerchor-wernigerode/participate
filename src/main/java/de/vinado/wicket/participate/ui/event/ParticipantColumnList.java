@@ -8,9 +8,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Vincent Nadoll
- */
 public interface ParticipantColumnList extends List<IColumn<Participant, SerializableFunction<Participant, ?>>>, Serializable {
 
     static ParticipantColumnList emptyList() {

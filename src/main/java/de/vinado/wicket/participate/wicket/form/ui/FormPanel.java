@@ -23,9 +23,6 @@ import org.apache.wicket.util.string.Strings;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author Vincent Nadoll
- */
 public class FormPanel extends GenericPanel<ParticipantDTO> {
 
     @SpringBean

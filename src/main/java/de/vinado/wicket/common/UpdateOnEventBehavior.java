@@ -7,9 +7,6 @@ import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 import java.util.function.Consumer;
 
-/**
- * @author Vincent Nadoll
- */
 public class UpdateOnEventBehavior<T> extends OnEventBehavior<T> {
 
     private final SerializableConsumer<T> callback;

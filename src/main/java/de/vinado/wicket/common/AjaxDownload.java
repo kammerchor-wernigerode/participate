@@ -6,9 +6,6 @@ import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.util.resource.IResourceStream;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public class AjaxDownload extends AbstractAjaxBehavior {
 
     private IResourceStream resourceStream;

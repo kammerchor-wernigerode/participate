@@ -8,9 +8,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-/**
- * @author Vincent Nadoll
- */
 public interface PageRegistry extends Streamable<PageRegistrar> {
 
     default Stream<String> getPaths() {

@@ -32,9 +32,6 @@ import java.util.Arrays;
 
 import static java.util.stream.Collectors.toList;
 
-/**
- * @author Vincent Nadoll
- */
 public abstract class ParticipantFilterForm extends Form<ParticipantFilter> {
 
     private static final String TAG_NAME = "participantFilterForm";

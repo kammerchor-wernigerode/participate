@@ -13,12 +13,6 @@ import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
-/**
- * Entity of a Singer.
- *
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- * @see de.vinado.wicket.participate.services.PersonService
- */
 @Entity
 @Table(name = "singers")
 @Polymorphism(type = PolymorphismType.EXPLICIT)
@@ -35,12 +29,6 @@ public class Singer extends Person implements Hideable {
     @Column(name = "is_active", nullable = false)
     private boolean active;
 
-    /**
-     * @param firstName The singers given name
-     * @param lastName  The singers surname
-     * @param email     The singers email address
-     * @param voice     The singers voice group
-     */
     public Singer(String firstName, String lastName, String email, Voice voice) {
         super(firstName, lastName, email);
         this.voice = voice;

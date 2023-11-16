@@ -19,9 +19,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-/**
- * @author Vincent Nadoll
- */
 @Component
 @RequiredArgsConstructor
 public class ManagementApplication extends AuthenticatedBootstrapWebApplication implements ApplicationContextAware {

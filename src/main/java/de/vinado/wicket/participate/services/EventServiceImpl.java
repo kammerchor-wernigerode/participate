@@ -68,12 +68,6 @@ import static de.vinado.wicket.participate.common.DateUtils.toLocalDate;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.temporal.ChronoUnit.DAYS;
 
-/**
- * Provides interaction with the database. The service implementation takes care of {@link Event} and Event related
- * objects.
- *
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Primary
 @Service
 @Transactional
@@ -93,9 +87,6 @@ public class EventServiceImpl extends DataService implements EventService {
         this.entityManager = entityManager;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Event createEvent(EventDTO dto) {
         if (Strings.isEmpty(dto.getName())) {
@@ -121,9 +112,6 @@ public class EventServiceImpl extends DataService implements EventService {
         return event;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Event saveEvent(EventDTO dto) {
         Event loadedEvent = load(Event.class, dto.getEvent().getId());
@@ -144,9 +132,6 @@ public class EventServiceImpl extends DataService implements EventService {
         return save(loadedEvent);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void removeEvent(Event event) {
         Event loadedEvent = load(Event.class, event.getId());
@@ -154,21 +139,12 @@ public class EventServiceImpl extends DataService implements EventService {
         save(loadedEvent);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Participant createParticipant(Event event, Singer singer) {
         Participant participant = new Participant(event, singer, generateEventToken(20), InvitationStatus.UNINVITED);
         return save(participant);
     }
 
-    /**
-     * Generates a new unique event token, by recursively checking for existing tokens.
-     *
-     * @param length the length of the token to generate
-     * @return an unique token
-     */
     private String generateEventToken(int length) {
         String accessToken = RandomStringUtils.randomAlphanumeric(length);
 
@@ -179,9 +155,6 @@ public class EventServiceImpl extends DataService implements EventService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Participant saveParticipant(ParticipantDTO dto) {
         Participant loadedParticipant = load(Participant.class, dto.getParticipant().getId());
@@ -194,9 +167,6 @@ public class EventServiceImpl extends DataService implements EventService {
         return save(loadedParticipant);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Participant acceptEvent(ParticipantDTO dto) {
         dto.setInvitationStatus(InvitationStatus.ACCEPTED);
@@ -209,9 +179,6 @@ public class EventServiceImpl extends DataService implements EventService {
         return saveParticipant(dto);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Participant declineEvent(ParticipantDTO dto) {
         dto.setInvitationStatus(InvitationStatus.DECLINED);
@@ -223,9 +190,6 @@ public class EventServiceImpl extends DataService implements EventService {
         return saveParticipant(dto);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasToken(String token) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -236,9 +200,6 @@ public class EventServiceImpl extends DataService implements EventService {
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasUpcomingEvents() {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -249,9 +210,6 @@ public class EventServiceImpl extends DataService implements EventService {
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Participant getLatestParticipant(Singer singer) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -269,9 +227,6 @@ public class EventServiceImpl extends DataService implements EventService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public EventDetails getLatestEventDetails() {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -286,9 +241,6 @@ public class EventServiceImpl extends DataService implements EventService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Event getLatestEvent() {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -304,9 +256,6 @@ public class EventServiceImpl extends DataService implements EventService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public EventDetails getSuccessor(EventDetails eventDetails) {
         Date startDate = load(EventDetails.class, eventDetails.getId()).getStartDate();
@@ -324,9 +273,6 @@ public class EventServiceImpl extends DataService implements EventService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public EventDetails getPredecessor(EventDetails eventDetails) {
         Date startDate = load(EventDetails.class, eventDetails.getId()).getStartDate();
@@ -345,9 +291,6 @@ public class EventServiceImpl extends DataService implements EventService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Event> getUpcomingEvents() {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -358,9 +301,6 @@ public class EventServiceImpl extends DataService implements EventService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<EventDetails> getUpcomingEventDetails() {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -371,9 +311,6 @@ public class EventServiceImpl extends DataService implements EventService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<String> getEventTypes() {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -384,9 +321,6 @@ public class EventServiceImpl extends DataService implements EventService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<String> getLocationList() {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -397,9 +331,6 @@ public class EventServiceImpl extends DataService implements EventService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public EventDetails getEventDetails(Event event) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -414,9 +345,6 @@ public class EventServiceImpl extends DataService implements EventService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Participant> getParticipants(Event event) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -427,9 +355,6 @@ public class EventServiceImpl extends DataService implements EventService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Participant> getInvitedParticipants(Event event) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -442,17 +367,11 @@ public class EventServiceImpl extends DataService implements EventService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Participant> getUninvitedParticipants(Event event) {
         return getParticipants(event, InvitationStatus.UNINVITED);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Participant> getParticipants(Event event, InvitationStatus invitationStatus) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -465,9 +384,6 @@ public class EventServiceImpl extends DataService implements EventService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasParticipant(Event event) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -480,9 +396,6 @@ public class EventServiceImpl extends DataService implements EventService {
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Participant getParticipant(String token) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -497,9 +410,6 @@ public class EventServiceImpl extends DataService implements EventService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Participant> getParticipants(Singer singer) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -514,9 +424,6 @@ public class EventServiceImpl extends DataService implements EventService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getToken(Singer singer, Event event) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -534,9 +441,6 @@ public class EventServiceImpl extends DataService implements EventService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int inviteParticipants(List<Participant> participants, User organizer) {
         Stream<Email> invitations = participants
@@ -570,20 +474,11 @@ public class EventServiceImpl extends DataService implements EventService {
         return participants.size();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void inviteParticipant(Participant participant, User organizer) {
         inviteParticipants(Collections.singletonList(participant), organizer);
     }
 
-    /**
-     * Creates a new iCal attachment for event invitations.
-     *
-     * @param event the {@link Event} with information used in the attachment
-     * @return a new {@link EmailAttachment}
-     */
     private EmailAttachment newEventAttachment(Event event, User organizer) {
         String eventName = event.getEventType() + " in " + event.getLocation();
 

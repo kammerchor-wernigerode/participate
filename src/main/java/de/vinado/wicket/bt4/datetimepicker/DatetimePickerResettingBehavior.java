@@ -12,9 +12,6 @@ import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 import java.util.Date;
 
-/**
- * @author Vincent Nadoll
- */
 public class DatetimePickerResettingBehavior extends AjaxFormComponentUpdatingBehavior {
 
     private final SerializableConsumer<Date> currentValue;

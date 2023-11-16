@@ -8,11 +8,6 @@ import org.wicketstuff.select2.StringTextChoiceProvider;
 
 import java.util.Collection;
 
-/**
- * Choice provider that recommends options from the list of provided choices.
- *
- * @author Vincent Nadoll
- */
 @RequiredArgsConstructor
 public class Select2StringProvider extends StringTextChoiceProvider {
 

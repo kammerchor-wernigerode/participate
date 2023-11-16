@@ -6,9 +6,6 @@ import de.vinado.wicket.participate.ui.event.ParticipantFilterPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public abstract class DetailedParticipantFilterPanel extends ParticipantFilterPanel {
 
     private final IModel<Event> eventModel;

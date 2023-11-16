@@ -7,9 +7,6 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.danekja.java.util.function.serializable.SerializablePredicate;
 
-/**
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 @Getter
 @Setter
 public class SingerFilter implements SerializablePredicate<Singer> {

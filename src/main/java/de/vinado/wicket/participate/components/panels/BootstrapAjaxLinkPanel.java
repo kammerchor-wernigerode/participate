@@ -8,12 +8,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
-/**
- * Bootstrap Ajax Button Panel. Use it in {@link org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable
- * DataTabels} and provide awesome click action to the cell.
- *
- * @author Vincent Nadoll (vincent.nadoll@gmail.com)
- */
 public abstract class BootstrapAjaxLinkPanel extends Panel {
 
     private BootstrapAjaxLink<Void> ajaxLink;
@@ -24,74 +18,26 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
     private IModel<String> titleModel;
     private IconType icon;
 
-    /**
-     * Construct.
-     *
-     * @param id         Wicket ID
-     * @param type       {@link Buttons.Type}
-     * @param labelModel Label
-     */
     public BootstrapAjaxLinkPanel(String id, Buttons.Type type, IModel<String> labelModel) {
         this(id, type, Buttons.Size.Small, labelModel, null, null);
     }
 
-    /**
-     * Construct.
-     *
-     * @param id         Wicket ID
-     * @param type       {@link Buttons.Type}
-     * @param size       {@link Buttons.Size}
-     * @param labelModel Label
-     */
     public BootstrapAjaxLinkPanel(String id, Buttons.Type type, Buttons.Size size, IModel<String> labelModel) {
         this(id, type, size, labelModel, null, null);
     }
 
-    /**
-     * Construct.
-     *
-     * @param id         Wicket ID
-     * @param type       {@link Buttons.Type}
-     * @param labelModel Label
-     * @param icon       {@link IconType}
-     */
     public BootstrapAjaxLinkPanel(String id, Buttons.Type type, IModel<String> labelModel, IconType icon) {
         this(id, type, Buttons.Size.Small, labelModel, icon, null);
     }
 
-    /**
-     * Construct.
-     *
-     * @param id   Wicket ID
-     * @param type {@link Buttons.Type}
-     * @param icon {@link IconType}
-     */
     public BootstrapAjaxLinkPanel(String id, Buttons.Type type, IconType icon) {
         this(id, type, Buttons.Size.Small, null, icon, null);
     }
 
-    /**
-     * Construct.
-     *
-     * @param id         Wicket ID
-     * @param type       {@link Buttons.Type}
-     * @param icon       {@link IconType}
-     * @param titleModel Label
-     */
     public BootstrapAjaxLinkPanel(String id, Buttons.Type type, IconType icon, IModel<String> titleModel) {
         this(id, type, Buttons.Size.Small, null, icon, titleModel);
     }
 
-    /**
-     * Construct.
-     *
-     * @param id         Wicket ID
-     * @param type       {@link Buttons.Type}
-     * @param size       {@link Buttons.Size}
-     * @param labelModel Label
-     * @param icon       {@link IconType}
-     * @param titleModel Title for {@link TooltipBehavior Tooltip}
-     */
     public BootstrapAjaxLinkPanel(String id, Buttons.Type type, Buttons.Size size, IModel<String> labelModel, IconType icon, IModel<String> titleModel) {
         super(id, labelModel);
         this.type = type;
@@ -117,11 +63,6 @@ public abstract class BootstrapAjaxLinkPanel extends Panel {
         add(ajaxLink);
     }
 
-    /**
-     * What happens, when you click the button.
-     *
-     * @param target {@link AjaxRequestTarget}
-     */
     public abstract void onClick(AjaxRequestTarget target);
 
     public BootstrapAjaxLink getLink() {

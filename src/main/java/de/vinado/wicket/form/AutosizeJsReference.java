@@ -4,9 +4,6 @@ import de.agilecoders.wicket.webjars.request.resource.WebjarsJavaScriptResourceR
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 
-/**
- * @author Vincent Nadoll
- */
 public class AutosizeJsReference extends WebjarsJavaScriptResourceReference {
 
     private AutosizeJsReference() {
