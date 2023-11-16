@@ -65,7 +65,9 @@ public class ParticipantFilter implements SerializablePredicate<Participant> {
     }
 
     private boolean matchesAccommodation(Participant participant) {
-        return null == accommodation || accommodation.equals(participant.getAccommodation().getStatus());
+        Accommodation accommodation = participant.getAccommodation();
+        if (null == this.accommodation || null == accommodation) return true;
+        return this.accommodation.equals(accommodation.getStatus());
     }
 
     private boolean matchesNotInvited(Participant participant) {
