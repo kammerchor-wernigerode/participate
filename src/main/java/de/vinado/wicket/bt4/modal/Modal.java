@@ -35,6 +35,7 @@ import static de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal.Size
 import static de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal.Size.Small;
 import static java.util.function.Predicate.not;
 
+@Deprecated(forRemoval = true)
 public class Modal<T> extends GenericPanel<T> {
 
     private final ModalAnchor anchor;

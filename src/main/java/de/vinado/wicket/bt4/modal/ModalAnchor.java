@@ -8,6 +8,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 
+@Deprecated(forRemoval = true)
 public class ModalAnchor extends Panel {
 
     public static final String MODAL_ID = "modal";
