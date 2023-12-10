@@ -1,17 +1,16 @@
 package de.vinado.wicket.bt4.tooltip;
 
 import de.agilecoders.wicket.jquery.IKey;
+import de.agilecoders.wicket.jquery.util.Json;
 
 import java.time.Duration;
 
-import static de.vinado.wicket.bt4.tooltip.TooltipConfig.Boundary.scrollParent;
-
 public class TooltipConfig extends de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig {
 
-    private static final IKey<String> Boundary = newKey("boundary", scrollParent.name());
+    private static final IKey<Json.RawValue> Boundary = newKey("boundary", new Json.RawValue("'clippingParents'"));
 
-    public TooltipConfig withBoundary(Boundary boundary) {
-        put(Boundary, boundary.name());
+    public TooltipConfig withBoundary(Json.RawValue boundary) {
+        put(Boundary, boundary);
         return this;
     }
 
@@ -58,13 +57,5 @@ public class TooltipConfig extends de.agilecoders.wicket.core.markup.html.bootst
     @Override
     public TooltipConfig withSanitizer(boolean value) {
         return (TooltipConfig) super.withSanitizer(value);
-    }
-
-
-    public enum Boundary {
-        scrollParent,
-        viewport,
-        window,
-        ;
     }
 }

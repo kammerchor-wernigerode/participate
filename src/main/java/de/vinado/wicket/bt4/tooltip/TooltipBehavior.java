@@ -1,6 +1,8 @@
 package de.vinado.wicket.bt4.tooltip;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig;
+import de.agilecoders.wicket.jquery.Config;
+import de.agilecoders.wicket.jquery.function.Function;
 import de.agilecoders.wicket.jquery.function.IFunction;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -10,6 +12,7 @@ import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.IModel;
 
 import static de.agilecoders.wicket.jquery.JQuery.$;
+import static de.agilecoders.wicket.jquery.JQuery.markupId;
 
 public class TooltipBehavior extends de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior {
 
@@ -33,5 +36,10 @@ public class TooltipBehavior extends de.agilecoders.wicket.core.markup.html.boot
                 }
             });
         }
+    }
+
+    @Override
+    protected CharSequence createInitializerScript(final Component component, final Config config) {
+        return new Function("new bootstrap.Tooltip", markupId(component).quoted(), config).build();
     }
 }
