@@ -3,6 +3,7 @@ package de.vinado.wicket.participate.ui.singers;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.vinado.app.participate.wicket.form.FormComponentLabel;
 import de.vinado.wicket.bt4.modal.FormModal;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.form.ConditionalValidator;
@@ -55,24 +56,24 @@ public class AddEditSingerPanel extends FormModal<SingerDTO> {
         TextField<String> firstNameTf = new TextField<>("firstName");
         firstNameTf.setLabel(new ResourceModel("firstName", "Given name"));
         firstNameTf.setRequired(true);
-        form.add(firstNameTf);
+        form.add(firstNameTf, new FormComponentLabel("firstNameLabel", firstNameTf));
 
         TextField<String> lastNameTf = new TextField<>("lastName");
         lastNameTf.setLabel(new ResourceModel("lastName", "Surname"));
         lastNameTf.setRequired(true);
-        form.add(lastNameTf);
+        form.add(lastNameTf, new FormComponentLabel("lastNameLabel", lastNameTf));
 
         EmailTextField emailTf = new EmailTextField("email");
         emailTf.setLabel(new ResourceModel("email", "Email"));
         emailTf.setRequired(true);
         emailTf.add(new ConditionalValidator<>(this::ensureUnique,
             new ResourceModel("unique.email", "A person with this e-mail address already exists")));
-        form.add(emailTf);
+        form.add(emailTf, new FormComponentLabel("emailLabel", emailTf));
 
         DropDownChoice<Voice> voiceDd = new DropDownChoice<>("voice",
             Collections.unmodifiableList(Arrays.asList(Voice.values())), new EnumChoiceRenderer<>());
         voiceDd.setLabel(new ResourceModel("voice", "Voice"));
-        form.add(voiceDd);
+        form.add(voiceDd, new FormComponentLabel("voiceLabel", voiceDd));
 
         BootstrapAjaxLink<Void> removeBtn = new BootstrapAjaxLink<>("removeBtn", Buttons.Type.Link) {
             @Override
@@ -99,8 +100,6 @@ public class AddEditSingerPanel extends FormModal<SingerDTO> {
         removeBtn.setSize(Buttons.Size.Small);
         removeBtn.setOutputMarkupId(true);
         form.add(removeBtn);
-
-        addBootstrapHorizontalFormDecorator(form);
     }
 
     private boolean ensureUnique(String email) {

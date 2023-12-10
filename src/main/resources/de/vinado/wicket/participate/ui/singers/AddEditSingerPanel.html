@@ -6,11 +6,31 @@
 <body>
 <wicket:panel>
     <wicket:extend>
-        <input wicket:id="firstName">
-        <input wicket:id="lastName">
-        <input type="email" wicket:id="email">
-        <select wicket:id="voice"></select>
-        <div class="form-group row">
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" wicket:id="firstNameLabel"></label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" wicket:id="firstName"/>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" wicket:id="lastNameLabel"></label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" wicket:id="lastName"/>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" wicket:id="emailLabel"></label>
+            <div class="col-sm-9">
+                <input type="email" class="form-control" wicket:id="email"/>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" wicket:id="voiceLabel"></label>
+            <div class="col-sm-9">
+                <select class="form-select" wicket:id="voice"></select>
+            </div>
+        </div>
+        <div class="row mb-3">
             <div class="col-sm-9 offset-sm-3 text-end">
                 <button class="pull-right" wicket:id="removeBtn"></button>
             </div>
