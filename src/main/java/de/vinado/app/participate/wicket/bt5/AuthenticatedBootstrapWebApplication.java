@@ -1,4 +1,4 @@
-package de.vinado.wicket.bt4;
+package de.vinado.app.participate.wicket.bt5;
 
 import de.agilecoders.wicket.core.Bootstrap;
 import de.agilecoders.wicket.core.markup.html.RenderJavaScriptToFooterHeaderResponseDecorator;

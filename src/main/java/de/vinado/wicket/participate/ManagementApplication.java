@@ -2,8 +2,8 @@ package de.vinado.wicket.participate;
 
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
 import de.vinado.app.participate.management.wicket.ManagementSession;
+import de.vinado.app.participate.wicket.bt5.AuthenticatedBootstrapWebApplication;
 import de.vinado.app.participate.wicket.crypto.CryptFactory;
-import de.vinado.wicket.bt4.AuthenticatedBootstrapWebApplication;
 import de.vinado.wicket.participate.ui.event.EventsPage;
 import de.vinado.wicket.participate.ui.login.SignInPage;
 import de.vinado.wicket.participate.ui.pages.ManagementPageRegistry;
