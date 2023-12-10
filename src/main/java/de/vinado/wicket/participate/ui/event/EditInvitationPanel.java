@@ -10,7 +10,6 @@ import de.vinado.app.participate.wicket.form.FormComponentLabel;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
-import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.form.AutosizeBehavior;
 import de.vinado.wicket.participate.common.ParticipateUtils;
@@ -41,7 +40,6 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.net.URL;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -183,8 +181,6 @@ public class EditInvitationPanel extends GenericPanel<ParticipantDTO> {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 eventService.inviteParticipant(EditInvitationPanel.this.getModelObject().getParticipant(), Session.get().getMetaData(ManagementSession.user));
-                Optional.ofNullable(EditInvitationPanel.this.findParent(ModalAnchor.class))
-                    .ifPresent(anchor -> anchor.close(target));
                 if (!InvitationStatus.UNINVITED.equals(EditInvitationPanel.this.getModelObject().getInvitationStatus())) {
                     Snackbar.show(target, new ResourceModel("email.send.reminder.success", "A reminder has been sent"));
                 } else {
