@@ -6,15 +6,29 @@
 <body>
 <wicket:panel>
     <wicket:extend>
-        <select wicket:id="invitationStatus"></select>
+        <div class="row mb-3">
+            <div class="col-sm-9 offset-sm-3">
+                <select wicket:id="invitationStatus"></select>
+            </div>
+        </div>
         <div class="row mb-3">
             <div class="col-sm-9 offset-sm-3">
                 <a wicket:id="inviteSingerBtn"></a>
             </div>
         </div>
-        <input autocomplete="off" type="text" wicket:id="fromDate">
-        <input autocomplete="off" type="text" wicket:id="toDate">
-        <fieldset class="form-group row">
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" wicket:id="fromDateLabel"></label>
+            <div class="col-sm-9">
+                <input type="text" autocomplete="off" class="form-control" wicket:id="fromDate"/>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" wicket:id="toDateLabel"></label>
+            <div class="col-sm-9">
+                <input type="text" autocomplete="off" class="form-control" wicket:id="toDate"/>
+            </div>
+        </div>
+        <fieldset class="row mb-3">
             <legend class="col-form-label col-sm-3 float-sm-left pt-0">
                 <wicket:message key="event.participant.dialog.form.label.accommodation">Accommodation</wicket:message>
             </legend>
@@ -22,7 +36,7 @@
                 <div wicket:id="accommodation"></div>
             </div>
         </fieldset>
-        <div class="form-group row">
+        <div class="row mb-3">
             <div class="col-sm-9 offset-sm-3">
                 <div class="row align-items-center">
                     <div class="col-2">
@@ -33,7 +47,7 @@
                     </div>
                     <div class="col-auto flex-grow-1">
                         <div class="row">
-                            <label class="col-lg-4 col-form-label"><wicket:message key="carSeatCount">Number of Seats</wicket:message></label>
+                            <label class="col-lg-4 col-form-label" wicket:id="carSeatCountLabel"></label>
                             <div class="col-lg-8">
                                 <input type="number" class="form-control" wicket:id="carSeatCount">
                             </div>
@@ -42,8 +56,13 @@
                 </div>
             </div>
         </div>
-        <textarea wicket:id="comment"></textarea>
-        <div class="form-group row">
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" wicket:id="commentLabel"></label>
+            <div class="col-sm-9">
+                <textarea rows="6" class="form-control" wicket:id="comment"></textarea>
+            </div>
+        </div>
+        <div class="row">
             <label class="col-sm-3 col-form-label"><wicket:message key="link">Link</wicket:message></label>
             <div class="col-sm-9">
                 <p class="form-control-plaintext"><a class="nobusy" wicket:id="token"></a></p>
