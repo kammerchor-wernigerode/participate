@@ -82,14 +82,14 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
     protected void onSubmit(AjaxRequestTarget target) {
         EditAccountDTO modelObject = getModelObject();
 
-        if (null != modelObject.getSinger()) {
+        if (null != modelObject.getPerson()) {
             PersonDTO personDTO = new PersonDTO(modelObject.getPerson());
             personDTO.setFirstName(modelObject.getFirstName());
             personDTO.setLastName(modelObject.getLastName());
             personDTO.setEmail(modelObject.getEmail());
             personService.savePerson(personDTO);
             if (null != modelObject.getSinger()) {
-                SingerDTO singerDTO = new SingerDTO();
+                SingerDTO singerDTO = new SingerDTO(modelObject.getSinger());
                 singerDTO.setVoice(modelObject.getVoice());
                 personService.saveSinger(singerDTO);
             }
