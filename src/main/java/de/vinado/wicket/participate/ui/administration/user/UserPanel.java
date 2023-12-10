@@ -54,13 +54,23 @@ public class UserPanel extends BootstrapPanel<Void> {
     @SpringBean
     private UserService userService;
 
+    private final de.vinado.app.participate.wicket.bt5.modal.Modal modal;
+
     public UserPanel(String id) {
         super(id);
+
+        this.modal = modal("modal");
+    }
+
+    protected de.vinado.app.participate.wicket.bt5.modal.Modal modal(String wicketId) {
+        return new de.vinado.app.participate.wicket.bt5.modal.Modal(wicketId);
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        add(modal);
 
         addQuickAccessAction(AjaxAction.create(new ResourceModel("user.add", "Add User"), plus_s, this::add));
 
@@ -290,21 +300,19 @@ public class UserPanel extends BootstrapPanel<Void> {
 
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
-                        modal.setContent(editPerson(modal));
-                        modal.show(target);
+                        IModel<PersonDTO> model = new CompoundPropertyModel<>(new PersonDTO(person));
+
+                        modal
+                            .title(new ResourceModel("person.edit", "Edit Person"))
+                            .content(id -> new AddEditPersonPanel(id, model))
+                            .addCloseAction(new ResourceModel("cancel", "Cancel"))
+                            .addSubmitAction(new ResourceModel("save", "Save"), this::onUpdate)
+                            .show(target);
                     }
 
-                    private AddEditPersonPanel editPerson(ModalAnchor modal) {
-                        return new AddEditPersonPanel(modal, new ResourceModel("person.edit", "Edit Person"),
-                            new CompoundPropertyModel<>(new PersonDTO(person))) {
-
-                            @Override
-                            protected void onUpdate(AjaxRequestTarget target) {
-                                send(getWebPage(), Broadcast.BREADTH, new UserTableUpdateIntent());
-                                Snackbar.show(target, new ResourceModel("person.edit.success", "The person was successfully edited"));
-                            }
-                        };
+                    private void onUpdate(AjaxRequestTarget target) {
+                        send(getWebPage(), Broadcast.BREADTH, new UserTableUpdateIntent());
+                        Snackbar.show(target, new ResourceModel("person.edit.success", "The person was successfully edited"));
                     }
                 });
             }
