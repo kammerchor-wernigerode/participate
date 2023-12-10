@@ -150,17 +150,21 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     }
 
     private void edit(AjaxRequestTarget target, IModel<Participant> rowModel) {
-        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
-        modal.setContent(new EditInvitationPanel(modal, new CompoundPropertyModel<>(new ParticipantDTO(rowModel.getObject()))) {
-            @Override
-            protected void onSubmit(AjaxRequestTarget target) {
-                eventService.saveParticipant(getModelObject());
-                Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
-                send(getWebPage(), Broadcast.BREADTH, new EventTableUpdateIntent());
-                send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
-            }
-        });
-        modal.show(target);
+        IModel<ParticipantDTO> model = new CompoundPropertyModel<>(new ParticipantDTO(rowModel.getObject()));
+
+        modal
+            .size(Modal.Size.LARGE)
+            .title(new ResourceModel("invitation.edit", "Edit Invitation"))
+            .content(id -> new EditInvitationPanel(id, model))
+            .addCloseAction(new ResourceModel("cancel", "Cancel"))
+            .addSubmitAction(new ResourceModel("save", "Save"), this::onSave)
+            .show(target);
+    }
+
+    private void onSave(AjaxRequestTarget target) {
+        Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
+        send(getWebPage(), Broadcast.BREADTH, new EventTableUpdateIntent());
+        send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
     }
 
     private void email(AjaxRequestTarget target, IModel<Participant> rowModel) {

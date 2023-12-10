@@ -2,7 +2,6 @@ package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal.Size;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.select.BootstrapSelect;
@@ -11,7 +10,6 @@ import de.vinado.app.participate.wicket.form.FormComponentLabel;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
-import de.vinado.wicket.bt4.modal.FormModal;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.form.AutosizeBehavior;
@@ -32,9 +30,11 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
@@ -45,7 +45,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
-public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
+public class EditInvitationPanel extends GenericPanel<ParticipantDTO> {
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -54,16 +54,35 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
     @SpringBean
     private ApplicationProperties applicationProperties;
 
-    public EditInvitationPanel(ModalAnchor modal, IModel<ParticipantDTO> model) {
-        super(modal, model);
+    private final Form<ParticipantDTO> form;
 
-        size(Size.Large);
-        title(new ResourceModel("invitation.edit", "Edit Invitation"));
+    public EditInvitationPanel(String id, IModel<ParticipantDTO> model) {
+        super(id, model);
+
+        this.form = form("form");
+    }
+
+    protected Form<ParticipantDTO> form(String wicketId) {
+        return new Form<>(wicketId, getModel()) {
+
+            @Override
+            protected void onSubmit() {
+                super.onSubmit();
+
+                EditInvitationPanel.this.onSubmit();
+            }
+        };
+    }
+
+    protected void onSubmit() {
+        eventService.saveParticipant(getModelObject());
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        add(form);
 
         Event event = getModelObject().getEvent();
         DatetimePickerConfig fromConfig = new DatetimePickerConfig();

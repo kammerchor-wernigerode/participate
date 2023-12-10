@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.event.ui;
 
+import de.vinado.app.participate.wicket.bt5.modal.Modal;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.panels.SendEmailPanel;
@@ -40,11 +41,14 @@ public class EventSummaryListPanel extends BootstrapPanel<Event> {
 
     private final IModel<ParticipantFilter> filterModel;
 
+    private final Modal modal;
+
     public EventSummaryListPanel(String id, IModel<Event> model,
                                  IModel<ParticipantFilter> filterModel, boolean editable) {
         super(id, model);
 
         this.filterModel = filterModel;
+        this.modal = modal("modal");
 
         DetailedParticipantFilterPanel filterPanel = new DetailedParticipantFilterPanel("filterPanel",
             filterModel, model) {
@@ -67,23 +71,37 @@ public class EventSummaryListPanel extends BootstrapPanel<Event> {
         add(tableBuilder.build());
     }
 
+    protected Modal modal(String wicketId) {
+        return new Modal(wicketId);
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        add(modal);
+    }
+
     private ParticipantDataProvider dataProvider() {
         return new ParticipantDataProvider(getModel(), eventService, filterModel);
     }
 
     private void edit(AjaxRequestTarget target, IModel<Participant> rowModel) {
-        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
         ParticipantDTO participantDTO = new ParticipantDTO(rowModel.getObject());
+        IModel<ParticipantDTO> model = new CompoundPropertyModel<>(participantDTO);
 
-        modal.setContent(new EditInvitationPanel(modal, new CompoundPropertyModel<>(participantDTO)) {
-            @Override
-            protected void onSubmit(AjaxRequestTarget target) {
-                eventService.saveParticipant(getModelObject());
-                send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
-                Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
-            }
-        });
-        modal.show(target);
+        modal
+            .size(Modal.Size.LARGE)
+            .title(new ResourceModel("invitation.edit", "Edit Invitation"))
+            .content(id -> new EditInvitationPanel(id, model))
+            .addCloseAction(new ResourceModel("cancel", "Cancel"))
+            .addSubmitAction(new ResourceModel("save", "Save"), this::onSave)
+            .show(target);
+    }
+
+    private void onSave(AjaxRequestTarget target) {
+        send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
+        Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
     }
 
     private void email(AjaxRequestTarget target, IModel<Participant> rowModel) {
