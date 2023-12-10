@@ -2,6 +2,7 @@ package de.vinado.wicket.participate.ui.administration.user;
 
 import de.vinado.wicket.bt4.modal.FormModal;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
+import de.vinado.app.participate.wicket.form.FormComponentLabel;
 import de.vinado.wicket.common.FocusBehavior;
 import de.vinado.wicket.form.ConditionalValidator;
 import de.vinado.wicket.participate.model.User;
@@ -32,12 +33,11 @@ public abstract class AddUserPanel extends FormModal<AddUserDTO> {
 
         TextField<String> usernameTf = new TextField<>("username");
         usernameTf.setRequired(true);
+        usernameTf.setLabel(new ResourceModel("username", "Username"));
         usernameTf.add(new FocusBehavior());
         usernameTf.add(new ConditionalValidator<>(this::ensureUnique,
             new ResourceModel("unique.user", "A user with this username already exists")));
-        form.add(usernameTf);
-
-        addBootstrapHorizontalFormDecorator(form);
+        queue(usernameTf, new FormComponentLabel("usernameLabel", usernameTf));
     }
 
     private boolean ensureUnique(String username) {
