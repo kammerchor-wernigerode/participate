@@ -93,16 +93,19 @@ public class UserPanel extends BootstrapPanel<Void> {
     }
 
     private void add(AjaxRequestTarget target) {
-        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
-        modal.setContent(new AddUserPanel(modal, new CompoundPropertyModel<>(new AddUserDTO())) {
+        IModel<AddUserDTO> model = new CompoundPropertyModel<>(new AddUserDTO());
 
-            @Override
-            protected void onConfirm(User user, AjaxRequestTarget target) {
-                send(getWebPage(), Broadcast.BREADTH, new UserTableUpdateIntent());
-                Snackbar.show(target, new ResourceModel("user.add.success", "A new user has been added"));
-            }
-        });
-        modal.show(target);
+        modal
+            .title(new ResourceModel("user.add", "Add User"))
+            .content(id -> new AddUserPanel(id, model))
+            .addCloseAction(new ResourceModel("cancel", "Cancel"))
+            .addSubmitAction(new ResourceModel("save", "Save"), this::onConfirm)
+            .show(target);
+    }
+
+    private void onConfirm(AjaxRequestTarget target) {
+        send(getWebPage(), Broadcast.BREADTH, new UserTableUpdateIntent());
+        Snackbar.show(target, new ResourceModel("user.add.success", "A new user has been added"));
     }
 
     private List<IColumn<User, SerializableFunction<User, ?>>> columns() {
