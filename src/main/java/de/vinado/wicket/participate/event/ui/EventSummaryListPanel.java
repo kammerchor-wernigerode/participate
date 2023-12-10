@@ -1,15 +1,11 @@
 package de.vinado.wicket.participate.event.ui;
 
 import de.vinado.app.participate.wicket.bt5.modal.Modal;
-import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
-import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
-import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
-import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
@@ -20,7 +16,6 @@ import de.vinado.wicket.participate.ui.event.ParticipantTable;
 import de.vinado.wicket.participate.ui.event.details.DetailedParticipantFilterPanel;
 import de.vinado.wicket.participate.ui.event.details.ParticipantDataProvider;
 import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateIntent;
-import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
@@ -63,7 +58,6 @@ public class EventSummaryListPanel extends BootstrapPanel<Event> {
         InteractiveColumnPresetDecoratorFactory decoratorFactory = InteractiveColumnPresetDecoratorFactory.builder()
             .visible(editable)
             .onEdit(EventSummaryListPanel.this::edit)
-            .onEmail(EventSummaryListPanel.this::email)
             .build();
 
         ParticipantTable.Builder tableBuilder = ParticipantTable.builder("dataTable", dataProvider())
@@ -102,17 +96,6 @@ public class EventSummaryListPanel extends BootstrapPanel<Event> {
     private void onSave(AjaxRequestTarget target) {
         send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
         Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
-    }
-
-    private void email(AjaxRequestTarget target, IModel<Participant> rowModel) {
-        Person person = rowModel.getObject().getSinger();
-        Email mailData = emailBuilderFactory.create()
-            .to(person)
-            .build();
-
-        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
-        modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
-        modal.show(target);
     }
 
     @Override

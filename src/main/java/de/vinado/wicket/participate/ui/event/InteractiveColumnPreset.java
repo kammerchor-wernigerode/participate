@@ -15,12 +15,10 @@ import java.util.Optional;
 public class InteractiveColumnPreset extends ParticipantColumnListDecorator {
 
     public InteractiveColumnPreset(ParticipantColumnList delegate,
-                                   SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onEdit,
-                                   SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onEmail) {
+                                   SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onEdit) {
         super(delegate);
 
         Optional.ofNullable(onEdit).map(this::editColumn).map(this::add);
-        Optional.ofNullable(onEmail).map(this::emailColumn).map(this::add);
     }
 
     private IColumn<Participant, SerializableFunction<Participant, ?>> editColumn(
@@ -35,22 +33,6 @@ public class InteractiveColumnPreset extends ParticipantColumnListDecorator {
             @Override
             public String getCssClass() {
                 return "edit";
-            }
-        };
-    }
-
-    private IColumn<Participant, SerializableFunction<Participant, ?>> emailColumn(
-        SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onClick) {
-        return new BootstrapAjaxLinkColumn<Participant, SerializableFunction<Participant, ?>>(
-            FontAwesome5IconType.envelope_s, new ResourceModel("email.send", "Send Email")) {
-            @Override
-            public void onClick(AjaxRequestTarget target, IModel<Participant> rowModel) {
-                onClick.accept(target, rowModel);
-            }
-
-            @Override
-            public String getCssClass() {
-                return "notify";
             }
         };
     }

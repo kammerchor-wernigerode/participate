@@ -9,10 +9,8 @@ import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
-import de.vinado.wicket.participate.components.panels.SendEmailPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
-import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.event.ui.EventSummaryPage;
 import de.vinado.wicket.participate.model.Event;
@@ -28,7 +26,6 @@ import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.details.ParticipantDataProvider;
 import de.vinado.wicket.participate.ui.event.details.ParticipantFilterIntent;
 import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateIntent;
-import de.vinado.wicket.participate.ui.pages.BasePage;
 import de.vinado.wicket.participate.ui.pages.ParticipatePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
@@ -130,7 +127,6 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         InteractiveColumnPresetDecoratorFactory decoratorFactory = InteractiveColumnPresetDecoratorFactory.builder()
             .visible(editable)
             .onEdit(EventPanel.this::edit)
-            .onEmail(EventPanel.this::email)
             .build();
 
         ParticipantTable dataTable = ParticipantTable.builder("dataTable", dataProvider())
@@ -165,17 +161,6 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
         send(getWebPage(), Broadcast.BREADTH, new EventTableUpdateIntent());
         send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
-    }
-
-    private void email(AjaxRequestTarget target, IModel<Participant> rowModel) {
-        Person person = rowModel.getObject().getSinger();
-        Email mailData = emailBuilderFactory.create()
-            .to(person)
-            .build();
-
-        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
-        modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
-        modal.show(target);
     }
 
     @Override

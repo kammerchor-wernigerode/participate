@@ -9,17 +9,15 @@ public class InteractiveColumnPresetDecoratorFactory implements ParticipantColum
 
     private final boolean visible;
     private final SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onEdit;
-    private final SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onEmail;
 
     private InteractiveColumnPresetDecoratorFactory(Builder builder) {
         this.visible = builder.visible;
         this.onEdit = builder.onEdit;
-        this.onEmail = builder.onEmail;
     }
 
     @Override
     public ParticipantColumnList decorate(ParticipantColumnList preset) {
-        return visible ? new InteractiveColumnPreset(preset, onEdit, onEmail) : preset;
+        return visible ? new InteractiveColumnPreset(preset, onEdit) : preset;
     }
 
     public static Builder builder() {
@@ -39,11 +37,6 @@ public class InteractiveColumnPresetDecoratorFactory implements ParticipantColum
 
         public Builder onEdit(SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onEdit) {
             this.onEdit = onEdit;
-            return this;
-        }
-
-        public Builder onEmail(SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onEmail) {
-            this.onEmail = onEmail;
             return this;
         }
 
