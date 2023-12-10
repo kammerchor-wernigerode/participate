@@ -73,8 +73,7 @@ public class ParticipatePage extends BasePage {
     protected void onInitialize() {
         super.onInitialize();
 
-        // TODO: change back to add
-        addOrReplace(modal);
+        add(modal);
 
         assertSignedIn();
 

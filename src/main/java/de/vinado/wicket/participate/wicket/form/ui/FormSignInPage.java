@@ -35,8 +35,6 @@ public class FormSignInPage extends BasePage implements IGenericComponent<Partic
 
         setStatelessHint(true);
 
-        remove("modal");
-
         add(new FormSignInPanel("signInPanel", getModel()));
 
         assertStatelessness();
