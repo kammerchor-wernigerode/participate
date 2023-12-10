@@ -6,14 +6,51 @@
 <body>
 <wicket:panel>
     <wicket:extend>
-        <input type="text" wicket:id="name"/>
-        <input type="checkbox" wicket:id="isSeveralDays"/>
-        <select wicket:id="eventType"></select>
-        <input autocomplete="off" type="text" wicket:id="startDate"/>
-        <input autocomplete="off" type="text" wicket:id="endDate"/>
-        <select wicket:id="location"></select>
-        <textarea rows="6" wicket:id="description"></textarea>
-        <div class="form-group row">
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" wicket:id="nameLabel"></label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" wicket:id="name"/>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-9 offset-sm-3">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" wicket:id="isSeveralDays"/>
+                    <label class="form-check-label" wicket:id="isSeveralDaysLabel"></label>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" wicket:id="eventTypeLabel"></label>
+            <div class="col-sm-9">
+                <select class="form-select" wicket:id="eventType"></select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" wicket:id="startDateLabel"></label>
+            <div class="col-sm-9">
+                <input type="text" autocomplete="off" class="form-control" wicket:id="startDate"/>
+            </div>
+        </div>
+        <div class="row mb-3" wicket:id="endDateContainer">
+            <label class="col-sm-3 col-form-label" wicket:id="endDateLabel"></label>
+            <div class="col-sm-9">
+                <input type="text" autocomplete="off" class="form-control" wicket:id="endDate"/>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" wicket:id="locationLabel"></label>
+            <div class="col-sm-9">
+                <select class="form-select" wicket:id="location"></select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" wicket:id="descriptionLabel"></label>
+            <div class="col-sm-9">
+                <textarea rows="6" class="form-control" wicket:id="description"></textarea>
+            </div>
+        </div>
+        <div class="row mb-3">
             <div class="col-sm-9 offset-sm-3 text-end">
                 <button class="pull-right" wicket:id="removeBtn"></button>
             </div>
