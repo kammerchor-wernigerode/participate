@@ -3,6 +3,7 @@ package de.vinado.wicket.participate.ui.event;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.app.participate.management.wicket.ManagementSession;
+import de.vinado.app.participate.wicket.bt5.modal.Modal;
 import de.vinado.wicket.bt4.modal.ConfirmationModal;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
@@ -50,6 +51,7 @@ import org.apache.wicket.request.mapper.parameter.INamedParameters.Type;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -72,6 +74,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     private final PersonContext personContext;
     private final IModel<ParticipantFilter> filterModel;
 
+    private final Modal modal;
     private final Form form;
 
     public EventPanel(String id, IModel<EventDetails> model, boolean editable, PersonContext personContext, IModel<ParticipantFilter> filterModel) {
@@ -80,6 +83,9 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
 
         this.personContext = personContext;
         this.filterModel = filterModel;
+
+        this.modal = modal("modal");
+        add(modal);
 
         form = new Form("form");
         add(form);
@@ -133,6 +139,10 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
             .columns(decoratorFactory.decorate(columns))
             .build();
         wmc.add(dataTable);
+    }
+
+    protected Modal modal(String wicketId) {
+        return new Modal(wicketId);
     }
 
     private ParticipantDataProvider dataProvider() {
@@ -278,17 +288,31 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
 
     private void edit(AjaxRequestTarget target) {
         Event event = getModelObject().getEvent();
-        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
-        modal.setContent(new AddEditEventPanel(modal, new ResourceModel("event.edit", "Edit Event"),
-            new CompoundPropertyModel<>(new EventDTO(event))) {
-            @Override
-            public void onUpdate(Event savedEvent, AjaxRequestTarget target) {
-                EventPanel.this.setModelObject(eventService.getEventDetails(savedEvent));
-                send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(savedEvent));
+        CompoundPropertyModel<EventDTO> model = new CompoundPropertyModel<>(new EventDTO(event));
+        AddEditEventPanel content = new AddEditEventPanel(modal.getContentId(), model);
+
+        modal
+            .size(Modal.Size.LARGE)
+            .title(new ResourceModel("event.edit", "Edit Event"))
+            .content(content)
+            .addCloseAction(new ResourceModel("cancel", "cancel"))
+            .addSubmitAction(new ResourceModel("save", "Save"), onUpdate(model))
+            .show(target);
+    }
+
+    private SerializableConsumer<AjaxRequestTarget> onUpdate(IModel<EventDTO> model) {
+        return target -> {
+            Event event = model.map(EventDTO::getEvent).getObject();
+            if (null == event || !event.isActive()) {
+                getSession().setMetaData(ManagementSession.event, null);
+                send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(null));
+                Snackbar.show(target, new ResourceModel("event.remove.success", "The event has been removed"));
+            } else {
+                EventPanel.this.setModelObject(eventService.getEventDetails(event));
+                send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(event));
                 Snackbar.show(target, new ResourceModel("event.edit.success", "The event was successfully edited"));
             }
-        });
-        modal.show(target);
+        };
     }
 
     @Override

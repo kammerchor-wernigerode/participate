@@ -2,29 +2,26 @@ package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal.Size;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
-import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.app.participate.wicket.form.FormComponentLabel;
-import de.vinado.wicket.bt4.modal.FormModal;
-import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.common.AjaxFocusBehavior;
 import de.vinado.wicket.form.AutosizeBehavior;
-import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.providers.Select2StringProvider;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
+import lombok.Getter;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -35,7 +32,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2Choice;
 
-public abstract class AddEditEventPanel extends FormModal<EventDTO> {
+public class AddEditEventPanel extends GenericPanel<EventDTO> {
 
     @SpringBean
     @SuppressWarnings("unused")
@@ -50,11 +47,25 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
 
     private IModel<Boolean> severalDays;
 
-    public AddEditEventPanel(ModalAnchor modal, IModel<String> titleModel, IModel<EventDTO> model) {
-        super(modal, model);
+    @Getter
+    private final Form<EventDTO> form;
 
-        size(Size.Large);
-        title(titleModel);
+    public AddEditEventPanel(String id, IModel<EventDTO> model) {
+        super(id, model);
+
+        this.form = form("form");
+    }
+
+    protected Form<EventDTO> form(String wicketId) {
+        return new Form<>(wicketId, getModel()) {
+
+            @Override
+            protected void onSubmit() {
+                super.onSubmit();
+
+                AddEditEventPanel.this.onSubmit();
+            }
+        };
     }
 
     @Override
@@ -62,8 +73,10 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
         super.onInitialize();
 
         edit = null != getModelObject().getEvent();
-
+        form.setOutputMarkupId(true);
         severalDays = new CompoundPropertyModel<>(edit ? getModelObject().isSeveralDays() : Boolean.TRUE);
+
+        add(form);
 
         DateTextFieldConfig startDateConfig = new DateTextFieldConfig();
         startDateConfig.withLanguage("de");
@@ -206,8 +219,7 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
         form.add(removeBtn);
     }
 
-    @Override
-    protected void onSubmit(AjaxRequestTarget target) {
+    protected void onSubmit() {
         EventDTO dto = getModelObject();
         if (!severalDays.getObject()) {
             dto.setEndDate(dto.getStartDate());
@@ -215,17 +227,28 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
 
         if (edit) {
             if (remove) {
-                eventService.removeEvent(dto.getEvent());
-                getSession().setMetaData(ManagementSession.event, null);
-                send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(null));
-                Snackbar.show(target, new ResourceModel("event.remove.success", "The event has been removed"));
-                return;
+                delete(dto);
+            } else {
+                update(dto);
             }
-            onUpdate(eventService.saveEvent(dto), target);
         } else {
-            onUpdate(eventService.createEvent(dto), target);
+            create(dto);
         }
     }
 
-    public abstract void onUpdate(Event savedEvent, AjaxRequestTarget target);
+    private void create(EventDTO dto) {
+        Event event = eventService.createEvent(dto);
+        dto.setEvent(event);
+    }
+
+    private void update(EventDTO dto) {
+        Event event = eventService.saveEvent(dto);
+        dto.setEvent(event);
+    }
+
+    private void delete(EventDTO dto) {
+        Event event = dto.getEvent();
+        eventService.removeEvent(event);
+        event.setActive(false);
+    }
 }

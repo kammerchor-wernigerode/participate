@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.app.participate.management.wicket.ManagementSession;
-import de.vinado.wicket.bt4.modal.ModalAnchor;
+import de.vinado.app.participate.wicket.bt5.modal.Modal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.model.Event;
@@ -10,7 +10,6 @@ import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.services.EventService;
-import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
@@ -18,6 +17,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 public class EventsPanel extends BootstrapPanel<EventFilter> {
 
@@ -25,13 +25,23 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
     @SuppressWarnings("unused")
     private EventService eventService;
 
+    private final Modal modal;
+
     public EventsPanel(String id, IModel<EventFilter> filterModel) {
         super(id, filterModel);
+
+        this.modal = modal("modal");
+    }
+
+    protected Modal modal(String wicketId) {
+        return new Modal(wicketId);
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        add(modal);
 
         addQuickAccessAction(AjaxAction.create(new ResourceModel("event.add", "Add Event"),
             FontAwesome5IconType.plus_s,
@@ -72,14 +82,24 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
     }
 
     private void onAdd(AjaxRequestTarget target) {
-        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
-        modal.setContent(new AddEditEventPanel(modal, new ResourceModel("event.add", "Add Event"), new CompoundPropertyModel<>(new EventDTO())) {
-            @Override
-            public void onUpdate(Event savedEvent, AjaxRequestTarget target) {
-                send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(savedEvent));
-                Snackbar.show(target, new ResourceModel("event.add.success", "A new event has been added"));
-            }
-        });
-        modal.show(target);
+        CompoundPropertyModel<EventDTO> model = new CompoundPropertyModel<>(new EventDTO());
+        ResourceModel title = new ResourceModel("event.add", "Add Event");
+        AddEditEventPanel content = new AddEditEventPanel(modal.getContentId(), model);
+
+        modal
+            .size(Modal.Size.LARGE)
+            .title(title)
+            .content(content)
+            .addCloseAction(new ResourceModel("cancel", "Cancel"))
+            .addSubmitAction(new ResourceModel("save", "Save"), update(model))
+            .show(target);
+    }
+
+    private SerializableConsumer<AjaxRequestTarget> update(IModel<EventDTO> model) {
+        return target -> {
+            Event event = model.map(EventDTO::getEvent).getObject();
+            send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(event));
+            Snackbar.show(target, new ResourceModel("event.add.success", "A new event has been added"));
+        };
     }
 }
