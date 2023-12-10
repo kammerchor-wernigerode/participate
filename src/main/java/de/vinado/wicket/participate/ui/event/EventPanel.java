@@ -1,11 +1,11 @@
 package de.vinado.wicket.participate.ui.event;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.app.participate.wicket.bt5.modal.Modal;
-import de.vinado.wicket.bt4.modal.ConfirmationModal;
-import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
@@ -26,7 +26,6 @@ import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.details.ParticipantDataProvider;
 import de.vinado.wicket.participate.ui.event.details.ParticipantFilterIntent;
 import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateIntent;
-import de.vinado.wicket.participate.ui.pages.ParticipatePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -149,6 +148,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         IModel<ParticipantDTO> model = new CompoundPropertyModel<>(new ParticipantDTO(rowModel.getObject()));
 
         modal
+            .setHeaderVisible(true)
             .size(Modal.Size.LARGE)
             .title(new ResourceModel("invitation.edit", "Edit Invitation"))
             .content(id -> new EditInvitationPanel(id, model))
@@ -219,24 +219,29 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
             return;
         }
 
-        ModalAnchor anchor = ((ParticipatePage) getWebPage()).getModalAnchor();
-        anchor.setContent(new ConfirmationModal(anchor,
-            new ResourceModel("email.send.reminder.question", "Some singers have already received an invitation. Should they be remembered?")) {
+        IModel<String> prompt = new ResourceModel("email.send.reminder.question", "Some singers have already received an invitation. Should they be remembered?");
 
-            @Override
-            protected void onConfirm(AjaxRequestTarget target) {
-                List<Participant> participants = eventService.getParticipants(event, InvitationStatus.PENDING);
-                participants.addAll(eventService.getParticipants(event, InvitationStatus.TENTATIVE));
-                int count = eventService.inviteParticipants(participants, organizer);
+        modal
+            .setHeaderVisible(false)
+            .content(id -> new SmartLinkMultiLineLabel(id, prompt))
+            .addCloseAction(new ResourceModel("abort", "Abort"))
+            .addAction(id -> new BootstrapAjaxLink<Void>(id, Buttons.Type.Success) {
 
-                Snackbar.show(target, "Erinnerung wurde an "
-                    + count
-                    + (count != 1 ? " Mitglieder " : " Mitglied ")
-                    + "versandt.");
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    List<Participant> participants = eventService.getParticipants(event, InvitationStatus.PENDING);
+                    participants.addAll(eventService.getParticipants(event, InvitationStatus.TENTATIVE));
+                    int count = eventService.inviteParticipants(participants, organizer);
 
-            }
-        }.title(new ResourceModel("email.send.reminder", "Send Reminder")));
-        anchor.show(target);
+                    Snackbar.show(target, "Erinnerung wurde an "
+                        + count
+                        + (count != 1 ? " Mitglieder " : " Mitglied ")
+                        + "versandt.");
+
+                    modal.close(target);
+                }
+            }.setLabel(new ResourceModel("confirm", "Confirm")))
+            .show(target);
     }
 
     private static SerializableFunction<String, AbstractAction> create(IModel<String> labelModel,
@@ -280,6 +285,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         CompoundPropertyModel<EventDTO> model = new CompoundPropertyModel<>(new EventDTO(event));
 
         modal
+            .setHeaderVisible(true)
             .size(Modal.Size.LARGE)
             .title(new ResourceModel("event.edit", "Edit Event"))
             .content(new AddEditEventPanel(modal.getContentId(), model))

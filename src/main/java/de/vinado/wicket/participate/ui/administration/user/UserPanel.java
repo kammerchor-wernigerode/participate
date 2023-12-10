@@ -1,11 +1,9 @@
 package de.vinado.wicket.participate.ui.administration.user;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
-import de.vinado.wicket.bt4.modal.ConfirmationModal;
-import de.vinado.wicket.bt4.modal.Modal;
-import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.components.TextAlign;
 import de.vinado.wicket.participate.components.panels.BootstrapAjaxLinkPanel;
@@ -19,10 +17,10 @@ import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.AddUserDTO;
 import de.vinado.wicket.participate.model.dtos.PersonDTO;
 import de.vinado.wicket.participate.services.UserService;
-import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.extensions.markup.html.basic.SmartLinkMultiLineLabel;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
@@ -96,6 +94,7 @@ public class UserPanel extends BootstrapPanel<Void> {
         IModel<AddUserDTO> model = new CompoundPropertyModel<>(new AddUserDTO());
 
         modal
+            .setHeaderVisible(true)
             .title(new ResourceModel("user.add", "Add User"))
             .content(id -> new AddUserPanel(id, model))
             .addCloseAction(new ResourceModel("cancel", "Cancel"))
@@ -190,39 +189,45 @@ public class UserPanel extends BootstrapPanel<Void> {
 
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
                         boolean associated = isAssociated(rowModel.getObject());
                         if (associated) {
-                            modal.setContent(unassociate(modal));
-                            modal.show(target);
+                            unassociate(target);
                         } else {
                             associate(target);
                         }
                     }
 
-                    private Modal<?> unassociate(ModalAnchor modal) {
-                        return new ConfirmationModal(modal,
-                            new ResourceModel("user.remove.person.question", "Are you sure you want to remove the user-person association?")) {
+                    private void unassociate(AjaxRequestTarget target) {
+                        IModel<String> prompt = new ResourceModel("user.remove.person.question", "Are you sure you want to remove the user-person association?");
 
-                            @Override
-                            protected void onConfirm(AjaxRequestTarget target) {
-                                unassign(rowModel.getObject());
-                                send(getWebPage(), Broadcast.BREADTH, new UserTableUpdateIntent());
+                        modal
+                            .setHeaderVisible(false)
+                            .content(id -> new SmartLinkMultiLineLabel(id, prompt))
+                            .addCloseAction(new ResourceModel("abort", "Abort"))
+                            .addAction(id -> new BootstrapAjaxLink<Void>(id, Buttons.Type.Success) {
 
-                            }
+                                @Override
+                                public void onClick(AjaxRequestTarget target) {
+                                    unassign(rowModel.getObject());
+                                    send(getWebPage(), Broadcast.BREADTH, new UserTableUpdateIntent());
 
-                            private void unassign(User user) {
-                                AddUserDTO dto = new AddUserDTO(user);
-                                dto.setPerson(null);
-                                userService.saveUser(dto);
-                            }
-                        }.title(new ResourceModel("user.remove.person", "Remove user-person association"));
+                                    modal.close(target);
+                                }
+
+                                private void unassign(User user) {
+                                    AddUserDTO dto = new AddUserDTO(user);
+                                    dto.setPerson(null);
+                                    userService.saveUser(dto);
+                                }
+                            }.setLabel(new ResourceModel("confirm", "Confirm")))
+                            .show(target);
                     }
 
                     private void associate(AjaxRequestTarget target) {
                         IModel<AddUserDTO> model = new CompoundPropertyModel<>(new AddUserDTO(rowModel.getObject()));
 
                         modal
+                            .setHeaderVisible(true)
                             .title(new ResourceModel("person.assign", "Assign Person"))
                             .content(id -> new AddPersonToUserPanel(id, model))
                             .addCloseAction(new ResourceModel("cancel", "Cancel"))
@@ -297,6 +302,7 @@ public class UserPanel extends BootstrapPanel<Void> {
                         IModel<PersonDTO> model = new CompoundPropertyModel<>(new PersonDTO(person));
 
                         modal
+                            .setHeaderVisible(true)
                             .title(new ResourceModel("person.edit", "Edit Person"))
                             .content(id -> new AddEditPersonPanel(id, model))
                             .addCloseAction(new ResourceModel("cancel", "Cancel"))
