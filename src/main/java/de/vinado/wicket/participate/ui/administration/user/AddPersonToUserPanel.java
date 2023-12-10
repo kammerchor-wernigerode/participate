@@ -1,7 +1,5 @@
 package de.vinado.wicket.participate.ui.administration.user;
 
-import de.vinado.wicket.bt4.modal.FormModal;
-import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.app.participate.wicket.form.FormComponentLabel;
 import de.vinado.wicket.form.ConditionalValidator;
 import de.vinado.wicket.participate.model.Person;
@@ -15,10 +13,12 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.EmailTextField;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -29,7 +29,7 @@ import org.wicketstuff.select2.Select2Choice;
 
 import static de.vinado.util.SerializablePredicates.not;
 
-public abstract class AddPersonToUserPanel extends FormModal<AddUserDTO> {
+public class AddPersonToUserPanel extends GenericPanel<AddUserDTO> {
 
     public static final String SELECTED_ASSIGN_PERSON = "person.assign";
     public static final String SELECTED_CREATE_PERSON = "person.add";
@@ -44,10 +44,8 @@ public abstract class AddPersonToUserPanel extends FormModal<AddUserDTO> {
     @SuppressWarnings("unused")
     private PersonService personService;
 
-    public AddPersonToUserPanel(ModalAnchor anchor, IModel<AddUserDTO> model) {
-        super(anchor, model);
-
-        title(new ResourceModel("person.assign", "Assign Person"));
+    public AddPersonToUserPanel(String wicketId, IModel<AddUserDTO> model) {
+        super(wicketId, model);
 
         selectedModel.setObject(SELECTED_ASSIGN_PERSON);
     }
@@ -55,6 +53,9 @@ public abstract class AddPersonToUserPanel extends FormModal<AddUserDTO> {
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        Form<AddUserDTO> form;
+        add(form = form("form"));
 
         WebMarkupContainer wmc = new WebMarkupContainer("wmc");
         wmc.setOutputMarkupPlaceholderTag(true);
@@ -134,21 +135,31 @@ public abstract class AddPersonToUserPanel extends FormModal<AddUserDTO> {
         personS2c.add(new ConditionalValidator<>(not(userService::hasUser),
             new ResourceModel("person.assign.error", "The person is already assigned to a user")));
         personWmc.add(personS2c, new FormComponentLabel("personLabel", personS2c));
+    }
 
+    protected Form<AddUserDTO> form(String wicketId) {
+        return new Form<>(wicketId, getModel()) {
+
+            @Override
+            protected void onSubmit() {
+                super.onSubmit();
+
+                AddPersonToUserPanel.this.onSubmit();
+            }
+        };
     }
 
     private boolean ensureUnique(String email) {
         return StringUtils.equalsIgnoreCase(email, getModelObject().getEmail()) || !personService.hasPerson(email);
     }
 
-    @Override
-    protected void onSubmit(AjaxRequestTarget target) {
-        onConfirm(userService.assignPerson(getModelObject()), target);
+    protected void onSubmit() {
+        User user = userService.assignPerson(getModelObject());
+        Person person = user.getPerson();
+        userService.startPasswordReset(person.getEmail(), true);
     }
 
     public IModel<String> getSelectedModel() {
         return selectedModel;
     }
-
-    protected abstract void onConfirm(User user, AjaxRequestTarget target);
 }

@@ -191,10 +191,13 @@ public class UserPanel extends BootstrapPanel<Void> {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
-                        modal.setContent(isAssociated(rowModel.getObject())
-                            ? unassociate(modal)
-                            : associate(modal));
-                        modal.show(target);
+                        boolean associated = isAssociated(rowModel.getObject());
+                        if (associated) {
+                            modal.setContent(unassociate(modal));
+                            modal.show(target);
+                        } else {
+                            associate(target);
+                        }
                     }
 
                     private Modal<?> unassociate(ModalAnchor modal) {
@@ -216,32 +219,20 @@ public class UserPanel extends BootstrapPanel<Void> {
                         }.title(new ResourceModel("user.remove.person", "Remove user-person association"));
                     }
 
-                    private Modal<?> associate(ModalAnchor modal) {
-                        return new AddPersonToUserPanel(modal, new CompoundPropertyModel<>(new AddUserDTO(rowModel.getObject()))) {
+                    private void associate(AjaxRequestTarget target) {
+                        IModel<AddUserDTO> model = new CompoundPropertyModel<>(new AddUserDTO(rowModel.getObject()));
 
-                            @Override
-                            protected void onConfirm(User savedUser, AjaxRequestTarget target) {
-                                Person person = savedUser.getPerson();
-                                assignAndNotify(person, target);
-                                send(getWebPage(), Broadcast.BREADTH, new UserTableUpdateIntent());
-                            }
+                        modal
+                            .title(new ResourceModel("person.assign", "Assign Person"))
+                            .content(id -> new AddPersonToUserPanel(id, model))
+                            .addCloseAction(new ResourceModel("cancel", "Cancel"))
+                            .addSubmitAction(new ResourceModel("save", "Save"), this::onConfirm)
+                            .show(target);
+                    }
 
-                            private void assignAndNotify(Person person, AjaxRequestTarget target) {
-                                try {
-                                    assign(person);
-                                    Snackbar.show(target, new ResourceModel("email.send.invitation.success", "An invitation has been sent"));
-                                } catch (RuntimeException e) {
-                                    Snackbar.show(target, new ResourceModel("email.send.invitation.error", "There was an error sending the invitation"));
-                                }
-                            }
-
-                            private void assign(Person person) {
-                                boolean success = userService.startPasswordReset(person.getEmail(), true);
-                                if (!success) {
-                                    throw new RuntimeException();
-                                }
-                            }
-                        };
+                    private void onConfirm(AjaxRequestTarget target) {
+                        Snackbar.show(target, new ResourceModel("email.send.invitation.success", "An invitation has been sent"));
+                        send(getWebPage(), Broadcast.BREADTH, new UserTableUpdateIntent());
                     }
                 };
                 item.add(button);
