@@ -289,12 +289,11 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     private void edit(AjaxRequestTarget target) {
         Event event = getModelObject().getEvent();
         CompoundPropertyModel<EventDTO> model = new CompoundPropertyModel<>(new EventDTO(event));
-        AddEditEventPanel content = new AddEditEventPanel(modal.getContentId(), model);
 
         modal
             .size(Modal.Size.LARGE)
             .title(new ResourceModel("event.edit", "Edit Event"))
-            .content(content)
+            .content(new AddEditEventPanel(modal.getContentId(), model))
             .addCloseAction(new ResourceModel("cancel", "cancel"))
             .addSubmitAction(new ResourceModel("save", "Save"), onUpdate(model))
             .show(target);

@@ -13,7 +13,6 @@ import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.providers.Select2StringProvider;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
-import lombok.Getter;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -47,7 +46,6 @@ public class AddEditEventPanel extends GenericPanel<EventDTO> {
 
     private IModel<Boolean> severalDays;
 
-    @Getter
     private final Form<EventDTO> form;
 
     public AddEditEventPanel(String id, IModel<EventDTO> model) {

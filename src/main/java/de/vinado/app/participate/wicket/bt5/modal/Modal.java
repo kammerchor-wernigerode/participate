@@ -44,6 +44,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class Modal extends Panel {
@@ -269,12 +270,13 @@ public class Modal extends Panel {
         return "bootstrap.Modal.getInstance(document.getElementById('" + Strings2.escapeMarkupId(markupId) + "'))." + action + "();";
     }
 
-    public Modal addSubmitAction(IModel<?> label, Form<?> form) {
-        return addSubmitAction(label, form, target -> {
+    public Modal addSubmitAction(IModel<?> label) {
+        return addSubmitAction(label, target -> {
         });
     }
 
-    public Modal addSubmitAction(IModel<?> label, Form<?> form, SerializableConsumer<AjaxRequestTarget> onAfterSubmit) {
+    public Modal addSubmitAction(IModel<?> label, SerializableConsumer<AjaxRequestTarget> onAfterSubmit) {
+        Form<?> form = findForm().orElseThrow(() -> new IllegalStateException("Form cannot be found in the hierarchy"));
         return addAction(id -> new SubmitButton(id, form, label) {
 
             @Override
@@ -283,6 +285,14 @@ public class Modal extends Panel {
                 onAfterSubmit.accept(target);
             }
         });
+    }
+
+    @SuppressWarnings("rawtypes")
+    private Optional<Form> findForm() {
+        return body.streamChildren()
+            .filter(Form.class::isInstance)
+            .map(Form.class::cast)
+            .findFirst();
     }
 
     public Modal addCloseAction(IModel<String> label) {
