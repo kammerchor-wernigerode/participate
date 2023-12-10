@@ -6,27 +6,45 @@
 <body>
 <wicket:panel>
     <wicket:extend>
-        <div class="form-horizontal">
-            <div wicket:id="personRC">
-                <div class="form-group">
-                    <div class="col-sm-9 offset-sm-3">
-                        <label class="radio-inline">
-                            <input type="radio" wicket:id="assignPersonChoice"/>
-                            <wicket:message key="person.assign">Assign Person</wicket:message>
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" wicket:id="createPersonChoice"/>
-                            <wicket:message key="person.add">Add Person</wicket:message>
-                        </label>
+        <div wicket:id="personRC">
+            <div class="row mb-3">
+                <div class="col-sm-9 offset-sm-3">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" wicket:id="assignPersonChoice">
+                        <label class="form-check-label" wicket:id="assignPersonChoiceLabel"></label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" wicket:id="createPersonChoice">
+                        <label class="form-check-label" wicket:id="createPersonChoiceLabel"></label>
                     </div>
                 </div>
             </div>
-            <div wicket:id="wmc">
-                <input type="text" wicket:id="firstName"/>
-                <input type="text" wicket:id="lastName"/>
-                <input type="email" wicket:id="email"/>
+        </div>
+        <div wicket:id="wmc">
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" wicket:id="firstNameLabel"></label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" wicket:id="firstName">
+                </div>
             </div>
-            <select wicket:id="person"></select>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" wicket:id="lastNameLabel"></label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" wicket:id="lastName">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" wicket:id="emailLabel"></label>
+                <div class="col-sm-9">
+                    <input type="email" class="form-control" wicket:id="email">
+                </div>
+            </div>
+        </div>
+        <div class="row" wicket:id="personWmc">
+            <label class="col-sm-3 col-form-label" wicket:id="personLabel"></label>
+            <div class="col-sm-9">
+                <select class="form-select" wicket:id="person"></select>
+            </div>
         </div>
     </wicket:extend>
 </wicket:panel>

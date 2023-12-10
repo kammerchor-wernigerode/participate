@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate.ui.administration.user;
 
-import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.bt4.modal.FormModal;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
+import de.vinado.app.participate.wicket.form.FormComponentLabel;
 import de.vinado.wicket.form.ConditionalValidator;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.User;
@@ -17,6 +17,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -43,8 +44,6 @@ public abstract class AddPersonToUserPanel extends FormModal<AddUserDTO> {
     @SuppressWarnings("unused")
     private PersonService personService;
 
-    private Select2Choice<Person> personS2c;
-
     public AddPersonToUserPanel(ModalAnchor anchor, IModel<AddUserDTO> model) {
         super(anchor, model);
 
@@ -63,50 +62,62 @@ public abstract class AddPersonToUserPanel extends FormModal<AddUserDTO> {
         wmc.setVisible(false);
         form.add(wmc);
 
+        WebMarkupContainer personWmc = new WebMarkupContainer("personWmc");
+        personWmc.setOutputMarkupPlaceholderTag(true);
+        form.add(personWmc);
+
         RadioGroup<String> radioGroup = new RadioGroup<>("personRC", selectedModel);
-        radioGroup.setLabel(Model.of(""));
-        radioGroup.add(new Radio<>("assignPersonChoice", Model.of(SELECTED_ASSIGN_PERSON)));
-        radioGroup.add(new Radio<>("createPersonChoice", Model.of(SELECTED_CREATE_PERSON)));
+
+        Radio<String> assignPersonChoice;
+        radioGroup.add(assignPersonChoice = new Radio<>("assignPersonChoice", Model.of(SELECTED_ASSIGN_PERSON)));
+        assignPersonChoice.setLabel(new ResourceModel("person.assign", "Assign Person"));
+        radioGroup.add(new SimpleFormComponentLabel("assignPersonChoiceLabel", assignPersonChoice));
+
+        Radio<String> createPersonChoice;
+        radioGroup.add(createPersonChoice = new Radio<>("createPersonChoice", Model.of(SELECTED_CREATE_PERSON)));
+        createPersonChoice.setLabel(new ResourceModel("person.add", "Add Person"));
+        radioGroup.add(new SimpleFormComponentLabel("createPersonChoiceLabel", createPersonChoice));
+
         radioGroup.setRenderBodyOnly(false);
         radioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 if (SELECTED_CREATE_PERSON.equals(getSelectedModel().getObject())) {
                     wmc.setVisible(true);
-                    personS2c.setVisible(false);
-                    target.add(personS2c);
+                    personWmc.setVisible(false);
+                    target.add(personWmc);
                     target.add(wmc);
                 } else {
                     wmc.setVisible(false);
                     target.add(wmc);
-                    personS2c.setVisible(true);
-                    target.add(personS2c);
+                    personWmc.setVisible(true);
+                    target.add(personWmc);
                 }
             }
         });
         form.add(radioGroup);
 
         TextField firstNameTf = new TextField("firstName");
-        firstNameTf.add(BootstrapHorizontalFormDecorator.decorate());
+        firstNameTf.setLabel(new ResourceModel("firstName", "Given name"));
         firstNameTf.setRequired(true);
-        wmc.add(firstNameTf);
+        wmc.add(firstNameTf, new FormComponentLabel("firstNameLabel", firstNameTf));
 
         // surName
         TextField lastNameTf = new TextField("lastName");
-        lastNameTf.add(BootstrapHorizontalFormDecorator.decorate());
+        lastNameTf.setLabel(new ResourceModel("lastName", "Surname"));
         lastNameTf.setRequired(true);
-        wmc.add(lastNameTf);
+        wmc.add(lastNameTf, new FormComponentLabel("lastNameLabel", lastNameTf));
 
         // email
         EmailTextField emailTf = new EmailTextField("email");
-        emailTf.add(BootstrapHorizontalFormDecorator.decorate());
+        emailTf.setLabel(new ResourceModel("email", "Email"));
         emailTf.setRequired(true);
         emailTf.add(new ConditionalValidator<>(this::ensureUnique,
             new ResourceModel("unique.email", "A person with this e-mail address already exists")));
-        wmc.add(emailTf);
+        wmc.add(emailTf, new FormComponentLabel("emailLabel", emailTf));
 
         // person
-        personS2c = new Select2Choice<>("person",
+        Select2Choice<Person> personS2c = new Select2Choice<>("person",
             new PropertyModel<>(getModel(), "person"),
             new Select2PersonProvider(personService));
         personS2c.getSettings().setLanguage(getLocale().getLanguage());
@@ -119,12 +130,11 @@ public abstract class AddPersonToUserPanel extends FormModal<AddUserDTO> {
         personS2c.setOutputMarkupPlaceholderTag(true);
         personS2c.setEnabled(true);
         personS2c.setLabel(new ResourceModel("person.select", "Select Person"));
-        personS2c.add(BootstrapHorizontalFormDecorator.decorate());
+        personS2c.setLabel(new ResourceModel("person", "Person"));
         personS2c.add(new ConditionalValidator<>(not(userService::hasUser),
             new ResourceModel("person.assign.error", "The person is already assigned to a user")));
-        form.add(personS2c);
+        personWmc.add(personS2c, new FormComponentLabel("personLabel", personS2c));
 
-        addBootstrapHorizontalFormDecorator(form);
     }
 
     private boolean ensureUnique(String email) {
