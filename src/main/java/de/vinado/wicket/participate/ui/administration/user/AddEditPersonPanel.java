@@ -2,6 +2,7 @@ package de.vinado.wicket.participate.ui.administration.user;
 
 import de.vinado.wicket.bt4.modal.FormModal;
 import de.vinado.wicket.bt4.modal.ModalAnchor;
+import de.vinado.app.participate.wicket.form.FormComponentLabel;
 import de.vinado.wicket.form.ConditionalValidator;
 import de.vinado.wicket.participate.model.dtos.PersonDTO;
 import de.vinado.wicket.participate.services.PersonService;
@@ -34,18 +35,19 @@ public abstract class AddEditPersonPanel extends FormModal<PersonDTO> {
         super.onInitialize();
 
         RequiredTextField firstNameTf = new RequiredTextField("firstName");
-        form.add(firstNameTf);
+        firstNameTf.setLabel(new ResourceModel("firstName", "Given Name"));
+        form.add(firstNameTf, new FormComponentLabel("firstNameLabel", firstNameTf));
 
         RequiredTextField lastNameTf = new RequiredTextField("lastName");
-        form.add(lastNameTf);
+        lastNameTf.setLabel(new ResourceModel("lastName", "Surname"));
+        form.add(lastNameTf, new FormComponentLabel("lastNameLabel", lastNameTf));
 
         EmailTextField emailTf = new EmailTextField("email");
+        emailTf.setLabel(new ResourceModel("email", "Email"));
         emailTf.setRequired(true);
         emailTf.add(new ConditionalValidator<>(this::ensureUnique,
             new ResourceModel("unique.email", "A person with this e-mail address already exists")));
-        form.add(emailTf);
-
-        addBootstrapHorizontalFormDecorator(form);
+        form.add(emailTf, new FormComponentLabel("emailLabel", emailTf));
     }
 
     @Override
