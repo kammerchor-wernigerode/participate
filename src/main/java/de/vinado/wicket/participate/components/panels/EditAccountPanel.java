@@ -1,8 +1,6 @@
 package de.vinado.wicket.participate.components.panels;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.tabs.AjaxBootstrapTabbedPanel;
-import de.vinado.wicket.bt4.modal.FormModal;
-import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.app.participate.wicket.form.FormComponentLabel;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.Voice;
@@ -26,6 +24,7 @@ import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.validation.AbstractFormValidator;
 import org.apache.wicket.markup.html.form.validation.EqualPasswordInputValidator;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
@@ -38,7 +37,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
+public class EditAccountPanel extends GenericPanel<EditAccountDTO> {
 
     @SpringBean
     @SuppressWarnings("unused")
@@ -48,15 +47,31 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
     @SuppressWarnings("unused")
     private PersonService personService;
 
-    public EditAccountPanel(ModalAnchor modal, IModel<EditAccountDTO> model) {
-        super(modal, model);
+    private final Form<EditAccountDTO> form;
 
-        title(new ResourceModel("account.edit", "Edit Account"));
+    public EditAccountPanel(String id, IModel<EditAccountDTO> model) {
+        super(id, model);
+
+        this.form = form("form");
+    }
+
+    protected Form<EditAccountDTO> form(String wicketId) {
+        return new Form<>(wicketId, getModel()) {
+
+            @Override
+            protected void onSubmit() {
+                super.onSubmit();
+
+                EditAccountPanel.this.onSubmit();
+            }
+        };
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        add(form);
 
         List<ITab> tabs = new ArrayList<>();
         tabs.add(new AbstractTab(new ResourceModel("account.user", "User Account")) {
@@ -78,8 +93,7 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
         form.add(tabbedPanel);
     }
 
-    @Override
-    protected void onSubmit(AjaxRequestTarget target) {
+    protected void onSubmit() {
         EditAccountDTO modelObject = getModelObject();
 
         if (null != modelObject.getPerson()) {
@@ -98,10 +112,10 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
         AddUserDTO userDTO = new AddUserDTO(modelObject.getUser());
         userDTO.setUsername(modelObject.getUsername());
         userDTO.setPassword(modelObject.getPassword());
-        onConfirm(userService.saveUser(userDTO), target);
+        User user = userService.saveUser(userDTO);
+        modelObject.setUser(user);
     }
 
-    protected abstract void onConfirm(User user, AjaxRequestTarget target);
 
     private class EditUserPanel extends Panel {
 
