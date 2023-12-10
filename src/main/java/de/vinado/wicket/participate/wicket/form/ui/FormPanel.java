@@ -1,7 +1,6 @@
 package de.vinado.wicket.participate.wicket.form.ui;
 
-import de.vinado.wicket.bt4.modal.ModalAnchor;
-import de.vinado.wicket.bt4.modal.TextContentModal;
+import de.vinado.app.participate.wicket.bt5.modal.Modal;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.Participant;
@@ -9,10 +8,10 @@ import de.vinado.wicket.participate.model.TemplateModel;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateIntent;
-import de.vinado.wicket.participate.ui.pages.BasePage;
 import lombok.RequiredArgsConstructor;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.extensions.markup.html.basic.SmartLinkMultiLineLabel;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
@@ -31,14 +30,23 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
     @SpringBean
     private ApplicationProperties applicationProperties;
 
+    private final Modal modal;
+
     public FormPanel(String id, IModel<ParticipantDTO> model) {
         super(id, model);
+
+        this.modal = modal("modal");
+    }
+
+    protected Modal modal(String wicketId) {
+        return new Modal(wicketId);
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
+        add(modal);
         add(form("form"));
     }
 
@@ -104,14 +112,12 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
         return data;
     }
 
-    private void displaySuccessionModal(IModel<String> messageModel, AjaxRequestTarget target) {
-        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
-        ResourceModel titleModel = new ResourceModel("invitation.accept.success", "Thanks you for your registration!");
-
-        TextContentModal confirmation = new TextContentModal(modal, messageModel);
-        confirmation.title(titleModel);
-        modal.setContent(confirmation);
-        modal.show(target);
+    private void displaySuccessionModal(IModel<String> message, AjaxRequestTarget target) {
+        modal
+            .title(new ResourceModel("invitation.accept.success", "Thanks you for your registration!"))
+            .content(id -> new SmartLinkMultiLineLabel(id, message))
+            .addCloseAction(new ResourceModel("close", "Close"))
+            .show(target);
     }
 
     @RequiredArgsConstructor
