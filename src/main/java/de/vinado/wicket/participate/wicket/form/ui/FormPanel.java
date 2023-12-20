@@ -58,9 +58,8 @@ public class FormPanel extends GenericPanel<ParticipantDTO> {
                 eventService.declineEvent(getModelObject());
                 send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
 
-                ResourceModel model = new ResourceModel("invitation.decline.success",
-                    "Your cancellation has been saved. You can leave this page now.");
-                Snackbar.show(target, model);
+                String string = FormPanel.this.getString("invitation.decline.success");
+                Snackbar.show(target, string);
             }
 
             @Override
