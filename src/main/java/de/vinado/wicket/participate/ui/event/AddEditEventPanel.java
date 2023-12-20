@@ -26,10 +26,11 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2Choice;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class AddEditEventPanel extends GenericPanel<EventDTO> {
 
@@ -79,13 +80,13 @@ public class AddEditEventPanel extends GenericPanel<EventDTO> {
         DateTextFieldConfig startDateConfig = new DateTextFieldConfig();
         startDateConfig.withLanguage("de");
         startDateConfig.withFormat("dd.MM.yyyy");
-        startDateConfig.withStartDate(new DateTime());
+        startDateConfig.withStartDate(LocalDateTime.now());
         startDateConfig.autoClose(true);
 
         DateTextFieldConfig endDateConfig = new DateTextFieldConfig();
         endDateConfig.withLanguage("de");
         endDateConfig.withFormat("dd.MM.yyyy");
-        endDateConfig.withStartDate(new DateTime());
+        endDateConfig.withStartDate(LocalDateTime.now());
         endDateConfig.autoClose(true);
 
         TextField<String> nameTf = new TextField<>("name");
@@ -145,7 +146,8 @@ public class AddEditEventPanel extends GenericPanel<EventDTO> {
         startDateTf.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                endDateConfig.withStartDate(DateTime.parse(startDateTf.getValue(), DateTimeFormat.forPattern("dd.MM.yyyy")));
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+                endDateConfig.withStartDate(LocalDateTime.parse(startDateTf.getValue(), formatter));
                 target.add(endDateTf);
             }
         });

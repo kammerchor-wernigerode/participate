@@ -6,8 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.lang3.time.DateUtils;
-import org.joda.time.format.ISODateTimeFormat;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -145,7 +147,8 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
 
     @Transient
     public String getCreationDateTimeIso() {
-        return ISODateTimeFormat.dateTime().print(creationDate.getTime());
+        Instant instant = Instant.ofEpochMilli(creationDate.getTime());
+        return DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(instant.atZone(ZoneId.systemDefault()));
     }
 
     @Transient

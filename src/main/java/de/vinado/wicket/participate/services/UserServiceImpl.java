@@ -15,14 +15,17 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.string.Strings;
-import org.joda.time.DateTime;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -98,7 +101,9 @@ public class UserServiceImpl extends DataService implements UserService {
     }
 
     protected UserRecoveryToken createUserRecoveryToken(User user, int validDuration) {
-        return save(new UserRecoveryToken(user, generateRecoveryToken(), DateTime.now().plusDays(validDuration).toDate()));
+        LocalDateTime validUntil = LocalDateTime.now().plusDays(validDuration);
+        Instant instant = validUntil.atZone(ZoneId.systemDefault()).toInstant();
+        return save(new UserRecoveryToken(user, generateRecoveryToken(), Date.from(instant)));
     }
 
     @Override
