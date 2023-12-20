@@ -23,7 +23,7 @@
         <resource.delimiter>^</resource.delimiter>
         <java.version>11</java.version>
 
-        <dependency.ical4j.version>3.1.3</dependency.ical4j.version>
+        <dependency.ical4j.version>3.2.14</dependency.ical4j.version>
         <dependency.mail-extensions-all-spring-boot-starter.version>2.0.0</dependency.mail-extensions-all-spring-boot-starter.version>
         <dependency.opencsv.version>5.9</dependency.opencsv.version>
         <dependency.sass.version>1.69.5</dependency.sass.version>
