@@ -17,9 +17,6 @@ A location has not be announced yet.
 
 Please fill the form behind the link.
 
-Even if you don't know exactly whether you can come, you may provisionally accept the invitation.
-From now on you can tell us whether you are arriving by car and how many seats your car has.
-
 ${acceptLink}
 
 You are able to change your data at any time. Simply click on the link again.

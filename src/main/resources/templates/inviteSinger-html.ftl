@@ -174,8 +174,6 @@
                                             You are able to change your data at any time. Simply click on the link
                                             again.
                                         </p>
-                                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Even if you don't know exactly whether you can come, you may provisionally accept the invitation.</p>
-                                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">From now on you can tell us whether you are arriving by car and how many seats your car has.</p>
                                     </td>
                                 </tr>
                             </table>
