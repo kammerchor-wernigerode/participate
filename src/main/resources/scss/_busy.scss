@@ -2,7 +2,7 @@
 
 #busy-indicator {
     display: inline;
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
@@ -12,7 +12,7 @@
     transform: translate(-21.09px, -21.09px); // Transform half of icon size
     z-index: 22001;
 
-    .fa {
+    svg {
         position: fixed;
         top: 50%;
         left: 50%;
