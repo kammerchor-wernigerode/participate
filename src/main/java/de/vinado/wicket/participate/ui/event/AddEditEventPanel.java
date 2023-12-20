@@ -13,6 +13,7 @@ import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.providers.Select2StringProvider;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
+import lombok.SneakyThrows;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -29,8 +30,8 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2Choice;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class AddEditEventPanel extends GenericPanel<EventDTO> {
 
@@ -80,13 +81,13 @@ public class AddEditEventPanel extends GenericPanel<EventDTO> {
         DateTextFieldConfig startDateConfig = new DateTextFieldConfig();
         startDateConfig.withLanguage("de");
         startDateConfig.withFormat("dd.MM.yyyy");
-        startDateConfig.withStartDate(LocalDateTime.now());
+        startDateConfig.withStartDate(new Date());
         startDateConfig.autoClose(true);
 
         DateTextFieldConfig endDateConfig = new DateTextFieldConfig();
         endDateConfig.withLanguage("de");
         endDateConfig.withFormat("dd.MM.yyyy");
-        endDateConfig.withStartDate(LocalDateTime.now());
+        endDateConfig.withStartDate(new Date());
         endDateConfig.autoClose(true);
 
         TextField<String> nameTf = new TextField<>("name");
@@ -144,10 +145,13 @@ public class AddEditEventPanel extends GenericPanel<EventDTO> {
             }
         };
         startDateTf.add(new AjaxFormComponentUpdatingBehavior("change") {
+
+            @SneakyThrows
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-                endDateConfig.withStartDate(LocalDateTime.parse(startDateTf.getValue(), formatter));
+                String pattern = endDateConfig.getFormat();
+                SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+                endDateConfig.withStartDate(formatter.parse(startDateTf.getValue()));
                 target.add(endDateTf);
             }
         });
