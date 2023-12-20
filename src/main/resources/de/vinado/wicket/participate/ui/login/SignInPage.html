@@ -31,13 +31,13 @@
         <div class="col-md-6 align-self-center">
             <div class="card">
                 <div class="card-header">
-                    <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    <a data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                         <wicket:message key="resetPasswordQ">Forgot Password?</wicket:message>
                     </a>
                 </div>
                 <form class="collapse card-body" id="collapseExample" wicket:id="passwordResetForm">
                     <div class="input-group mb-3">
-                        <div class="input-group-prepend"><span class="input-group-text" id="input-addon-email"><i class="fas fa-at" aria-hidden="true"></i></span></div>
+                        <span class="input-group-text" id="input-addon-email"><i class="fas fa-at" aria-hidden="true"></i></span>
                         <input type="email" class="form-control" placeholder="E-mail Address"
                                aria-label="E-mail Address" aria-describedby="input-addon-email"
                                wicket:message="placeholder:email,aria-label:email"

@@ -5,14 +5,28 @@
 </head>
 <body>
 <wicket:panel>
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" wicket:id="usernameLabel"></label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" wicket:id="username"/>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" wicket:id="oldPasswordLabel"></label>
+        <div class="col-sm-9">
+            <input type="password" class="form-control" wicket:id="oldPassword"/>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" wicket:id="passwordLabel"></label>
+        <div class="col-sm-9">
+            <input type="password" class="form-control" wicket:id="password"/>
+        </div>
+    </div>
     <div class="row">
-        <div class="col-12">
-            <div class="form-horizontal">
-                <input type="text" wicket:id="username"/>
-                <input type="password" wicket:id="oldPassword"/>
-                <input type="password" wicket:id="password"/>
-                <input type="password" wicket:id="confirmPassword"/>
-            </div>
+        <label class="col-sm-3 col-form-label" wicket:id="confirmPasswordLabel"></label>
+        <div class="col-sm-9">
+            <input type="password" class="form-control" wicket:id="confirmPassword"/>
         </div>
     </div>
 </wicket:panel>

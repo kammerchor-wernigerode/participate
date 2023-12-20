@@ -3,11 +3,8 @@ package de.vinado.wicket.participate.ui.singers;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
-import de.vinado.wicket.bt4.modal.FormModal;
-import de.vinado.wicket.bt4.modal.ModalAnchor;
+import de.vinado.app.participate.wicket.form.FormComponentLabel;
 import de.vinado.wicket.form.ConditionalValidator;
-import de.vinado.wicket.participate.components.snackbar.Snackbar;
-import de.vinado.wicket.participate.events.SingerUpdateEvent;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.SingerDTO;
@@ -15,11 +12,12 @@ import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -27,7 +25,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class AddEditSingerPanel extends FormModal<SingerDTO> {
+public class AddEditSingerPanel extends GenericPanel<SingerDTO> {
 
     @SpringBean
     @SuppressWarnings("unused")
@@ -40,39 +38,54 @@ public class AddEditSingerPanel extends FormModal<SingerDTO> {
     private final boolean edit;
     private boolean remove = false;
 
-    public AddEditSingerPanel(ModalAnchor anchor, IModel<String> title, IModel<SingerDTO> model) {
-        super(anchor, model);
+    private final Form<SingerDTO> form;
 
-        title(title);
+    public AddEditSingerPanel(String id, IModel<SingerDTO> model) {
+        super(id, model);
 
         edit = null != model.getObject().getSinger();
+        this.form = form("form");
+    }
+
+    private Form<SingerDTO> form(String wicketId) {
+        return new Form<>(wicketId, getModel()) {
+
+            @Override
+            protected void onSubmit() {
+                super.onSubmit();
+
+                AddEditSingerPanel.this.onSubmit();
+            }
+        };
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
+        add(form);
+
         TextField<String> firstNameTf = new TextField<>("firstName");
         firstNameTf.setLabel(new ResourceModel("firstName", "Given name"));
         firstNameTf.setRequired(true);
-        form.add(firstNameTf);
+        form.add(firstNameTf, new FormComponentLabel("firstNameLabel", firstNameTf));
 
         TextField<String> lastNameTf = new TextField<>("lastName");
         lastNameTf.setLabel(new ResourceModel("lastName", "Surname"));
         lastNameTf.setRequired(true);
-        form.add(lastNameTf);
+        form.add(lastNameTf, new FormComponentLabel("lastNameLabel", lastNameTf));
 
         EmailTextField emailTf = new EmailTextField("email");
         emailTf.setLabel(new ResourceModel("email", "Email"));
         emailTf.setRequired(true);
         emailTf.add(new ConditionalValidator<>(this::ensureUnique,
             new ResourceModel("unique.email", "A person with this e-mail address already exists")));
-        form.add(emailTf);
+        form.add(emailTf, new FormComponentLabel("emailLabel", emailTf));
 
         DropDownChoice<Voice> voiceDd = new DropDownChoice<>("voice",
             Collections.unmodifiableList(Arrays.asList(Voice.values())), new EnumChoiceRenderer<>());
         voiceDd.setLabel(new ResourceModel("voice", "Voice"));
-        form.add(voiceDd);
+        form.add(voiceDd, new FormComponentLabel("voiceLabel", voiceDd));
 
         BootstrapAjaxLink<Void> removeBtn = new BootstrapAjaxLink<>("removeBtn", Buttons.Type.Link) {
             @Override
@@ -99,30 +112,38 @@ public class AddEditSingerPanel extends FormModal<SingerDTO> {
         removeBtn.setSize(Buttons.Size.Small);
         removeBtn.setOutputMarkupId(true);
         form.add(removeBtn);
-
-        addBootstrapHorizontalFormDecorator(form);
     }
 
     private boolean ensureUnique(String email) {
         return StringUtils.equalsIgnoreCase(email, getModelObject().getEmail()) || !personService.hasSinger(email);
     }
 
-    @Override
-    protected void onSubmit(AjaxRequestTarget target) {
+    protected void onSubmit() {
         SingerDTO dto = getModelObject();
         if (edit) {
             if (remove) {
-                personService.removeSinger(dto.getSinger());
-                send(getWebPage(), Broadcast.BREADTH, new SingerUpdateEvent(target));
-                Snackbar.show(target, new ResourceModel("singer.remove.success", "The singer has been removed"));
+                delete(dto);
                 return;
             }
-            personService.saveSinger(dto);
-            send(getWebPage(), Broadcast.BREADTH, new SingerUpdateEvent(target));
+            update(dto);
         } else {
-            Singer singer = personService.createSinger(dto);
-            eventService.getUpcomingEvents().forEach(event -> eventService.createParticipant(event, singer));
+            create(dto);
         }
-        send(getWebPage(), Broadcast.BREADTH, new SingerUpdateEvent(target));
+    }
+
+    private void create(SingerDTO dto) {
+        Singer singer = personService.createSinger(dto);
+        dto.setSinger(singer);
+        eventService.getUpcomingEvents().forEach(event -> eventService.createParticipant(event, singer));
+    }
+
+    private void update(SingerDTO dto) {
+        personService.saveSinger(dto);
+    }
+
+    private void delete(SingerDTO dto) {
+        Singer singer = dto.getSinger();
+        personService.removeSinger(singer);
+        singer.setActive(false);
     }
 }

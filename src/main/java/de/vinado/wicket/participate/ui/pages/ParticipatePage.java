@@ -7,7 +7,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarComponents;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarDropDownButton;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.app.participate.management.wicket.ManagementSession;
-import de.vinado.wicket.bt4.modal.ModalAnchor;
+import de.vinado.app.participate.wicket.bt5.modal.Modal;
 import de.vinado.wicket.participate.components.panels.EditAccountPanel;
 import de.vinado.wicket.participate.components.panels.Footer;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
@@ -37,6 +37,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,9 +59,21 @@ public class ParticipatePage extends BasePage {
     @SpringBean
     private PersonService personService;
 
+    private final Modal modal;
+
+    public ParticipatePage() {
+        this.modal = modal("modal");
+    }
+
+    protected Modal modal(String wicketId) {
+        return new Modal(wicketId);
+    }
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        add(modal);
 
         assertSignedIn();
 
@@ -95,18 +108,25 @@ public class ParticipatePage extends BasePage {
                                 singer = personService.hasSinger(person) ? personService.getSinger(person) : null;
                             }
 
-                            ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
-                            modal.setContent(new EditAccountPanel(modal, new CompoundPropertyModel<>(
-                                new EditAccountDTO(user, user.getPerson(), singer))) {
-                                @Override
-                                protected void onConfirm(User user, AjaxRequestTarget target) {
-                                    getSession().setMetaData(ManagementSession.user, user);
-                                    Application.get().getSecuritySettings().getAuthenticationStrategy().remove();
-                                    target.add(navbar);
-                                    Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
-                                }
-                            });
-                            modal.show(target);
+                            IModel<EditAccountDTO> model = new CompoundPropertyModel<>(new EditAccountDTO(user, user.getPerson(), singer));
+
+                            modal
+                                .size(Modal.Size.LARGE)
+                                .title(new ResourceModel("account.edit", "Edit Account"))
+                                .content(id -> new EditAccountPanel(id, model))
+                                .addCloseAction(new ResourceModel("cancel", "Cancel"))
+                                .addSubmitAction(new ResourceModel("save", "Save"), onConfirm(model))
+                                .show(target);
+                        }
+
+                        private SerializableConsumer<AjaxRequestTarget> onConfirm(IModel<EditAccountDTO> model) {
+                            return target -> {
+                                User user = model.map(EditAccountDTO::getUser).getObject();
+                                getSession().setMetaData(ManagementSession.user, user);
+                                Application.get().getSecuritySettings().getAuthenticationStrategy().remove();
+                                target.add(navbar);
+                                Snackbar.show(target, new ResourceModel("edit.success", "The data was saved successfully"));
+                            };
                         }
                     }.setBody(new ResourceModel("account.edit", "Edit Account")));
                     if (null != getSession().getMetaData(ManagementSession.user) && AbstractAuthenticatedWebSession.get().getRoles().hasRole(Roles.ADMIN)) {

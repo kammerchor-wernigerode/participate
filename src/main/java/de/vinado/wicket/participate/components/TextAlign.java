@@ -3,9 +3,9 @@ package de.vinado.wicket.participate.components;
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.ICssClassNameProvider;
 
 public enum TextAlign implements ICssClassNameProvider {
-    LEFT("text-left"),
+    START("text-start"),
     CENTER("text-center"),
-    RIGHT("text-right");
+    END("text-end");
 
     private final String cssClassName;
 

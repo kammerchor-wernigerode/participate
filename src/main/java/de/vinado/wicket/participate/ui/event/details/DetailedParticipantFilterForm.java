@@ -11,11 +11,16 @@ import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.ui.event.ParticipantFilterForm;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.FormComponentLabel;
+import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
 
@@ -33,43 +38,62 @@ public abstract class DetailedParticipantFilterForm extends ParticipantFilterFor
 
     @Override
     protected void onInitialize() {
-        add(commentInput("comment"));
-        add(accommodationInput("accommodation"));
+        super.onInitialize();
+
+        queue(comment("comment"));
+        queue(accommodation("accommodation"));
 
         DatetimePickerConfig toDateConfig = createDatetimePickerConfig();
-        add(toDateInput("toDate", toDateConfig));
-        add(fromDateInput("fromDate", toDateConfig::withMinDate));
-
-        super.onInitialize();
+        queue(toDate("toDate", toDateConfig));
+        queue(fromDate("fromDate", toDateConfig::withMinDate));
     }
 
-    protected FormComponent<String> commentInput(String id) {
-        TextField<String> field = new TextField<>(id);
-        field.setLabel(new ResourceModel("filter.comments", "Filter by comments"));
-        return field;
+    protected MarkupContainer comment(String wicketId) {
+        WebMarkupContainer container = new WebMarkupContainer(wicketId);
+
+        IModel<String> model = LambdaModel.of(getModel(), ParticipantFilter::getComment, ParticipantFilter::setComment);
+        FormComponent<String> control = new TextField<>("control", model)
+            .setLabel(new ResourceModel("filter.participant.form.control.comment", "Filter by comments"));
+        FormComponentLabel label = new SimpleFormComponentLabel("label", control);
+
+        return container.add(control, label);
     }
 
-    protected FormComponent<Date> fromDateInput(String id, SerializableConsumer<Date> onChange) {
+    protected MarkupContainer fromDate(String wicketId, SerializableConsumer<Date> onChange) {
+        WebMarkupContainer container = new WebMarkupContainer(wicketId);
+
+        IModel<Date> model = LambdaModel.of(getModel(), ParticipantFilter::getFromDate, ParticipantFilter::setFromDate);
         DatetimePickerConfig config = createDatetimePickerConfig();
+        FormComponent<Date> control = new DatetimePicker("control", model, config);
+        control.setLabel(new ResourceModel("filter.participant.form.control.from", "From"));
+        control.add(new DatetimePickerResettingBehavior(onChange));
+        FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 
-        DatetimePicker field = new DatetimePicker(id, config);
-        field.setLabel(new ResourceModel("from", "From"));
-        field.add(new DatetimePickerResettingBehavior(onChange));
-        return field;
+        return container.add(control, label);
     }
 
-    protected FormComponent<Date> toDateInput(String id, DatetimePickerConfig config) {
-        DatetimePicker field = new DatetimePicker(id, config);
-        field.setLabel(new ResourceModel("to", "To"));
-        field.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
-        return field;
+    protected MarkupContainer toDate(String wicketId, DatetimePickerConfig config) {
+        WebMarkupContainer container = new WebMarkupContainer(wicketId);
+
+        IModel<Date> model = LambdaModel.of(getModel(), ParticipantFilter::getToDate, ParticipantFilter::setToDate);
+        FormComponent<Date> control = new DatetimePicker("control", model, config);
+        control.setLabel(new ResourceModel("filter.participant.form.control.to", "To"));
+        control.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
+        FormComponentLabel label = new SimpleFormComponentLabel("label", control);
+
+        return container.add(control, label);
     }
 
-    protected FormComponent<Accommodation.Status> accommodationInput(String id) {
-        DropDownChoice<Accommodation.Status> select = new DropDownChoice<>(id,
+    protected MarkupContainer accommodation(String wicketId) {
+        WebMarkupContainer container = new WebMarkupContainer(wicketId);
+
+        IModel<Accommodation.Status> model = LambdaModel.of(getModel(), ParticipantFilter::getAccommodation, ParticipantFilter::setAccommodation);
+        DropDownChoice<Accommodation.Status> control = new DropDownChoice<>("control", model,
             Arrays.asList(Accommodation.Status.values()), new EnumChoiceRenderer<>(this));
-        select.setLabel(new ResourceModel("filter.participant.form.control.accommodation", "Accommodation"));
-        return select;
+        control.setLabel(new ResourceModel("filter.participant.form.control.accommodation", "Accommodation"));
+        FormComponentLabel label = new SimpleFormComponentLabel("label", control);
+
+        return container.add(control, label);
     }
 
     protected DatetimePickerConfig createDatetimePickerConfig() {

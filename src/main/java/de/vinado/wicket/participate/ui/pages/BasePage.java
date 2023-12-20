@@ -2,11 +2,9 @@ package de.vinado.wicket.participate.ui.pages;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.HtmlTag;
-import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.participate.resources.css.SnackbarCssResourceReference;
 import de.vinado.wicket.participate.resources.js.SnackbarJsResourceReference;
 import de.vinado.wicket.participate.wicket.inject.ApplicationName;
-import lombok.Getter;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -21,22 +19,13 @@ public abstract class BasePage extends WebPage {
     @SpringBean
     private ApplicationName applicationName;
 
-    @Getter
-    private ModalAnchor modalAnchor;
-
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
-        add(modalAnchor = modalAnchor(ModalAnchor.MODAL_ID));
-
         add(html("html"));
 
         add(new HeaderResponseContainer("footer-container", "footer-container"));
-    }
-
-    private ModalAnchor modalAnchor(String wicketId) {
-        return new ModalAnchor(wicketId);
     }
 
     private Component html(String id) {

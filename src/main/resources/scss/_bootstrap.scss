@@ -20,14 +20,3 @@
 .tab-content {
     margin-top: 30px;
 }
-
-.tooltip,
-.tooltip-inner {
-    overflow: visible !important;
-    text-overflow: clip !important;
-    white-space: normal !important;
-}
-
-.tooltip .tooltip-inner {
-    max-width: 350px;
-}

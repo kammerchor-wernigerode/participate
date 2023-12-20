@@ -1,9 +1,7 @@
 package de.vinado.wicket.participate.components.panels;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.tabs.AjaxBootstrapTabbedPanel;
-import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
-import de.vinado.wicket.bt4.modal.FormModal;
-import de.vinado.wicket.bt4.modal.ModalAnchor;
+import de.vinado.app.participate.wicket.form.FormComponentLabel;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.AddUserDTO;
@@ -26,6 +24,7 @@ import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.validation.AbstractFormValidator;
 import org.apache.wicket.markup.html.form.validation.EqualPasswordInputValidator;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
@@ -38,7 +37,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
+public class EditAccountPanel extends GenericPanel<EditAccountDTO> {
 
     @SpringBean
     @SuppressWarnings("unused")
@@ -48,15 +47,31 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
     @SuppressWarnings("unused")
     private PersonService personService;
 
-    public EditAccountPanel(ModalAnchor modal, IModel<EditAccountDTO> model) {
-        super(modal, model);
+    private final Form<EditAccountDTO> form;
 
-        title(new ResourceModel("account.edit", "Edit Account"));
+    public EditAccountPanel(String id, IModel<EditAccountDTO> model) {
+        super(id, model);
+
+        this.form = form("form");
+    }
+
+    protected Form<EditAccountDTO> form(String wicketId) {
+        return new Form<>(wicketId, getModel()) {
+
+            @Override
+            protected void onSubmit() {
+                super.onSubmit();
+
+                EditAccountPanel.this.onSubmit();
+            }
+        };
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        add(form);
 
         List<ITab> tabs = new ArrayList<>();
         tabs.add(new AbstractTab(new ResourceModel("account.user", "User Account")) {
@@ -78,8 +93,7 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
         form.add(tabbedPanel);
     }
 
-    @Override
-    protected void onSubmit(AjaxRequestTarget target) {
+    protected void onSubmit() {
         EditAccountDTO modelObject = getModelObject();
 
         if (null != modelObject.getPerson()) {
@@ -98,10 +112,10 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
         AddUserDTO userDTO = new AddUserDTO(modelObject.getUser());
         userDTO.setUsername(modelObject.getUsername());
         userDTO.setPassword(modelObject.getPassword());
-        onConfirm(userService.saveUser(userDTO), target);
+        User user = userService.saveUser(userDTO);
+        modelObject.setUser(user);
     }
 
-    protected abstract void onConfirm(User user, AjaxRequestTarget target);
 
     private class EditUserPanel extends Panel {
 
@@ -110,43 +124,42 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
 
             TextField usernameTf = new TextField("username");
             usernameTf.setEnabled(false);
-            usernameTf.add(BootstrapHorizontalFormDecorator.decorate());
             usernameTf.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
                 protected void onUpdate(AjaxRequestTarget target) {
                 }
             });
-            add(usernameTf);
+            add(usernameTf, new FormComponentLabel("usernameLabel", usernameTf));
 
             PasswordTextField oldPasswordTf = new PasswordTextField("oldPassword");
-            oldPasswordTf.add(BootstrapHorizontalFormDecorator.decorate());
+            oldPasswordTf.setLabel(new ResourceModel("oldPassword", "Old Password"));
             oldPasswordTf.setRequired(false);
             oldPasswordTf.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
                 protected void onUpdate(AjaxRequestTarget target) {
                 }
             });
-            add(oldPasswordTf);
+            add(oldPasswordTf, new FormComponentLabel("oldPasswordLabel", oldPasswordTf));
 
             PasswordTextField passwordTf = new PasswordTextField("password");
             passwordTf.setRequired(false);
-            passwordTf.add(BootstrapHorizontalFormDecorator.decorate());
+            passwordTf.setLabel(new ResourceModel("password", "Password"));
             passwordTf.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
                 protected void onUpdate(AjaxRequestTarget target) {
                 }
             });
-            add(passwordTf);
+            add(passwordTf, new FormComponentLabel("passwordLabel", passwordTf));
 
             PasswordTextField confirmPasswordTf = new PasswordTextField("confirmPassword");
             confirmPasswordTf.setRequired(false);
-            confirmPasswordTf.add(BootstrapHorizontalFormDecorator.decorate());
+            confirmPasswordTf.setLabel(new ResourceModel("confirmPassword", "Confirm Password"));
             confirmPasswordTf.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
                 protected void onUpdate(AjaxRequestTarget target) {
                 }
             });
-            add(confirmPasswordTf);
+            add(confirmPasswordTf, new FormComponentLabel("confirmPasswordLabel", confirmPasswordTf));
 
             form.add(new EqualPasswordInputValidator(passwordTf, confirmPasswordTf));
             form.add(new AbstractFormValidator() {
@@ -175,31 +188,31 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
             super(id, model);
 
             TextField firstNameTf = new TextField("firstName");
-            firstNameTf.add(BootstrapHorizontalFormDecorator.decorate());
+            firstNameTf.setLabel(new ResourceModel("firstName", "Given Name"));
             firstNameTf.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
                 protected void onUpdate(AjaxRequestTarget target) {
                 }
             });
-            add(firstNameTf);
+            add(firstNameTf, new FormComponentLabel("firstNameLabel", firstNameTf));
 
             TextField lastNameTf = new TextField("lastName");
-            lastNameTf.add(BootstrapHorizontalFormDecorator.decorate());
+            lastNameTf.setLabel(new ResourceModel("lastName", "Surname"));
             lastNameTf.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
                 protected void onUpdate(AjaxRequestTarget target) {
                 }
             });
-            add(lastNameTf);
+            add(lastNameTf, new FormComponentLabel("lastNameLabel", lastNameTf));
 
             EmailTextField emailTf = new EmailTextField("email");
-            emailTf.add(BootstrapHorizontalFormDecorator.decorate());
+            emailTf.setLabel(new ResourceModel("email", "Email"));
             emailTf.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
                 protected void onUpdate(AjaxRequestTarget target) {
                 }
             });
-            add(emailTf);
+            add(emailTf, new FormComponentLabel("emailLabel", emailTf));
 
             DropDownChoice<Voice> voiceDd = new DropDownChoice<Voice>("voice",
                 Collections.unmodifiableList(Arrays.asList(Voice.values())), new EnumChoiceRenderer<>()) {
@@ -209,13 +222,13 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
                     setVisible(null != model.getObject().getSinger());
                 }
             };
-            voiceDd.add(BootstrapHorizontalFormDecorator.decorate());
+            voiceDd.setLabel(new ResourceModel("voice", "Voice"));
             voiceDd.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
                 protected void onUpdate(AjaxRequestTarget target) {
                 }
             });
-            add(voiceDd);
+            add(voiceDd, new FormComponentLabel("voiceLabel", voiceDd));
         }
     }
 }

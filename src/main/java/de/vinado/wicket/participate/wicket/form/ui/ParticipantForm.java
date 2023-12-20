@@ -10,7 +10,6 @@ import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerWidgetPositioningConfig;
-import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.form.AutosizeBehavior;
 import de.vinado.wicket.participate.model.Accommodation;
@@ -26,6 +25,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponentLabel;
 import org.apache.wicket.markup.html.form.NumberTextField;
+import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
@@ -109,9 +109,8 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
 
         TextArea<?> commentTa = new TextArea<>("comment");
         commentTa.setLabel(new ResourceModel("comments", "More comments"));
-        commentTa.add(BootstrapHorizontalFormDecorator.decorate());
         commentTa.add(new AutosizeBehavior());
-        add(commentTa);
+        add(commentTa, new SimpleFormComponentLabel("commentLabel", commentTa));
 
         BootstrapAjaxButton submitBtn = new BootstrapAjaxButton("submit", Buttons.Type.Success) {
             @Override

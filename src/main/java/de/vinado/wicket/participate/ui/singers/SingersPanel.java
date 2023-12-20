@@ -2,21 +2,19 @@ package de.vinado.wicket.participate.ui.singers;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
-import de.vinado.wicket.bt4.modal.ModalAnchor;
+import de.vinado.app.participate.wicket.bt5.modal.Modal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
-import de.vinado.wicket.participate.components.panels.SendEmailPanel;
+import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.components.tables.columns.BootstrapAjaxLinkColumn;
 import de.vinado.wicket.participate.components.tables.columns.EnumColumn;
-import de.vinado.wicket.participate.email.Email;
 import de.vinado.wicket.participate.email.EmailBuilderFactory;
-import de.vinado.wicket.participate.model.Person;
+import de.vinado.wicket.participate.events.SingerUpdateEvent;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.dtos.SingerDTO;
 import de.vinado.wicket.participate.model.filters.SingerFilter;
 import de.vinado.wicket.participate.services.PersonService;
-import de.vinado.wicket.participate.ui.pages.BasePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
@@ -32,6 +30,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 
 import java.util.Arrays;
@@ -48,40 +47,45 @@ public class SingersPanel extends BootstrapPanel<SingerFilter> {
     @SpringBean
     private EmailBuilderFactory emailBuilderFactory;
 
+    public final Modal modal;
+
     public SingersPanel(String id, IModel<SingerFilter> model) {
         super(id, model);
+
+        this.modal = modal("modal");
+    }
+
+    protected Modal modal(String wicketId) {
+        return new Modal(wicketId);
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
+        add(modal);
+
         addQuickAccessAction(AjaxAction.create(new ResourceModel("singer.add", "Add Singer"),
             FontAwesome5IconType.plus_s,
             this::add));
-        addDropdownAction(AjaxAction.create(new ResourceModel("email.send", "Send Email"),
-            FontAwesome5IconType.envelope_s,
-            this::email));
 
         add(filter());
         add(table());
     }
 
     private void add(AjaxRequestTarget target) {
-        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
-        modal.setContent(new AddEditSingerPanel(modal, new ResourceModel("singer.add", "Add Singer"),
-            new CompoundPropertyModel<>(new SingerDTO())));
-        modal.show(target);
+        IModel<SingerDTO> model = new CompoundPropertyModel<>(new SingerDTO());
+
+        modal
+            .title(new ResourceModel("singer.add", "Add Singer"))
+            .content(id -> new AddEditSingerPanel(id, model))
+            .addCloseAction(new ResourceModel("cancel", "Cancel"))
+            .addSubmitAction(new ResourceModel("save", "Save"), this::onAdd)
+            .show(target);
     }
 
-    private void email(AjaxRequestTarget target) {
-        Email mailData = emailBuilderFactory.create()
-            .toPeople(personService.getSingers())
-            .build();
-
-        ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
-        modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
-        modal.show(target);
+    private void onAdd(AjaxRequestTarget target) {
+        broadcastSingerUpdateEvent(target);
     }
 
     private SingerFilterForm filter() {
@@ -112,8 +116,7 @@ public class SingersPanel extends BootstrapPanel<SingerFilter> {
             nameColumn(),
             emailAddressColumn(),
             voiceColumn(),
-            editColumn(),
-            emailColumn()
+            editColumn()
         );
     }
 
@@ -156,11 +159,26 @@ public class SingersPanel extends BootstrapPanel<SingerFilter> {
             new ResourceModel("singer.edit", "Edit Singer")) {
             @Override
             public void onClick(AjaxRequestTarget target, IModel<Singer> rowModel) {
-                ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
                 Singer singer = rowModel.getObject();
-                modal.setContent(new AddEditSingerPanel(modal, new ResourceModel("singer.edit", "Edit Singer"), new CompoundPropertyModel<>(
-                    new SingerDTO(singer))));
-                modal.show(target);
+                CompoundPropertyModel<SingerDTO> model = new CompoundPropertyModel<>(new SingerDTO(singer));
+
+                modal
+                    .title(new ResourceModel("singer.edit", "Edit Singer"))
+                    .content(id -> new AddEditSingerPanel(id, model))
+                    .addCloseAction(new ResourceModel("cancel", "Cancel"))
+                    .addSubmitAction(new ResourceModel("save", "Save"), onUpdate(model))
+                    .show(target);
+            }
+
+            private SerializableConsumer<AjaxRequestTarget> onUpdate(CompoundPropertyModel<SingerDTO> model) {
+                return target -> {
+                    Singer singer = model.map(SingerDTO::getSinger).getObject();
+                    if (null == singer || !singer.isActive()) {
+                        Snackbar.show(target, new ResourceModel("singer.remove.success", "The singer has been removed"));
+                    }
+
+                    broadcastSingerUpdateEvent(target);
+                };
             }
 
             @Override
@@ -170,31 +188,12 @@ public class SingersPanel extends BootstrapPanel<SingerFilter> {
         };
     }
 
-    private IColumn<Singer, SerializableFunction<Singer, ?>> emailColumn() {
-        return new BootstrapAjaxLinkColumn<>(FontAwesome5IconType.envelope_s,
-            new ResourceModel("email.send", "Send Email")) {
-            @Override
-            public void onClick(AjaxRequestTarget target, IModel<Singer> rowModel) {
-                Person person = rowModel.getObject();
-
-                Email mailData = emailBuilderFactory.create()
-                    .to(person)
-                    .build();
-
-                ModalAnchor modal = ((BasePage) getWebPage()).getModalAnchor();
-                modal.setContent(new SendEmailPanel(modal, new CompoundPropertyModel<>(mailData)));
-                modal.show(target);
-            }
-
-            @Override
-            public String getCssClass() {
-                return "email";
-            }
-        };
-    }
-
     private static <T, R> SerializableFunction<T, R> with(SerializableFunction<T, R> function) {
         return function;
+    }
+
+    private void broadcastSingerUpdateEvent(AjaxRequestTarget target) {
+        send(getWebPage(), Broadcast.BREADTH, new SingerUpdateEvent(target));
     }
 
     @Override

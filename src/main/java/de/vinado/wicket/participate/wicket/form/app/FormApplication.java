@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate.wicket.form.app;
 
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
+import de.vinado.app.participate.wicket.bt5.AuthenticatedBootstrapWebApplication;
 import de.vinado.app.participate.wicket.crypto.CryptFactory;
-import de.vinado.wicket.bt4.AuthenticatedBootstrapWebApplication;
 import de.vinado.wicket.participate.wicket.form.ui.FormPage;
 import de.vinado.wicket.participate.wicket.form.ui.FormSignInPage;
 import lombok.RequiredArgsConstructor;

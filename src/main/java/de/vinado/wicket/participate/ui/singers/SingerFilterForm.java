@@ -1,42 +1,35 @@
 package de.vinado.wicket.participate.ui.singers;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.ButtonBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
-import de.vinado.wicket.bt4.form.decorator.BootstrapInlineFormDecorator;
 import de.vinado.wicket.bt4.tooltip.TooltipBehavior;
 import de.vinado.wicket.participate.model.Voice;
 import de.vinado.wicket.participate.model.filters.SingerFilter;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.AbstractSubmitLink;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.FormComponentLabel;
+import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.AbstractLink;
-import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
-import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.util.visit.IVisitor;
 
 import java.util.Arrays;
 
-public abstract class SingerFilterForm extends Form<SingerFilter> {
-
-    private static final String TAG_NAME = "singerFilterForm";
-
-    static {
-        WicketTagIdentifier.registerWellKnownTagName(TAG_NAME);
-    }
+public abstract class SingerFilterForm extends GenericPanel<SingerFilter> {
 
     public SingerFilterForm(String id, IModel<SingerFilter> model) {
         super(id, model);
@@ -48,36 +41,51 @@ public abstract class SingerFilterForm extends Form<SingerFilter> {
 
         setOutputMarkupId(true);
 
-        add(termInput("searchTerm"));
-        add(voiceSelect("voice"));
-        add(showAllCheck("showAll"));
+        queue(form("form"));
+        queue(searchTerm("searchTerm"));
+        queue(voice("voice"));
+        queue(showAll("showAll"));
 
-        add(resetButton("reset"));
-        add(applyButton("apply"));
-
-        add(new CssClassNameAppender("form-inline"));
-        visitChildren(FormComponent.class, (IVisitor<FormComponent<?>, Void>) (component, visit) -> {
-            if (!(component instanceof Button)) {
-                component.add(BootstrapInlineFormDecorator.decorate());
-            }
-            visit.dontGoDeeper();
-        });
+        queue(resetButton("reset"));
+        queue(applyButton("apply"));
     }
 
-    protected FormComponent<String> termInput(String id) {
-        return new TextField<String>(id)
-            .setLabel(new ResourceModel("search", "Search"));
+    protected Form<SingerFilter> form(String wicketId) {
+        return new Form<>(wicketId);
     }
 
-    protected FormComponent<Voice> voiceSelect(String id) {
-        DropDownChoice<Voice> select = new DropDownChoice<>(id, Arrays.asList(Voice.values()),
-            new EnumChoiceRenderer<>());
-        select.setLabel(new ResourceModel("voice", "Voice"));
-        return select;
+    protected MarkupContainer searchTerm(String wicketId) {
+        WebMarkupContainer container = new WebMarkupContainer(wicketId);
+
+        IModel<String> model = LambdaModel.of(getModel(), SingerFilter::getSearchTerm, SingerFilter::setSearchTerm);
+        FormComponent<String> control = new TextField<>("control", model)
+            .setLabel(new ResourceModel("filter.singer.form.control.search", "Search"));
+        FormComponentLabel label = new SimpleFormComponentLabel("label", control);
+
+        return container.add(control, label);
     }
 
-    protected FormComponent<Boolean> showAllCheck(String id) {
-        return new CheckBox(id);
+    protected MarkupContainer voice(String wicketId) {
+        WebMarkupContainer container = new WebMarkupContainer(wicketId);
+
+        IModel<Voice> model = LambdaModel.of(getModel(), SingerFilter::getVoice, SingerFilter::setVoice);
+        FormComponent<Voice> control = new DropDownChoice<>("control", model, Arrays.asList(Voice.values()),
+            new EnumChoiceRenderer<>())
+            .setLabel(new ResourceModel("filter.singer.form.control.voice", "Voice"));
+        FormComponentLabel label = new SimpleFormComponentLabel("label", control);
+
+        return container.add(control, label);
+    }
+
+    protected MarkupContainer showAll(String wicketId) {
+        WebMarkupContainer container = new WebMarkupContainer(wicketId);
+
+        IModel<Boolean> model = LambdaModel.of(getModel(), SingerFilter::isShowAll, SingerFilter::setShowAll);
+        FormComponent<Boolean> control = new CheckBox("control", model)
+            .setLabel(new ResourceModel("filter.singer.form.control.show-all", "Show all"));
+        FormComponentLabel label = new SimpleFormComponentLabel("label", control);
+
+        return container.add(control, label);
     }
 
     protected AbstractLink resetButton(String id) {
@@ -90,7 +98,7 @@ public abstract class SingerFilterForm extends Form<SingerFilter> {
             }
         };
         button.setIconType(FontAwesome5IconType.undo_s);
-        button.add(new TooltipBehavior(new ResourceModel("reset", "Reset")));
+        button.add(new TooltipBehavior(new ResourceModel("filter.singer.form.button.reset", "Reset")));
         return button;
     }
 
@@ -108,7 +116,7 @@ public abstract class SingerFilterForm extends Form<SingerFilter> {
         };
         button.add(new ButtonBehavior(Buttons.Type.Primary));
         button.add(new Icon("icon", FontAwesome5IconType.filter_s));
-        button.add(new TooltipBehavior(new ResourceModel("filter", "Filter")));
+        button.add(new TooltipBehavior(new ResourceModel("filter.singer.form.button.submit", "Filter")));
         return button;
     }
 
@@ -116,10 +124,5 @@ public abstract class SingerFilterForm extends Form<SingerFilter> {
 
     protected void onReset() {
         onApply();
-    }
-
-    @Override
-    protected IMarkupSourcingStrategy newMarkupSourcingStrategy() {
-        return new PanelMarkupSourcingStrategy(TAG_NAME, false);
     }
 }

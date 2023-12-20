@@ -8,15 +8,15 @@
     <div class="modal-dialog" wicket:id="dialog">
         <div class="modal-content">
             <div class="modal-header" wicket:id="header">
-                <h5 class="modal-title" wicket:id="title">Modal title</h5>
-                <button type="button" class="close nobusy" data-dismiss="modal" aria-label="Close" aria-hidden="true" wicket:message="aria-label:close" wicket:id="close">&times;</button>
+                <h4 class="modal-title" wicket:id="title"></h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true" wicket:id="times"></button>
             </div>
-            <div class="modal-body">
-                <wicket:child/>
+            <div class="modal-body" wicket:id="body">
+                <div wicket:id="content"></div>
             </div>
             <div class="modal-footer" wicket:id="footer">
                 <wicket:container wicket:id="actions">
-                    <button wicket:id="link"><span wicket:id="label"></span></button>
+                    <button type="button" wicket:id="action"></button>
                 </wicket:container>
             </div>
         </div>

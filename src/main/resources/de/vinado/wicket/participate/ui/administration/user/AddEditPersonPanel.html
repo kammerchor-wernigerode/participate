@@ -5,13 +5,26 @@
 </head>
 <body>
 <wicket:panel>
-    <wicket:extend>
-        <div class="form-horizontal">
-            <input type="text" wicket:id="firstName">
-            <input type="text" wicket:id="lastName">
-            <input type="email" wicket:id="email">
+    <form wicket:id="form">
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" wicket:id="firstNameLabel"></label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" wicket:id="firstName">
+            </div>
         </div>
-    </wicket:extend>
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" wicket:id="lastNameLabel"></label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" wicket:id="lastName">
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-sm-3 col-form-label" wicket:id="emailLabel"></label>
+            <div class="col-sm-9">
+                <input type="email" class="form-control" wicket:id="email">
+            </div>
+        </div>
+    </form>
 </wicket:panel>
 </body>
 </html>

@@ -55,11 +55,10 @@ main > {
 .participants {
     --cell-width-invitationStatus: 34px;
     --cell-width-edit: 30px;
-    --cell-width-notify: 30px;
 
     &.participants-basic {
         --cell-width-name: 300px;
-        --cell-width-voice: calc(100% - var(--cell-width-invitationStatus) - var(--cell-width-name) - var(--cell-width-edit) - var(--cell-width-notify));
+        --cell-width-voice: calc(100% - var(--cell-width-invitationStatus) - var(--cell-width-name) - var(--cell-width-edit));
     }
 
     &.participants-detailed {
@@ -67,7 +66,7 @@ main > {
         --cell-width-voice: 110px;
         --cell-width-attribute: 120px;
         --cell-width-period: 171px;
-        --cell-width-comment: calc(100% - var(--cell-width-invitationStatus) - var(--cell-width-name) - var(--cell-width-voice) - var(--cell-width-attribute) - var(--cell-width-period) - var(--cell-width-edit) - var(--cell-width-notify));
+        --cell-width-comment: calc(100% - var(--cell-width-invitationStatus) - var(--cell-width-name) - var(--cell-width-voice) - var(--cell-width-attribute) - var(--cell-width-period) - var(--cell-width-edit));
     }
 
     td {
@@ -98,16 +97,12 @@ main > {
         &.edit {
             width: var(--cell-width-edit);
         }
-
-        &.notify {
-            width: var(--cell-width-notify);
-        }
     }
 }
 
 .events td {
     --cell-width-name: 500px;
-    --cell-width-date: 195px;
+    --cell-width-date: 215px;
     --cell-width-type: calc(100% - var(--cell-width-name) - var(--cell-width-date) - var(--cell-width-location) - var(--cell-width-adp));
     --cell-width-location: 180px;
     --cell-width-adp: 120px;
@@ -149,15 +144,15 @@ main > {
             }
 
             .a {
-                background-color: var(--success);
+                background-color: var(--bs-success);
             }
 
             .d {
-                background-color: var(--danger);
+                background-color: var(--bs-danger);
             }
 
             .p {
-                background-color: var(--warning);
+                background-color: var(--bs-warning);
             }
         }
     }
@@ -166,9 +161,8 @@ main > {
 .singers td {
     --cell-width-name: 300px;
     --cell-width-emailAddress: 350px;
-    --cell-width-voice: calc(100% - var(--cell-width-name) - var(--cell-width-emailAddress) - var(--acll-width-edit) - var(--acll-width-email));
+    --cell-width-voice: calc(100% - var(--cell-width-name) - var(--cell-width-emailAddress) - var(--acll-width-edit));
     --acll-width-edit: 40px;
-    --acll-width-email: 40px;
 
     &.name {
         width: var(--cell-width-name);
@@ -184,9 +178,5 @@ main > {
 
     &.edit {
         width: var(--acll-width-edit);
-    }
-
-    &.email {
-        width: var(--acll-width-email);
     }
 }

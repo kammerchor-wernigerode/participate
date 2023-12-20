@@ -2,17 +2,14 @@ package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal.Size;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.select.BootstrapSelect;
 import de.vinado.app.participate.management.wicket.ManagementSession;
+import de.vinado.app.participate.wicket.form.FormComponentLabel;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
-import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
-import de.vinado.wicket.bt4.modal.FormModal;
-import de.vinado.wicket.bt4.modal.ModalAnchor;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.form.AutosizeBehavior;
 import de.vinado.wicket.participate.common.ParticipateUtils;
@@ -32,20 +29,21 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.NumberTextField;
+import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.net.URL;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
-public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
+public class EditInvitationPanel extends GenericPanel<ParticipantDTO> {
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -54,16 +52,35 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
     @SpringBean
     private ApplicationProperties applicationProperties;
 
-    public EditInvitationPanel(ModalAnchor modal, IModel<ParticipantDTO> model) {
-        super(modal, model);
+    private final Form<ParticipantDTO> form;
 
-        size(Size.Large);
-        title(new ResourceModel("invitation.edit", "Edit Invitation"));
+    public EditInvitationPanel(String id, IModel<ParticipantDTO> model) {
+        super(id, model);
+
+        this.form = form("form");
+    }
+
+    protected Form<ParticipantDTO> form(String wicketId) {
+        return new Form<>(wicketId, getModel()) {
+
+            @Override
+            protected void onSubmit() {
+                super.onSubmit();
+
+                EditInvitationPanel.this.onSubmit();
+            }
+        };
+    }
+
+    protected void onSubmit() {
+        eventService.saveParticipant(getModelObject());
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        add(form);
 
         Event event = getModelObject().getEvent();
         DatetimePickerConfig fromConfig = new DatetimePickerConfig();
@@ -93,26 +110,24 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
                 target.add(form);
             }
         });
-        invitationStatusBs.setLabel(Model.of(""));
-        invitationStatusBs.add(BootstrapHorizontalFormDecorator.decorate());
         form.add(invitationStatusBs);
 
         DatetimePicker toDtP = new DatetimePicker("toDate", toConfig);
 
         DatetimePicker fromDtP = new DatetimePicker("fromDate", fromConfig);
         fromDtP.add(new DatetimePickerResettingBehavior(toConfig::withMinDate));
-        fromDtP.add(BootstrapHorizontalFormDecorator.decorate(new ResourceModel("from", "From")));
-        form.add(fromDtP);
+        fromDtP.setLabel(new ResourceModel("from", "From"));
+        form.add(fromDtP, new FormComponentLabel("fromDateLabel", fromDtP));
 
         toDtP.setOutputMarkupId(true);
-        toDtP.add(BootstrapHorizontalFormDecorator.decorate(new ResourceModel("till", "Till")));
+        toDtP.setLabel(new ResourceModel("till", "Till"));
         toDtP.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
         toDtP.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
             }
         });
-        form.add(toDtP);
+        form.add(toDtP, new FormComponentLabel("toDateLabel", toDtP));
 
         IModel<Accommodation> model = LambdaModel.of(getModel(), ParticipantDTO::getAccommodation, ParticipantDTO::setAccommodation);
         AccommodationFormGroup accommodationCb = new AccommodationFormGroup("accommodation", model);
@@ -137,7 +152,8 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
         carSeatCountTf.setOutputMarkupId(true);
         carSeatCountTf.setMinimum((short) 0);
         carSeatCountTf.setMaximum((short) 127); // 1 Byte maximum signed integer
-        form.add(carSeatCountTf);
+        carSeatCountTf.setLabel(new ResourceModel("carSeatCount", "Number of Seats"));
+        form.add(carSeatCountTf, new SimpleFormComponentLabel("carSeatCountLabel", carSeatCountTf));
 
         AjaxCheckBox carCb = new AjaxCheckBox("car") {
             @Override
@@ -149,14 +165,14 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
 
         TextArea commentTa = new TextArea<>("comment");
         commentTa.add(new AutosizeBehavior());
-        commentTa.add(BootstrapHorizontalFormDecorator.decorate());
+        commentTa.setLabel(new ResourceModel("comment", "Comment"));
         commentTa.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
 
             }
         });
-        form.add(commentTa);
+        form.add(commentTa, new FormComponentLabel("commentLabel", commentTa));
 
         BootstrapAjaxLink<ParticipantDTO> inviteSingerBtn = new BootstrapAjaxLink<ParticipantDTO>(
             "inviteSingerBtn", getModel(), Buttons.Type.Default, !InvitationStatus.UNINVITED.equals(getModelObject().getInvitationStatus())
@@ -165,8 +181,6 @@ public abstract class EditInvitationPanel extends FormModal<ParticipantDTO> {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 eventService.inviteParticipant(EditInvitationPanel.this.getModelObject().getParticipant(), Session.get().getMetaData(ManagementSession.user));
-                Optional.ofNullable(EditInvitationPanel.this.findParent(ModalAnchor.class))
-                    .ifPresent(anchor -> anchor.close(target));
                 if (!InvitationStatus.UNINVITED.equals(EditInvitationPanel.this.getModelObject().getInvitationStatus())) {
                     Snackbar.show(target, new ResourceModel("email.send.reminder.success", "A reminder has been sent"));
                 } else {

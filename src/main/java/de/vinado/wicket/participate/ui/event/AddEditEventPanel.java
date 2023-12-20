@@ -2,17 +2,12 @@ package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal.Size;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
-import de.vinado.app.participate.management.wicket.ManagementSession;
-import de.vinado.wicket.bt4.form.decorator.BootstrapHorizontalFormDecorator;
-import de.vinado.wicket.bt4.modal.FormModal;
-import de.vinado.wicket.bt4.modal.ModalAnchor;
+import de.vinado.app.participate.wicket.form.FormComponentLabel;
 import de.vinado.wicket.common.AjaxFocusBehavior;
 import de.vinado.wicket.form.AutosizeBehavior;
-import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.providers.Select2StringProvider;
@@ -21,11 +16,14 @@ import de.vinado.wicket.participate.services.PersonService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
-import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.joda.time.DateTime;
@@ -33,7 +31,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2Choice;
 
-public abstract class AddEditEventPanel extends FormModal<EventDTO> {
+public class AddEditEventPanel extends GenericPanel<EventDTO> {
 
     @SpringBean
     @SuppressWarnings("unused")
@@ -48,11 +46,24 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
 
     private IModel<Boolean> severalDays;
 
-    public AddEditEventPanel(ModalAnchor modal, IModel<String> titleModel, IModel<EventDTO> model) {
-        super(modal, model);
+    private final Form<EventDTO> form;
 
-        size(Size.Large);
-        title(titleModel);
+    public AddEditEventPanel(String id, IModel<EventDTO> model) {
+        super(id, model);
+
+        this.form = form("form");
+    }
+
+    protected Form<EventDTO> form(String wicketId) {
+        return new Form<>(wicketId, getModel()) {
+
+            @Override
+            protected void onSubmit() {
+                super.onSubmit();
+
+                AddEditEventPanel.this.onSubmit();
+            }
+        };
     }
 
     @Override
@@ -60,8 +71,10 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
         super.onInitialize();
 
         edit = null != getModelObject().getEvent();
-
+        form.setOutputMarkupId(true);
         severalDays = new CompoundPropertyModel<>(edit ? getModelObject().isSeveralDays() : Boolean.TRUE);
+
+        add(form);
 
         DateTextFieldConfig startDateConfig = new DateTextFieldConfig();
         startDateConfig.withLanguage("de");
@@ -77,13 +90,12 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
 
         TextField<String> nameTf = new TextField<>("name");
         nameTf.setLabel(new ResourceModel("event.name", "Event Name"));
-        nameTf.add(BootstrapHorizontalFormDecorator.decorate());
         nameTf.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
             }
         });
-        form.add(nameTf);
+        form.add(nameTf, new FormComponentLabel("nameLabel", nameTf));
 
         AjaxCheckBox isSeveralDaysCb = new AjaxCheckBox("isSeveralDays", severalDays) {
             @Override
@@ -92,14 +104,12 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
             }
         };
         isSeveralDaysCb.setLabel(new ResourceModel("event.multi-day", "Multi-day Event"));
-        isSeveralDaysCb.add(BootstrapHorizontalFormDecorator.decorate());
-        form.add(isSeveralDaysCb);
+        form.add(isSeveralDaysCb, new FormComponentLabel("isSeveralDaysLabel", isSeveralDaysCb));
 
         Select2Choice<String> eventTypeS2c = new Select2Choice<>("eventType",
             new Select2StringProvider(eventService::getEventTypes));
         eventTypeS2c.add(new AjaxFocusBehavior());
         eventTypeS2c.setLabel(new ResourceModel("event", "Event"));
-        eventTypeS2c.add(BootstrapHorizontalFormDecorator.decorate());
         eventTypeS2c.getSettings().setLanguage(getLocale().getLanguage());
         eventTypeS2c.getSettings().setCloseOnSelect(true);
         eventTypeS2c.getSettings().setTheme(new Select2BootstrapTheme(true));
@@ -110,15 +120,18 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
             protected void onUpdate(AjaxRequestTarget target) {
             }
         });
-        form.add(eventTypeS2c);
+        form.add(eventTypeS2c, new FormComponentLabel("eventTypeLabel", eventTypeS2c));
 
-        DateTextField endDateTf = new DateTextField("endDate", endDateConfig) {
+        WebMarkupContainer endDateContainer = new WebMarkupContainer("endDateContainer") {
+
             @Override
             protected void onConfigure() {
                 super.onConfigure();
                 setVisible(severalDays.getObject());
             }
         };
+        endDateContainer.setOutputMarkupId(true);
+        DateTextField endDateTf = new DateTextField("endDate", endDateConfig);
 
         DateTextField startDateTf = new DateTextField("startDate", startDateConfig) {
             @Override
@@ -136,24 +149,26 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
                 target.add(endDateTf);
             }
         });
-        startDateTf.add(BootstrapHorizontalFormDecorator.decorate());
         startDateTf.setRequired(true);
-        form.add(startDateTf);
+        startDateTf.setLabel(Model.of());
+        FormComponentLabel startDateLabel = new FormComponentLabel("startDateLabel", startDateTf);
+        startDateLabel.setOutputMarkupId(true);
+        form.add(startDateTf, startDateLabel);
 
         endDateTf.setOutputMarkupId(true);
-        endDateTf.add(BootstrapHorizontalFormDecorator.decorate(new ResourceModel("till", "Till")));
+        endDateTf.setLabel(new ResourceModel("till", "Till"));
         endDateTf.setRequired(true);
         endDateTf.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
             }
         });
-        form.add(endDateTf);
+        endDateContainer.add(endDateTf, new FormComponentLabel("endDateLabel", endDateTf));
+        form.add(endDateContainer);
 
         Select2Choice<String> locationS2c = new Select2Choice<>("location",
             new Select2StringProvider(eventService::getLocationList));
         locationS2c.setLabel(new ResourceModel("location", "Location"));
-        locationS2c.add(BootstrapHorizontalFormDecorator.decorate());
         locationS2c.getSettings().setLanguage(getLocale().getLanguage());
         locationS2c.getSettings().setCloseOnSelect(true);
         locationS2c.getSettings().setTheme(new Select2BootstrapTheme(true));
@@ -163,17 +178,17 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
             protected void onUpdate(AjaxRequestTarget target) {
             }
         });
-        form.add(locationS2c);
+        form.add(locationS2c, new FormComponentLabel("locationLabel", locationS2c));
 
         TextArea<String> descriptionTa = new TextArea<>("description");
-        descriptionTa.add(BootstrapHorizontalFormDecorator.decorate());
+        descriptionTa.setLabel(new ResourceModel("description", "Description"));
         descriptionTa.add(new AutosizeBehavior());
         descriptionTa.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
             }
         });
-        form.add(descriptionTa);
+        form.add(descriptionTa, new FormComponentLabel("descriptionLabel", descriptionTa));
 
         BootstrapAjaxLink<Void> removeBtn = new BootstrapAjaxLink<>("removeBtn", Buttons.Type.Link) {
             @Override
@@ -202,8 +217,7 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
         form.add(removeBtn);
     }
 
-    @Override
-    protected void onSubmit(AjaxRequestTarget target) {
+    protected void onSubmit() {
         EventDTO dto = getModelObject();
         if (!severalDays.getObject()) {
             dto.setEndDate(dto.getStartDate());
@@ -211,17 +225,28 @@ public abstract class AddEditEventPanel extends FormModal<EventDTO> {
 
         if (edit) {
             if (remove) {
-                eventService.removeEvent(dto.getEvent());
-                getSession().setMetaData(ManagementSession.event, null);
-                send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(null));
-                Snackbar.show(target, new ResourceModel("event.remove.success", "The event has been removed"));
-                return;
+                delete(dto);
+            } else {
+                update(dto);
             }
-            onUpdate(eventService.saveEvent(dto), target);
         } else {
-            onUpdate(eventService.createEvent(dto), target);
+            create(dto);
         }
     }
 
-    public abstract void onUpdate(Event savedEvent, AjaxRequestTarget target);
+    private void create(EventDTO dto) {
+        Event event = eventService.createEvent(dto);
+        dto.setEvent(event);
+    }
+
+    private void update(EventDTO dto) {
+        Event event = eventService.saveEvent(dto);
+        dto.setEvent(event);
+    }
+
+    private void delete(EventDTO dto) {
+        Event event = dto.getEvent();
+        eventService.removeEvent(event);
+        event.setActive(false);
+    }
 }
