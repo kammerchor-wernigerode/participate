@@ -40,12 +40,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.primitives.Ints.saturatedCast;
 import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.check_s;
 import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.edit_s;
 import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.plus_s;
 import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.times_s;
 import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.trash_alt_s;
-import static de.vinado.util.Ints.saturatedCast;
 
 public class UserPanel extends BootstrapPanel<Void> {
 
