@@ -124,6 +124,7 @@ public class EditAccountPanel extends GenericPanel<EditAccountDTO> {
 
             TextField usernameTf = new TextField("username");
             usernameTf.setEnabled(false);
+            usernameTf.setLabel(new ResourceModel("username", "Username"));
             usernameTf.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
                 protected void onUpdate(AjaxRequestTarget target) {
