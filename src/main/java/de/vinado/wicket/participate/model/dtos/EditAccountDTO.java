@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
-import javax.annotation.Nullable;
 
 @Getter
 @Setter
@@ -26,7 +25,7 @@ public class EditAccountDTO implements Serializable {
     private String email;
     private Voice voice;
 
-    public EditAccountDTO(User user, @Nullable final Person person, @Nullable final Singer singer) {
+    public EditAccountDTO(User user, final Person person, final Singer singer) {
         this.user = user;
         this.person = person;
         this.singer = singer;
