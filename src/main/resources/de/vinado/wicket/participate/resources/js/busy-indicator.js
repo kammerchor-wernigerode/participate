@@ -34,6 +34,9 @@ function clickFunc(eventData) {
     while (e != null) {
         if (e.nodeType == 1) {
             for (var i = 0; i < noBusy4Classes.length; i++) {
+                if (typeof e.className !== 'string') {
+                    return;
+                }
                 if (e.className.search('\\b' + noBusy4Classes[i] + '\\b') != -1) {
                     return;
                 }
