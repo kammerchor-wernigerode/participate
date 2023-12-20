@@ -109,6 +109,7 @@ public abstract class EditAccountPanel extends FormModal<EditAccountDTO> {
             super(id, model);
 
             TextField usernameTf = new TextField("username");
+            usernameTf.setEnabled(false);
             usernameTf.add(BootstrapHorizontalFormDecorator.decorate());
             usernameTf.add(new AjaxFormComponentUpdatingBehavior("change") {
                 @Override
