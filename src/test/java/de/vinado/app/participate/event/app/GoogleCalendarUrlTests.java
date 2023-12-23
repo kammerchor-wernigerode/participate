@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -29,7 +30,7 @@ class GoogleCalendarUrlTests {
 
     @BeforeEach
     void setUp() {
-        calendarUrl = createCalendarUrl();
+        calendarUrl = createCalendarUrl(Random.uri(), Arbitrary.zoneId());
     }
 
     @ParameterizedTest
@@ -69,8 +70,19 @@ class GoogleCalendarUrlTests {
     }
 
     @Test
-    void applyTimezone_shouldSetSystemDefaultTimezone() {
-        CalendarUrl calendarUrl = createCalendarUrl();
+    void applyTimezone_shouldSetTimezone() {
+        ZoneId timezone = ZoneId.of("Europe/Berlin");
+        CalendarUrl calendarUrl = createCalendarUrl(Random.uri(), timezone);
+        Event event = createEvent(Arbitrary.date(), Arbitrary.date());
+
+        URI uri = calendarUrl.apply(event, Arbitrary.locale());
+
+        assertEquals("Europe/Berlin", queryParam("ctz", uri));
+    }
+
+    @Test
+    void applyNullTimezone_shouldSetSystemDefaultTimezone() {
+        CalendarUrl calendarUrl = createCalendarUrl(Random.uri(), null);
         Event event = createEvent(Arbitrary.date(), Arbitrary.date());
 
         URI uri = calendarUrl.apply(event, Arbitrary.locale());
@@ -80,16 +92,17 @@ class GoogleCalendarUrlTests {
 
     @Test
     void apply_shouldSetSource() {
-        CalendarUrl calendarUrl = createCalendarUrl();
+        CalendarUrl calendarUrl = createCalendarUrl(URI.create("foobar"), Arbitrary.zoneId());
         Event event = createEvent(Arbitrary.date(), Arbitrary.date());
 
         URI uri = calendarUrl.apply(event, Arbitrary.locale());
 
-        assertEquals("", queryParam("src", uri));
+        assertEquals("foobar", queryParam("src", uri));
     }
 
-    private static CalendarUrl createCalendarUrl() {
-        return new GoogleCalendarUrl();
+    private static CalendarUrl createCalendarUrl(URI uri, ZoneId timezone) {
+        GoogleCalendarUrlProperties properties = new GoogleCalendarUrlProperties(uri, timezone);
+        return new GoogleCalendarUrl(properties);
     }
 
     private static Event createEvent(Date start, Date end) {
@@ -127,5 +140,15 @@ class GoogleCalendarUrlTests {
             return Locale.getDefault();
         }
 
+        public static ZoneId zoneId() {
+            return ZoneId.systemDefault();
+        }
+    }
+
+    private static final class Random {
+
+        public static URI uri() {
+            return URI.create(UUID.randomUUID().toString());
+        }
     }
 }

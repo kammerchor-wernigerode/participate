@@ -2,6 +2,7 @@ package de.vinado.app.participate.event.app;
 
 import de.vinado.wicket.participate.model.Event;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -13,9 +14,13 @@ import java.time.temporal.WeekFields;
 import java.util.Locale;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 public class GoogleCalendarUrl implements CalendarUrl {
 
     public static final String BASE_URL = "https://calendar.google.com/calendar/embed";
+
+    @NonNull
+    private final GoogleCalendarUrlProperties properties;
 
     @Override
     public URI apply(@NonNull Event event, @NonNull Locale locale) {
@@ -28,7 +33,7 @@ public class GoogleCalendarUrl implements CalendarUrl {
     }
 
     private URI source() {
-        return URI.create("");
+        return properties.getSource();
     }
 
     private int weekStart(Locale locale) {
@@ -38,7 +43,8 @@ public class GoogleCalendarUrl implements CalendarUrl {
     }
 
     private ZoneId timezone() {
-        return ZoneId.systemDefault();
+        return Optional.ofNullable(properties.getTimezone())
+            .orElse(ZoneId.systemDefault());
     }
 
     private String dates(Event event, Locale locale) {
