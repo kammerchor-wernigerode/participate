@@ -5,7 +5,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
 import de.agilecoders.wicket.jquery.Key;
-import de.vinado.wicket.bt4.button.BootstrapAjaxButton;
+import de.vinado.app.participate.wicket.bt5.button.BootstrapAjaxButton;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;

@@ -4,7 +4,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.agilecoders.wicket.core.markup.html.bootstrap.tabs.Collapsible;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
-import de.vinado.wicket.bt4.button.BootstrapAjaxButton;
+import de.vinado.app.participate.wicket.bt5.button.BootstrapAjaxButton;
 import de.vinado.wicket.common.AjaxDownload;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.services.EventService;
