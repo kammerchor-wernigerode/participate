@@ -11,7 +11,9 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.net.URI;
 import java.util.Date;
+import java.util.UUID;
 
 import static de.vinado.wicket.participate.model.MockedEvent.mockEvent;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,9 +32,14 @@ class EventServiceTest {
         ApplicationProperties applicationProperties = mock(ApplicationProperties.class);
         EmailBuilderFactory emailBuilderFactory = new PreconfiguredEmailBuilderFactory(applicationProperties);
 
-        service = new EventServiceImpl(personService, emailService, applicationProperties, emailBuilderFactory, new DefaultApplicationName());
+        service = new EventServiceImpl(personService, emailService, applicationProperties, emailBuilderFactory, new DefaultApplicationName(), (event, locale) -> randomUri());
 
         doReturn(13).when(applicationProperties).getDeadlineOffset();
+    }
+
+    private static URI randomUri() {
+        UUID uuid = UUID.randomUUID();
+        return URI.create(uuid.toString());
     }
 
     @Test

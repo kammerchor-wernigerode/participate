@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.services;
 
+import de.vinado.app.participate.event.app.CalendarUrl;
 import de.vinado.wicket.participate.common.ParticipateUtils;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.email.Email;
@@ -49,6 +50,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -80,6 +82,7 @@ public class EventServiceImpl extends DataService implements EventService {
     private final ApplicationProperties applicationProperties;
     private final EmailBuilderFactory emailBuilderFactory;
     private final ApplicationName applicationName;
+    private final CalendarUrl calendarUrl;
 
     @Override
     @PersistenceContext
@@ -414,6 +417,7 @@ public class EventServiceImpl extends DataService implements EventService {
                     .data("singer", singer)
                     .data("acceptLink", ParticipateUtils.generateInvitationLink(applicationProperties.getBaseUrl(), participant.getToken()))
                     .data("deadline", offset > 1 ? null : deadline)
+                    .data("calendarUrl", calendarUrl.apply(participant.getEvent(), Locale.getDefault()))
                     .build();
 
                 if (InvitationStatus.UNINVITED.equals(participant.getInvitationStatus())) {

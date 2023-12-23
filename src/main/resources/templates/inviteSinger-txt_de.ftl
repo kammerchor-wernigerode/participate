@@ -21,4 +21,6 @@ Sag uns bitte, ob und wie viel Zeit du hast, ob du einen Schlafplatz brauchst od
 ${acceptLink}
 
 Du kannst deine Angabe jederzeit ändern, indem du erneut auf den Link klickst.
+
+Der Termin ist außerdem in unserem Kalender einsehbar: ${calendarUrl}
 <#-- @formatter:on -->

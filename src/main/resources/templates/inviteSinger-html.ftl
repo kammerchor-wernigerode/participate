@@ -174,6 +174,9 @@
                                             You are able to change your data at any time. Simply click on the link
                                             again.
                                         </p>
+                                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
+                                            The dates are also available in our <a href="${calendarUrl}">calendar</a>.
+                                        </p>
                                     </td>
                                 </tr>
                             </table>
