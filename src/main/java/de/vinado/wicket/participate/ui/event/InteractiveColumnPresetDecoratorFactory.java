@@ -31,7 +31,6 @@ public class InteractiveColumnPresetDecoratorFactory implements ParticipantColum
         private boolean visible = true;
         private SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onEdit;
         private SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onInvite;
-        private SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onEmail;
 
         public Builder visible(boolean visible) {
             this.visible = visible;
