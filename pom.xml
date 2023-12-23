@@ -24,7 +24,6 @@
         <java.version>11</java.version>
 
         <dependency.guava.version>25.1-jre</dependency.guava.version>
-        <dependency.ical4j.version>3.2.14</dependency.ical4j.version>
         <dependency.mail-extensions-all-spring-boot-starter.version>2.0.0</dependency.mail-extensions-all-spring-boot-starter.version>
         <dependency.opencsv.version>5.9</dependency.opencsv.version>
         <dependency.sass.version>1.69.5</dependency.sass.version>
@@ -110,11 +109,6 @@
                 <groupId>com.opencsv</groupId>
                 <artifactId>opencsv</artifactId>
                 <version>${dependency.opencsv.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mnode.ical4j</groupId>
-                <artifactId>ical4j</artifactId>
-                <version>${dependency.ical4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.pivovarit</groupId>
@@ -215,10 +209,6 @@
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mnode.ical4j</groupId>
-            <artifactId>ical4j</artifactId>
         </dependency>
         <dependency>
             <groupId>com.pivovarit</groupId>
