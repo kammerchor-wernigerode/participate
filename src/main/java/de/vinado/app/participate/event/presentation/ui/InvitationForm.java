@@ -23,6 +23,7 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -51,6 +52,7 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
     @SpringBean
     private ApplicationProperties applicationProperties;
 
+    private FormComponent<Accommodation> accommodationFormGroup;
     private FormComponent<Boolean> carCheckbox;
     private FormComponent<Short> carSeatCountTextField;
     private FormComponent<String> commentTextField;
@@ -83,6 +85,8 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
         form.setOutputMarkupId(true);
 
         queue(form);
+        queue(accommodationFormGroup = accommodationFormGroup("accommodation"));
+        queue(accommodationFormGroupLabel("accommodationLabel"));
         queue(carSeatCountTextField = carSeatCountTextField("carSeatCount"));
         queue(carSeatCountTextFieldLabel("carSeatCountLabel"));
         queue(carCheckbox = carCheckbox("car"));
@@ -134,16 +138,19 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
             }
         });
         form.add(toDtP, new FormComponentLabel("toDateLabel", toDtP));
+    }
 
+    protected FormComponent<Accommodation> accommodationFormGroup(String wicketId) {
         IModel<Accommodation> model = LambdaModel.of(getModel(), ParticipantDTO::getAccommodation, ParticipantDTO::setAccommodation);
-        AccommodationFormGroup accommodationCb = new AccommodationFormGroup("accommodation", model);
-        accommodationCb.add(new AjaxFormComponentUpdatingBehavior("change") {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
+        FormComponent<Accommodation> formGroup = new AccommodationFormGroup(wicketId, model);
+        formGroup.setType(Accommodation.class);
+        formGroup.setLabel(new ResourceModel("event.participant.dialog.form.label.accommodation", "Accommodation"));
+        return formGroup;
+    }
 
-            }
-        });
-        form.add(accommodationCb);
+    protected Component accommodationFormGroupLabel(String wicketId) {
+        IModel<String> model = accommodationFormGroup.getLabel();
+        return new Label(wicketId, model);
     }
 
     protected FormComponent<Short> carSeatCountTextField(String wicketId) {
