@@ -83,6 +83,8 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
         form.setOutputMarkupId(true);
 
         queue(form);
+        queue(carSeatCountTextField = carSeatCountTextField("carSeatCount"));
+        queue(carSeatCountTextFieldLabel("carSeatCountLabel"));
         queue(carCheckbox = carCheckbox("car"));
         queue(carCheckboxLabel("carLabel"));
         queue(commentTextField = commentTextField("comment"));
@@ -142,8 +144,19 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
             }
         });
         form.add(accommodationCb);
+    }
 
-        NumberTextField<Short> carSeatCountTf = new NumberTextField<>("carSeatCount") {
+    protected FormComponent<Short> carSeatCountTextField(String wicketId) {
+        IModel<Short> model = LambdaModel.of(getModel(), ParticipantDTO::getCarSeatCount, ParticipantDTO::setCarSeatCount);
+        FormComponent<Short> carSeatCountTextField = new NumberTextField<>(wicketId, model, Short.class) {
+
+            @Override
+            protected void onInitialize() {
+                super.onInitialize();
+                setMinimum((short) 0);
+                setMaximum((short) 127); // 1 Byte maximum signed integer
+            }
+
             @Override
             protected void onConfigure() {
                 super.onConfigure();
@@ -153,14 +166,17 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
                 setEnabled(InvitationForm.this.getModelObject().isCar());
             }
         };
-        carSeatCountTf.setOutputMarkupId(true);
-        carSeatCountTf.setMinimum((short) 0);
-        carSeatCountTf.setMaximum((short) 127); // 1 Byte maximum signed integer
-        carSeatCountTf.setLabel(new ResourceModel("carSeatCount", "Number of Seats"));
-        form.add(carSeatCountTextField = carSeatCountTf, new SimpleFormComponentLabel("carSeatCountLabel", carSeatCountTf));
+        carSeatCountTextField.setLabel(new ResourceModel("carSeatCount", "Number of Seats"));
+        return carSeatCountTextField;
+    }
+
+    protected Component carSeatCountTextFieldLabel(String wicketId) {
+        return new FormComponentLabel(wicketId, carSeatCountTextField);
     }
 
     protected FormComponent<Boolean> carCheckbox(String wicketId) {
+        carSeatCountTextField.setOutputMarkupId(true);
+
         IModel<Boolean> model = LambdaModel.of(getModel(), ParticipantDTO::isCar, ParticipantDTO::setCar);
         AjaxCheckBox checkbox = new AjaxCheckBox(wicketId, model) {
 
