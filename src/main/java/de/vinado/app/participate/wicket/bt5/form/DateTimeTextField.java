@@ -4,9 +4,6 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.tempusdominus
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.tempusdominus.TempusDominusConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.tempusdominus.TempusDominusDisplayConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.tempusdominus.TempusDominusLocalizationConfig.DateFormatType;
-import org.apache.wicket.Component;
-import org.apache.wicket.markup.head.HeaderItem;
-import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
@@ -16,7 +13,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.stream.Stream;
 
 public class DateTimeTextField extends TextField<Date> {
 
@@ -44,23 +40,11 @@ public class DateTimeTextField extends TextField<Date> {
                 .withButton(TempusDominusDisplayConfig.ButtonType.CLOSE, true))
         ;
 
-        add(new TempusDominusBehavior(config) {
-
-            @Override
-            public void renderHead(Component component, IHeaderResponse response) {
-                super.renderHead(component, response);
-
-                additionalHeaderItems(component).forEach(response::render);
-            }
-        });
+        add(new TempusDominusBehavior(config));
     }
 
     private static String getPattern(DateFormat format) {
         return ((SimpleDateFormat) format).toLocalizedPattern();
-    }
-
-    protected Stream<HeaderItem> additionalHeaderItems(Component component) {
-        return Stream.empty();
     }
 
     @Override
