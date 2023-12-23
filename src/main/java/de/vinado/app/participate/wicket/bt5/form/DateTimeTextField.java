@@ -23,6 +23,12 @@ public class DateTimeTextField extends TextField<Date> {
     private final TempusDominusConfig config;
     private final TempusDominusConverter converter;
 
+    public DateTimeTextField(String id, TempusDominusConfig config) {
+        super(id, null, Date.class);
+        this.config = config;
+        this.converter = new TempusDominusConverter();
+    }
+
     public DateTimeTextField(String id, IModel<Date> model, TempusDominusConfig config) {
         super(id, model, Date.class);
         this.config = config;

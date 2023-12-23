@@ -2,27 +2,25 @@ package de.vinado.wicket.participate.wicket.form.ui;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
-import de.agilecoders.wicket.jquery.Key;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.tempusdominus.TempusDominusConfig;
+import de.vinado.app.participate.wicket.bt5.form.DateTimeTextField;
 import de.vinado.wicket.bt4.button.BootstrapAjaxButton;
-import de.vinado.wicket.bt4.datetimepicker.DateTextFieldResetIntent;
-import de.vinado.wicket.bt4.datetimepicker.DateTextFieldResettingBehavior;
-import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
-import de.vinado.wicket.bt4.datetimepicker.DatetimePickerWidgetPositioningConfig;
-import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.form.AutosizeBehavior;
+import de.vinado.wicket.participate.common.DateUtils;
 import de.vinado.wicket.participate.model.Accommodation;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
-import org.apache.commons.lang3.time.DateUtils;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentLabel;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
@@ -36,6 +34,7 @@ import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 
 import java.util.Date;
+import java.util.stream.Stream;
 
 public abstract class ParticipantForm extends Form<ParticipantDTO> {
 
@@ -58,27 +57,44 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
         setOutputMarkupId(true);
 
         Event event = getModelObject().getEvent();
-        DatetimePickerConfig fromConfig = createDatetimePickerConfig(event);
-        DatetimePickerConfig toConfig = createDatetimePickerConfig(event);
+        TempusDominusConfig fromConfig = createTempusDominusConfig(event);
+        TempusDominusConfig toConfig = createTempusDominusConfig(event);
 
         add(feedback = feedback("feedback"));
         feedback.setOutputMarkupId(true);
 
         add(new Label("singer.displayName"));
 
-        DatetimePicker toDtP = new DatetimePicker("toDate", toConfig);
+        FormComponent<Date> toDtP = new DateTimeTextField("toDate", toConfig);
 
         WebMarkupContainer periodHelp;
         add(periodHelp = new WebMarkupContainer("periodHelp"));
         periodHelp.setOutputMarkupId(true);
 
-        DatetimePicker fromDtP = new DatetimePicker("fromDate", fromConfig);
-        fromDtP.add(new DateTextFieldResettingBehavior(toConfig::withMinDate));
+        FormComponent<Date> fromDtP = new DateTimeTextField("fromDate", fromConfig) {
+
+            @Override
+            protected Stream<HeaderItem> additionalHeaderItems(Component component) {
+                String javascript = ""
+                    + "const " + component.getMarkupId() + " = document.getElementById('" + component.getMarkupId() + "');\n"
+                    + "const " + toDtP.getMarkupId() + " = document.getElementById('" + toDtP.getMarkupId() + "');\n"
+                    + component.getMarkupId() + ".datetimepicker.subscribe(tempusDominus.Namespace.events.change, e => {\n"
+                    + "  if (!e.date) return;\n"
+                    + "  " + toDtP.getMarkupId() + ".datetimepicker.updateOptions({\n"
+                    + "    restrictions: {\n"
+                    + "      minDate: e.date,\n"
+                    + "    },\n"
+                    + "  });\n"
+                    + "  " + toDtP.getMarkupId() + ".datetimepicker.clear();\n"
+                    + "});\n";
+
+                return Stream.of(OnDomReadyHeaderItem.forScript(javascript));
+            }
+        };
         fromDtP.add(AttributeAppender.append("aria-describedby", periodHelp.getMarkupId()));
         add(fromDtP, new FormComponentLabel("fromDateLabel", fromDtP));
 
         toDtP.setOutputMarkupId(true);
-        toDtP.add(new UpdateOnEventBehavior<>(DateTextFieldResetIntent.class));
         add(toDtP, new FormComponentLabel("toDateLabel", toDtP));
 
         IModel<Accommodation> model = LambdaModel.of(getModel(), ParticipantDTO::getAccommodation, ParticipantDTO::setAccommodation);
@@ -167,28 +183,16 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
         }.setLabel(new ResourceModel("tentative", "Tentative")));
     }
 
-    protected DatetimePickerConfig createDatetimePickerConfig(Event event) {
-        DatetimePickerConfig config = new DatetimePickerConfig();
-        config.useLocale("de");
-        config.useCurrent(false);
-        config.withFormat("dd.MM.yyyy HH:mm");
-        config.withMinuteStepping(30);
-        config.with(new DatetimePickerIconConfig());
-
-        config.withMaxDate(getMaximumEndDate(event));
-        config.withMinDate(event.getStartDate());
-
-        Key<DatetimePickerWidgetPositioningConfig> positioningConfigKey = new Key<>("widgetPositioning");
-        DatetimePickerWidgetPositioningConfig widgetPositioning = new DatetimePickerWidgetPositioningConfig()
-            .withVerticalPositioning("bottom");
-        config.put(positioningConfigKey, widgetPositioning);
-
-        return config;
-    }
-
-    private Date getMaximumEndDate(Event event) {
-        Date date = DateUtils.addDays(event.getEndDate(), 1);
-        return DateUtils.addMilliseconds(date, -1);
+    private static TempusDominusConfig createTempusDominusConfig(Event event) {
+        return new TempusDominusConfig()
+            .withUseCurrent(false)
+            .withStepping(30)
+            .withViewDate(new Date(event.getStartDate().getTime()))
+            .withDisplay(display -> display
+                .withSideBySide(true))
+            .withRestrictions(restrictions -> restrictions
+                .withMinDate(DateUtils.atStartOfDay(event.getStartDate()))
+                .withMaxDate(DateUtils.atEndOfDay(event.getEndDate())));
     }
 
     protected abstract void onAcceptEvent(AjaxRequestTarget target);
