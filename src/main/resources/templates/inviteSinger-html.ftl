@@ -144,7 +144,7 @@
                                             You got invited to a ${event.eventType} from ${event.startDate}
                                             to ${event.endDate}.
                                         </#if>
-                                            <br>A location has not be announced yet.
+                                            <br>A location has not been announced yet.
                                         </p>
                                     </#if>
                                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
