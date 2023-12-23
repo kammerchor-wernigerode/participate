@@ -4,7 +4,6 @@ import de.vinado.app.participate.event.app.CalendarUrl;
 import de.vinado.wicket.participate.common.ParticipateUtils;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.email.Email;
-import de.vinado.wicket.participate.email.EmailAttachment;
 import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.email.service.EmailService;
 import de.vinado.wicket.participate.model.Accommodation;
@@ -12,47 +11,26 @@ import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
-import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.Terminable;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
-import de.vinado.wicket.participate.model.ical4j.SimpleDateProperty;
-import de.vinado.wicket.participate.wicket.inject.ApplicationName;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.parameter.Cn;
-import net.fortuna.ical4j.model.property.CalScale;
-import net.fortuna.ical4j.model.property.Created;
-import net.fortuna.ical4j.model.property.Description;
-import net.fortuna.ical4j.model.property.Location;
-import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.Organizer;
-import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.model.property.Summary;
-import net.fortuna.ical4j.model.property.Uid;
-import net.fortuna.ical4j.model.property.Version;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.wicket.util.string.Strings;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.persistence.EntityManager;
@@ -67,7 +45,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import static de.vinado.wicket.participate.common.DateUtils.toLocalDate;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 @Primary
@@ -81,7 +58,6 @@ public class EventServiceImpl extends DataService implements EventService {
     private final EmailService emailService;
     private final ApplicationProperties applicationProperties;
     private final EmailBuilderFactory emailBuilderFactory;
-    private final ApplicationName applicationName;
     private final CalendarUrl calendarUrl;
 
     @Override
@@ -412,7 +388,6 @@ public class EventServiceImpl extends DataService implements EventService {
                 Email email = emailBuilderFactory.create()
                     .to(singer)
                     .subject(participant.getEvent().getName())
-                    .attachments(newEventAttachment(participant.getEvent(), organizer))
                     .data("event", participant.getEvent())
                     .data("singer", singer)
                     .data("acceptLink", ParticipateUtils.generateInvitationLink(applicationProperties.getBaseUrl(), participant.getToken()))
@@ -437,53 +412,6 @@ public class EventServiceImpl extends DataService implements EventService {
     @Override
     public void inviteParticipant(Participant participant, User organizer) {
         inviteParticipants(Collections.singletonList(participant), organizer);
-    }
-
-    private EmailAttachment newEventAttachment(Event event, User organizer) {
-        String eventName = event.getEventType() + " in " + event.getLocation();
-
-        net.fortuna.ical4j.model.Calendar cal = new net.fortuna.ical4j.model.Calendar();
-        cal.getProperties().add(new ProdId(String.format(
-            "-//%s//%s %s//DE",
-            applicationProperties.getCustomer(),
-            applicationName.get(),
-            applicationProperties.getVersion()
-        )));
-        cal.getProperties().add(Version.VERSION_2_0);
-        cal.getProperties().add(CalScale.GREGORIAN);
-        cal.getProperties().add(Method.REQUEST);
-
-        UUID uuid = UUID.randomUUID();
-        VEvent vEvent = new VEvent();
-        vEvent.getProperties().add(new Uid(uuid.toString()));
-        vEvent.getProperties().add(new Summary(eventName));
-        vEvent.getProperties().add(new Description(event.getDescription()));
-        vEvent.getProperties().add(new Location(event.getLocation()));
-        vEvent.getProperties().add(new Created(new DateTime(event.getCreationDate())));
-        vEvent.getProperties().add(vEvent.getDateStamp());
-
-
-        vEvent.getProperties().add(new SimpleDateProperty(SimpleDateProperty.Type.DTSTART, event.getStartDate()));
-        if (!event.getStartDate().equals(event.getEndDate())) {
-            vEvent.getProperties().add(new SimpleDateProperty(SimpleDateProperty.Type.DTEND, event.getEndDate()));
-        }
-
-        String orgaEmail = Optional.ofNullable(organizer)
-            .map(User::getPerson)
-            .map(Person::getEmail)
-            .orElse(applicationProperties.getMail().getSender());
-        ParameterList organizerParameters = new ParameterList();
-        organizerParameters.add(new Cn(applicationProperties.getCustomer()));
-        Organizer vOrganizer = new Organizer(organizerParameters, URI.create("mailto:" + orgaEmail));
-        vEvent.getProperties().add(vOrganizer);
-
-        cal.getComponents().add(vEvent);
-
-        try {
-            return new EmailAttachment("participate-event.ics", MediaType.valueOf("text/calendar"), cal.toString().getBytes(UTF_8.name()));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("UnsupportedEncodingException", e);
-        }
     }
 
     @Override
