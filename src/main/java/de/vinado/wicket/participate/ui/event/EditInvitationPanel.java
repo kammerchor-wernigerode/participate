@@ -112,6 +112,11 @@ public class EditInvitationPanel extends GenericPanel<ParticipantDTO> {
             }
         };
         fromDtP.setLabel(new ResourceModel("from", "From"));
+        fromDtP.add(new AjaxFormComponentUpdatingBehavior("change") {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+            }
+        });
         form.add(fromDtP, new FormComponentLabel("fromDateLabel", fromDtP));
 
         toDtP.setLabel(new ResourceModel("till", "Till"));
