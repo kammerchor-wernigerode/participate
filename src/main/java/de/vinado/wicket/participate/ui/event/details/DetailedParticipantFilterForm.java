@@ -2,9 +2,9 @@ package de.vinado.wicket.participate.ui.event.details;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
+import de.vinado.wicket.bt4.datetimepicker.DateTextFieldResetIntent;
+import de.vinado.wicket.bt4.datetimepicker.DateTextFieldResettingBehavior;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
-import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
-import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.model.Accommodation;
 import de.vinado.wicket.participate.model.Event;
@@ -66,7 +66,7 @@ public abstract class DetailedParticipantFilterForm extends ParticipantFilterFor
         DatetimePickerConfig config = createDatetimePickerConfig();
         FormComponent<Date> control = new DatetimePicker("control", model, config);
         control.setLabel(new ResourceModel("filter.participant.form.control.from", "From"));
-        control.add(new DatetimePickerResettingBehavior(onChange));
+        control.add(new DateTextFieldResettingBehavior(onChange));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 
         return container.add(control, label);
@@ -78,7 +78,7 @@ public abstract class DetailedParticipantFilterForm extends ParticipantFilterFor
         IModel<Date> model = LambdaModel.of(getModel(), ParticipantFilter::getToDate, ParticipantFilter::setToDate);
         FormComponent<Date> control = new DatetimePicker("control", model, config);
         control.setLabel(new ResourceModel("filter.participant.form.control.to", "To"));
-        control.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
+        control.add(new UpdateOnEventBehavior<>(DateTextFieldResetIntent.class));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 
         return container.add(control, label);

@@ -6,9 +6,9 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.Date
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
 import de.agilecoders.wicket.jquery.Key;
 import de.vinado.wicket.bt4.button.BootstrapAjaxButton;
+import de.vinado.wicket.bt4.datetimepicker.DateTextFieldResetIntent;
+import de.vinado.wicket.bt4.datetimepicker.DateTextFieldResettingBehavior;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
-import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
-import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
 import de.vinado.wicket.bt4.datetimepicker.DatetimePickerWidgetPositioningConfig;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.form.AutosizeBehavior;
@@ -73,12 +73,12 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
         periodHelp.setOutputMarkupId(true);
 
         DatetimePicker fromDtP = new DatetimePicker("fromDate", fromConfig);
-        fromDtP.add(new DatetimePickerResettingBehavior(toConfig::withMinDate));
+        fromDtP.add(new DateTextFieldResettingBehavior(toConfig::withMinDate));
         fromDtP.add(AttributeAppender.append("aria-describedby", periodHelp.getMarkupId()));
         add(fromDtP, new FormComponentLabel("fromDateLabel", fromDtP));
 
         toDtP.setOutputMarkupId(true);
-        toDtP.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
+        toDtP.add(new UpdateOnEventBehavior<>(DateTextFieldResetIntent.class));
         add(toDtP, new FormComponentLabel("toDateLabel", toDtP));
 
         IModel<Accommodation> model = LambdaModel.of(getModel(), ParticipantDTO::getAccommodation, ParticipantDTO::setAccommodation);
