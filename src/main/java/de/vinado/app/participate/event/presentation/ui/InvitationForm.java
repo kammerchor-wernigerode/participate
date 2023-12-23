@@ -52,6 +52,8 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
     @SpringBean
     private ApplicationProperties applicationProperties;
 
+    private FormComponent<Date> fromTextField;
+    private FormComponent<Date> toTextField;
     private FormComponent<Accommodation> accommodationFormGroup;
     private FormComponent<Boolean> carCheckbox;
     private FormComponent<Short> carSeatCountTextField;
@@ -85,6 +87,8 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
         form.setOutputMarkupId(true);
 
         queue(form);
+        queue(fromTextField = fromTextField("from"));
+        queue(fromTextFieldLabel("fromLabel"));
         queue(accommodationFormGroup = accommodationFormGroup("accommodation"));
         queue(accommodationFormGroupLabel("accommodationLabel"));
         queue(carSeatCountTextField = carSeatCountTextField("carSeatCount"));
@@ -96,7 +100,6 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
         queue(invitationLink("invitationLink"));
 
         Event event = getModelObject().getEvent();
-        TempusDominusConfig fromConfig = createTempusDominusConfig(event);
         TempusDominusConfig toConfig = createTempusDominusConfig(event);
 
         BootstrapSelect<InvitationStatus> invitationStatusBs = new BootstrapSelect<>("invitationStatus",
@@ -113,31 +116,33 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
         IModel<Date> toModel = LambdaModel.of(getModel(), ParticipantDTO::getToDate, ParticipantDTO::setToDate);
         DateTimeTextField toDtP = new DateTimeTextField("toDate", toModel, toConfig);
 
-        IModel<Date> fromModel = LambdaModel.of(getModel(), ParticipantDTO::getFromDate, ParticipantDTO::setFromDate);
-        FormComponent<Date> fromDtP = new DateTimeTextField("fromDate", fromModel, fromConfig) {
-
-            @Override
-            protected Stream<HeaderItem> additionalHeaderItems(Component component) {
-                String source = component.getMarkupId();
-                String target = toDtP.getMarkupId();
-                return Stream.of(linkMinDate(source, target));
-            }
-        };
-        fromDtP.setLabel(new ResourceModel("from", "From"));
-        fromDtP.add(new AjaxFormComponentUpdatingBehavior("change") {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-            }
-        });
-        form.add(fromDtP, new FormComponentLabel("fromDateLabel", fromDtP));
-
         toDtP.setLabel(new ResourceModel("till", "Till"));
         toDtP.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
             }
         });
-        form.add(toDtP, new FormComponentLabel("toDateLabel", toDtP));
+        form.add(toTextField = toDtP, new FormComponentLabel("toDateLabel", toDtP));
+    }
+
+    protected FormComponent<Date> fromTextField(String wicketId) {
+        IModel<Date> model = LambdaModel.of(getModel(), ParticipantDTO::getFromDate, ParticipantDTO::setFromDate);
+        TempusDominusConfig config = createTempusDominusConfig(getModelObject().getEvent());
+        FormComponent<Date> textField = new DateTimeTextField(wicketId, model, config) {
+
+            @Override
+            protected Stream<HeaderItem> additionalHeaderItems(Component component) {
+                String source = component.getMarkupId();
+                String target = toTextField.getMarkupId();
+                return Stream.of(linkMinDate(source, target));
+            }
+        };
+        textField.setLabel(new ResourceModel("from", "From"));
+        return textField;
+    }
+
+    protected Component fromTextFieldLabel(String wicketId) {
+        return new FormComponentLabel(wicketId, fromTextField);
     }
 
     protected FormComponent<Accommodation> accommodationFormGroup(String wicketId) {
