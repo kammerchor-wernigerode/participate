@@ -28,7 +28,6 @@ import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.NumberTextField;
-import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -87,6 +86,8 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
         form.setOutputMarkupId(true);
 
         queue(form);
+        queue(toTextField = toTextField("to"));
+        queue(toTextFieldLabel("toLabel"));
         queue(fromTextField = fromTextField("from"));
         queue(fromTextFieldLabel("fromLabel"));
         queue(accommodationFormGroup = accommodationFormGroup("accommodation"));
@@ -99,9 +100,6 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
         queue(commentTextFieldLabel("commentLabel"));
         queue(invitationLink("invitationLink"));
 
-        Event event = getModelObject().getEvent();
-        TempusDominusConfig toConfig = createTempusDominusConfig(event);
-
         BootstrapSelect<InvitationStatus> invitationStatusBs = new BootstrapSelect<>("invitationStatus",
             InvitationStatus.stream().collect(toList()), new EnumChoiceRenderer<>());
         invitationStatusBs.add(new AjaxFormComponentUpdatingBehavior("hidden.bs.select") {
@@ -112,17 +110,18 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
             }
         });
         form.add(invitationStatusBs);
+    }
 
-        IModel<Date> toModel = LambdaModel.of(getModel(), ParticipantDTO::getToDate, ParticipantDTO::setToDate);
-        DateTimeTextField toDtP = new DateTimeTextField("toDate", toModel, toConfig);
+    protected FormComponent<Date> toTextField(String wicketId) {
+        IModel<Date> model = LambdaModel.of(getModel(), ParticipantDTO::getToDate, ParticipantDTO::setToDate);
+        TempusDominusConfig config = createTempusDominusConfig(getModelObject().getEvent());
+        FormComponent<Date> textField = new DateTimeTextField(wicketId, model, config);
+        textField.setLabel(new ResourceModel("till", "Till"));
+        return textField;
+    }
 
-        toDtP.setLabel(new ResourceModel("till", "Till"));
-        toDtP.add(new AjaxFormComponentUpdatingBehavior("change") {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-            }
-        });
-        form.add(toTextField = toDtP, new FormComponentLabel("toDateLabel", toDtP));
+    protected Component toTextFieldLabel(String wicketId) {
+        return new FormComponentLabel(wicketId, toTextField);
     }
 
     protected FormComponent<Date> fromTextField(String wicketId) {
