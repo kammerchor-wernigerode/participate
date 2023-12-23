@@ -12,6 +12,7 @@ import de.vinado.wicket.participate.common.DateUtils;
 import de.vinado.wicket.participate.common.ParticipateUtils;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.Accommodation;
+import de.vinado.wicket.participate.model.Accommodation.Status;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
@@ -38,6 +39,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -105,6 +107,13 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
     }
 
     protected FormComponent<InvitationStatus> invitationStatusSelect(String wicketId) {
+        fromTextField.setOutputMarkupId(true);
+        toTextField.setOutputMarkupId(true);
+        accommodationFormGroup.setOutputMarkupId(true);
+        carCheckbox.setOutputMarkupId(true);
+        carSeatCountTextField.setOutputMarkupId(true);
+        commentTextField.setOutputMarkupId(true);
+
         IModel<InvitationStatus> model = LambdaModel.of(getModel(), ParticipantDTO::getInvitationStatus, ParticipantDTO::setInvitationStatus);
         List<InvitationStatus> choices = InvitationStatus.stream().collect(Collectors.toList());
         EnumChoiceRenderer<InvitationStatus> renderer = new EnumChoiceRenderer<>();
@@ -114,7 +123,48 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
 
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                target.add(form);
+                FormComponent<InvitationStatus> component = (FormComponent<InvitationStatus>) getFormComponent();
+                InvitationStatus selected = component.getConvertedInput();
+
+                if (isNoteWorthy(selected)) {
+                    return;
+                }
+
+                reset(target
+                    , fromTextField
+                    , toTextField
+                    , accommodationFormGroup
+                    , carCheckbox
+                    , carSeatCountTextField
+                    , commentTextField
+                );
+            }
+
+            private boolean isNoteWorthy(InvitationStatus selected) {
+                return List.of(InvitationStatus.ACCEPTED, InvitationStatus.TENTATIVE).contains(selected);
+            }
+
+            private void reset(AjaxRequestTarget target, FormComponent<?>... formComponents) {
+                Arrays.stream(formComponents)
+                    .forEach(formComponent -> reset(formComponent, target));
+            }
+
+            private void reset(FormComponent<?> formComponent, AjaxRequestTarget target) {
+                formComponent.setDefaultModelObject(defaultValue(formComponent));
+                target.add(formComponent);
+            }
+
+            private Object defaultValue(FormComponent<?> formComponent) {
+                Class<?> type = formComponent.getType();
+                if (type.isAssignableFrom(Boolean.class)) {
+                    return false;
+                } else if (type.isAssignableFrom(Short.class)) {
+                    return (short) 0;
+                } else if (type.isAssignableFrom(Accommodation.class)) {
+                    return new Accommodation(Status.NO_NEED, null);
+                } else {
+                    return null;
+                }
             }
         });
         return select;
