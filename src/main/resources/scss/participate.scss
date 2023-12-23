@@ -54,11 +54,12 @@ main > {
 
 .participants {
     --cell-width-invitationStatus: 34px;
+    --cell-width-invite: 30px;
     --cell-width-edit: 30px;
 
     &.participants-basic {
         --cell-width-name: 300px;
-        --cell-width-voice: calc(100% - var(--cell-width-invitationStatus) - var(--cell-width-name) - var(--cell-width-edit));
+        --cell-width-voice: calc(100% - var(--cell-width-invitationStatus) - var(--cell-width-name) - var(--cell-width-invite) - var(--cell-width-edit));
     }
 
     &.participants-detailed {
@@ -66,7 +67,7 @@ main > {
         --cell-width-voice: 110px;
         --cell-width-attribute: 120px;
         --cell-width-period: 171px;
-        --cell-width-comment: calc(100% - var(--cell-width-invitationStatus) - var(--cell-width-name) - var(--cell-width-voice) - var(--cell-width-attribute) - var(--cell-width-period) - var(--cell-width-edit));
+        --cell-width-comment: calc(100% - var(--cell-width-invitationStatus) - var(--cell-width-name) - var(--cell-width-voice) - var(--cell-width-attribute) - var(--cell-width-period) - var(--cell-width-invite) - var(--cell-width-edit));
     }
 
     td {
@@ -92,6 +93,10 @@ main > {
 
         &.comment {
             width: var(--cell-width-comment);
+        }
+
+        &.invite {
+            width: var(--cell-width-invite);
         }
 
         &.edit {

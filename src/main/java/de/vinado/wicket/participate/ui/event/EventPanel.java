@@ -126,6 +126,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         BasicParticipantColumnPreset columns = new BasicParticipantColumnPreset();
         InteractiveColumnPresetDecoratorFactory decoratorFactory = InteractiveColumnPresetDecoratorFactory.builder()
             .visible(editable)
+            .onInvite(EventPanel.this::invite)
             .onEdit(EventPanel.this::edit)
             .build();
 
@@ -143,6 +144,18 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
 
     private ParticipantDataProvider dataProvider() {
         return new ParticipantDataProvider(getModel().map(EventDetails::getEvent), eventService, filterModel, personContext);
+    }
+
+    private void invite(AjaxRequestTarget target, IModel<Participant> rowModel) {
+        Participant participant = rowModel.getObject();
+
+        eventService.inviteParticipant(participant, Session.get().getMetaData(ManagementSession.user));
+
+        if (!InvitationStatus.UNINVITED.equals(participant.getInvitationStatus())) {
+            Snackbar.show(target, new ResourceModel("email.send.reminder.success", "A reminder has been sent"));
+        } else {
+            Snackbar.show(target, new ResourceModel("email.send.invitation.success", "An invitation has been sent"));
+        }
     }
 
     private void edit(AjaxRequestTarget target, IModel<Participant> rowModel) {

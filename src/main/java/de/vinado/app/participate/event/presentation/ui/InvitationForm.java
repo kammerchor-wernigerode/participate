@@ -1,16 +1,12 @@
 package de.vinado.app.participate.event.presentation.ui;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.select.BootstrapSelect;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.tempusdominus.TempusDominusConfig;
-import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.app.participate.wicket.bt5.form.DateTimeTextField;
 import de.vinado.app.participate.wicket.form.FormComponentLabel;
 import de.vinado.wicket.form.AutosizeBehavior;
 import de.vinado.wicket.participate.common.DateUtils;
 import de.vinado.wicket.participate.common.ParticipateUtils;
-import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.Accommodation;
 import de.vinado.wicket.participate.model.Event;
@@ -19,7 +15,6 @@ import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.wicket.form.ui.AccommodationFormGroup;
 import org.apache.wicket.Component;
-import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -170,23 +165,6 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
             }
         });
         form.add(commentTa, new FormComponentLabel("commentLabel", commentTa));
-
-        BootstrapAjaxLink<ParticipantDTO> inviteSingerBtn = new BootstrapAjaxLink<ParticipantDTO>(
-            "inviteSingerBtn", getModel(), Buttons.Type.Default, !InvitationStatus.UNINVITED.equals(getModelObject().getInvitationStatus())
-            ? new ResourceModel("email.send.reminder", "Send Reminder")
-            : new ResourceModel("email.send.invitation", "Send Invitation")) {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                eventService.inviteParticipant(InvitationForm.this.getModelObject().getParticipant(), Session.get().getMetaData(ManagementSession.user));
-                if (!InvitationStatus.UNINVITED.equals(InvitationForm.this.getModelObject().getInvitationStatus())) {
-                    Snackbar.show(target, new ResourceModel("email.send.reminder.success", "A reminder has been sent"));
-                } else {
-                    Snackbar.show(target, new ResourceModel("email.send.invitation.success", "An invitation has been sent"));
-                }
-            }
-        };
-        inviteSingerBtn.setSize(Buttons.Size.Small);
-        form.add(inviteSingerBtn);
     }
 
     protected AbstractLink invitationLink(String wicketId) {

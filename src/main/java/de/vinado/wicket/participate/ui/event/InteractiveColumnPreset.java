@@ -15,10 +15,28 @@ import java.util.Optional;
 public class InteractiveColumnPreset extends ParticipantColumnListDecorator {
 
     public InteractiveColumnPreset(ParticipantColumnList delegate,
+                                   SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onInvite,
                                    SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onEdit) {
         super(delegate);
 
+        Optional.ofNullable(onInvite).map(this::inviteColumn).map(this::add);
         Optional.ofNullable(onEdit).map(this::editColumn).map(this::add);
+    }
+
+    private IColumn<Participant, SerializableFunction<Participant, ?>> inviteColumn(
+        SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onClick) {
+        return new BootstrapAjaxLinkColumn<>(FontAwesome5IconType.envelope_s, new ResourceModel("invitation.invite", "Invite")) {
+
+            @Override
+            public void onClick(AjaxRequestTarget target, IModel<Participant> rowModel) {
+                onClick.accept(target, rowModel);
+            }
+
+            @Override
+            public String getCssClass() {
+                return "invite";
+            }
+        };
     }
 
     private IColumn<Participant, SerializableFunction<Participant, ?>> editColumn(
