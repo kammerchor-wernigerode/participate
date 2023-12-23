@@ -3,7 +3,7 @@ package de.vinado.wicket.participate.ui.event.details;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
-import de.vinado.wicket.bt4.tooltip.TooltipBehavior;
+import de.vinado.app.participate.wicket.bt5.tooltip.TooltipBehavior;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;

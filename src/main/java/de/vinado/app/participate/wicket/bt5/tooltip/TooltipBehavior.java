@@ -1,4 +1,4 @@
-package de.vinado.wicket.bt4.tooltip;
+package de.vinado.app.participate.wicket.bt5.tooltip;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig;
 import org.apache.wicket.behavior.Behavior;

@@ -2,8 +2,8 @@ package de.vinado.wicket.participate.components;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
 import de.agilecoders.wicket.jquery.util.Json;
-import de.vinado.wicket.bt4.tooltip.TooltipBehavior;
-import de.vinado.wicket.bt4.tooltip.TooltipConfig;
+import de.vinado.app.participate.wicket.bt5.tooltip.TooltipBehavior;
+import de.vinado.app.participate.wicket.bt5.tooltip.TooltipConfig;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;

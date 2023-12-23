@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.vinado.wicket.bt4.tooltip.TooltipBehavior;
+import de.vinado.app.participate.wicket.bt5.tooltip.TooltipBehavior;
 import de.vinado.wicket.participate.model.Accommodation;
 import lombok.AccessLevel;
 import lombok.NonNull;
