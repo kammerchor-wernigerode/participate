@@ -144,7 +144,7 @@
                                             You got invited to a ${event.eventType} from ${event.startDate}
                                             to ${event.endDate}.
                                         </#if>
-                                            <br>A location has not be announced yet.
+                                            <br>A location has not been announced yet.
                                         </p>
                                     </#if>
                                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
@@ -173,6 +173,9 @@
                                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
                                             You are able to change your data at any time. Simply click on the link
                                             again.
+                                        </p>
+                                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
+                                            The dates are also available in our <a href="${calendarUrl}">calendar</a>.
                                         </p>
                                     </td>
                                 </tr>

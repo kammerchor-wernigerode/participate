@@ -70,6 +70,8 @@ app:
     reply-to: ${spring.mail.properties.mail.reply-to}
   wicket:
     runtime-configuration: DEPLOYMENT
+  google-calendar:
+    source: foo
 
   features:
     remind-overdue:

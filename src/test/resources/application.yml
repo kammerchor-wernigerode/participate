@@ -11,4 +11,7 @@ spring:
     host: localhost
     port: 587
 
-app.base-url: http://localhost:8080
+app:
+  base-url: http://localhost:8080
+  google-calendar:
+    source: foo

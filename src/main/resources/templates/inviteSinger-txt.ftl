@@ -12,7 +12,7 @@ You got invited to a ${event.eventType} on ${event.startDate}.
     <#else>
 You got invited to a ${event.eventType} from ${event.startDate} to ${event.endDate}.
     </#if>
-A location has not be announced yet.
+A location has not been announced yet.
 </#if>
 
 Please fill the form behind the link.
@@ -20,4 +20,6 @@ Please fill the form behind the link.
 ${acceptLink}
 
 You are able to change your data at any time. Simply click on the link again.
+
+The dates are also available in our calendar: ${calendarUrl}
 <#-- @formatter:on -->

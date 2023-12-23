@@ -144,6 +144,9 @@
                                             </tbody>
                                         </table>
                                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Du kannst deine Angabe jederzeit ändern, indem du erneut auf den Button klickst.</p>
+                                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
+                                            Der Termin ist außerdem in unserem <a href="${calendarUrl}">Kalender</a> einsehbar.
+                                        </p>
                                     </td>
                                 </tr>
                             </table>
