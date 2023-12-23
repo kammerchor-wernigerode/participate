@@ -46,7 +46,6 @@ import static java.util.stream.Collectors.toList;
 
 public class InvitationForm extends GenericPanel<ParticipantDTO> {
 
-    @SuppressWarnings("unused")
     @SpringBean
     private EventService eventService;
 
