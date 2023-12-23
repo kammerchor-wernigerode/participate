@@ -1,8 +1,11 @@
 package de.vinado.app.participate.event.presentation.ui;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.select.BootstrapSelect;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.tempusdominus.TempusDominusConfig;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.app.participate.wicket.bt5.form.DateTimeTextField;
+import de.vinado.app.participate.wicket.bt5.tooltip.TooltipBehavior;
 import de.vinado.app.participate.wicket.form.FormComponentLabel;
 import de.vinado.wicket.form.AutosizeBehavior;
 import de.vinado.wicket.participate.common.DateUtils;
@@ -18,6 +21,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
@@ -47,6 +51,8 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
     @SpringBean
     private ApplicationProperties applicationProperties;
 
+    private FormComponent<Boolean> carCheckbox;
+    private FormComponent<Short> carSeatCountTextField;
     private FormComponent<String> commentTextField;
 
     private final Form<ParticipantDTO> form;
@@ -77,6 +83,8 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
         form.setOutputMarkupId(true);
 
         queue(form);
+        queue(carCheckbox = carCheckbox("car"));
+        queue(carCheckboxLabel("carLabel"));
         queue(commentTextField = commentTextField("comment"));
         queue(commentTextFieldLabel("commentLabel"));
         queue(invitationLink("invitationLink"));
@@ -149,15 +157,28 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
         carSeatCountTf.setMinimum((short) 0);
         carSeatCountTf.setMaximum((short) 127); // 1 Byte maximum signed integer
         carSeatCountTf.setLabel(new ResourceModel("carSeatCount", "Number of Seats"));
-        form.add(carSeatCountTf, new SimpleFormComponentLabel("carSeatCountLabel", carSeatCountTf));
+        form.add(carSeatCountTextField = carSeatCountTf, new SimpleFormComponentLabel("carSeatCountLabel", carSeatCountTf));
+    }
 
-        AjaxCheckBox carCb = new AjaxCheckBox("car") {
+    protected FormComponent<Boolean> carCheckbox(String wicketId) {
+        IModel<Boolean> model = LambdaModel.of(getModel(), ParticipantDTO::isCar, ParticipantDTO::setCar);
+        AjaxCheckBox checkbox = new AjaxCheckBox(wicketId, model) {
+
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                target.add(carSeatCountTf);
+                target.add(carSeatCountTextField);
             }
         };
-        form.add(carCb);
+        checkbox.setLabel(new ResourceModel("event.participant.dialog.form.label.car", "Uses own car"));
+        return checkbox;
+    }
+
+    protected Component carCheckboxLabel(String wicketId) {
+        carCheckbox.add(AttributeAppender.replace("aria-label", carCheckbox.getLabel()));
+
+        Icon icon = new Icon(wicketId, FontAwesome5IconType.car_s);
+        icon.add(new TooltipBehavior(carCheckbox.getLabel()));
+        return icon;
     }
 
     protected FormComponent<String> commentTextField(String wicketId) {
