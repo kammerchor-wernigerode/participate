@@ -4,6 +4,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.vinado.app.participate.event.presentation.ui.InvitationForm;
 import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.app.participate.wicket.bt5.modal.Modal;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
@@ -151,7 +152,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
             .setHeaderVisible(true)
             .size(Modal.Size.LARGE)
             .title(new ResourceModel("invitation.edit", "Edit Invitation"))
-            .content(id -> new EditInvitationPanel(id, model))
+            .content(id -> new InvitationForm(id, model))
             .addCloseAction(new ResourceModel("cancel", "Cancel"))
             .addSubmitAction(new ResourceModel("save", "Save"), this::onSave)
             .show(target);

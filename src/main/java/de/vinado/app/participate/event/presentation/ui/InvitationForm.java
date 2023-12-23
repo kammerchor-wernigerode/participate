@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.ui.event;
+package de.vinado.app.participate.event.presentation.ui;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
@@ -44,7 +44,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
-public class EditInvitationPanel extends GenericPanel<ParticipantDTO> {
+public class InvitationForm extends GenericPanel<ParticipantDTO> {
 
     @SuppressWarnings("unused")
     @SpringBean
@@ -55,7 +55,7 @@ public class EditInvitationPanel extends GenericPanel<ParticipantDTO> {
 
     private final Form<ParticipantDTO> form;
 
-    public EditInvitationPanel(String id, IModel<ParticipantDTO> model) {
+    public InvitationForm(String id, IModel<ParticipantDTO> model) {
         super(id, model);
 
         this.form = form("form");
@@ -68,7 +68,7 @@ public class EditInvitationPanel extends GenericPanel<ParticipantDTO> {
             protected void onSubmit() {
                 super.onSubmit();
 
-                EditInvitationPanel.this.onSubmit();
+                InvitationForm.this.onSubmit();
             }
         };
     }
@@ -141,10 +141,10 @@ public class EditInvitationPanel extends GenericPanel<ParticipantDTO> {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-                if (!EditInvitationPanel.this.getModelObject().isCar()) {
-                    EditInvitationPanel.this.getModelObject().setCarSeatCount((short) 0);
+                if (!InvitationForm.this.getModelObject().isCar()) {
+                    InvitationForm.this.getModelObject().setCarSeatCount((short) 0);
                 }
-                setEnabled(EditInvitationPanel.this.getModelObject().isCar());
+                setEnabled(InvitationForm.this.getModelObject().isCar());
             }
         };
         carSeatCountTf.setOutputMarkupId(true);
@@ -178,8 +178,8 @@ public class EditInvitationPanel extends GenericPanel<ParticipantDTO> {
             : new ResourceModel("email.send.invitation", "Send Invitation")) {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                eventService.inviteParticipant(EditInvitationPanel.this.getModelObject().getParticipant(), Session.get().getMetaData(ManagementSession.user));
-                if (!InvitationStatus.UNINVITED.equals(EditInvitationPanel.this.getModelObject().getInvitationStatus())) {
+                eventService.inviteParticipant(InvitationForm.this.getModelObject().getParticipant(), Session.get().getMetaData(ManagementSession.user));
+                if (!InvitationStatus.UNINVITED.equals(InvitationForm.this.getModelObject().getInvitationStatus())) {
                     Snackbar.show(target, new ResourceModel("email.send.reminder.success", "A reminder has been sent"));
                 } else {
                     Snackbar.show(target, new ResourceModel("email.send.invitation.success", "An invitation has been sent"));
