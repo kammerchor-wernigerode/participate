@@ -19,10 +19,13 @@ import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.wicket.form.ui.AccommodationFormGroup;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
@@ -38,6 +41,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.net.URL;
 import java.util.Date;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -99,7 +103,27 @@ public class EditInvitationPanel extends GenericPanel<ParticipantDTO> {
         DateTimeTextField toDtP = new DateTimeTextField("toDate", toModel, toConfig);
 
         IModel<Date> fromModel = LambdaModel.of(getModel(), ParticipantDTO::getFromDate, ParticipantDTO::setFromDate);
-        FormComponent<Date> fromDtP = new DateTimeTextField("fromDate", fromModel, fromConfig);
+        FormComponent<Date> fromDtP = new DateTimeTextField("fromDate", fromModel, fromConfig) {
+
+            @Override
+            protected Stream<HeaderItem> additionalHeaderItems(Component component) {
+                String javascript = ""
+                    + "const " + component.getMarkupId() + " = document.getElementById('" + component.getMarkupId() + "');\n"
+                    + "const " + toDtP.getMarkupId() + " = document.getElementById('" + toDtP.getMarkupId() + "');\n"
+                    + component.getMarkupId() + ".datetimepicker.subscribe(tempusDominus.Namespace.events.change, e => {\n"
+                    + "  if (!e.date) return;\n"
+                    + "  " + toDtP.getMarkupId() + ".datetimepicker.updateOptions({\n"
+                    + "    restrictions: {\n"
+                    + "      minDate: e.date,\n"
+                    + "    },\n"
+                    + "  });\n"
+                    + "  " + toDtP.getMarkupId() + ".datetimepicker.clear();\n"
+                    + "});\n"
+                    ;
+
+                return Stream.of(OnDomReadyHeaderItem.forScript(javascript));
+            }
+        };
         fromDtP.setLabel(new ResourceModel("from", "From"));
         form.add(fromDtP, new FormComponentLabel("fromDateLabel", fromDtP));
 
