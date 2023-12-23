@@ -47,6 +47,8 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
     @SpringBean
     private ApplicationProperties applicationProperties;
 
+    private FormComponent<String> commentTextField;
+
     private final Form<ParticipantDTO> form;
 
     public InvitationForm(String id, IModel<ParticipantDTO> model) {
@@ -75,6 +77,8 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
         form.setOutputMarkupId(true);
 
         queue(form);
+        queue(commentTextField = commentTextField("comment"));
+        queue(commentTextFieldLabel("commentLabel"));
         queue(invitationLink("invitationLink"));
 
         Event event = getModelObject().getEvent();
@@ -154,17 +158,19 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
             }
         };
         form.add(carCb);
+    }
 
-        TextArea commentTa = new TextArea<>("comment");
-        commentTa.add(new AutosizeBehavior());
-        commentTa.setLabel(new ResourceModel("comment", "Comment"));
-        commentTa.add(new AjaxFormComponentUpdatingBehavior("change") {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
+    protected FormComponent<String> commentTextField(String wicketId) {
+        IModel<String> model = LambdaModel.of(getModel(), ParticipantDTO::getComment, ParticipantDTO::setComment);
+        TextArea<String> textArea = new TextArea<>(wicketId, model);
+        textArea.setType(String.class);
+        textArea.setLabel(new ResourceModel("comment", "Comment"));
+        textArea.add(new AutosizeBehavior());
+        return textArea;
+    }
 
-            }
-        });
-        form.add(commentTa, new FormComponentLabel("commentLabel", commentTa));
+    protected Component commentTextFieldLabel(String wicketId) {
+        return new FormComponentLabel(wicketId, commentTextField);
     }
 
     protected AbstractLink invitationLink(String wicketId) {
