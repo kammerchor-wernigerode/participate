@@ -18,20 +18,20 @@ import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.wicket.form.ui.AccommodationFormGroup;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.head.HeaderItem;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.link.AbstractLink;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
@@ -80,6 +80,7 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
         form.setOutputMarkupId(true);
 
         queue(form);
+        queue(invitationLink("invitationLink"));
 
         Event event = getModelObject().getEvent();
         TempusDominusConfig fromConfig = createTempusDominusConfig(event);
@@ -186,14 +187,17 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
         };
         inviteSingerBtn.setSize(Buttons.Size.Small);
         form.add(inviteSingerBtn);
+    }
 
-        URL href = ParticipateUtils.generateInvitationLink(
-            applicationProperties.getBaseUrl(),
-            getModelObject().getToken());
-        Label link = new Label("token", href);
-        link.add(AttributeModifier.append("href", href));
-        link.add(AttributeModifier.append("target", "_blank"));
-        form.add(link);
+    protected AbstractLink invitationLink(String wicketId) {
+        IModel<String> model = getModel().map(this::invitationUrl).map(URL::toString);
+        return new ExternalLink(wicketId, model, model);
+    }
+
+    private URL invitationUrl(ParticipantDTO dto) {
+        String baseUrl = applicationProperties.getBaseUrl();
+        String token = dto.getToken();
+        return ParticipateUtils.generateInvitationLink(baseUrl, token);
     }
 
     private static TempusDominusConfig createTempusDominusConfig(Event event) {
