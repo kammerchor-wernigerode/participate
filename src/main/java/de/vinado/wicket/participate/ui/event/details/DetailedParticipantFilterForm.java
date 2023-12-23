@@ -10,7 +10,6 @@ import de.vinado.wicket.participate.ui.event.ParticipantFilterForm;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.head.HeaderItem;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
@@ -68,21 +67,9 @@ public abstract class DetailedParticipantFilterForm extends ParticipantFilterFor
 
             @Override
             protected Stream<HeaderItem> additionalHeaderItems(Component component) {
-                String javascript = ""
-                    + "const " + component.getMarkupId() + " = document.getElementById('" + component.getMarkupId() + "');\n"
-                    + "const " + toTextField.getMarkupId() + " = document.getElementById('" + toTextField.getMarkupId() + "');\n"
-                    + component.getMarkupId() + ".datetimepicker.subscribe(tempusDominus.Namespace.events.change, e => {\n"
-                    + "  if (!e.date) return;\n"
-                    + "  " + toTextField.getMarkupId() + ".datetimepicker.updateOptions({\n"
-                    + "    restrictions: {\n"
-                    + "      minDate: e.date,\n"
-                    + "    },\n"
-                    + "  });\n"
-                    + "  " + toTextField.getMarkupId() + ".datetimepicker.clear();\n"
-                    + "});\n"
-                    ;
-
-                return Stream.of(OnDomReadyHeaderItem.forScript(javascript));
+                String source = component.getMarkupId();
+                String target = toTextField.getMarkupId();
+                return Stream.of(linkMinDate(source, target));
             }
         };
         control.setLabel(new ResourceModel("filter.participant.form.control.from", "From"));

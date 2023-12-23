@@ -16,7 +16,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.HeaderItem;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -75,20 +74,9 @@ public abstract class ParticipantForm extends Form<ParticipantDTO> {
 
             @Override
             protected Stream<HeaderItem> additionalHeaderItems(Component component) {
-                String javascript = ""
-                    + "const " + component.getMarkupId() + " = document.getElementById('" + component.getMarkupId() + "');\n"
-                    + "const " + toDtP.getMarkupId() + " = document.getElementById('" + toDtP.getMarkupId() + "');\n"
-                    + component.getMarkupId() + ".datetimepicker.subscribe(tempusDominus.Namespace.events.change, e => {\n"
-                    + "  if (!e.date) return;\n"
-                    + "  " + toDtP.getMarkupId() + ".datetimepicker.updateOptions({\n"
-                    + "    restrictions: {\n"
-                    + "      minDate: e.date,\n"
-                    + "    },\n"
-                    + "  });\n"
-                    + "  " + toDtP.getMarkupId() + ".datetimepicker.clear();\n"
-                    + "});\n";
-
-                return Stream.of(OnDomReadyHeaderItem.forScript(javascript));
+                String source = component.getMarkupId();
+                String target = toDtP.getMarkupId();
+                return Stream.of(linkMinDate(source, target));
             }
         };
         fromDtP.add(AttributeAppender.append("aria-describedby", periodHelp.getMarkupId()));

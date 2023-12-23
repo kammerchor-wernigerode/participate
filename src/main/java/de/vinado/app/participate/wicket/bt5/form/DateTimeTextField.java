@@ -7,6 +7,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.tempusdominus
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
@@ -75,6 +76,24 @@ public class DateTimeTextField extends TextField<Date> {
             return converter;
         }
         return null;
+    }
+
+    public static HeaderItem linkMinDate(String sourceMarkupId, String targetMarkupId) {
+        String javascript = ""
+            + "const " + sourceMarkupId + " = document.getElementById('" + sourceMarkupId + "');\n"
+            + "const " + targetMarkupId + " = document.getElementById('" + targetMarkupId + "');\n"
+            + sourceMarkupId + ".datetimepicker.subscribe(tempusDominus.Namespace.events.change, e => {\n"
+            + "  if (!e.date) return;\n"
+            + "  " + targetMarkupId + ".datetimepicker.updateOptions({\n"
+            + "    restrictions: {\n"
+            + "      minDate: e.date,\n"
+            + "    },\n"
+            + "  });\n"
+            + "  " + targetMarkupId + ".datetimepicker.clear();\n"
+            + "});\n"
+            ;
+
+        return OnDomReadyHeaderItem.forScript(javascript);
     }
 
 
