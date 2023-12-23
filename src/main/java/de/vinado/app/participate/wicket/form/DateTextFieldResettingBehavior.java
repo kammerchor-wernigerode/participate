@@ -1,6 +1,5 @@
-package de.vinado.wicket.bt4.datetimepicker;
+package de.vinado.app.participate.wicket.form;
 
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -12,11 +11,11 @@ import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 import java.util.Date;
 
-public class DatetimePickerResettingBehavior extends AjaxFormComponentUpdatingBehavior {
+public class DateTextFieldResettingBehavior extends AjaxFormComponentUpdatingBehavior {
 
     private final SerializableConsumer<Date> currentValue;
 
-    public DatetimePickerResettingBehavior(SerializableConsumer<Date> currentValue) {
+    public DateTextFieldResettingBehavior(SerializableConsumer<Date> currentValue) {
         super("change.datetimepicker");
         this.currentValue = currentValue;
     }
@@ -25,15 +24,15 @@ public class DatetimePickerResettingBehavior extends AjaxFormComponentUpdatingBe
     protected void onBind() {
         super.onBind();
         FormComponent<?> component = getFormComponent();
-        if (!(component instanceof DatetimePicker)) {
+        if (!(component.getType().isAssignableFrom(Date.class))) {
             throw new WicketRuntimeException("Behavior " + getClass().getName()
-                + " can only be added to an instance of a DatetimePicker");
+                + " can only be added to an instance of FormComponent");
         }
     }
 
     @Override
     protected void onUpdate(AjaxRequestTarget target) {
-        DatetimePicker component = (DatetimePicker) getFormComponent();
+        FormComponent<Date> component = (FormComponent<Date>) getFormComponent();
         String value = component.getValue();
         if (Strings.isEmpty(value)) {
             return;
@@ -44,7 +43,7 @@ public class DatetimePickerResettingBehavior extends AjaxFormComponentUpdatingBe
     }
 
     protected void onReset(AjaxRequestTarget target) {
-        getComponent().send(getScope(), Broadcast.BREADTH, new DatetimePickerResetIntent());
+        getComponent().send(getScope(), Broadcast.BREADTH, new DateTextFieldResetIntent());
     }
 
     protected IEventSink getScope() {

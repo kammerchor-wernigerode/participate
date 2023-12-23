@@ -1,17 +1,15 @@
 package de.vinado.wicket.participate.ui.event.details;
 
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
-import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
-import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResetIntent;
-import de.vinado.wicket.bt4.datetimepicker.DatetimePickerResettingBehavior;
-import de.vinado.wicket.common.UpdateOnEventBehavior;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.tempusdominus.TempusDominusConfig;
+import de.vinado.app.participate.wicket.bt5.form.DateTimeTextField;
+import de.vinado.wicket.participate.common.DateUtils;
 import de.vinado.wicket.participate.model.Accommodation;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.ui.event.ParticipantFilterForm;
-import org.apache.commons.lang3.time.DateUtils;
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
@@ -22,12 +20,14 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
-import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.stream.Stream;
 
 public abstract class DetailedParticipantFilterForm extends ParticipantFilterForm {
+
+    private Component toTextField;
 
     private final IModel<Event> eventModel;
 
@@ -43,9 +43,8 @@ public abstract class DetailedParticipantFilterForm extends ParticipantFilterFor
         queue(comment("comment"));
         queue(accommodation("accommodation"));
 
-        DatetimePickerConfig toDateConfig = createDatetimePickerConfig();
-        queue(toDate("toDate", toDateConfig));
-        queue(fromDate("fromDate", toDateConfig::withMinDate));
+        queue(toDate("toDate"));
+        queue(fromDate("fromDate"));
     }
 
     protected MarkupContainer comment(String wicketId) {
@@ -59,29 +58,36 @@ public abstract class DetailedParticipantFilterForm extends ParticipantFilterFor
         return container.add(control, label);
     }
 
-    protected MarkupContainer fromDate(String wicketId, SerializableConsumer<Date> onChange) {
+    protected MarkupContainer fromDate(String wicketId) {
         WebMarkupContainer container = new WebMarkupContainer(wicketId);
 
         IModel<Date> model = LambdaModel.of(getModel(), ParticipantFilter::getFromDate, ParticipantFilter::setFromDate);
-        DatetimePickerConfig config = createDatetimePickerConfig();
-        FormComponent<Date> control = new DatetimePicker("control", model, config);
+        TempusDominusConfig config = createTempusDominusConfig(eventModel.getObject());
+        FormComponent<Date> control = new DateTimeTextField("control", model, config) {
+
+            @Override
+            protected Stream<HeaderItem> additionalHeaderItems(Component component) {
+                String source = component.getMarkupId();
+                String target = toTextField.getMarkupId();
+                return Stream.of(linkMinDate(source, target));
+            }
+        };
         control.setLabel(new ResourceModel("filter.participant.form.control.from", "From"));
-        control.add(new DatetimePickerResettingBehavior(onChange));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 
         return container.add(control, label);
     }
 
-    protected MarkupContainer toDate(String wicketId, DatetimePickerConfig config) {
+    protected MarkupContainer toDate(String wicketId) {
         WebMarkupContainer container = new WebMarkupContainer(wicketId);
 
         IModel<Date> model = LambdaModel.of(getModel(), ParticipantFilter::getToDate, ParticipantFilter::setToDate);
-        FormComponent<Date> control = new DatetimePicker("control", model, config);
+        TempusDominusConfig config = createTempusDominusConfig(eventModel.getObject());
+        FormComponent<Date> control = new DateTimeTextField("control", model, config);
         control.setLabel(new ResourceModel("filter.participant.form.control.to", "To"));
-        control.add(new UpdateOnEventBehavior<>(DatetimePickerResetIntent.class));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
 
-        return container.add(control, label);
+        return container.add(toTextField = control, label);
     }
 
     protected MarkupContainer accommodation(String wicketId) {
@@ -96,17 +102,14 @@ public abstract class DetailedParticipantFilterForm extends ParticipantFilterFor
         return container.add(control, label);
     }
 
-    protected DatetimePickerConfig createDatetimePickerConfig() {
-        Event event = eventModel.getObject();
-        DatetimePickerConfig config = new DatetimePickerConfig();
-        config.with(new DatetimePickerIconConfig());
-        config.useLocale(getLocale().getLanguage());
-        config.withMinDate(event.getStartDate());
-        config.withMaxDate(DateUtils.addMilliseconds(DateUtils.addDays(event.getEndDate(), 1), -1));
-        config.withFormat("dd.MM.yyyy HH:mm");
-        config.withMinuteStepping(30);
-        config.useCurrent(false);
-        return config;
+    private static TempusDominusConfig createTempusDominusConfig(Event event) {
+        return new TempusDominusConfig()
+            .withUseCurrent(false)
+            .withStepping(30)
+            .withViewDate(new Date(event.getStartDate().getTime()))
+            .withRestrictions(restrictions -> restrictions
+                .withMinDate(DateUtils.atStartOfDay(event.getStartDate()))
+                .withMaxDate(DateUtils.atEndOfDay(event.getEndDate())));
     }
 
     @Override
