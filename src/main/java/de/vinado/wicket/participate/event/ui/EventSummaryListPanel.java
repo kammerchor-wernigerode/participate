@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.event.ui;
 
+import de.vinado.app.participate.event.presentation.ui.InvitationForm;
 import de.vinado.app.participate.wicket.bt5.modal.Modal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
@@ -10,7 +11,6 @@ import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.DetailedParticipantColumnPreset;
-import de.vinado.wicket.participate.ui.event.EditInvitationPanel;
 import de.vinado.wicket.participate.ui.event.InteractiveColumnPresetDecoratorFactory;
 import de.vinado.wicket.participate.ui.event.ParticipantTable;
 import de.vinado.wicket.participate.ui.event.details.DetailedParticipantFilterPanel;
@@ -87,7 +87,7 @@ public class EventSummaryListPanel extends BootstrapPanel<Event> {
         modal
             .size(Modal.Size.LARGE)
             .title(new ResourceModel("invitation.edit", "Edit Invitation"))
-            .content(id -> new EditInvitationPanel(id, model))
+            .content(id -> new InvitationForm(id, model))
             .addCloseAction(new ResourceModel("cancel", "Cancel"))
             .addSubmitAction(new ResourceModel("save", "Save"), this::onSave)
             .show(target);
