@@ -4,12 +4,11 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.ButtonBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.wicket.bt4.datetimepicker.DateTextFieldResetIntent;
 import de.vinado.wicket.bt4.datetimepicker.DateTextFieldResettingBehavior;
-import de.vinado.wicket.bt4.datetimepicker.DatetimePickerIconConfig;
 import de.vinado.wicket.bt4.tooltip.TooltipBehavior;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.model.filters.EventFilter;
@@ -31,7 +30,10 @@ import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public abstract class EventFilterForm extends GenericPanel<EventFilter> {
 
@@ -49,9 +51,9 @@ public abstract class EventFilterForm extends GenericPanel<EventFilter> {
         queue(searchTerm("searchTerm"));
         queue(showAll("showAll"));
 
-        DatetimePickerConfig endDateConfig = createDatetimePickerConfig();
+        DateTextFieldConfig endDateConfig = createDateTextFieldConfig(getLocale());
         queue(endDate("endDate", endDateConfig));
-        queue(startDate("startDate", endDateConfig::withMinDate));
+        queue(startDate("startDate", endDateConfig::withStartDate));
 
         queue(resetButton("reset"));
         queue(applyButton("apply"));
@@ -83,11 +85,11 @@ public abstract class EventFilterForm extends GenericPanel<EventFilter> {
         return container.add(control, label);
     }
 
-    protected MarkupContainer endDate(String wicketId, DatetimePickerConfig config) {
+    protected MarkupContainer endDate(String wicketId, DateTextFieldConfig config) {
         WebMarkupContainer container = new WebMarkupContainer(wicketId);
 
         IModel<Date> model = LambdaModel.of(getModel(), EventFilter::getEndDate, EventFilter::setEndDate);
-        FormComponent<Date> control = new DatetimePicker("control", model, config);
+        FormComponent<Date> control = new DateTextField("control", model, config);
         control.setLabel(new ResourceModel("filter.event.form.control.to", "To"));
         control.add(new UpdateOnEventBehavior<>(DateTextFieldResetIntent.class));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
@@ -95,11 +97,11 @@ public abstract class EventFilterForm extends GenericPanel<EventFilter> {
         return container.add(control, label);
     }
 
-    protected MarkupContainer startDate(String wicketId, SerializableConsumer<Date> onChange) {
+    protected final MarkupContainer startDate(String wicketId, SerializableConsumer<Date> onChange) {
         WebMarkupContainer container = new WebMarkupContainer(wicketId);
 
         IModel<Date> model = LambdaModel.of(getModel(), EventFilter::getStartDate, EventFilter::setStartDate);
-        FormComponent<Date> control = new DatetimePicker("control", model, createDatetimePickerConfig());
+        FormComponent<Date> control = new DateTextField("control", model, createDateTextFieldConfig(getLocale()));
         control.setLabel(new ResourceModel("filter.event.form.control.from", "From"));
         control.add(new DateTextFieldResettingBehavior(onChange));
         FormComponentLabel label = new SimpleFormComponentLabel("label", control);
@@ -107,13 +109,15 @@ public abstract class EventFilterForm extends GenericPanel<EventFilter> {
         return container.add(control, label);
     }
 
-    protected DatetimePickerConfig createDatetimePickerConfig() {
-        DatetimePickerConfig config = new DatetimePickerConfig();
-        config.with(new DatetimePickerIconConfig());
-        config.useLocale(getLocale().getLanguage());
-        config.withFormat("dd.MM.yyyy");
-        config.useCurrent(false);
-        return config;
+    private static DateTextFieldConfig createDateTextFieldConfig(Locale locale) {
+        return new DateTextFieldConfig()
+            .withLanguage(locale.getLanguage())
+            .withFormat(getPattern(SimpleDateFormat.getDateInstance(DateFormat.SHORT, locale)))
+            .autoClose(true);
+    }
+
+    private static String getPattern(DateFormat format) {
+        return ((SimpleDateFormat) format).toLocalizedPattern();
     }
 
     protected AbstractLink resetButton(String id) {
