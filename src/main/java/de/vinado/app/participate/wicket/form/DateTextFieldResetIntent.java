@@ -1,4 +1,4 @@
-package de.vinado.wicket.bt4.datetimepicker;
+package de.vinado.app.participate.wicket.form;
 
 import lombok.Value;
 
