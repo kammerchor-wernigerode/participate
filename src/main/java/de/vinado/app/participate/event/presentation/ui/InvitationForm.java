@@ -39,9 +39,9 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.toList;
 
 public class InvitationForm extends GenericPanel<ParticipantDTO> {
 
@@ -51,6 +51,7 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
     @SpringBean
     private ApplicationProperties applicationProperties;
 
+    private FormComponent<InvitationStatus> invitationStatusSelect;
     private FormComponent<Date> fromTextField;
     private FormComponent<Date> toTextField;
     private FormComponent<Accommodation> accommodationFormGroup;
@@ -98,18 +99,29 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
         queue(carCheckboxLabel("carLabel"));
         queue(commentTextField = commentTextField("comment"));
         queue(commentTextFieldLabel("commentLabel"));
+        queue(invitationStatusSelect = invitationStatusSelect("invitationStatus"));
+        queue(invitationStatusSelectLabel("invitationStatusLabel"));
         queue(invitationLink("invitationLink"));
+    }
 
-        BootstrapSelect<InvitationStatus> invitationStatusBs = new BootstrapSelect<>("invitationStatus",
-            InvitationStatus.stream().collect(toList()), new EnumChoiceRenderer<>());
-        invitationStatusBs.add(new AjaxFormComponentUpdatingBehavior("hidden.bs.select") {
+    protected FormComponent<InvitationStatus> invitationStatusSelect(String wicketId) {
+        IModel<InvitationStatus> model = LambdaModel.of(getModel(), ParticipantDTO::getInvitationStatus, ParticipantDTO::setInvitationStatus);
+        List<InvitationStatus> choices = InvitationStatus.stream().collect(Collectors.toList());
+        EnumChoiceRenderer<InvitationStatus> renderer = new EnumChoiceRenderer<>();
+        FormComponent<InvitationStatus> select = new BootstrapSelect<>(wicketId, model, choices, renderer);
+        select.setLabel(new ResourceModel("status", "Status"));
+        select.add(new AjaxFormComponentUpdatingBehavior("hidden.bs.select") {
+
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                getModelObject().setInvitationStatus(invitationStatusBs.getConvertedInput());
                 target.add(form);
             }
         });
-        form.add(invitationStatusBs);
+        return select;
+    }
+
+    protected Component invitationStatusSelectLabel(String wicketId) {
+        return new FormComponentLabel(wicketId, invitationStatusSelect);
     }
 
     protected FormComponent<Date> toTextField(String wicketId) {
