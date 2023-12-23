@@ -56,7 +56,6 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
 
     public InvitationForm(String id, IModel<ParticipantDTO> model) {
         super(id, model);
-
         this.form = form("form");
     }
 
@@ -65,22 +64,22 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
 
             @Override
             protected void onSubmit() {
-                super.onSubmit();
-
-                InvitationForm.this.onSubmit();
+                save(getModelObject());
             }
         };
     }
 
-    protected void onSubmit() {
-        eventService.saveParticipant(getModelObject());
+    private void save(ParticipantDTO dto) {
+        eventService.saveParticipant(dto);
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
-        add(form);
+        form.setOutputMarkupId(true);
+
+        queue(form);
 
         Event event = getModelObject().getEvent();
         TempusDominusConfig fromConfig = createTempusDominusConfig(event);
