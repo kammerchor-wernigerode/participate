@@ -83,15 +83,15 @@ public class AccommodationBadge extends GenericPanel<AccommodationBadge.ViewMode
                 case NO_NEED:
                     String noNeed = "no-need";
                     String noNeedTooltipKey = tooltipNamespace + noNeed;
-                    return new ViewModel(model, "badge-transparent text-muted", beds(model), noNeedTooltipKey);
+                    return new ViewModel(model, "text-muted", beds(model), noNeedTooltipKey);
                 case SEARCHING:
                     String searching = "searching";
                     String searchingTooltipKey = tooltipNamespace + searching;
-                    return new ViewModel(model, "badge-warning", beds(model), searchingTooltipKey);
+                    return new ViewModel(model, "bg-warning", beds(model), searchingTooltipKey);
                 case OFFERING:
                     String offering = "offering";
                     String offeringTooltipKey = tooltipNamespace + offering;
-                    return new ViewModel(model, "badge-info", beds(model), offeringTooltipKey);
+                    return new ViewModel(model, "bg-info", beds(model), offeringTooltipKey);
                 default:
                     throw new IllegalArgumentException();
             }

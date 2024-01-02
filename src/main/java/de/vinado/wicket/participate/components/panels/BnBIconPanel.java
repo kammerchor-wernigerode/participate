@@ -20,7 +20,7 @@ public class BnBIconPanel extends Panel {
 
         IModel<ParticipantDTO> dtoModel = model.map(ParticipantDTO::new);
         WebMarkupContainer car = new WebMarkupContainer("car");
-        car.add(new CssClassNameAppender(dtoModel.getObject().isCar() ? "badge-success" : "badge-transparent text-muted"));
+        car.add(new CssClassNameAppender(dtoModel.getObject().isCar() ? "bg-success" : "text-muted"));
         add(car);
 
         car.add(new Label("seats", dtoModel.map(ParticipantDTO::getCarSeatCount)));
