@@ -5,8 +5,10 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.vinado.app.participate.wicket.form.FormComponentLabel;
 import de.vinado.wicket.form.ConditionalValidator;
+import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.Voice;
+import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.model.dtos.SingerDTO;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
@@ -24,6 +26,9 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 public class AddEditSingerPanel extends GenericPanel<SingerDTO> {
 
@@ -144,6 +149,16 @@ public class AddEditSingerPanel extends GenericPanel<SingerDTO> {
     private void delete(SingerDTO dto) {
         Singer singer = dto.getSinger();
         personService.removeSinger(singer);
+        eventService.getUpcomingEvents().stream()
+            .map(eventService::getParticipants)
+            .flatMap(List::stream)
+            .filter(equals(singer))
+            .map(ParticipantDTO::new)
+            .forEach(eventService::declineEvent);
         singer.setActive(false);
+    }
+
+    private static Predicate<Participant> equals(Singer singer) {
+        return participant -> Objects.equals(participant.getSinger().getId(), singer.getId());
     }
 }
