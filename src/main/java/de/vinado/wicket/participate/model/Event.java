@@ -18,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "events")
@@ -85,6 +86,12 @@ public class Event implements Identifiable<Long>, Hideable, Terminable {
         } else {
             return dateFormat.format(startDate);
         }
+    }
+
+    @Transient
+    public boolean isUpcoming() {
+        Date now = new Date();
+        return now.before(startDate);
     }
 
     @Override
