@@ -1,5 +1,7 @@
 package de.vinado.wicket.participate.person.presentation.ui;
 
+import de.vinado.wicket.participate.model.Event;
+import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.Singer;
@@ -12,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,9 +38,29 @@ class DefaultPersonRestorationService implements PersonRestorationService {
     private void invite(Person person) {
         Singer singer = singerRepository.findBy(person.getId()).orElseThrow(IllegalStateException::new);
         List<Participant> participants = eventService.getUpcomingEvents().stream()
-            .map(event -> eventService.createParticipant(event, singer))
+            .map(createParticipant(singer))
+            .peek(setInvitationStatus(InvitationStatus.UNINVITED))
             .collect(Collectors.toList());
 
         eventService.inviteParticipants(participants, userContext.get());
+    }
+
+    private Function<Event, Participant> createParticipant(Singer singer) {
+        return event -> createParticipant(event, singer);
+    }
+
+    private Participant createParticipant(Event event, Singer singer) {
+        return eventService.getParticipants(singer).stream()
+            .filter(by(event))
+            .findFirst()
+            .orElseGet(() -> eventService.createParticipant(event, singer));
+    }
+
+    private static Predicate<Participant> by(Event event) {
+        return participant -> event.equals(participant.getEvent());
+    }
+
+    private static Consumer<Participant> setInvitationStatus(InvitationStatus uninvited) {
+        return participant -> participant.setInvitationStatus(uninvited);
     }
 }
