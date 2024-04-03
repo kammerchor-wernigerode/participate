@@ -28,7 +28,6 @@ WORKDIR      /app
 ARG JAR_FILE=participate-4.4.0-SNAPSHOT.jar
 COPY --from=maven /usr/src/app/target/$JAR_FILE /app/application.jar
 COPY --from=healthcheck-builder /usr/src/healthcheck/Healthcheck.class /usr/local/bin/
-COPY scripts/docker-entrypoint.sh /usr/local/bin/
 
 ENV SPRING_PROFILES_ACTIVE=smtp_auth,smtp_tls
 
@@ -36,5 +35,4 @@ HEALTHCHECK --interval=20s --timeout=5s --retries=5 --start-period=30s \
     CMD ["java", "-cp", "/usr/local/bin", "Healthcheck"]
 
 EXPOSE 8080
-ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["/usr/local/openjdk-11/bin/java", "-Djava.security.egd=file:/dev/./urandom", "-jar" ,"/app/application.jar"]
