@@ -16,7 +16,7 @@ class CryptoProperties {
 
     private String sessionSecret;
     private byte[] pbeSalt;
-    private int pbeIterationCount;
+    private int pbeIterationCount = 17;
 
     public String getSessionSecret() {
         if (!StringUtils.hasText(sessionSecret)) {
