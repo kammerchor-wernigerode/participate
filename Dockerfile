@@ -18,10 +18,6 @@ RUN javac -d . Healthcheck.java
 
 FROM openjdk:11-jre-slim
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    netcat \
- && rm -rf /var/lib/apt/lists/*
-
 RUN mkdir -p /app
 WORKDIR      /app
 
