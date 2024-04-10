@@ -283,7 +283,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         Optional.ofNullable(session.getMetaData(ManagementSession.user))
             .map(User::getPerson)
             .map(Person::getEmail)
-            .ifPresentOrElse(email -> builder.queryParam("to", email), () -> builder.queryParam("to", mailProperties.getSender()));
+            .ifPresentOrElse(email -> builder.queryParam("to", email), () -> builder.queryParam("to", mailProperties.getSender().getAddress()));
     }
 
     private void populateRecipients(UriComponentsBuilder builder) {

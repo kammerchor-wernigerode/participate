@@ -16,7 +16,7 @@ public class PreconfiguredEmailBuilderFactory implements EmailBuilderFactory {
 
     @Override
     public Email.Builder create() {
-        return Email.builder(mailProperties.getSender(), properties.getCustomer())
+        return Email.builder(mailProperties.getSender())
             .data("baseUrl", properties.getBaseUrl())
             .data("footer", mailProperties.getFooter())
             ;

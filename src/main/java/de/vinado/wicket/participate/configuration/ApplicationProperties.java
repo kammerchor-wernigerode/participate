@@ -8,16 +8,14 @@ import org.springframework.context.annotation.Configuration;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import javax.mail.internet.InternetAddress;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 @Configuration
 @ConfigurationProperties("app")
 @Getter
 @Setter
 public class ApplicationProperties implements InitializingBean {
-
-    private static final String EMAIL_PATTERN = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,6}$";
 
     private String version;
     private @NotBlank String baseUrl;
@@ -41,8 +39,8 @@ public class ApplicationProperties implements InitializingBean {
     @Setter
     public static class Mail {
 
-        private @Pattern(regexp = EMAIL_PATTERN) String sender;
+        private InternetAddress sender;
         private String footer = "Participate";
-        private @Pattern(regexp = EMAIL_PATTERN) String replyTo;
+        private InternetAddress replyTo;
     }
 }

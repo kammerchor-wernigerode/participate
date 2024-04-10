@@ -6,7 +6,6 @@ import de.vinado.wicket.participate.email.EmailAttachment;
 import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.context.annotation.Primary;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -201,8 +200,8 @@ public class EmailServiceImpl implements EmailService {
 
         if (null != email.getReplyTo()) {
             helper.setReplyTo(email.getReplyTo());
-        } else if (Strings.isNotBlank(mailProperties.getReplyTo())) {
-            helper.setReplyTo(new InternetAddress(mailProperties.getReplyTo()));
+        } else if (null != mailProperties.getReplyTo()) {
+            helper.setReplyTo(mailProperties.getReplyTo());
         }
 
         if (multipart) {
