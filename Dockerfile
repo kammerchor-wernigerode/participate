@@ -21,7 +21,7 @@ FROM openjdk:11-jre-slim
 RUN mkdir -p /app
 WORKDIR      /app
 
-ARG JAR_FILE=participate-4.4.1.jar
+ARG JAR_FILE=participate-4.5.0-SNAPSHOT.jar
 COPY --from=maven /usr/src/app/target/$JAR_FILE /app/application.jar
 COPY --from=healthcheck-builder /usr/src/healthcheck/Healthcheck.class /usr/local/bin/
 
