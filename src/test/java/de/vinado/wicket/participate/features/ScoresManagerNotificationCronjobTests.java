@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import javax.mail.internet.InternetAddress;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -95,7 +96,7 @@ class ScoresManagerNotificationCronjobTests {
         when(eventService.getUpcomingEvents()).thenReturn(List.of(event));
         when(configuration.getOffset()).thenReturn(Integer.MAX_VALUE);
         when(eventService.getInvitedParticipants(eq(event))).thenReturn(Collections.emptyList());
-        when(emailBuilderFactory.create()).thenAnswer(i -> Email.builder(emailAddress));
+        when(emailBuilderFactory.create()).thenAnswer(i -> Email.builder(new InternetAddress(emailAddress)));
 
         cronjob.run();
 
@@ -146,7 +147,7 @@ class ScoresManagerNotificationCronjobTests {
         when(eventService.getUpcomingEvents()).thenReturn(List.of(event));
         when(configuration.getOffset()).thenReturn(Integer.MAX_VALUE);
         when(eventService.getInvitedParticipants(eq(event))).thenReturn(List.of(participant));
-        when(emailBuilderFactory.create()).thenAnswer(i -> Email.builder(emailAddress));
+        when(emailBuilderFactory.create()).thenAnswer(i -> Email.builder(new InternetAddress(emailAddress)));
 
         cronjob.run();
 
@@ -165,7 +166,7 @@ class ScoresManagerNotificationCronjobTests {
         when(eventService.getUpcomingEvents()).thenReturn(List.of(event));
         when(configuration.getOffset()).thenReturn(Integer.MAX_VALUE);
         when(eventService.getInvitedParticipants(eq(event))).thenReturn(List.of(participant));
-        when(emailBuilderFactory.create()).thenAnswer(i -> Email.builder(emailAddress));
+        when(emailBuilderFactory.create()).thenAnswer(i -> Email.builder(new InternetAddress(emailAddress)));
 
         cronjob.run();
 
@@ -184,7 +185,7 @@ class ScoresManagerNotificationCronjobTests {
         when(configuration.getOffset()).thenReturn(Integer.MAX_VALUE);
         when(eventService.getInvitedParticipants(eq(event_0))).thenReturn(Collections.emptyList());
         when(eventService.getInvitedParticipants(eq(event_1))).thenReturn(Collections.emptyList());
-        when(emailBuilderFactory.create()).thenAnswer(i -> Email.builder(emailAddress));
+        when(emailBuilderFactory.create()).thenAnswer(i -> Email.builder(new InternetAddress(emailAddress)));
 
         cronjob.run();
 

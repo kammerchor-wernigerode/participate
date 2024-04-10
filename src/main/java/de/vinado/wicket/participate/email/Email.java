@@ -77,14 +77,6 @@ public class Email implements Serializable {
             );
     }
 
-    public static Builder builder(String email, String personal) {
-        return builder(InternetAddressFactory.create(email, personal));
-    }
-
-    public static Builder builder(String email) {
-        return builder(create(email));
-    }
-
     public static Builder builder(InternetAddress from) {
         return new Builder(from);
     }
