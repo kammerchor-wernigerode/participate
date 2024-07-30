@@ -150,7 +150,7 @@ public abstract class AuthenticatedBootstrapWebApplication extends Authenticated
         }
 
         if (StringUtils.hasText(Bootstrap.getSettings().getJsResourceFilterName()))
-            setHeaderResponseDecorator(new RenderJavaScriptToFooterHeaderResponseDecorator());
+            getHeaderResponseDecorators().replaceAll(new RenderJavaScriptToFooterHeaderResponseDecorator());
         getRequestCycleSettings().setRenderStrategy(RequestCycleSettings.RenderStrategy.ONE_PASS_RENDER);
     }
 
