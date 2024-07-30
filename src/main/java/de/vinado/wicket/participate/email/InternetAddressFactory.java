@@ -1,10 +1,10 @@
 package de.vinado.wicket.participate.email;
 
 import de.vinado.wicket.participate.model.Person;
+import jakarta.mail.internet.InternetAddress;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import javax.mail.internet.InternetAddress;
 
 public final class InternetAddressFactory {
 

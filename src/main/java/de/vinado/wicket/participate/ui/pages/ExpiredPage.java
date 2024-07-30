@@ -10,7 +10,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.time.Duration;
+
+import java.time.Duration;
 
 public class ExpiredPage extends AbstractErrorPage {
 
@@ -32,7 +33,7 @@ public class ExpiredPage extends AbstractErrorPage {
 
         Label message = new Label("message", new StringResourceModel("page.error.expired.message").setParameters(model.getObject()));
         message.setOutputMarkupId(true);
-        message.add(new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
+        message.add(new AbstractAjaxTimerBehavior(Duration.ofSeconds(1)) {
             @Override
             protected void onTimer(AjaxRequestTarget target) {
                 target.add(message);

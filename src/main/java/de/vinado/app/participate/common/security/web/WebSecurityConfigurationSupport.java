@@ -10,11 +10,12 @@ public class WebSecurityConfigurationSupport {
 
     @Bean
     public SecurityFilterChain rootFilterChain(HttpSecurity http) throws Exception {
-        http.antMatcher("/**")
+        http.securityMatchers(matchers -> matchers
+                .requestMatchers("/**"))
             .csrf(AbstractHttpConfigurer::disable)
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> authorize
-                .anyRequest().permitAll())
+                .anyRequest().permitAll());
         ;
 
         configure(http);

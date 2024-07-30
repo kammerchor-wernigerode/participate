@@ -7,8 +7,8 @@ import org.springframework.scheduling.TriggerContext;
 import org.springframework.scheduling.support.CronTrigger;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Calendar;
-import java.util.Date;
 
 @Slf4j
 class SchedulerUnitTest {
@@ -27,18 +27,18 @@ class SchedulerUnitTest {
             new TriggerContext() {
 
                 @Override
-                public Date lastScheduledExecutionTime() {
-                    return yesterday;
+                public Instant lastScheduledExecution() {
+                    return yesterday.toInstant();
                 }
 
                 @Override
-                public Date lastActualExecutionTime() {
-                    return yesterday;
+                public Instant lastActualExecution() {
+                    return yesterday.toInstant();
                 }
 
                 @Override
-                public Date lastCompletionTime() {
-                    return yesterday;
+                public Instant lastCompletion() {
+                    return yesterday.toInstant();
                 }
             });
 

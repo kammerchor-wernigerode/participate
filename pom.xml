@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.18</version>
+        <version>3.3.2</version>
         <relativePath/>
     </parent>
 
@@ -21,7 +21,7 @@
 
     <properties>
         <resource.delimiter>^</resource.delimiter>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
 
         <dependency.guava.version>25.1-jre</dependency.guava.version>
         <dependency.opencsv.version>5.9</dependency.opencsv.version>
@@ -30,8 +30,8 @@
         <dependency.testcontainers.version>1.18.3</dependency.testcontainers.version>
         <dependency.throwing-function.version>1.5.1</dependency.throwing-function.version>
         <dependency.tika.version>2.9.1</dependency.tika.version>
-        <dependency.wicket.version>9.16.0</dependency.wicket.version>
-        <dependency.wicket-bootstrap.version>6.0.5</dependency.wicket-bootstrap.version>
+        <dependency.wicket.version>10.1.0</dependency.wicket.version>
+        <dependency.wicket-bootstrap.version>7.0.5</dependency.wicket-bootstrap.version>
         <dependency.yuicompressor.version>2.4.8</dependency.yuicompressor.version>
 
         <webjar.autosize.version>6.0.1</webjar.autosize.version>
@@ -42,13 +42,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.testcontainers</groupId>
-                <artifactId>testcontainers-bom</artifactId>
-                <version>${dependency.testcontainers.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
             <dependency>
                 <groupId>de.vinado.boot</groupId>
                 <artifactId>spring-boot-secrets-api</artifactId>
@@ -72,6 +65,11 @@
             <dependency>
                 <groupId>org.wicketstuff</groupId>
                 <artifactId>wicketstuff-select2</artifactId>
+                <version>${dependency.wicket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-tester</artifactId>
                 <version>${dependency.wicket.version}</version>
             </dependency>
             <dependency>
@@ -177,6 +175,11 @@
             <artifactId>wicketstuff-select2</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-tester</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>de.agilecoders.wicket</groupId>
             <artifactId>wicket-bootstrap-extensions</artifactId>
         </dependency>
@@ -227,6 +230,16 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

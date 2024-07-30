@@ -1,5 +1,9 @@
 package de.vinado.wicket.participate.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,10 +12,6 @@ import org.hibernate.annotations.Polymorphism;
 import org.hibernate.annotations.PolymorphismType;
 
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
 
 @Entity
 @Table(name = "singers")
@@ -23,7 +23,7 @@ import javax.persistence.Table;
 public class Singer extends Person implements Hideable {
 
     @Enumerated
-    @Column
+    @Column(columnDefinition = "integer")
     private Voice voice;
 
     @Column(name = "is_active", nullable = false)

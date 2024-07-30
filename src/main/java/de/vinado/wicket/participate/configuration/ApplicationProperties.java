@@ -1,5 +1,7 @@
 package de.vinado.wicket.participate.configuration;
 
+import jakarta.mail.internet.InternetAddress;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.InitializingBean;
@@ -8,8 +10,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import javax.mail.internet.InternetAddress;
-import javax.validation.constraints.NotBlank;
 
 @Configuration
 @ConfigurationProperties("app")

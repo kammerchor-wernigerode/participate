@@ -26,7 +26,7 @@ public class Oauth2WebSecurityConfiguration {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> authorize
-                .antMatchers("/_/**").hasAnyRole("admin", "organizer")
+                .requestMatchers("/_/**").hasAnyRole("admin", "organizer")
                 .anyRequest().permitAll())
             .oauth2Login(Customizer.withDefaults())
             .logout(logout -> logout

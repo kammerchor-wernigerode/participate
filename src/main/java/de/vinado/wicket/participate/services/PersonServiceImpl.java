@@ -5,6 +5,13 @@ import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.dtos.PersonDTO;
 import de.vinado.wicket.participate.model.dtos.SingerDTO;
 import de.vinado.wicket.participate.providers.SimpleDataProvider;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
@@ -28,13 +35,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 import static org.apache.commons.codec.CharEncoding.UTF_8;
 

@@ -1,6 +1,7 @@
 package de.vinado.wicket.participate.email;
 
 import de.vinado.wicket.participate.model.Person;
+import jakarta.mail.internet.InternetAddress;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
-import javax.mail.internet.InternetAddress;
 
 import static de.vinado.wicket.participate.email.InternetAddressFactory.create;
 import static lombok.AccessLevel.PRIVATE;

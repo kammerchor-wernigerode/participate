@@ -1,5 +1,10 @@
 package de.vinado.wicket.participate.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,11 +15,6 @@ import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 import java.util.Optional;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Transient;
 
 import static de.vinado.wicket.participate.model.Accommodation.Status.OFFERING;
 import static de.vinado.wicket.participate.model.Accommodation.Status.SEARCHING;

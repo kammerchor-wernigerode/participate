@@ -1,5 +1,21 @@
 package de.vinado.wicket.participate.model;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -8,22 +24,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Date;
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 import static de.vinado.wicket.participate.model.InvitationStatus.ACCEPTED;
 import static de.vinado.wicket.participate.model.InvitationStatus.DECLINED;
@@ -57,7 +57,7 @@ public class Participant implements Identifiable<Long>, Invitable {
     private Singer singer;
 
     @Enumerated
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "integer")
     private InvitationStatus invitationStatus;
 
     @Temporal(TemporalType.TIMESTAMP)

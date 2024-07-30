@@ -3,14 +3,12 @@ package de.vinado.app.participate.event.app;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.lang.Nullable;
 
 import java.net.URI;
 import java.time.ZoneId;
 
 @Value
-@ConstructorBinding
 @ConfigurationProperties("app.google-calendar")
 @RequiredArgsConstructor
 public class GoogleCalendarUrlProperties {
