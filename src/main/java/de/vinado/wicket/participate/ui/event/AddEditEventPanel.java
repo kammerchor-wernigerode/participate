@@ -32,6 +32,7 @@ import org.wicketstuff.select2.Select2Choice;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class AddEditEventPanel extends GenericPanel<EventDTO> {
 
@@ -241,12 +242,14 @@ public class AddEditEventPanel extends GenericPanel<EventDTO> {
     }
 
     private void create(EventDTO dto) {
-        Event event = eventService.createEvent(dto);
+        Locale locale = getLocale();
+        Event event = eventService.createEvent(dto, locale);
         dto.setEvent(event);
     }
 
     private void update(EventDTO dto) {
-        Event event = eventService.saveEvent(dto);
+        Locale locale = getLocale();
+        Event event = eventService.saveEvent(dto, locale);
         dto.setEvent(event);
     }
 

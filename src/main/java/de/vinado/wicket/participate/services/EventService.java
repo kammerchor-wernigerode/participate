@@ -10,14 +10,15 @@ import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 public interface EventService {
 
-    Event createEvent(EventDTO dto);
+    Event createEvent(EventDTO dto, Locale locale);
 
-    Event saveEvent(EventDTO dto);
+    Event saveEvent(EventDTO dto, Locale locale);
 
     void removeEvent(Event event);
 

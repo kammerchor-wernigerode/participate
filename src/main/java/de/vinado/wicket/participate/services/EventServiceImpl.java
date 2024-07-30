@@ -70,9 +70,9 @@ public class EventServiceImpl extends DataService implements EventService {
     }
 
     @Override
-    public Event createEvent(EventDTO dto) {
+    public Event createEvent(EventDTO dto, Locale locale) {
         if (Strings.isEmpty(dto.getName())) {
-            dto.setName(ParticipateUtils.getGenericEventName(dto));
+            dto.setName(ParticipateUtils.getGenericEventName(dto, locale));
         }
 
         // Event
@@ -95,11 +95,11 @@ public class EventServiceImpl extends DataService implements EventService {
     }
 
     @Override
-    public Event saveEvent(EventDTO dto) {
+    public Event saveEvent(EventDTO dto, Locale locale) {
         Event loadedEvent = load(Event.class, dto.getEvent().getId());
 
         if (Strings.isEmpty(dto.getName())) {
-            dto.setName(ParticipateUtils.getGenericEventName(dto));
+            dto.setName(ParticipateUtils.getGenericEventName(dto, locale));
         }
 
         loadedEvent.setName(dto.getName());
