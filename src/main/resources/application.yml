@@ -3,7 +3,6 @@ spring:
     name: Participate
 
   profiles:
-    default: metrics
     group:
       keycloak: oidc,oauth2
 
