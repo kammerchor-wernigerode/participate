@@ -56,7 +56,6 @@ import java.util.stream.Collectors;
 public class EventPanel extends BootstrapPanel<EventDetails> {
 
     @SpringBean
-    @SuppressWarnings("unused")
     private EventService eventService;
 
     private final PersonContext personContext;
@@ -64,7 +63,6 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     private final IModel<List<Participant>> acceptedParticipants;
 
     private final Modal modal;
-    private final Form form;
 
     public EventPanel(String id, IModel<EventDetails> model, boolean editable, PersonContext personContext, IModel<ParticipantFilter> filterModel) {
         super(id, model);
@@ -77,7 +75,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         this.modal = modal("modal");
         add(modal);
 
-        form = new Form("form");
+        Form<EventDetails> form = new Form<>("form", model);
         add(form);
 
         WebMarkupContainer wmc = new WebMarkupContainer("wmc");
