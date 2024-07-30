@@ -19,6 +19,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -79,6 +80,11 @@ public class Participant implements Identifiable<Long>, Invitable {
         @AttributeOverride(name = "beds", column = @Column(name = "accommodation_bed_count")),
     })
     private Accommodation accommodation = new Accommodation();
+
+    @MapsId("event")
+    @ManyToOne
+    @JoinColumn(name = "event_id", insertable = false, updatable = false)
+    private EventDetails eventDetails;
 
     public Participant(Event event, Singer singer, String token,
                        InvitationStatus invitationStatus, Date fromDate, Date toDate,

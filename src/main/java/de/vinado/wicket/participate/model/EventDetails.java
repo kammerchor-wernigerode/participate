@@ -62,7 +62,7 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
     private String location;
 
     @OneToMany(
-        mappedBy = "event",
+        mappedBy = "eventDetails",
         fetch = FetchType.EAGER
     )
     private List<Participant> participants;
