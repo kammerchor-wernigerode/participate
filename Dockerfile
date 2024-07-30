@@ -1,29 +1,38 @@
-FROM maven:3.9.8-eclipse-temurin-17 AS maven
-RUN mkdir -p  /usr/src/app
-WORKDIR       /usr/src/app
+FROM maven:3.9.8-eclipse-temurin-17 AS base
 
-COPY pom.xml /usr/src/app
-RUN mvn -B -q dependency:go-offline
+FROM base AS dependencies
+WORKDIR /usr/src/anwendung
 
-COPY src     /usr/src/app/src
-# Due to missing depencencies, mvn does not run with -o (offline)
-RUN mvn -q package
+COPY pom.xml                                                     .
+RUN mkdir -p                                                     ./src/main/resources/scss
+COPY src/main/java/de/vinado/wicket/participate/Participate.java ./src/main/java/de/vinado/wicket/participate/Participate.java
 
-FROM maven:3.9.8-eclipse-temurin-17 AS healthcheck-builder
-RUN mkdir -p                  /usr/src/healthcheck
-WORKDIR                       /usr/src/healthcheck
+RUN mvn -C -q package
 
-COPY scripts/Healthcheck.java /usr/src/healthcheck/
+
+FROM base AS builder
+WORKDIR /usr/src/anwendung
+
+COPY --from=dependencies /root/.m2/repository /root/.m2/repository
+COPY pom.xml .
+COPY src/    ./src/
+
+RUN mvn package
+
+
+FROM base AS healthcheck-builder
+WORKDIR /usr/src/healthcheck
+
+COPY scripts/Healthcheck.java ./Healthcheck.java
 RUN javac -d . Healthcheck.java
 
+
 FROM eclipse-temurin:17.0.12_7-jre
+WORKDIR /opt/anwendung
 
-RUN mkdir -p /app
-WORKDIR      /app
-
-ARG JAR_FILE=participate-4.5.0-SNAPSHOT.jar
-COPY --from=maven /usr/src/app/target/$JAR_FILE /app/application.jar
-COPY --from=healthcheck-builder /usr/src/healthcheck/Healthcheck.class /usr/local/bin/
+ARG JAR_FILE=participate-*.jar
+COPY --from=builder             /usr/src/anwendung/target/${JAR_FILE} ./server.jar
+COPY --from=healthcheck-builder /usr/src/healthcheck/Healthcheck.class /usr/local/bin/Healthcheck.class
 
 ENV SPRING_PROFILES_ACTIVE=smtp_auth,smtp_tls
 
@@ -31,4 +40,4 @@ HEALTHCHECK --interval=20s --timeout=5s --retries=5 --start-period=30s \
     CMD ["/opt/java/openjdk/bin/java", "-cp", "/usr/local/bin", "Healthcheck"]
 
 EXPOSE 8080
-CMD ["/opt/java/openjdk/bin/java", "-Djava.security.egd=file:/dev/urandom", "-jar" ,"/app/application.jar"]
+CMD ["/opt/java/openjdk/bin/java", "-Djava.security.egd=file:/dev/urandom", "-jar" ,"/opt/anwendung/server.jar"]
