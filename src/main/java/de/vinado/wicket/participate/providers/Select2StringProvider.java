@@ -26,7 +26,6 @@ public class Select2StringProvider extends StringTextChoiceProvider {
             .filter(Strings::isNotBlank)
             .filter(s -> s.toLowerCase().startsWith(term.toLowerCase()))
             .filter(s -> !s.equalsIgnoreCase(term))
-            .sorted(String.CASE_INSENSITIVE_ORDER)
             .forEach(response::add);
 
         response.add(term);

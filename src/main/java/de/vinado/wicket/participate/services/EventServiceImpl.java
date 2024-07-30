@@ -26,11 +26,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.persistence.EntityManager;
@@ -269,8 +272,12 @@ public class EventServiceImpl extends DataService implements EventService {
         CriteriaQuery<String> criteriaQuery = criteriaBuilder.createQuery(String.class);
         Root<Event> root = criteriaQuery.from(Event.class);
         criteriaQuery.select(root.get("eventType"));
-        criteriaQuery.groupBy(root.<String>get("eventType"));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        List<String> resultList = entityManager.createQuery(criteriaQuery).getResultList();
+        Map<String, Integer> frequency = resultList.stream()
+            .collect(Collectors.toMap(Function.identity(), v -> 1, Integer::sum));
+        List<String> eventTypes = new ArrayList<>(frequency.keySet());
+        eventTypes.sort((a, b) -> frequency.get(b) - frequency.get(a));
+        return eventTypes;
     }
 
     @Override
