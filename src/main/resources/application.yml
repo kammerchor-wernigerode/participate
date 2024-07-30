@@ -27,11 +27,15 @@ spring:
   mail:
     host: localhost
     port: 587
+    username:
+    password:
     test-connection: true
     properties:
+      mail.smtp.auth: false
       mail.smtp.localhost: localhost
       mail.from: smtp@example.com
       mail.reply-to: no-reply@example.com
+      mail.smtp.starttls.enable: false
 
 app:
   version: "^project.version^"

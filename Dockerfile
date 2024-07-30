@@ -34,8 +34,6 @@ ARG JAR_FILE=participate-*.jar
 COPY --from=builder             /usr/src/anwendung/target/${JAR_FILE} ./server.jar
 COPY --from=healthcheck-builder /usr/src/healthcheck/Healthcheck.class /usr/local/bin/Healthcheck.class
 
-ENV SPRING_PROFILES_ACTIVE=smtp_auth,smtp_tls
-
 HEALTHCHECK --interval=20s --timeout=5s --retries=5 --start-period=30s \
     CMD ["/opt/java/openjdk/bin/java", "-cp", "/usr/local/bin", "Healthcheck"]
 

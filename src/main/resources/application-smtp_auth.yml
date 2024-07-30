@@ -1,6 +1,0 @@
-spring:
-  mail:
-    username: smtp@example.com
-    password: d3v
-    properties:
-      mail.smtp.auth: true
