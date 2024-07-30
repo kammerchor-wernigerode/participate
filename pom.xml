@@ -14,7 +14,7 @@
     <groupId>de.vinado.wicket</groupId>
     <artifactId>participate</artifactId>
     <packaging>jar</packaging>
-    <version>5.0.1</version>
+    <version>5.1.0-SNAPSHOT</version>
 
     <name>participate</name>
     <description>Participation Manager for Kammerchor Wernigerode e.V.</description>
