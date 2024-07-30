@@ -26,6 +26,7 @@ import org.apache.wicket.request.resource.caching.version.CachingResourceVersion
 import org.apache.wicket.serialize.java.DeflatedJavaSerializer;
 import org.apache.wicket.settings.ApplicationSettings;
 import org.apache.wicket.settings.DebugSettings;
+import org.apache.wicket.settings.DebugSettings.ClassOutputStrategy;
 import org.apache.wicket.settings.MarkupSettings;
 import org.apache.wicket.settings.RequestCycleSettings;
 import org.apache.wicket.settings.ResourceSettings;
@@ -159,7 +160,7 @@ public abstract class AuthenticatedBootstrapWebApplication extends Authenticated
             debugSettings.setComponentUseCheck(false);
         } else if (usesDevelopmentConfig()) {
             debugSettings.setComponentPathAttributeName("data-wicket-path");
-            debugSettings.setOutputMarkupContainerClassName(true);
+            debugSettings.setOutputMarkupContainerClassNameStrategy(ClassOutputStrategy.HTML_COMMENT);
         }
     }
 
