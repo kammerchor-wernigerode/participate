@@ -13,6 +13,7 @@ services:
 
   fakesmtp:
     image: ghusta/fakesmtp:2.3-jre17
+    stop_signal: SIGKILL
     ports:
       - "587:25"
     volumes:
