@@ -3,7 +3,7 @@ package de.vinado.wicket.participate.ui.administration.user;
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.components.TextAlign;
 import de.vinado.wicket.participate.components.panels.BootstrapAjaxLinkPanel;
@@ -41,11 +41,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.primitives.Ints.saturatedCast;
-import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.check_s;
-import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.edit_s;
-import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.plus_s;
-import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.times_s;
-import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.trash_alt_s;
 
 public class UserPanel extends BootstrapPanel<Void> {
 
@@ -70,7 +65,7 @@ public class UserPanel extends BootstrapPanel<Void> {
 
         add(modal);
 
-        addQuickAccessAction(AjaxAction.create(new ResourceModel("user.add", "Add User"), plus_s, this::add));
+        addQuickAccessAction(AjaxAction.create(new ResourceModel("user.add", "Add User"), FontAwesome6IconType.plus_s, this::add));
 
         add(new BootstrapAjaxDataTable<>("dataTable", columns(), dataProvider(), Integer.MAX_VALUE)
             .hover().condensed()
@@ -148,7 +143,7 @@ public class UserPanel extends BootstrapPanel<Void> {
             public void populateItem(Item<ICellPopulator<User>> item, String componentId, IModel<User> rowModel) {
                 item.add(new IconPanel(
                     componentId,
-                    rowModel.getObject().isAdmin() ? check_s : times_s,
+                    rowModel.getObject().isAdmin() ? FontAwesome6IconType.check_s : FontAwesome6IconType.xmark_s,
                     Color.DEFAULT, TextAlign.CENTER));
             }
 
@@ -166,7 +161,7 @@ public class UserPanel extends BootstrapPanel<Void> {
             public void populateItem(Item<ICellPopulator<User>> item, String componentId, IModel<User> rowModel) {
                 item.add(new IconPanel(
                     componentId,
-                    rowModel.getObject().isEnabled() ? check_s : times_s,
+                    rowModel.getObject().isEnabled() ? FontAwesome6IconType.check_s : FontAwesome6IconType.xmark_s,
                     Color.DEFAULT, TextAlign.CENTER));
             }
 
@@ -182,9 +177,9 @@ public class UserPanel extends BootstrapPanel<Void> {
 
             @Override
             public void populateItem(Item<ICellPopulator<User>> item, String componentId, IModel<User> rowModel) {
-                FontAwesome5IconType icon = isAssociated(rowModel.getObject())
-                    ? trash_alt_s
-                    : plus_s;
+                FontAwesome6IconType icon = isAssociated(rowModel.getObject())
+                    ? FontAwesome6IconType.trash_arrow_up_s
+                    : FontAwesome6IconType.plus_s;
                 BootstrapAjaxLinkPanel button = new BootstrapAjaxLinkPanel(componentId, Buttons.Type.Link, icon) {
 
                     @Override
@@ -295,7 +290,7 @@ public class UserPanel extends BootstrapPanel<Void> {
                     return;
                 }
 
-                item.add(new BootstrapAjaxLinkPanel(componentId, Buttons.Type.Link, edit_s) {
+                item.add(new BootstrapAjaxLinkPanel(componentId, Buttons.Type.Link, FontAwesome6IconType.pencil_s) {
 
                     @Override
                     public void onClick(AjaxRequestTarget target) {

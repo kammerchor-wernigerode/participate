@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.ui.singers;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.app.participate.wicket.bt5.modal.Modal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
@@ -66,7 +66,7 @@ public class SingersPanel extends BootstrapPanel<SingerFilter> {
         add(modal);
 
         addQuickAccessAction(AjaxAction.create(new ResourceModel("singer.add", "Add Singer"),
-            FontAwesome5IconType.plus_s,
+            FontAwesome6IconType.plus_s,
             this::add));
 
         add(filter());
@@ -155,7 +155,7 @@ public class SingersPanel extends BootstrapPanel<SingerFilter> {
     }
 
     private IColumn<Singer, SerializableFunction<Singer, ?>> editColumn() {
-        return new BootstrapAjaxLinkColumn<>(FontAwesome5IconType.pencil_alt_s,
+        return new BootstrapAjaxLinkColumn<>(FontAwesome6IconType.pencil_s,
             new ResourceModel("singer.edit", "Edit Singer")) {
             @Override
             public void onClick(AjaxRequestTarget target, IModel<Singer> rowModel) {

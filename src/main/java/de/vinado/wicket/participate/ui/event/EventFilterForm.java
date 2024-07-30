@@ -6,7 +6,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.app.participate.wicket.bt5.tooltip.TooltipBehavior;
 import de.vinado.app.participate.wicket.form.DateTextFieldResetIntent;
 import de.vinado.app.participate.wicket.form.DateTextFieldResettingBehavior;
@@ -129,7 +129,7 @@ public abstract class EventFilterForm extends GenericPanel<EventFilter> {
                 onReset();
             }
         };
-        button.setIconType(FontAwesome5IconType.undo_s);
+        button.setIconType(FontAwesome6IconType.rotate_left_s);
         button.add(new TooltipBehavior(new ResourceModel("filter.event.form.button.reset", "Reset")));
         return button;
     }
@@ -147,7 +147,7 @@ public abstract class EventFilterForm extends GenericPanel<EventFilter> {
             }
         };
         button.add(new ButtonBehavior(Buttons.Type.Primary));
-        button.add(new Icon("icon", FontAwesome5IconType.filter_s));
+        button.add(new Icon("icon", FontAwesome6IconType.filter_s));
         button.add(new TooltipBehavior(new ResourceModel("filter.event.form.button.submit", "Filter")));
         return button;
     }

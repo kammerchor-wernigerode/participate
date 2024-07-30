@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.ui.event;
 
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.wicket.participate.components.tables.columns.BootstrapAjaxLinkColumn;
 import de.vinado.wicket.participate.model.Participant;
@@ -43,7 +42,7 @@ public class InteractiveColumnPreset extends ParticipantColumnListDecorator {
     private IColumn<Participant, SerializableFunction<Participant, ?>> editColumn(
         SerializableBiConsumer<AjaxRequestTarget, IModel<Participant>> onClick) {
         return new BootstrapAjaxLinkColumn<Participant, SerializableFunction<Participant, ?>>(
-            FontAwesome5IconType.pencil_alt_s, new ResourceModel("invitation.edit", "Edit Invitation")) {
+            FontAwesome6IconType.pencil_s, new ResourceModel("invitation.edit", "Edit Invitation")) {
             @Override
             public void onClick(AjaxRequestTarget target, IModel<Participant> rowModel) {
                 onClick.accept(target, rowModel);

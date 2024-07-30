@@ -3,7 +3,7 @@ package de.vinado.wicket.participate.ui.event;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.app.participate.event.presentation.ui.InvitationForm;
 import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.app.participate.wicket.bt5.modal.Modal;
@@ -188,21 +188,21 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
 
         addQuickAccessAction(this::summary);
         addQuickAccessAction(AjaxAction.create(new ResourceModel("email.send.invitation", "Send Invitation"),
-            FontAwesome5IconType.envelope_square_s,
+            FontAwesome6IconType.square_envelope_s,
             this::invite));
         addDropdownAction(AjaxAction.create(new ResourceModel("email.send.reminder", "Send Reminder"),
-            FontAwesome5IconType.exclamation_s,
+            FontAwesome6IconType.exclamation_s,
             this::remind));
         addDropdownAction(create(new ResourceModel("email.send", "Send Email"),
-            FontAwesome5IconType.envelope_s,
+            FontAwesome6IconType.envelope_s,
             this::email));
         addDropdownAction(AjaxAction.create(new ResourceModel("event.edit", "Edit Event"),
-            FontAwesome5IconType.pencil_alt_s,
+            FontAwesome6IconType.pencil_s,
             this::edit));
     }
 
     private AbstractAction summary(String id) {
-        return new AbstractAction(id, new ResourceModel("show.event.summary", "Show Event Summary"), FontAwesome5IconType.check_s) {
+        return new AbstractAction(id, new ResourceModel("show.event.summary", "Show Event Summary"), FontAwesome6IconType.check_s) {
             @Override
             protected AbstractLink link(String id) {
                 PageParameters pageParameters = new PageParameters(getWebPage().getPageParameters());

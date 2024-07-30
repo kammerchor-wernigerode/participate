@@ -4,7 +4,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.app.participate.wicket.form.FormComponentLabel;
 import de.vinado.wicket.common.AjaxFocusBehavior;
 import de.vinado.wicket.form.AutosizeBehavior;
@@ -208,16 +208,16 @@ public class AddEditEventPanel extends GenericPanel<EventDTO> {
                 remove = !remove;
                 if (remove) {
                     setLabel(new ResourceModel("event.remove.hint", "Event will be removed"));
-                    setIconType(FontAwesome5IconType.exclamation_circle_s);
+                    setIconType(FontAwesome6IconType.circle_exclamation_s);
                 } else {
                     setLabel(new ResourceModel("event.remove", "Remove event"));
-                    setIconType(FontAwesome5IconType.trash_s);
+                    setIconType(FontAwesome6IconType.trash_s);
                 }
                 target.add(this);
             }
         };
         removeBtn.setLabel(new ResourceModel("event.remove", "Remove Event"));
-        removeBtn.setIconType(FontAwesome5IconType.trash_s);
+        removeBtn.setIconType(FontAwesome6IconType.trash_s);
         removeBtn.setSize(Buttons.Size.Small);
         removeBtn.setOutputMarkupId(true);
         form.add(removeBtn);

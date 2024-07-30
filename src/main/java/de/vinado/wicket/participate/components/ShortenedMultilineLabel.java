@@ -1,6 +1,7 @@
 package de.vinado.wicket.participate.components;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.agilecoders.wicket.jquery.util.Json;
 import de.vinado.app.participate.wicket.bt5.tooltip.TooltipBehavior;
 import de.vinado.app.participate.wicket.bt5.tooltip.TooltipConfig;
@@ -22,9 +23,6 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
 
 import java.io.Serializable;
-
-import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.angle_double_down_s;
-import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.angle_double_up_s;
 
 public class ShortenedMultilineLabel extends GenericPanel<String> {
 
@@ -189,7 +187,7 @@ public class ShortenedMultilineLabel extends GenericPanel<String> {
         }
 
         private WebMarkupContainer icon() {
-            return new Icon("icon", () -> state.equals(State.COLLAPSED) ? angle_double_down_s : angle_double_up_s);
+            return new Icon("icon", () -> state.equals(State.COLLAPSED) ? FontAwesome6IconType.angle_down_s : FontAwesome6IconType.angles_up_s);
         }
 
         private Behavior tooltip() {

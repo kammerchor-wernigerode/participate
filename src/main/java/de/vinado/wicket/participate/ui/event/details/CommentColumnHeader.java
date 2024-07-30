@@ -3,6 +3,7 @@ package de.vinado.wicket.participate.ui.event.details;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.app.participate.wicket.bt5.tooltip.TooltipBehavior;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -14,8 +15,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 
-import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.angle_double_down_s;
-import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.angle_double_up_s;
 import static de.vinado.wicket.participate.components.ShortenedMultilineLabel.Intent;
 import static de.vinado.wicket.participate.components.ShortenedMultilineLabel.State;
 import static de.vinado.wicket.participate.components.ShortenedMultilineLabel.State.COLLAPSED;
@@ -59,11 +58,11 @@ public abstract class CommentColumnHeader extends GenericPanel<String> {
         }
 
         private Component expandButton(String id) {
-            return button(id, EXPANDED, COLLAPSED, angle_double_down_s);
+            return button(id, EXPANDED, COLLAPSED, FontAwesome6IconType.angle_down_s);
         }
 
         private Component collapseButton(String id) {
-            return button(id, COLLAPSED, EXPANDED, angle_double_up_s);
+            return button(id, COLLAPSED, EXPANDED, FontAwesome6IconType.angles_up_s);
         }
 
         private WebMarkupContainer button(String id, State targetState, State represented, IconType icon) {

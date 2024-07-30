@@ -5,7 +5,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarComponents;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarDropDownButton;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.app.participate.wicket.bt5.modal.Modal;
 import de.vinado.wicket.participate.components.panels.EditAccountPanel;
@@ -90,11 +90,11 @@ public class ParticipatePage extends BasePage {
         navbar.setBrandName(applicationName::get);
         navbar.addComponents(NavbarComponents.transform(
             Navbar.ComponentPosition.LEFT,
-            new NavbarButton(EventsPage.class, new ResourceModel("events", "Events")).setIconType(FontAwesome5IconType.calendar_s),
-            new NavbarButton(SingersPage.class, new ResourceModel("singers", "Singers")).setIconType(FontAwesome5IconType.users_s)));
+            new NavbarButton(EventsPage.class, new ResourceModel("events", "Events")).setIconType(FontAwesome6IconType.calendar_s),
+            new NavbarButton(SingersPage.class, new ResourceModel("singers", "Singers")).setIconType(FontAwesome6IconType.users_s)));
         navbar.addComponents(NavbarComponents.transform(
             Navbar.ComponentPosition.RIGHT,
-            new NavbarDropDownButton(new UsernameModel(), Model.of(FontAwesome5IconType.user_s)) {
+            new NavbarDropDownButton(new UsernameModel(), Model.of(FontAwesome6IconType.user_s)) {
                 @Override
                 protected List<AbstractLink> newSubMenuButtons(String buttonMarkupId) {
                     List<AbstractLink> menuButtons = new ArrayList<>();

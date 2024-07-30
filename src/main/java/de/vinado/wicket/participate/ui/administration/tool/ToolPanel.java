@@ -3,7 +3,7 @@ package de.vinado.wicket.participate.ui.administration.tool;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.agilecoders.wicket.core.markup.html.bootstrap.tabs.Collapsible;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.app.participate.wicket.bt5.button.BootstrapAjaxButton;
 import de.vinado.wicket.common.AjaxDownload;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
@@ -106,7 +106,7 @@ public class ToolPanel extends Panel {
                     return feedback;
                 }
             };
-            submitBtn.setIconType(FontAwesome5IconType.database_s);
+            submitBtn.setIconType(FontAwesome6IconType.database_s);
             submitBtn.setSize(Buttons.Size.Small);
             importWmc.add(submitBtn);
 
@@ -131,7 +131,7 @@ public class ToolPanel extends Panel {
                     return feedback;
                 }
             };
-            exportBtn.setIconType(FontAwesome5IconType.save_s);
+            exportBtn.setIconType(FontAwesome6IconType.floppy_disk_s);
             exportBtn.setSize(Buttons.Size.Small);
             exportBtn.add(export);
             exportWmc.add(exportBtn);

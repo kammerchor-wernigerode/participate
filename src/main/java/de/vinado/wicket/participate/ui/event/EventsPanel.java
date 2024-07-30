@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.ui.event;
 
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.app.participate.wicket.bt5.modal.Modal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
@@ -44,7 +44,7 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
         add(modal);
 
         addQuickAccessAction(AjaxAction.create(new ResourceModel("event.add", "Add Event"),
-            FontAwesome5IconType.plus_s,
+            FontAwesome6IconType.plus_s,
             this::onAdd));
 
         add(filter());

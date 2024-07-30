@@ -1,7 +1,7 @@
 package de.vinado.wicket.participate.components.tables;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackHeadersToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
@@ -19,17 +19,17 @@ public class BootstrapAjaxHeadersToolbar<S> extends AjaxFallbackHeadersToolbar<S
         return new BootstrapAjaxOrderByBorder<S>(headerId, property, locator) {
             @Override
             protected IconType ascendingIconType() {
-                return FontAwesome5IconType.sort_up_s;
+                return FontAwesome6IconType.sort_up_s;
             }
 
             @Override
             protected IconType descendingIconType() {
-                return FontAwesome5IconType.sort_down_s;
+                return FontAwesome6IconType.sort_down_s;
             }
 
             @Override
             protected IconType unsortedIconType() {
-                return FontAwesome5IconType.sort_s;
+                return FontAwesome6IconType.sort_s;
             }
 
             @Override

@@ -3,7 +3,7 @@ package de.vinado.app.participate.event.presentation.ui;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.select.BootstrapSelect;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.tempusdominus.TempusDominusConfig;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.app.participate.wicket.bt5.form.DateTimeTextField;
 import de.vinado.app.participate.wicket.bt5.tooltip.TooltipBehavior;
 import de.vinado.app.participate.wicket.form.FormComponentLabel;
@@ -265,7 +265,7 @@ public class InvitationForm extends GenericPanel<ParticipantDTO> {
     protected Component carCheckboxLabel(String wicketId) {
         carCheckbox.add(AttributeAppender.replace("aria-label", carCheckbox.getLabel()));
 
-        Icon icon = new Icon(wicketId, FontAwesome5IconType.car_s);
+        Icon icon = new Icon(wicketId, FontAwesome6IconType.car_s);
         icon.add(new TooltipBehavior(carCheckbox.getLabel()));
         return icon;
     }

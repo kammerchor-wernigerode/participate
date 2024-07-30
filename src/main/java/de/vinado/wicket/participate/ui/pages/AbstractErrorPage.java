@@ -4,7 +4,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.HtmlTag;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.wicket.participate.components.panels.Footer;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -27,7 +27,7 @@ public abstract class AbstractErrorPage extends org.apache.wicket.markup.html.pa
 
         BootstrapBookmarkablePageLink<String> homePageLink = new BootstrapBookmarkablePageLink<>("homePageLink",
             getApplication().getHomePage(), Buttons.Type.Primary);
-        homePageLink.setIconType(FontAwesome5IconType.home_s);
+        homePageLink.setIconType(FontAwesome6IconType.house_s);
         homePageLink.setLabel(new ResourceModel("navigate.homepage", "Goto Homepage"));
         addHomePageLink(homePageLink);
 

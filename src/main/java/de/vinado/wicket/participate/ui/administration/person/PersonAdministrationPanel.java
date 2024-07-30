@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.ui.administration.person;
 
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.components.tables.columns.BootstrapAjaxLinkColumn;
 import de.vinado.wicket.participate.model.Person;
@@ -25,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
-
-import static de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType.trash_restore_s;
 
 public class PersonAdministrationPanel extends Panel {
 
@@ -76,7 +75,7 @@ public class PersonAdministrationPanel extends Panel {
     }
 
     private IColumn<Person, SerializableFunction<Person, ?>> restoreColumn() {
-        return new BootstrapAjaxLinkColumn<>(trash_restore_s, new ResourceModel("person.restore", "Restore")) {
+        return new BootstrapAjaxLinkColumn<>(FontAwesome6IconType.trash_arrow_up_s, new ResourceModel("person.restore", "Restore")) {
 
             @Override
             public void onClick(AjaxRequestTarget target, IModel<Person> rowModel) {

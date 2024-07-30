@@ -3,7 +3,7 @@ package de.vinado.wicket.participate.event.ui;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.model.EventDetails;
@@ -61,13 +61,13 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
         };
         previousEventBtn.setOutputMarkupPlaceholderTag(true);
         previousEventBtn.setSize(Buttons.Size.Small);
-        previousEventBtn.setIconType(FontAwesome5IconType.caret_left_s);
+        previousEventBtn.setIconType(FontAwesome6IconType.caret_left_s);
         add(previousEventBtn);
 
         BootstrapBookmarkablePageLink<Void> backBtn = new BootstrapBookmarkablePageLink<>("backBtn", EventsPage.class, Default);
         backBtn.setLabel(new ResourceModel("show.event.overview", "Show Event Overview"));
         backBtn.setSize(Buttons.Size.Small);
-        backBtn.setIconType(FontAwesome5IconType.calendar_s);
+        backBtn.setIconType(FontAwesome6IconType.calendar_s);
         add(backBtn);
 
         BootstrapAjaxLink<EventDetails> nextEventBtn = new BootstrapAjaxLink<>("nextEventBtn", getModel(), Link) {
@@ -80,7 +80,7 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
         };
         nextEventBtn.setOutputMarkupPlaceholderTag(true);
         nextEventBtn.setSize(Buttons.Size.Small);
-        nextEventBtn.setIconType(FontAwesome5IconType.caret_right_s);
+        nextEventBtn.setIconType(FontAwesome6IconType.caret_right_s);
         add(nextEventBtn);
 
         add(new Label("acceptedCount"));

@@ -2,7 +2,7 @@ package de.vinado.wicket.participate.ui.singers;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.app.participate.wicket.form.FormComponentLabel;
 import de.vinado.wicket.form.ConditionalValidator;
 import de.vinado.wicket.participate.model.Participant;
@@ -104,16 +104,16 @@ public class AddEditSingerPanel extends GenericPanel<SingerDTO> {
                 remove = !remove;
                 if (remove) {
                     setLabel(new ResourceModel("singer.remove.hint", "Singer will be removed"));
-                    setIconType(FontAwesome5IconType.exclamation_circle_s);
+                    setIconType(FontAwesome6IconType.circle_exclamation_s);
                 } else {
                     setLabel(new ResourceModel("singer.remove", "Remove Singer"));
-                    setIconType(FontAwesome5IconType.trash_s);
+                    setIconType(FontAwesome6IconType.trash_s);
                 }
                 target.add(this);
             }
         };
         removeBtn.setLabel(new ResourceModel("singer.remove", "Remove Singer"));
-        removeBtn.setIconType(FontAwesome5IconType.trash_s);
+        removeBtn.setIconType(FontAwesome6IconType.trash_s);
         removeBtn.setSize(Buttons.Size.Small);
         removeBtn.setOutputMarkupId(true);
         form.add(removeBtn);
