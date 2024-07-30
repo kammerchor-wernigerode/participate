@@ -2,7 +2,6 @@ package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.app.participate.event.presentation.ui.InvitationForm;
 import de.vinado.app.participate.management.wicket.ManagementSession;
@@ -11,14 +10,12 @@ import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
-import de.vinado.wicket.participate.configuration.ApplicationProperties;
-import de.vinado.wicket.participate.email.EmailBuilderFactory;
+import de.vinado.wicket.participate.email.InternetAddressFactory;
 import de.vinado.wicket.participate.event.ui.EventSummaryPage;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
-import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
@@ -27,9 +24,11 @@ import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.ui.event.details.ParticipantDataProvider;
 import de.vinado.wicket.participate.ui.event.details.ParticipantFilterIntent;
 import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateIntent;
+import jakarta.mail.internet.InternetAddress;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.markup.html.basic.DefaultLinkParser;
 import org.apache.wicket.extensions.markup.html.basic.ILinkParser;
@@ -40,20 +39,18 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.INamedParameters.Type;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
-import org.danekja.java.util.function.serializable.SerializableFunction;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.wicketstuff.clipboardjs.ClipboardJsBehavior;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class EventPanel extends BootstrapPanel<EventDetails> {
@@ -62,14 +59,9 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     @SuppressWarnings("unused")
     private EventService eventService;
 
-    @SpringBean
-    private EmailBuilderFactory emailBuilderFactory;
-
-    @SpringBean
-    private ApplicationProperties applicationProperties;
-
     private final PersonContext personContext;
     private final IModel<ParticipantFilter> filterModel;
+    private final IModel<List<Participant>> acceptedParticipants;
 
     private final Modal modal;
     private final Form form;
@@ -80,6 +72,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
 
         this.personContext = personContext;
         this.filterModel = filterModel;
+        this.acceptedParticipants = acceptedParticipantsModel();
 
         this.modal = modal("modal");
         add(modal);
@@ -138,6 +131,17 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         wmc.add(dataTable);
     }
 
+    private IModel<List<Participant>> acceptedParticipantsModel() {
+        Event event = getModelObject().getEvent();
+        return new LoadableDetachableModel<>() {
+
+            @Override
+            protected List<Participant> load() {
+                return eventService.getParticipants(event, InvitationStatus.ACCEPTED);
+            }
+        };
+    }
+
     protected Modal modal(String wicketId) {
         return new Modal(wicketId);
     }
@@ -193,9 +197,41 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         addDropdownAction(AjaxAction.create(new ResourceModel("email.send.reminder", "Send Reminder"),
             FontAwesome6IconType.exclamation_s,
             this::remind));
-        addDropdownAction(create(new ResourceModel("email.send", "Send Email"),
-            FontAwesome6IconType.envelope_s,
-            this::email));
+        addDropdownAction(id -> new AbstractAction(id,
+            new ResourceModel("email.copy", "Copy email addresses"),
+            FontAwesome6IconType.copy_s) {
+
+            @Override
+            protected AbstractLink link(String linkId) {
+                IModel<String> model = copyLinkModel();
+                return new AjaxLink<>(linkId) {
+
+                    @Override
+                    protected void onInitialize() {
+                        super.onInitialize();
+
+                        ClipboardJsBehavior clipboardJsBehavior = new ClipboardJsBehavior();
+                        clipboardJsBehavior.setText(model);
+                        add(clipboardJsBehavior);
+                    }
+
+                    @Override
+                    public void onClick(AjaxRequestTarget target) {
+                        ResourceModel message = new ResourceModel("email.copy.success", "Email addresses have been copied to the clipboard");
+                        Snackbar.show(target, message);
+                    }
+                };
+            }
+
+            private IModel<String> copyLinkModel() {
+                return acceptedParticipants
+                    .map(participants -> participants.stream()
+                        .map(Participant::getSinger)
+                        .map(InternetAddressFactory::create)
+                        .map(InternetAddress::toUnicodeString)
+                        .collect(Collectors.joining(",")));
+            }
+        });
         addDropdownAction(AjaxAction.create(new ResourceModel("event.edit", "Edit Event"),
             FontAwesome6IconType.pencil_s,
             this::edit));
@@ -256,42 +292,6 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
                 }
             }.setLabel(new ResourceModel("confirm", "Confirm")))
             .show(target);
-    }
-
-    private static SerializableFunction<String, AbstractAction> create(IModel<String> labelModel,
-                                                                       IconType icon,
-                                                                       SerializableFunction<String, AbstractLink> link) {
-        return id -> new AbstractAction(id, labelModel, icon) {
-            @Override
-            protected AbstractLink link(String id) {
-                return link.apply(id);
-            }
-        };
-    }
-
-    private AbstractLink email(String id) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("mailto:");
-        populateRecipients(builder);
-        populateSender(builder);
-
-        return new ExternalLink(id, builder.toUriString());
-    }
-
-    private void populateSender(UriComponentsBuilder builder) {
-        ApplicationProperties.Mail mailProperties = applicationProperties.getMail();
-        Session session = getSession();
-        Optional.ofNullable(session.getMetaData(ManagementSession.user))
-            .map(User::getPerson)
-            .map(Person::getEmail)
-            .ifPresentOrElse(email -> builder.queryParam("to", email), () -> builder.queryParam("to", mailProperties.getSender().getAddress()));
-    }
-
-    private void populateRecipients(UriComponentsBuilder builder) {
-        String bccValue = eventService.getParticipants(getModelObject().getEvent(), InvitationStatus.ACCEPTED).stream()
-            .map(Participant::getSinger)
-            .map(Person::getEmail)
-            .collect(Collectors.joining(","));
-        builder.queryParam("bcc", bccValue);
     }
 
     private void edit(AjaxRequestTarget target) {

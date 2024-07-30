@@ -68,6 +68,11 @@
                 <version>${dependency.wicket.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wicketstuff</groupId>
+                <artifactId>wicketstuff-clipboardjs</artifactId>
+                <version>${dependency.wicket.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.wicket</groupId>
                 <artifactId>wicket-tester</artifactId>
                 <version>${dependency.wicket.version}</version>
@@ -173,6 +178,10 @@
         <dependency>
             <groupId>org.wicketstuff</groupId>
             <artifactId>wicketstuff-select2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wicketstuff</groupId>
+            <artifactId>wicketstuff-clipboardjs</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.wicket</groupId>
