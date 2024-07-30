@@ -286,8 +286,12 @@ public class EventServiceImpl extends DataService implements EventService {
         CriteriaQuery<String> criteriaQuery = criteriaBuilder.createQuery(String.class);
         Root<Event> root = criteriaQuery.from(Event.class);
         criteriaQuery.select(root.get("location"));
-        criteriaQuery.groupBy(root.<String>get("location"));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        List<String> resultList = entityManager.createQuery(criteriaQuery).getResultList();
+        Map<String, Integer> frequency = resultList.stream()
+            .collect(Collectors.toMap(Function.identity(), v -> 1, Integer::sum));
+        List<String> locations = new ArrayList<>(frequency.keySet());
+        locations.sort((a, b) -> frequency.get(b) - frequency.get(a));
+        return locations;
     }
 
     @Override
