@@ -17,6 +17,7 @@ import de.vinado.wicket.participate.model.filters.SingerFilter;
 import de.vinado.wicket.participate.services.PersonService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.markup.html.basic.SmartLinkLabel;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
@@ -24,6 +25,8 @@ import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
+import org.apache.wicket.markup.html.link.AbstractLink;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -32,6 +35,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
 import org.danekja.java.util.function.serializable.SerializableFunction;
+import org.wicketstuff.clipboardjs.ClipboardJsBehavior;
 
 import java.util.Arrays;
 import java.util.List;
@@ -133,8 +137,8 @@ public class SingersPanel extends BootstrapPanel<SingerFilter> {
         return new PropertyColumn<>(new ResourceModel("email", "Email"), with(Singer::getEmail), "email") {
             @Override
             public void populateItem(Item<ICellPopulator<Singer>> item, String componentId, IModel<Singer> rowModel) {
-                item.add(new SmartLinkLabel(componentId, getDataModel(rowModel).map(String.class::cast))
-                    .add(new CssClassNameAppender("nobusy")));
+                EmailLinkPanel panel = new EmailLinkPanel(componentId, getDataModel(rowModel).map(String.class::cast));
+                item.add(panel);
             }
 
             @Override
@@ -199,5 +203,59 @@ public class SingersPanel extends BootstrapPanel<SingerFilter> {
     @Override
     protected IModel<String> titleModel() {
         return new ResourceModel("singers", "Singers");
+    }
+
+
+    private static class EmailLinkPanel extends GenericPanel<String> {
+
+        public EmailLinkPanel(String id, IModel<String> model) {
+            super(id, model);
+        }
+
+        @Override
+        protected void onInitialize() {
+            super.onInitialize();
+
+            add(emailLink("email"));
+            add(copyLink("copy"));
+        }
+
+        private Component emailLink(String wicketId) {
+            IModel<String> model = emailLinkModel();
+            SmartLinkLabel link = new SmartLinkLabel(wicketId, model);
+            link.add(new CssClassNameAppender("nobusy"));
+            return link;
+        }
+
+        private IModel<String> emailLinkModel() {
+            return getModel();
+        }
+
+        private AbstractLink copyLink(String wicketId) {
+            IModel<String> model = copyLinkModel();
+            AjaxLink<String> link = new AjaxLink<>(wicketId, model) {
+
+                @Override
+                protected void onInitialize() {
+                    super.onInitialize();
+
+                    ClipboardJsBehavior copyBehavior = new ClipboardJsBehavior();
+                    copyBehavior.setText(getModel());
+                    add(copyBehavior);
+                }
+
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    ResourceModel message = new ResourceModel("email.copy.success", "Email address have been copied to the clipboard");
+                    Snackbar.show(target, message);
+                }
+            };
+            link.add(new CssClassNameAppender("ms-1", "link-secondary"));
+            return link;
+        }
+
+        private IModel<String> copyLinkModel() {
+            return getModel();
+        }
     }
 }
