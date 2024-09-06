@@ -1,10 +1,12 @@
 package de.vinado.wicket.participate.features;
 
 import com.opencsv.CSVWriter;
-import de.vinado.wicket.participate.email.Email;
-import de.vinado.wicket.participate.email.EmailAttachment;
-import de.vinado.wicket.participate.email.EmailBuilderFactory;
-import de.vinado.wicket.participate.email.service.EmailService;
+import de.vinado.app.participate.notification.email.app.EmailService;
+import de.vinado.app.participate.notification.email.model.Email;
+import de.vinado.app.participate.notification.email.model.EmailException;
+import de.vinado.app.participate.notification.email.model.Recipient;
+import de.vinado.app.participate.notification.email.model.TemplatedEmailFactory;
+import de.vinado.app.participate.notification.email.support.InMemoryAttachment;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Person;
@@ -32,14 +34,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.pivovarit.function.ThrowingFunction.sneaky;
+import static de.vinado.app.participate.notification.email.app.SendEmail.send;
 import static de.vinado.wicket.participate.common.DateUtils.toLocalDate;
 import static de.vinado.wicket.participate.features.ScoresManagerNotificationCronjob.Configuration.CRON_EXPRESSION;
 import static de.vinado.wicket.participate.features.ScoresManagerNotificationCronjob.Configuration.FEATURE_ENABLED;
@@ -53,7 +58,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @RequiredArgsConstructor
 public class ScoresManagerNotificationCronjob {
 
-    private final @NonNull EmailBuilderFactory emailBuilderFactory;
+    private final @NonNull TemplatedEmailFactory emailFactory;
     private final @NonNull Configuration configuration;
     private final @NonNull EventService eventService;
     private final @NonNull PersonService personService;
@@ -77,16 +82,21 @@ public class ScoresManagerNotificationCronjob {
                 .map(sneaky(name -> new InternetAddress(scoresManagerEmail, name, UTF_8.name())))
                 .orElse(new InternetAddress(scoresManagerEmail));
 
-            Stream<Email> emails = eventService.getUpcomingEvents()
+            Email[] emails = eventService.getUpcomingEvents()
                 .stream()
                 .filter(this::filter)
-                .map(event -> prepare(event, recipient))
-                .filter(Objects::nonNull);
+                .map(this::prepare)
+                .filter(Objects::nonNull)
+                .toArray(Email[]::new);
 
-            emailService.send(emails.collect(Collectors.toList()), "scoresManagerNotification-txt.ftl", null);
+            for (Email email : emails) {
+                emailService.execute(send(email).atOnce(Recipient.to(recipient)));
+            }
             log.info("Ran score's manager reminder job");
         } catch (AddressException e) {
             log.error("Malformed email address encountered", e);
+        } catch (EmailException e) {
+            log.error("Unable to send email", e);
         }
     }
 
@@ -98,7 +108,7 @@ public class ScoresManagerNotificationCronjob {
         return future && inScope;
     }
 
-    private Email prepare(Event event, InternetAddress recipient) {
+    private Email prepare(Event event) {
         try {
             List<Singer> attendees = eventService.getInvitedParticipants(event)
                 .stream()
@@ -107,18 +117,24 @@ public class ScoresManagerNotificationCronjob {
                 .sorted(Comparator.comparing(Person::getLastName))
                 .collect(Collectors.toList());
 
-            return emailBuilderFactory.create()
-                .to(recipient)
-                .subject("Participant list for event: " + event.getName())
-                .message("Attached you will find the list of participants.\n")
-                .attachments(new EmailAttachment("attendee-list.csv", MimeType.valueOf("text/csv"), getAttendeeByteArray(attendees)))
-                .build()
-                ;
+            String subject = "Participant list for event: " + event.getName();
+            String plaintextTemplatePath = "scoresManagerNotification-txt.ftl";
+            Map<String, Object> data = Collections.emptyMap();
+            Set<Email.Attachment> attachments = attachments(attendees);
+            return emailFactory.create(subject, plaintextTemplatePath, null, data, attachments);
         } catch (IOException e) {
             log.error("Unable to write stream to CSV attachment", e);
         }
 
         return null;
+    }
+
+    private Set<Email.Attachment> attachments(List<Singer> attendees) throws IOException {
+        String name = "attendee-list.csv";
+        MimeType type = MimeType.valueOf("text/csv");
+        byte[] data = getAttendeeByteArray(attendees);
+        Email.Attachment attachment = new InMemoryAttachment(name, type, data);
+        return Collections.singleton(attachment);
     }
 
     /**

@@ -1,20 +1,19 @@
 package de.vinado.wicket.participate.features;
 
-import de.vinado.wicket.participate.email.Email;
-import de.vinado.wicket.participate.email.EmailBuilderFactory;
-import de.vinado.wicket.participate.email.service.EmailService;
+import de.vinado.app.participate.notification.email.app.EmailService;
+import de.vinado.app.participate.notification.email.app.SendEmail;
+import de.vinado.app.participate.notification.email.model.Emails;
+import de.vinado.app.participate.notification.email.model.TemplatedEmailFactory;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.services.PersonService;
-import jakarta.mail.internet.InternetAddress;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -22,7 +21,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -36,7 +34,7 @@ class ScoresManagerNotificationCronjobTests {
 
     private static LocalDate now;
 
-    private @Mock EmailBuilderFactory emailBuilderFactory;
+    private @Mock TemplatedEmailFactory emailFactory;
     private @Mock ScoresManagerNotificationCronjob.Configuration configuration;
     private @Mock EventService eventService;
     private @Mock PersonService personService;
@@ -51,7 +49,7 @@ class ScoresManagerNotificationCronjobTests {
 
     @BeforeEach
     void setUp() {
-        cronjob = new ScoresManagerNotificationCronjob(emailBuilderFactory,
+        cronjob = new ScoresManagerNotificationCronjob(emailFactory,
             configuration,
             eventService,
             personService,
@@ -61,10 +59,10 @@ class ScoresManagerNotificationCronjobTests {
     @Test
     void creatingNullArguments_shouldThrowException() {
         assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(null, configuration, eventService, personService, emailService));
-        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailBuilderFactory, null, eventService, personService, emailService));
-        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailBuilderFactory, configuration, null, personService, emailService));
-        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailBuilderFactory, configuration, eventService, null, emailService));
-        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailBuilderFactory, configuration, eventService, personService, null));
+        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailFactory, null, eventService, personService, emailService));
+        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailFactory, configuration, null, personService, emailService));
+        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailFactory, configuration, eventService, null, emailService));
+        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailFactory, configuration, eventService, personService, null));
     }
 
     @Test
@@ -74,6 +72,7 @@ class ScoresManagerNotificationCronjobTests {
         assertThrows(IllegalArgumentException.class, cronjob::run);
     }
 
+    @SneakyThrows
     @Test
     void emptyEventList_shouldNotSendEmail() {
         String emailAddress = "jane.doe@example.com";
@@ -83,9 +82,10 @@ class ScoresManagerNotificationCronjobTests {
 
         cronjob.run();
 
-        verify(emailService).send(argThat(isEmpty()), any(String.class), isNull());
+        verify(emailService, never()).execute(any(SendEmail.Builder.class));
     }
 
+    @SneakyThrows
     @Test
     void emptyParticipantList_shouldSendEmail() {
         String emailAddress = "jane.doe@example.com";
@@ -96,13 +96,14 @@ class ScoresManagerNotificationCronjobTests {
         when(eventService.getUpcomingEvents()).thenReturn(List.of(event));
         when(configuration.getOffset()).thenReturn(Integer.MAX_VALUE);
         when(eventService.getInvitedParticipants(eq(event))).thenReturn(Collections.emptyList());
-        when(emailBuilderFactory.create()).thenAnswer(i -> Email.builder(new InternetAddress(emailAddress)));
+        when(emailFactory.create(any(), any(), any(), any(), any())).thenReturn(Emails.defaultEmail().build());
 
         cronjob.run();
 
-        verify(emailService).send(argThat(isNotEmpty()), any(String.class), isNull());
+        verify(emailService).execute(any(SendEmail.Builder.class));
     }
 
+    @SneakyThrows
     @Test
     void bygoneEvent_shouldNotSendEmail() {
         String emailAddress = "jane.doe@example.com";
@@ -116,9 +117,10 @@ class ScoresManagerNotificationCronjobTests {
 
         cronjob.run();
 
-        verify(emailService).send(argThat(isEmpty()), any(String.class), isNull());
+        verify(emailService, never()).execute(any(SendEmail.Builder.class));
     }
 
+    @SneakyThrows
     @Test
     void outOfOffset_shouldNotSendEmail() {
         String emailAddress = "jane.doe@example.com";
@@ -132,9 +134,10 @@ class ScoresManagerNotificationCronjobTests {
 
         cronjob.run();
 
-        verify(emailService).send(argThat(isEmpty()), any(String.class), isNull());
+        verify(emailService, never()).execute(any(SendEmail.Builder.class));
     }
 
+    @SneakyThrows
     @Test
     void withinScopeAndOffset_shouldSendEmail() {
         String emailAddress = "jane.doe@example.com";
@@ -147,13 +150,14 @@ class ScoresManagerNotificationCronjobTests {
         when(eventService.getUpcomingEvents()).thenReturn(List.of(event));
         when(configuration.getOffset()).thenReturn(Integer.MAX_VALUE);
         when(eventService.getInvitedParticipants(eq(event))).thenReturn(List.of(participant));
-        when(emailBuilderFactory.create()).thenAnswer(i -> Email.builder(new InternetAddress(emailAddress)));
+        when(emailFactory.create(any(), any(), any(), any(), any())).thenReturn(Emails.defaultEmail().build());
 
         cronjob.run();
 
-        verify(emailService).send(argThat(isNotEmpty()), any(String.class), isNull());
+        verify(emailService).execute(any(SendEmail.Builder.class));
     }
 
+    @SneakyThrows
     @Test
     void notAcceptedParticipation_shouldSendEmailAnyways() {
         String emailAddress = "jane.doe@example.com";
@@ -166,13 +170,14 @@ class ScoresManagerNotificationCronjobTests {
         when(eventService.getUpcomingEvents()).thenReturn(List.of(event));
         when(configuration.getOffset()).thenReturn(Integer.MAX_VALUE);
         when(eventService.getInvitedParticipants(eq(event))).thenReturn(List.of(participant));
-        when(emailBuilderFactory.create()).thenAnswer(i -> Email.builder(new InternetAddress(emailAddress)));
+        when(emailFactory.create(any(), any(), any(), any(), any())).thenReturn(Emails.defaultEmail().build());
 
         cronjob.run();
 
-        verify(emailService).send(argThat(isNotEmpty()), any(String.class), isNull());
+        verify(emailService).execute(any(SendEmail.Builder.class));
     }
 
+    @SneakyThrows
     @Test
     void multipleEvents_shouldSendMultipleEmails() {
         String emailAddress = "jane.doe@example.com";
@@ -185,11 +190,11 @@ class ScoresManagerNotificationCronjobTests {
         when(configuration.getOffset()).thenReturn(Integer.MAX_VALUE);
         when(eventService.getInvitedParticipants(eq(event_0))).thenReturn(Collections.emptyList());
         when(eventService.getInvitedParticipants(eq(event_1))).thenReturn(Collections.emptyList());
-        when(emailBuilderFactory.create()).thenAnswer(i -> Email.builder(new InternetAddress(emailAddress)));
+        when(emailFactory.create(any(), any(), any(), any(), any())).thenReturn(Emails.defaultEmail().build());
 
         cronjob.run();
 
-        verify(emailService).send(argThat(containsElements(2)), any(String.class), isNull());
+        verify(emailService, times(2)).execute(any(SendEmail.Builder.class));
     }
 
     @Test
@@ -220,18 +225,6 @@ class ScoresManagerNotificationCronjobTests {
         lenient().when(participant.getSinger().getLastName()).thenReturn("Doe");
         when(participant.isAccepted()).thenReturn(accepted);
         return participant;
-    }
-
-    private static ArgumentMatcher<Collection<Email>> isEmpty() {
-        return Collection::isEmpty;
-    }
-
-    private static ArgumentMatcher<Collection<Email>> isNotEmpty() {
-        return argument -> !argument.isEmpty();
-    }
-
-    private ArgumentMatcher<Collection<Email>> containsElements(int i) {
-        return argument -> argument.size() == i;
     }
 
     private static Date date(LocalDate date) {

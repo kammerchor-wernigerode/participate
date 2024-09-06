@@ -1,8 +1,8 @@
 package de.vinado.wicket.participate.services;
 
-import de.vinado.wicket.participate.email.Email;
-import de.vinado.wicket.participate.email.EmailBuilderFactory;
-import de.vinado.wicket.participate.email.service.EmailService;
+import de.vinado.app.participate.notification.email.app.EmailService;
+import de.vinado.app.participate.notification.email.model.Email;
+import de.vinado.app.participate.notification.email.model.TemplatedEmailFactory;
 import de.vinado.wicket.participate.model.Person;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.UserRecoveryToken;
@@ -19,6 +19,7 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -35,7 +36,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static de.vinado.app.participate.notification.email.app.SendEmail.send;
+import static de.vinado.app.participate.notification.email.model.Recipient.to;
+import static de.vinado.wicket.participate.email.InternetAddressFactory.create;
 
 @Primary
 @Service
@@ -46,7 +53,7 @@ public class UserServiceImpl extends DataService implements UserService {
 
     private final PersonService personService;
     private final EmailService emailService;
-    private final EmailBuilderFactory emailBuilderFactory;
+    private final TemplatedEmailFactory emailFactory;
     private final RequestUrl requestUrl;
 
     @Override
@@ -175,6 +182,7 @@ public class UserServiceImpl extends DataService implements UserService {
         return 0 != entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
+    @SneakyThrows
     @Override
     public boolean startPasswordReset(String usernameOrEmail, boolean initial) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -204,17 +212,17 @@ public class UserServiceImpl extends DataService implements UserService {
             passwordRecoveryLink.concatSegments(urlSegments);
             passwordRecoveryLink.setQueryParameter("token", token.getToken());
 
-            Email email = emailBuilderFactory.create()
-                .to(person)
-                .data("firstName", person.getFirstName())
-                .data("passwordRecoveryLink", passwordRecoveryLink.toString(Url.StringMode.FULL, StandardCharsets.UTF_8))
-                .data("validDuration", validDuration)
-                .subject(initial ? "Konto aktivieren" : "Passwort zurücksetzen")
-                .build();
+            String subject = initial ? "Konto aktivieren" : "Passwort zurücksetzen";
+            Map<String, Object> data = new HashMap<>();
+            data.put("firstName", person.getFirstName());
+            data.put("passwordRecoveryLink", passwordRecoveryLink.toString(Url.StringMode.FULL, StandardCharsets.UTF_8));
+            data.put("validDuration", validDuration);
             if (initial) {
-                emailService.send(email, "newUser-txt.ftl", "newUser-html.ftl");
+                Email email = emailFactory.create(subject, "newUser-txt.ftl", "newUser-html.ftl", data);
+                emailService.execute(send(email).atOnce(to(create(person))));
             } else {
-                emailService.send(email, "passwordReset-txt.ftl", "passwordReset-html.ftl");
+                Email email = emailFactory.create(subject, "passwordReset-txt.ftl", "passwordReset-html.ftl", data);
+                emailService.execute(send(email).atOnce(to(create(person))));
             }
 
             return true;
@@ -225,6 +233,7 @@ public class UserServiceImpl extends DataService implements UserService {
         return false;
     }
 
+    @SneakyThrows
     @Override
     public boolean finishPasswordReset(String recoveryToken, String newPlainPassword) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -242,14 +251,12 @@ public class UserServiceImpl extends DataService implements UserService {
             remove(token);
 
             Person person = user.getPerson();
+            String subject = "Dein Passwort wurde aktualisiert";
+            Map<String, Object> data = new HashMap<>();
+            data.put("firstName", person.getFirstName());
 
-            Email email = emailBuilderFactory.create()
-                .to(person)
-                .subject("Dein Passwort wurde aktualisiert")
-                .data("firstName", person.getFirstName())
-                .build();
-
-            emailService.send(email, "passwordResetSuccess-txt.ftl", "passwordResetSuccess-html.ftl");
+            Email email = emailFactory.create(subject, "passwordResetSuccess-txt.ftl", "passwordResetSuccess-html.ftl", data);
+            emailService.execute(send(email).atOnce(to(create(person))));
 
             return true;
         } catch (NoResultException e) {

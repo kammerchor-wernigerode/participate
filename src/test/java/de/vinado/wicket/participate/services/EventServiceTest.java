@@ -1,11 +1,11 @@
 package de.vinado.wicket.participate.services;
 
+import de.vinado.app.participate.notification.email.app.EmailService;
+import de.vinado.app.participate.notification.email.model.TemplatedEmailFactory;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
-import de.vinado.wicket.participate.email.EmailBuilderFactory;
-import de.vinado.wicket.participate.email.PreconfiguredEmailBuilderFactory;
-import de.vinado.wicket.participate.email.service.EmailService;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
+import freemarker.template.Configuration;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,10 +28,11 @@ class EventServiceTest {
     void setUp() {
         PersonService personService = mock(PersonService.class);
         EmailService emailService = mock(EmailService.class);
+        Configuration configuration = mock(Configuration.class);
         ApplicationProperties applicationProperties = mock(ApplicationProperties.class);
-        EmailBuilderFactory emailBuilderFactory = new PreconfiguredEmailBuilderFactory(applicationProperties);
+        TemplatedEmailFactory emailFactory = new TemplatedEmailFactory(configuration, applicationProperties);
 
-        service = new EventServiceImpl(personService, emailService, applicationProperties, emailBuilderFactory, (event, locale) -> randomUri());
+        service = new EventServiceImpl(personService, emailService, applicationProperties, emailFactory, (event, locale) -> randomUri());
 
         doReturn(13).when(applicationProperties).getDeadlineOffset();
     }
