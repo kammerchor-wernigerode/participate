@@ -52,6 +52,9 @@ app:
     footer: ${spring.application.name}
     sender: ${spring.mail.properties.mail.from}
     reply-to: ${spring.mail.properties.mail.reply-to}
+  notification:
+    email:
+      sender: ${spring.mail.properties.mail.from}
   wicket:
     runtime-configuration: DEPLOYMENT
   google-calendar:
