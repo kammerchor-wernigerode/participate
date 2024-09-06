@@ -15,3 +15,7 @@ app:
   base-url: http://localhost:8080
   google-calendar:
     source: foo
+  notification:
+    email:
+      dispatch:
+        concurrent-sessions: 1
