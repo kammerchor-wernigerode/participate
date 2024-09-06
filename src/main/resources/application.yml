@@ -33,7 +33,7 @@ spring:
       mail.smtp.auth: false
       mail.smtp.localhost: localhost
       mail.from: smtp@example.com
-      mail.reply-to: no-reply@example.com
+      mail.reply-to: ${spring.mail.properties.mail.from}
       mail.smtp.starttls.enable: false
 
 app:
