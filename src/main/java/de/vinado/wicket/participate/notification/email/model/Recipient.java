@@ -12,6 +12,7 @@ import lombok.experimental.Accessors;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringJoiner;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
@@ -86,6 +87,14 @@ public class Recipient {
         return Arrays.stream(addresses)
             .map(Recipient::bcc)
             .toArray(Recipient.Bcc[]::new);
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Recipient.class.getSimpleName() + "[", "]")
+            .add("address=" + address.toUnicodeString())
+            .add("type=" + type)
+            .toString();
     }
 
 

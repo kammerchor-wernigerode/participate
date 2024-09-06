@@ -6,6 +6,7 @@ import lombok.Value;
 import lombok.experimental.Accessors;
 
 import java.util.Optional;
+import java.util.StringJoiner;
 
 @Value
 @Accessors(fluent = true)
@@ -17,5 +18,13 @@ public class Sender {
 
     public Optional<InternetAddress> replyTo() {
         return Optional.ofNullable(replyTo);
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Sender.class.getSimpleName() + "[", "]")
+            .add("address=" + address.toUnicodeString())
+            .add("replyTo=" + replyTo.toUnicodeString())
+            .toString();
     }
 }
