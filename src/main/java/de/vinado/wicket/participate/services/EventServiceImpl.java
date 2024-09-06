@@ -29,6 +29,7 @@ import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -54,7 +55,6 @@ import java.util.stream.Stream;
 import static de.vinado.app.participate.notification.email.app.SendEmail.send;
 import static de.vinado.app.participate.notification.email.model.Recipient.to;
 import static de.vinado.wicket.participate.common.DateUtils.toLocalDate;
-import static de.vinado.wicket.participate.email.InternetAddressFactory.create;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 @Primary
@@ -419,6 +419,11 @@ public class EventServiceImpl extends DataService implements EventService {
         }
 
         return count;
+    }
+
+    @SneakyThrows
+    private static InternetAddress create(Singer singer) {
+        return new InternetAddress(singer.getEmail(), singer.getDisplayName(), "UTF-8");
     }
 
     private Entry<Participant, Email> createInvitation(Participant participant) {

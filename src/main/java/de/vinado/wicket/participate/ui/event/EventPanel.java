@@ -10,12 +10,12 @@ import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.components.PersonContext;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
-import de.vinado.wicket.participate.email.InternetAddressFactory;
 import de.vinado.wicket.participate.event.ui.EventSummaryPage;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
+import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
@@ -25,6 +25,7 @@ import de.vinado.wicket.participate.ui.event.details.ParticipantDataProvider;
 import de.vinado.wicket.participate.ui.event.details.ParticipantFilterIntent;
 import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateIntent;
 import jakarta.mail.internet.InternetAddress;
+import lombok.SneakyThrows;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -225,7 +226,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
                 return acceptedParticipants
                     .map(participants -> participants.stream()
                         .map(Participant::getSinger)
-                        .map(InternetAddressFactory::create)
+                        .map(EventPanel::create)
                         .map(InternetAddress::toUnicodeString)
                         .collect(Collectors.joining(",")));
             }
@@ -233,6 +234,11 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         addDropdownAction(AjaxAction.create(new ResourceModel("event.edit", "Edit Event"),
             FontAwesome6IconType.pencil_s,
             this::edit));
+    }
+
+    @SneakyThrows
+    private static InternetAddress create(Singer singer) {
+        return new InternetAddress(singer.getEmail(), singer.getDisplayName(), "UTF-8");
     }
 
     private AbstractAction summary(String id) {

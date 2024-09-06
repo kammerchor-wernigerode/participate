@@ -1,5 +1,6 @@
 package de.vinado.app.participate.notification.email.model;
 
+import de.vinado.wicket.participate.model.Person;
 import jakarta.mail.Message.RecipientType;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
@@ -7,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
@@ -29,6 +31,11 @@ public class Recipient {
 
     public static Recipient.To to(InternetAddress address) {
         return new Recipient.To(address);
+    }
+
+    @SneakyThrows
+    public static Recipient.To to(Person person) {
+        return to(new InternetAddress(person.getEmail(), person.getDisplayName(), "UTF-8"));
     }
 
     public static Recipient.To[] to(String... addresses) throws AddressException {

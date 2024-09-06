@@ -42,7 +42,6 @@ import java.util.Map;
 
 import static de.vinado.app.participate.notification.email.app.SendEmail.send;
 import static de.vinado.app.participate.notification.email.model.Recipient.to;
-import static de.vinado.wicket.participate.email.InternetAddressFactory.create;
 
 @Primary
 @Service
@@ -219,10 +218,10 @@ public class UserServiceImpl extends DataService implements UserService {
             data.put("validDuration", validDuration);
             if (initial) {
                 Email email = emailFactory.create(subject, "newUser-txt.ftl", "newUser-html.ftl", data);
-                emailService.execute(send(email).atOnce(to(create(person))));
+                emailService.execute(send(email).atOnce(to(person)));
             } else {
                 Email email = emailFactory.create(subject, "passwordReset-txt.ftl", "passwordReset-html.ftl", data);
-                emailService.execute(send(email).atOnce(to(create(person))));
+                emailService.execute(send(email).atOnce(to(person)));
             }
 
             return true;
@@ -256,7 +255,7 @@ public class UserServiceImpl extends DataService implements UserService {
             data.put("firstName", person.getFirstName());
 
             Email email = emailFactory.create(subject, "passwordResetSuccess-txt.ftl", "passwordResetSuccess-html.ftl", data);
-            emailService.execute(send(email).atOnce(to(create(person))));
+            emailService.execute(send(email).atOnce(to(person)));
 
             return true;
         } catch (NoResultException e) {
