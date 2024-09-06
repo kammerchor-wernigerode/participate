@@ -14,6 +14,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 import java.util.Optional;
 
 @Component
@@ -57,6 +58,12 @@ public class JavaMailEmailDispatcher implements EmailDispatcher {
         Optional<String> html = email.htmlContent();
         if (html.isPresent()) {
             helper.setText(html.get(), true);
+        }
+
+        Iterator<Email.Attachment> attachments = email.attachments().iterator();
+        while (attachments.hasNext()) {
+            Email.Attachment attachment = attachments.next();
+            helper.addAttachment(attachment.name(), attachment, attachment.type().toString());
         }
 
         sender.send(message);
