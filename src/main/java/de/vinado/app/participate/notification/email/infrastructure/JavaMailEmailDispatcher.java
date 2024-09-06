@@ -155,7 +155,7 @@ public class JavaMailEmailDispatcher implements EmailDispatcher, InitializingBea
             }
 
             sender.send(message);
-            log.debug("Email sent to {}", transmission);
+            log.debug("Email sent to {} from {}", transmission.recipients(), transmission.sender());
         }
     }
 }
