@@ -50,8 +50,6 @@ app:
     pbe-iteration-count: 1000
   mail:
     footer: ${spring.application.name}
-    sender: ${spring.mail.properties.mail.from}
-    reply-to: ${spring.mail.properties.mail.reply-to}
   notification:
     email:
       sender: ${spring.mail.properties.mail.from}
