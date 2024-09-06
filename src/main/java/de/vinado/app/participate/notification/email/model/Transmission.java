@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.notification.email.model;
+package de.vinado.app.participate.notification.email.model;
 
 import java.util.Arrays;
 import java.util.StringJoiner;

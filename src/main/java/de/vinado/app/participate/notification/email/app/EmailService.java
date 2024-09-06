@@ -1,8 +1,8 @@
-package de.vinado.wicket.participate.notification.email.app;
+package de.vinado.app.participate.notification.email.app;
 
-import de.vinado.wicket.participate.notification.email.model.EmailDispatcher;
-import de.vinado.wicket.participate.notification.email.model.EmailException;
-import de.vinado.wicket.participate.notification.email.model.Sender;
+import de.vinado.app.participate.notification.email.model.EmailDispatcher;
+import de.vinado.app.participate.notification.email.model.EmailException;
+import de.vinado.app.participate.notification.email.model.Sender;
 import jakarta.mail.internet.InternetAddress;
 import org.springframework.stereotype.Service;
 

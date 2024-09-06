@@ -1,6 +1,6 @@
-package de.vinado.wicket.participate.notification.email.support;
+package de.vinado.app.participate.notification.email.support;
 
-import de.vinado.wicket.participate.notification.email.model.Email;
+import de.vinado.app.participate.notification.email.model.Email;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

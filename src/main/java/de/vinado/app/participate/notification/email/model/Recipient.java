@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.notification.email.model;
+package de.vinado.app.participate.notification.email.model;
 
 import jakarta.mail.Message.RecipientType;
 import jakarta.mail.internet.AddressException;

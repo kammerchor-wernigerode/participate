@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.notification.email.app;
+package de.vinado.app.participate.notification.email.app;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

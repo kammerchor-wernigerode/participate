@@ -1,9 +1,9 @@
-package de.vinado.wicket.participate.notification.email.app;
+package de.vinado.app.participate.notification.email.app;
 
-import de.vinado.wicket.participate.notification.email.model.Email;
-import de.vinado.wicket.participate.notification.email.model.Recipient;
-import de.vinado.wicket.participate.notification.email.model.Sender;
-import de.vinado.wicket.participate.notification.email.model.Transmission;
+import de.vinado.app.participate.notification.email.model.Email;
+import de.vinado.app.participate.notification.email.model.Recipient;
+import de.vinado.app.participate.notification.email.model.Sender;
+import de.vinado.app.participate.notification.email.model.Transmission;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 

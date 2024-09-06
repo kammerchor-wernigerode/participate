@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.notification.email.infrastructure;
+package de.vinado.app.participate.notification.email.infrastructure;
 
 import lombok.Getter;
 import lombok.NonNull;

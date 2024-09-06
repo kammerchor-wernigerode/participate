@@ -1,4 +1,4 @@
-package de.vinado.wicket.participate.notification.email.app;
+package de.vinado.app.participate.notification.email.app;
 
 import jakarta.mail.internet.InternetAddress;
 import lombok.Getter;

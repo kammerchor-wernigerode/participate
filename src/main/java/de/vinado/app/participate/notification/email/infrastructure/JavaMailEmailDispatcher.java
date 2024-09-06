@@ -1,10 +1,10 @@
-package de.vinado.wicket.participate.notification.email.infrastructure;
+package de.vinado.app.participate.notification.email.infrastructure;
 
-import de.vinado.wicket.participate.notification.email.model.Email;
-import de.vinado.wicket.participate.notification.email.model.EmailDispatcher;
-import de.vinado.wicket.participate.notification.email.model.EmailException;
-import de.vinado.wicket.participate.notification.email.model.Recipient;
-import de.vinado.wicket.participate.notification.email.model.Transmission;
+import de.vinado.app.participate.notification.email.model.Email;
+import de.vinado.app.participate.notification.email.model.EmailDispatcher;
+import de.vinado.app.participate.notification.email.model.EmailException;
+import de.vinado.app.participate.notification.email.model.Recipient;
+import de.vinado.app.participate.notification.email.model.Transmission;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
