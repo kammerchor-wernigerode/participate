@@ -18,4 +18,4 @@ app:
   notification:
     email:
       dispatch:
-        concurrent-sessions: 1
+        concurrent-transmissions: 1

@@ -12,7 +12,7 @@ import java.time.Duration;
 @Setter
 public class JavaMailDispatcherProperties {
 
-    private int concurrentSessions;
+    private int concurrentTransmissions;
 
     @NonNull
     private Duration shutdownGracePeriod;

@@ -55,7 +55,7 @@ app:
       sender: ${spring.mail.properties.mail.from}
       reply-to: ${spring.mail.properties.mail.reply-to}
       dispatch:
-        concurrent-sessions: 1
+        concurrent-transmissions: 1
         shutdown-grace-period: 30s
   wicket:
     runtime-configuration: DEPLOYMENT

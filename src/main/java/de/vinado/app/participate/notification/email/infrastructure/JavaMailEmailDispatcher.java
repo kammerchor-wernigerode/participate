@@ -50,7 +50,7 @@ public class JavaMailEmailDispatcher implements EmailDispatcher, InitializingBea
 
     private static ExecutorService createExecutorService(JavaMailDispatcherProperties properties) {
         try {
-            int concurrentSessions = properties.getConcurrentSessions();
+            int concurrentSessions = properties.getConcurrentTransmissions();
             return Executors.newFixedThreadPool(concurrentSessions);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Number of concurrent sessions must be greater than zero");
@@ -59,7 +59,7 @@ public class JavaMailEmailDispatcher implements EmailDispatcher, InitializingBea
 
     @Override
     public void afterPropertiesSet() {
-        for (int i = 0; i < properties.getConcurrentSessions(); i++) {
+        for (int i = 0; i < properties.getConcurrentTransmissions(); i++) {
             Worker worker = new Worker();
             executor.execute(worker);
         }
