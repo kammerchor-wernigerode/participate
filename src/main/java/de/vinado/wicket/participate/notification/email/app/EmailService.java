@@ -19,7 +19,8 @@ public class EmailService {
 
     private static Sender sender(EmailProperties properties) {
         InternetAddress address = properties.getSender();
-        return new Sender(address);
+        InternetAddress replyTo = properties.getReplyTo();
+        return new Sender(address, replyTo);
     }
 
     public void execute(SendEmail.Builder command) throws EmailException {

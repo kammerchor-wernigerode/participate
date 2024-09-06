@@ -55,6 +55,7 @@ app:
   notification:
     email:
       sender: ${spring.mail.properties.mail.from}
+      reply-to: ${spring.mail.properties.mail.reply-to}
   wicket:
     runtime-configuration: DEPLOYMENT
   google-calendar:

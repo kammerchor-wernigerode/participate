@@ -40,6 +40,11 @@ public class JavaMailEmailDispatcher implements EmailDispatcher {
         helper.setSubject(email.subject());
         helper.setFrom(transmission.sender().address());
 
+        Optional<InternetAddress> replyTo = transmission.sender().replyTo();
+        if (replyTo.isPresent()) {
+            helper.setReplyTo(replyTo.get());
+        }
+
         for (Recipient recipient : transmission.recipients()) {
             message.addRecipients(recipient.type(), new InternetAddress[]{recipient.address()});
         }
