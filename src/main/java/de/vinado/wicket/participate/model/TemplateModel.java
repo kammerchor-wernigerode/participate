@@ -1,22 +1,27 @@
 package de.vinado.wicket.participate.model;
 
-import de.vinado.wicket.participate.email.service.MultipartType;
-import de.vinado.wicket.participate.email.service.TemplateService;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 
 public class TemplateModel implements IModel<String> {
 
+    private static final String UTF_8 = StandardCharsets.UTF_8.name();
+
     @SpringBean
-    private TemplateService templateService;
+    private Configuration configuration;
 
     private final String templateName;
     private final IModel<String> defaultValue;
@@ -45,11 +50,16 @@ public class TemplateModel implements IModel<String> {
     @Override
     public String getObject() {
         try {
-            return templateService.processTemplate(templateName, data, MultipartType.PLAIN);
+            return FreeMarkerTemplateUtils.processTemplateIntoString(template(), data);
         } catch (IOException e) {
             return defaultValue.getObject();
         } catch (TemplateException e) {
             throw new WicketRuntimeException("Unable to process template");
         }
+    }
+
+    private Template template() throws IOException {
+        Locale locale = Locale.getDefault();
+        return configuration.getTemplate(templateName, locale, UTF_8);
     }
 }

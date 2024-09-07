@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.configuration;
 
-import jakarta.mail.internet.InternetAddress;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,8 +38,6 @@ public class ApplicationProperties implements InitializingBean {
     @Setter
     public static class Mail {
 
-        private InternetAddress sender;
         private String footer = "Participate";
-        private InternetAddress replyTo;
     }
 }

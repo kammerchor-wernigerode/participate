@@ -4,7 +4,6 @@ import de.vinado.app.participate.event.presentation.ui.InvitationForm;
 import de.vinado.app.participate.wicket.bt5.modal.Modal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
-import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
@@ -30,9 +29,6 @@ public class EventSummaryListPanel extends BootstrapPanel<Event> {
     @SuppressWarnings("unused")
     @SpringBean
     private EventService eventService;
-
-    @SpringBean
-    private EmailBuilderFactory emailBuilderFactory;
 
     private final IModel<ParticipantFilter> filterModel;
 

@@ -8,7 +8,6 @@ import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
 import de.vinado.wicket.participate.components.tables.columns.BootstrapAjaxLinkColumn;
 import de.vinado.wicket.participate.components.tables.columns.EnumColumn;
-import de.vinado.wicket.participate.email.EmailBuilderFactory;
 import de.vinado.wicket.participate.events.SingerUpdateEvent;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.Voice;
@@ -47,9 +46,6 @@ public class SingersPanel extends BootstrapPanel<SingerFilter> {
     @SuppressWarnings("unused")
     @SpringBean
     private PersonService personService;
-
-    @SpringBean
-    private EmailBuilderFactory emailBuilderFactory;
 
     public final Modal modal;
 

@@ -1,11 +1,12 @@
 package de.vinado.wicket.participate.services;
 
 import de.vinado.app.participate.event.app.CalendarUrl;
+import de.vinado.app.participate.notification.email.app.EmailService;
+import de.vinado.app.participate.notification.email.model.Email;
+import de.vinado.app.participate.notification.email.model.EmailException;
+import de.vinado.app.participate.notification.email.model.TemplatedEmailFactory;
 import de.vinado.wicket.participate.common.ParticipateUtils;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
-import de.vinado.wicket.participate.email.Email;
-import de.vinado.wicket.participate.email.EmailBuilderFactory;
-import de.vinado.wicket.participate.email.service.EmailService;
 import de.vinado.wicket.participate.model.Accommodation;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
@@ -16,6 +17,7 @@ import de.vinado.wicket.participate.model.Terminable;
 import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
+import jakarta.mail.internet.InternetAddress;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
@@ -27,6 +29,7 @@ import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -39,14 +42,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static de.vinado.app.participate.notification.email.app.SendEmail.send;
+import static de.vinado.app.participate.notification.email.model.Recipient.to;
 import static de.vinado.wicket.participate.common.DateUtils.toLocalDate;
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -60,7 +67,7 @@ public class EventServiceImpl extends DataService implements EventService {
     private final PersonService personService;
     private final EmailService emailService;
     private final ApplicationProperties applicationProperties;
-    private final EmailBuilderFactory emailBuilderFactory;
+    private final TemplatedEmailFactory emailFactory;
     private final CalendarUrl calendarUrl;
 
     @Override
@@ -389,35 +396,52 @@ public class EventServiceImpl extends DataService implements EventService {
 
     @Override
     public int inviteParticipants(List<Participant> participants, User organizer) {
-        Stream<Email> invitations = participants
-            .stream()
-            .map(participant -> {
-                Singer singer = participant.getSinger();
-                int offset = 1 - applicationProperties.getDeadlineOffset();
-                Date deadline = DateUtils.addDays(participant.getEvent().getStartDate(), offset);
+        int count = 0;
 
-                Email email = emailBuilderFactory.create()
-                    .to(singer)
-                    .subject(participant.getEvent().getName())
-                    .data("event", participant.getEvent())
-                    .data("singer", singer)
-                    .data("acceptLink", ParticipateUtils.generateInvitationLink(applicationProperties.getBaseUrl(), participant.getToken()))
-                    .data("deadline", offset > 1 ? null : deadline)
-                    .data("calendarUrl", calendarUrl.apply(participant.getEvent(), Locale.getDefault()))
-                    .build();
+        try {
+            Map<Participant, Email> invitations = participants.stream()
+                .map(this::createInvitation)
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 
-                if (InvitationStatus.UNINVITED.equals(participant.getInvitationStatus())) {
-                    Participant loadedParticipant = load(Participant.class, participant.getId());
-                    loadedParticipant.setInvitationStatus(InvitationStatus.PENDING);
-                    save(loadedParticipant);
-                }
+            for (Entry<Participant, Email> invitation : invitations.entrySet()) {
+                Participant participant = invitation.getKey();
+                Email email = invitation.getValue();
+                InternetAddress recipient = create(participant.getSinger());
+                emailService.execute(send(email).individually(to(recipient)));
+                count++;
 
-                return email;
-            });
+                Participant loadedParticipant = load(Participant.class, participant.getId());
+                loadedParticipant.setInvitationStatus(InvitationStatus.PENDING);
+                save(loadedParticipant);
+            }
+        } catch (EmailException e) {
+            log.error("Could not send invitation", e);
+        }
 
-        // TODO Create notification template
-        emailService.send(invitations.collect(Collectors.toList()), "inviteSinger-txt.ftl", "inviteSinger-html.ftl");
-        return participants.size();
+        return count;
+    }
+
+    @SneakyThrows
+    private static InternetAddress create(Singer singer) {
+        return new InternetAddress(singer.getEmail(), singer.getDisplayName(), "UTF-8");
+    }
+
+    private Entry<Participant, Email> createInvitation(Participant participant) {
+        Singer singer = participant.getSinger();
+        Event event = participant.getEvent();
+        int offset = 1 - applicationProperties.getDeadlineOffset();
+        Date deadline = DateUtils.addDays(event.getStartDate(), offset);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("event", event);
+        data.put("singer", singer);
+        data.put("acceptLink", ParticipateUtils.generateInvitationLink(applicationProperties.getBaseUrl(), participant.getToken()));
+        data.put("deadline", offset > 1 ? null : deadline);
+        data.put("calendarUrl", calendarUrl.apply(event, Locale.getDefault()));
+
+        String subject = event.getName();
+        Email email = emailFactory.create(subject, "inviteSinger-txt.ftl", "inviteSinger-html.ftl", data);
+        return Map.entry(participant, email);
     }
 
     @Override

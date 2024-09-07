@@ -33,7 +33,7 @@ spring:
       mail.smtp.auth: false
       mail.smtp.localhost: localhost
       mail.from: smtp@example.com
-      mail.reply-to: no-reply@example.com
+      mail.reply-to: ${spring.mail.properties.mail.from}
       mail.smtp.starttls.enable: false
 
 app:
@@ -50,8 +50,15 @@ app:
     pbe-iteration-count: 1000
   mail:
     footer: ${spring.application.name}
-    sender: ${spring.mail.properties.mail.from}
-    reply-to: ${spring.mail.properties.mail.reply-to}
+  notification:
+    email:
+      sender:
+        from: ${spring.mail.properties.mail.from}
+        reply-to: ${spring.mail.properties.mail.reply-to}
+      dispatch:
+        concurrent-transmissions: 1
+        shutdown-grace-period: 30s
+        recipient-threshold: 100
   wicket:
     runtime-configuration: DEPLOYMENT
   google-calendar:
