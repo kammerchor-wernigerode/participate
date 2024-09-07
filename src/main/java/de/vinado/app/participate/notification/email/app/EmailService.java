@@ -4,9 +4,11 @@ import de.vinado.app.participate.notification.email.model.EmailDispatcher;
 import de.vinado.app.participate.notification.email.model.EmailException;
 import de.vinado.app.participate.notification.email.model.Sender;
 import jakarta.mail.internet.InternetAddress;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 @Service
+@EnableConfigurationProperties(SenderProperties.class)
 public class EmailService {
 
     private final EmailDispatcher dispatcher;
