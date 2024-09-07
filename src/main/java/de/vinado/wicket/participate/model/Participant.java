@@ -47,6 +47,8 @@ public class Participant implements Identifiable<Long>, Invitable {
 
     @ManyToOne
     @JoinColumn(name = "event_id", nullable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Event event;
 
     @Column(nullable = false, unique = true, length = 50)
@@ -84,6 +86,8 @@ public class Participant implements Identifiable<Long>, Invitable {
     @MapsId("event")
     @ManyToOne
     @JoinColumn(name = "event_id", insertable = false, updatable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private EventDetails eventDetails;
 
     public Participant(Event event, Singer singer, String token,
