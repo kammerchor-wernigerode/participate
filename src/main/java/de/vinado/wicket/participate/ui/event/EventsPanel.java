@@ -3,6 +3,7 @@ package de.vinado.wicket.participate.ui.event;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.app.participate.wicket.bt5.modal.Modal;
+import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.model.Event;
@@ -11,7 +12,9 @@ import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.services.EventService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
@@ -71,6 +74,15 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
         addQuickAccessAction(AjaxAction.create(new ResourceModel("event.add", "Add Event"),
             FontAwesome6IconType.plus_s,
             this::onAdd));
+        addQuickAccessAction(wicketId -> new AbstractAction(wicketId,
+            new ResourceModel("email.send.invitation", "Send Invitation"),
+            FontAwesome6IconType.square_envelope_s) {
+
+            @Override
+            protected AbstractLink link(String wicketId) {
+                return new SendInvitationLink(wicketId, dataProvider);
+            }
+        });
 
         add(filter());
         add(eventTable());
@@ -123,5 +135,35 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
             send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(event));
             Snackbar.show(target, new ResourceModel("event.add.success", "A new event has been added"));
         };
+    }
+
+
+    private static class SendInvitationLink extends AjaxLink<Void> {
+
+        private final EventDataProvider dataProvider;
+
+        public SendInvitationLink(String id, EventDataProvider dataProvider) {
+            super(id);
+
+            this.dataProvider = dataProvider;
+        }
+
+        @Override
+        protected void onInitialize() {
+            super.onInitialize();
+
+            add(new UpdateOnEventBehavior<>(ToggleEventSelectionIntent.class));
+        }
+
+        @Override
+        protected void onConfigure() {
+            super.onConfigure();
+
+            setEnabled(dataProvider.hasSelected());
+        }
+
+        @Override
+        public void onClick(AjaxRequestTarget target) {
+        }
     }
 }

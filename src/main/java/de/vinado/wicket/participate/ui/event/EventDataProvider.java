@@ -50,6 +50,10 @@ public class EventDataProvider extends SortableDataProvider<SelectableEventDetai
         list().forEach(event -> event.setSelected(selected));
     }
 
+    public boolean hasSelected() {
+        return list().anyMatch(SelectableEventDetails::isSelected);
+    }
+
     private Stream<SelectableEventDetails> list() {
         return model.getObject().stream()
             .filter(filter.getObject());
