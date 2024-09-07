@@ -16,13 +16,22 @@ import java.time.Duration;
 @Validated
 class JavaMailDispatcherProperties {
 
+    /**
+     * Amount of concurrent SMTP sessions.
+     */
     @Positive
     private int concurrentTransmissions;
 
+    /**
+     * Amount of time the dispatcher waits for running transmissions before shutting down forcefully.
+     */
     @NonNull
     @NotNull
     private Duration shutdownGracePeriod;
 
+    /**
+     * Maximum amount of recipients per transmission.
+     */
     @Positive
     private int recipientThreshold;
 }

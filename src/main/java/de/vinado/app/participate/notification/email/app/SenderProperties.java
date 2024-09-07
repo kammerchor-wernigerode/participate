@@ -15,10 +15,16 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class SenderProperties {
 
+    /**
+     * Sender's email address. In other words: the address this application sends emails from.
+     */
     @NonNull
     @NotNull
     private InternetAddress from;
 
+    /**
+     * If set, this address will be used as the reply-to address in all emails sent by this application.
+     */
     @Nullable
     private InternetAddress replyTo;
 }
