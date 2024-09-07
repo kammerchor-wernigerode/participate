@@ -7,7 +7,6 @@ import de.vinado.app.participate.wicket.bt5.tooltip.TooltipBehavior;
 import de.vinado.app.participate.wicket.bt5.tooltip.TooltipConfig;
 import de.vinado.wicket.participate.components.panels.AjaxLinkPanel;
 import de.vinado.wicket.participate.components.tables.BootstrapAjaxDataTable;
-import de.vinado.wicket.participate.model.EventDetails;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
@@ -26,15 +25,15 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
 import java.util.Arrays;
 import java.util.List;
 
-public class EventTable extends BootstrapAjaxDataTable<EventDetails, SerializableFunction<EventDetails, ?>> {
+public class EventTable extends BootstrapAjaxDataTable<SelectableEventDetails, SerializableFunction<SelectableEventDetails, ?>> {
 
     private static final int ROWS_PER_PAGE = 20;
 
     public EventTable(String id, EventDataProvider dataProvider,
-                      SerializableBiConsumer<AjaxRequestTarget, IModel<EventDetails>> selectAction) {
+                      SerializableBiConsumer<AjaxRequestTarget, IModel<SelectableEventDetails>> selectAction) {
         super(id, columns(selectAction), dataProvider, ROWS_PER_PAGE);
 
-        dataProvider.setSort(with(EventDetails::getStartDate), SortOrder.ASCENDING);
+        dataProvider.setSort(with(SelectableEventDetails::getStartDate), SortOrder.ASCENDING);
         setOutputMarkupId(true);
         condensed().hover();
 
@@ -49,8 +48,8 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
         add(new CssClassNameAppender("events"));
     }
 
-    private static List<IColumn<EventDetails, SerializableFunction<EventDetails, ?>>> columns(
-        SerializableBiConsumer<AjaxRequestTarget, IModel<EventDetails>> selectAction) {
+    private static List<IColumn<SelectableEventDetails, SerializableFunction<SelectableEventDetails, ?>>> columns(
+        SerializableBiConsumer<AjaxRequestTarget, IModel<SelectableEventDetails>> selectAction) {
         TooltipConfig tooltipConfig = new TooltipConfig()
             .withBoundary(new Json.RawValue("document.body"));
 
@@ -63,19 +62,19 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
         );
     }
 
-    private static IColumn<EventDetails, SerializableFunction<EventDetails, ?>> nameColumn(
-        SerializableBiConsumer<AjaxRequestTarget, IModel<EventDetails>> selectAction,
+    private static IColumn<SelectableEventDetails, SerializableFunction<SelectableEventDetails, ?>> nameColumn(
+        SerializableBiConsumer<AjaxRequestTarget, IModel<SelectableEventDetails>> selectAction,
         TooltipConfig tooltipConfig) {
-        return new PropertyColumn<>(new ResourceModel("name", "Name"), with(EventDetails::getName), "name") {
+        return new PropertyColumn<>(new ResourceModel("name", "Name"), with(SelectableEventDetails::getName), "name") {
             @Override
-            public void populateItem(Item<ICellPopulator<EventDetails>> item, String componentId, IModel<EventDetails> rowModel) {
+            public void populateItem(Item<ICellPopulator<SelectableEventDetails>> item, String componentId, IModel<SelectableEventDetails> rowModel) {
                 AjaxLinkPanel component = new AjaxLinkPanel(componentId, new PropertyModel<>(rowModel, getPropertyExpression())) {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         selectAction.accept(target, rowModel);
                     }
                 };
-                component.getAjaxLink().add(new TooltipBehavior(rowModel.map(EventDetails::getName), tooltipConfig));
+                component.getAjaxLink().add(new TooltipBehavior(rowModel.map(SelectableEventDetails::getName), tooltipConfig));
                 item.add(component.setOutputMarkupId(true));
             }
 
@@ -86,8 +85,8 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
         };
     }
 
-    private static IColumn<EventDetails, SerializableFunction<EventDetails, ?>> dateColumn() {
-        return new PropertyColumn<>(new ResourceModel("date", "Date"), with(EventDetails::getStartDate), "displayDate") {
+    private static IColumn<SelectableEventDetails, SerializableFunction<SelectableEventDetails, ?>> dateColumn() {
+        return new PropertyColumn<>(new ResourceModel("date", "Date"), with(SelectableEventDetails::getStartDate), "displayDate") {
             @Override
             public String getCssClass() {
                 return "date";
@@ -95,12 +94,12 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
         };
     }
 
-    private static IColumn<EventDetails, SerializableFunction<EventDetails, ?>> typeColumn(TooltipConfig tooltipConfig) {
-        return new PropertyColumn<>(new ResourceModel("event", "Event"), with(EventDetails::getEventType), "eventType") {
+    private static IColumn<SelectableEventDetails, SerializableFunction<SelectableEventDetails, ?>> typeColumn(TooltipConfig tooltipConfig) {
+        return new PropertyColumn<>(new ResourceModel("event", "Event"), with(SelectableEventDetails::getEventType), "eventType") {
             @Override
-            public void populateItem(Item<ICellPopulator<EventDetails>> item, String componentId, IModel<EventDetails> rowModel) {
+            public void populateItem(Item<ICellPopulator<SelectableEventDetails>> item, String componentId, IModel<SelectableEventDetails> rowModel) {
                 item.add(new Label(componentId, getDataModel(rowModel))
-                    .add(new TooltipBehavior(rowModel.map(EventDetails::getEventType), tooltipConfig))
+                    .add(new TooltipBehavior(rowModel.map(SelectableEventDetails::getEventType), tooltipConfig))
                     .setOutputMarkupId(true));
             }
 
@@ -111,8 +110,8 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
         };
     }
 
-    private static IColumn<EventDetails, SerializableFunction<EventDetails, ?>> locationColumn() {
-        return new PropertyColumn<>(new ResourceModel("location", "Location"), with(EventDetails::getLocation), "location") {
+    private static IColumn<SelectableEventDetails, SerializableFunction<SelectableEventDetails, ?>> locationColumn() {
+        return new PropertyColumn<>(new ResourceModel("location", "Location"), with(SelectableEventDetails::getLocation), "location") {
             @Override
             public String getCssClass() {
                 return "location";
@@ -120,11 +119,11 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
         };
     }
 
-    private static IColumn<EventDetails, SerializableFunction<EventDetails, ?>> adpColumn(TooltipConfig tooltipConfig) {
+    private static IColumn<SelectableEventDetails, SerializableFunction<SelectableEventDetails, ?>> adpColumn(TooltipConfig tooltipConfig) {
         return new PropertyColumn<>(new ResourceModel("event.a-d-p.short", "A/D/P"), "countAcceptedDeclinedPending") {
             @Override
-            public void populateItem(Item<ICellPopulator<EventDetails>> item, String componentId, IModel<EventDetails> rowModel) {
-                item.add(new ParticipationMeter(componentId, rowModel)
+            public void populateItem(Item<ICellPopulator<SelectableEventDetails>> item, String componentId, IModel<SelectableEventDetails> rowModel) {
+                item.add(new ParticipationMeter(componentId, rowModel.map(SelectableEventDetails::getSubject))
                     .add(new TooltipBehavior(new ResourceModel("event.a-d-p", "Accepted/Declined/Pending"), tooltipConfig))
                     .setOutputMarkupId(true));
             }
@@ -137,8 +136,8 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
     }
 
     @Override
-    protected Item<EventDetails> newRowItem(String id, int index, IModel<EventDetails> model) {
-        Item<EventDetails> item = super.newRowItem(id, index, model);
+    protected Item<SelectableEventDetails> newRowItem(String id, int index, IModel<SelectableEventDetails> model) {
+        Item<SelectableEventDetails> item = super.newRowItem(id, index, model);
         Long sessionEventId = Session.get().getMetaData(ManagementSession.event).getId();
         if (null != sessionEventId && model.getObject().getId().equals(sessionEventId))
             item.add(new CssClassNameAppender("table-primary"));

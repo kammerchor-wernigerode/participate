@@ -6,7 +6,6 @@ import de.vinado.app.participate.wicket.bt5.modal.Modal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.model.Event;
-import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.services.EventService;
@@ -67,7 +66,7 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
         return dataTable;
     }
 
-    private void selectEvent(AjaxRequestTarget target, IModel<EventDetails> model) {
+    private void selectEvent(AjaxRequestTarget target, IModel<SelectableEventDetails> model) {
         Event event = model.getObject().getEvent();
         send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(event));
     }
