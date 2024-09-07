@@ -12,6 +12,7 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,6 +40,8 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
     @Id
     @ManyToOne
     @JoinColumn(name = "id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Event event;
 
     @Column
