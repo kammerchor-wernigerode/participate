@@ -19,13 +19,18 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_SINGLETON;
@@ -38,16 +43,22 @@ class JavaMailDispatcher implements EmailDispatcher, InitializingBean, Disposabl
 
     private final JavaMailSender sender;
 
-    private final ExecutorService executor;
-
     private final JavaMailDispatcherProperties properties;
 
     private final BlockingQueue<DispatchTask> queue = new LinkedBlockingDeque<>();
 
+    private final ExecutorService executor;
+
+    private final ScheduledExecutorService monitorExecutor = Executors.newSingleThreadScheduledExecutor();
+
+    private final Set<Worker> activeWorkers = Collections.synchronizedSet(new HashSet<>());
+
+    private ScheduledFuture<?> monitorTask;
+
     public JavaMailDispatcher(JavaMailSender sender, JavaMailDispatcherProperties properties) {
         this.sender = sender;
-        this.executor = createExecutorService(properties);
         this.properties = properties;
+        this.executor = createExecutorService(properties);
     }
 
     private static ExecutorService createExecutorService(JavaMailDispatcherProperties properties) {
@@ -62,14 +73,40 @@ class JavaMailDispatcher implements EmailDispatcher, InitializingBean, Disposabl
     @Override
     public void afterPropertiesSet() {
         for (int i = 0; i < properties.getConcurrentTransmissions(); i++) {
-            Worker worker = new Worker();
-            executor.execute(worker);
+            registerWorker();
         }
+
+        monitorTask = monitorExecutor.scheduleAtFixedRate(this::monitorWorkers, 0, 1, TimeUnit.MINUTES);
+    }
+
+    private void monitorWorkers() {
+        synchronized (activeWorkers) {
+            for (Worker worker : activeWorkers) {
+                if (!worker.running) {
+                    activeWorkers.remove(worker);
+                    registerWorker();
+                }
+            }
+        }
+    }
+
+    private void registerWorker() {
+        if (executor.isShutdown()) {
+            log.warn("Cannot register worker because the executor has been shut down");
+            return;
+        }
+
+        Worker worker = new Worker();
+        activeWorkers.add(worker);
+        executor.execute(worker);
     }
 
     @Override
     public void destroy() {
         try {
+            monitorTask.cancel(true);
+            monitorExecutor.shutdown();
+
             List<Runnable> tasks = executor.shutdownNow();
             log.info("Shutting down email dispatcher with {} pending transmissions", tasks.size());
             if (!executor.awaitTermination(properties.getShutdownGracePeriod().toMillis(), TimeUnit.MILLISECONDS)) {
@@ -99,8 +136,12 @@ class JavaMailDispatcher implements EmailDispatcher, InitializingBean, Disposabl
     @RequiredArgsConstructor
     private class Worker implements Runnable {
 
+        private volatile boolean running = false;
+
         @Override
         public void run() {
+            running = true;
+
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     DispatchTask task = queue.take();
@@ -109,6 +150,8 @@ class JavaMailDispatcher implements EmailDispatcher, InitializingBean, Disposabl
                     Thread.currentThread().interrupt();
                 }
             }
+
+            running = false;
         }
     }
 
