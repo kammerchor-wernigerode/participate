@@ -14,7 +14,6 @@ import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulato
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.DefaultItemReuseStrategy;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
@@ -57,7 +56,6 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
         return Arrays.asList(
             nameColumn(selectAction, tooltipConfig),
             dateColumn(),
-            typeColumn(tooltipConfig),
             locationColumn(),
             adpColumn(tooltipConfig)
         );
@@ -66,7 +64,7 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
     private static IColumn<EventDetails, SerializableFunction<EventDetails, ?>> nameColumn(
         SerializableBiConsumer<AjaxRequestTarget, IModel<EventDetails>> selectAction,
         TooltipConfig tooltipConfig) {
-        return new PropertyColumn<>(new ResourceModel("name", "Name"), with(EventDetails::getName), "name") {
+        return new PropertyColumn<>(new ResourceModel("name", "Name"), with(EventDetails::getEventType), "eventType") {
             @Override
             public void populateItem(Item<ICellPopulator<EventDetails>> item, String componentId, IModel<EventDetails> rowModel) {
                 AjaxLinkPanel component = new AjaxLinkPanel(componentId, new PropertyModel<>(rowModel, getPropertyExpression())) {
@@ -75,7 +73,7 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
                         selectAction.accept(target, rowModel);
                     }
                 };
-                component.getAjaxLink().add(new TooltipBehavior(rowModel.map(EventDetails::getName), tooltipConfig));
+                component.getAjaxLink().add(new TooltipBehavior(rowModel.map(EventDetails::getEventType), tooltipConfig));
                 item.add(component.setOutputMarkupId(true));
             }
 
@@ -91,22 +89,6 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
             @Override
             public String getCssClass() {
                 return "date";
-            }
-        };
-    }
-
-    private static IColumn<EventDetails, SerializableFunction<EventDetails, ?>> typeColumn(TooltipConfig tooltipConfig) {
-        return new PropertyColumn<>(new ResourceModel("event", "Event"), with(EventDetails::getEventType), "eventType") {
-            @Override
-            public void populateItem(Item<ICellPopulator<EventDetails>> item, String componentId, IModel<EventDetails> rowModel) {
-                item.add(new Label(componentId, getDataModel(rowModel))
-                    .add(new TooltipBehavior(rowModel.map(EventDetails::getEventType), tooltipConfig))
-                    .setOutputMarkupId(true));
-            }
-
-            @Override
-            public String getCssClass() {
-                return "type";
             }
         };
     }

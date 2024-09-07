@@ -94,10 +94,9 @@ main > {
 }
 
 .events td {
-    --cell-width-name: 500px;
+    --cell-width-name: 250px;
     --cell-width-date: 215px;
-    --cell-width-type: calc(100% - var(--cell-width-name) - var(--cell-width-date) - var(--cell-width-location) - var(--cell-width-adp));
-    --cell-width-location: 180px;
+    --cell-width-location: calc(100% - var(--cell-width-name) - var(--cell-width-date) - var(--cell-width-adp));
     --cell-width-adp: 120px;
 
     &.name {
@@ -106,10 +105,6 @@ main > {
 
     &.date {
         width: var(--cell-width-date);
-    }
-
-    &.type {
-        width: var(--cell-width-type);
     }
 
     &.location {
