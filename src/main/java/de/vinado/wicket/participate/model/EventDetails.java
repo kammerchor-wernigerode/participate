@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.model;
 
+import de.vinado.app.participate.event.model.Interval;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,6 +13,7 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +21,7 @@ import lombok.ToString;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -39,10 +42,9 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
     @Id
     @ManyToOne
     @JoinColumn(name = "id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Event event;
-
-    @Column
-    private String name;
 
     @Column(name = "type")
     private String eventType;
@@ -180,6 +182,21 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
             .filter(predicate)
             .map(Accommodation::getBeds)
             .reduce(0, Integer::sum);
+    }
+
+    @Transient
+    public Interval getInterval() {
+        return event.getInterval();
+    }
+
+    @Transient
+    public LocalDate getLocalStartDate() {
+        return event.getLocalStartDate();
+    }
+
+    @Transient
+    public LocalDate getLocalEndDate() {
+        return event.getLocalEndDate();
     }
 
     @Override

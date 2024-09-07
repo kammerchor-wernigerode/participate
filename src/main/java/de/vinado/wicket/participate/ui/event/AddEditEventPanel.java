@@ -20,7 +20,6 @@ import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
@@ -90,15 +89,6 @@ public class AddEditEventPanel extends GenericPanel<EventDTO> {
         endDateConfig.withFormat("dd.MM.yyyy");
         endDateConfig.withStartDate(new Date());
         endDateConfig.autoClose(true);
-
-        TextField<String> nameTf = new TextField<>("name");
-        nameTf.setLabel(new ResourceModel("event.name", "Event Name"));
-        nameTf.add(new AjaxFormComponentUpdatingBehavior("change") {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-            }
-        });
-        form.add(nameTf, new FormComponentLabel("nameLabel", nameTf));
 
         AjaxCheckBox isSeveralDaysCb = new AjaxCheckBox("isSeveralDays", severalDays) {
             @Override

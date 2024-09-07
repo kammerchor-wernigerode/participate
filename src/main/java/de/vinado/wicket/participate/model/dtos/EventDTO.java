@@ -14,7 +14,6 @@ import java.util.Date;
 public class EventDTO implements Serializable {
 
     private Event event;
-    private String name;
     private String description;
     private String eventType;
     private Date startDate;

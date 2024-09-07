@@ -2,6 +2,7 @@ package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.jquery.util.Json;
+import de.vinado.app.participate.event.model.EventName;
 import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.app.participate.wicket.bt5.tooltip.TooltipBehavior;
 import de.vinado.app.participate.wicket.bt5.tooltip.TooltipConfig;
@@ -12,13 +13,12 @@ import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.DefaultItemReuseStrategy;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 import org.danekja.java.util.function.serializable.SerializableFunction;
@@ -57,7 +57,6 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
         return Arrays.asList(
             nameColumn(selectAction, tooltipConfig),
             dateColumn(),
-            typeColumn(tooltipConfig),
             locationColumn(),
             adpColumn(tooltipConfig)
         );
@@ -66,16 +65,16 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
     private static IColumn<EventDetails, SerializableFunction<EventDetails, ?>> nameColumn(
         SerializableBiConsumer<AjaxRequestTarget, IModel<EventDetails>> selectAction,
         TooltipConfig tooltipConfig) {
-        return new PropertyColumn<>(new ResourceModel("name", "Name"), with(EventDetails::getName), "name") {
+        return new AbstractColumn<>(new ResourceModel("name", "Name"), with(EventName::of)) {
             @Override
             public void populateItem(Item<ICellPopulator<EventDetails>> item, String componentId, IModel<EventDetails> rowModel) {
-                AjaxLinkPanel component = new AjaxLinkPanel(componentId, new PropertyModel<>(rowModel, getPropertyExpression())) {
+                AjaxLinkPanel component = new AjaxLinkPanel(componentId, rowModel.map(EventName::of)) {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         selectAction.accept(target, rowModel);
                     }
                 };
-                component.getAjaxLink().add(new TooltipBehavior(rowModel.map(EventDetails::getName), tooltipConfig));
+                component.getAjaxLink().add(new TooltipBehavior(rowModel.map(EventDetails::getEventType), tooltipConfig));
                 item.add(component.setOutputMarkupId(true));
             }
 
@@ -87,26 +86,10 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
     }
 
     private static IColumn<EventDetails, SerializableFunction<EventDetails, ?>> dateColumn() {
-        return new PropertyColumn<>(new ResourceModel("date", "Date"), with(EventDetails::getStartDate), "displayDate") {
+        return new PropertyColumn<>(new ResourceModel("date", "Date"), with(EventDetails::getLocalStartDate), "interval") {
             @Override
             public String getCssClass() {
                 return "date";
-            }
-        };
-    }
-
-    private static IColumn<EventDetails, SerializableFunction<EventDetails, ?>> typeColumn(TooltipConfig tooltipConfig) {
-        return new PropertyColumn<>(new ResourceModel("event", "Event"), with(EventDetails::getEventType), "eventType") {
-            @Override
-            public void populateItem(Item<ICellPopulator<EventDetails>> item, String componentId, IModel<EventDetails> rowModel) {
-                item.add(new Label(componentId, getDataModel(rowModel))
-                    .add(new TooltipBehavior(rowModel.map(EventDetails::getEventType), tooltipConfig))
-                    .setOutputMarkupId(true));
-            }
-
-            @Override
-            public String getCssClass() {
-                return "type";
             }
         };
     }

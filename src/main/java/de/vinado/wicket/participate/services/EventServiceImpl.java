@@ -1,6 +1,7 @@
 package de.vinado.wicket.participate.services;
 
 import de.vinado.app.participate.event.app.CalendarUrl;
+import de.vinado.app.participate.event.model.EventName;
 import de.vinado.app.participate.notification.email.app.EmailService;
 import de.vinado.app.participate.notification.email.model.Email;
 import de.vinado.app.participate.notification.email.model.EmailException;
@@ -33,8 +34,8 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.wicket.util.string.Strings;
 import org.springframework.context.annotation.Primary;
+import org.springframework.format.Printer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,6 +70,7 @@ public class EventServiceImpl extends DataService implements EventService {
     private final ApplicationProperties applicationProperties;
     private final TemplatedEmailFactory emailFactory;
     private final CalendarUrl calendarUrl;
+    private final Printer<EventName> eventNamePrinter;
 
     @Override
     @PersistenceContext
@@ -78,13 +80,8 @@ public class EventServiceImpl extends DataService implements EventService {
 
     @Override
     public Event createEvent(EventDTO dto, Locale locale) {
-        if (Strings.isEmpty(dto.getName())) {
-            dto.setName(ParticipateUtils.getGenericEventName(dto, locale));
-        }
-
         // Event
         Event event = new Event(
-            dto.getName(),
             dto.getEventType(),
             dto.getLocation(),
             dto.getDescription(),
@@ -105,11 +102,6 @@ public class EventServiceImpl extends DataService implements EventService {
     public Event saveEvent(EventDTO dto, Locale locale) {
         Event loadedEvent = load(Event.class, dto.getEvent().getId());
 
-        if (Strings.isEmpty(dto.getName())) {
-            dto.setName(ParticipateUtils.getGenericEventName(dto, locale));
-        }
-
-        loadedEvent.setName(dto.getName());
         loadedEvent.setEventType(dto.getEventType());
         loadedEvent.setLocation(dto.getLocation());
         loadedEvent.setDescription(dto.getDescription());
@@ -434,12 +426,13 @@ public class EventServiceImpl extends DataService implements EventService {
 
         Map<String, Object> data = new HashMap<>();
         data.put("event", event);
+        data.put("eventName", eventNamePrinter.print(EventName.of(event), Locale.getDefault()));
         data.put("singer", singer);
         data.put("acceptLink", ParticipateUtils.generateInvitationLink(applicationProperties.getBaseUrl(), participant.getToken()));
         data.put("deadline", offset > 1 ? null : deadline);
         data.put("calendarUrl", calendarUrl.apply(event, Locale.getDefault()));
 
-        String subject = event.getName();
+        String subject = eventNamePrinter.print(EventName.of(event), Locale.getDefault());
         Email email = emailFactory.create(subject, "inviteSinger-txt.ftl", "inviteSinger-html.ftl", data);
         return Map.entry(participant, email);
     }

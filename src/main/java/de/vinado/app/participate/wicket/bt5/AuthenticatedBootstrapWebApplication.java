@@ -6,9 +6,15 @@ import de.agilecoders.wicket.core.request.resource.caching.version.Adler32Resour
 import de.agilecoders.wicket.core.settings.BootstrapSettings;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
 import de.agilecoders.wicket.extensions.javascript.YuiCssCompressor;
+import de.vinado.app.participate.event.model.EventName;
+import de.vinado.app.participate.event.model.Interval;
+import de.vinado.app.participate.event.presentation.ui.EventNameConverter;
+import de.vinado.app.participate.event.presentation.ui.IntervalConverter;
 import de.vinado.wicket.http.HttpError;
 import de.vinado.wicket.participate.ui.pages.ErrorPage;
 import de.vinado.wicket.participate.ui.pages.ExpiredPage;
+import org.apache.wicket.ConverterLocator;
+import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authorization.strategies.role.RoleAuthorizationStrategy;
@@ -68,6 +74,14 @@ public abstract class AuthenticatedBootstrapWebApplication extends Authenticated
 
         RequestCycleListenerCollection listeners = getRequestCycleListeners();
         configureRequestCycleListeners(listeners);
+    }
+
+    @Override
+    protected IConverterLocator newConverterLocator() {
+        ConverterLocator converterLocator = new ConverterLocator();
+        converterLocator.set(Interval.class, new IntervalConverter());
+        converterLocator.set(EventName.class, new EventNameConverter());
+        return converterLocator;
     }
 
     protected void configureRequestCycleListeners(RequestCycleListenerCollection listeners) {

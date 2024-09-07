@@ -1,6 +1,7 @@
 package de.vinado.wicket.participate.features;
 
 import com.opencsv.CSVWriter;
+import de.vinado.app.participate.event.model.EventName;
 import de.vinado.app.participate.notification.email.app.EmailService;
 import de.vinado.app.participate.notification.email.model.Email;
 import de.vinado.app.participate.notification.email.model.EmailException;
@@ -26,6 +27,7 @@ import org.apache.wicket.util.string.Strings;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.format.Printer;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MimeType;
@@ -37,6 +39,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -63,6 +66,7 @@ public class ScoresManagerNotificationCronjob {
     private final @NonNull EventService eventService;
     private final @NonNull PersonService personService;
     private final @NonNull EmailService emailService;
+    private final @NonNull Printer<EventName> eventNamePrinter;
 
     @Scheduled(cron = CRON_EXPRESSION)
     public void run() {
@@ -117,7 +121,7 @@ public class ScoresManagerNotificationCronjob {
                 .sorted(Comparator.comparing(Person::getLastName))
                 .collect(Collectors.toList());
 
-            String subject = "Teilnehmerliste für " + event.getName();
+            String subject = "Teilnehmerliste für " + eventNamePrinter.print(EventName.of(event), Locale.getDefault());
             String plaintextTemplatePath = "scoresManagerNotification-txt.ftl";
             Map<String, Object> data = Collections.emptyMap();
             Set<Email.Attachment> attachments = attachments(attendees);

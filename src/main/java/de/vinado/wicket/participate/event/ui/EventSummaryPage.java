@@ -4,6 +4,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
+import de.vinado.app.participate.event.model.EventName;
 import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.model.EventDetails;
@@ -49,7 +50,7 @@ public class EventSummaryPage extends ParticipatePage implements IGenericCompone
             .orElseThrow(IllegalArgumentException::new);
         setModel(CompoundPropertyModel.of(eventDetails));
 
-        add(new Label("eventName", new PropertyModel<>(getModel(), "name")));
+        add(new Label("eventName", getModel().map(EventName::of)));
 
         BootstrapAjaxLink<EventDetails> previousEventBtn = new BootstrapAjaxLink<>("previousEventBtn", getModel(), Link) {
 
