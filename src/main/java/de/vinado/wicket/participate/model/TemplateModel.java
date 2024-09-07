@@ -1,13 +1,18 @@
 package de.vinado.wicket.participate.model;
 
+import de.vinado.app.participate.wicket.spring.Holder;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import java.io.IOException;
@@ -21,7 +26,7 @@ public class TemplateModel implements IModel<String> {
     private static final String UTF_8 = StandardCharsets.UTF_8.name();
 
     @SpringBean
-    private Configuration configuration;
+    private Holder<Configuration> configuration;
 
     private final String templateName;
     private final IModel<String> defaultValue;
@@ -60,6 +65,20 @@ public class TemplateModel implements IModel<String> {
 
     private Template template() throws IOException {
         Locale locale = Locale.getDefault();
-        return configuration.getTemplate(templateName, locale, UTF_8);
+        return configuration().getTemplate(templateName, locale, UTF_8);
+    }
+
+    private Configuration configuration() {
+        return configuration.service();
+    }
+
+
+    @Component
+    @RequiredArgsConstructor
+    @Accessors(fluent = true)
+    @Getter
+    private static class ConfigurationHolder implements Holder<Configuration> {
+
+        private final Configuration service;
     }
 }
