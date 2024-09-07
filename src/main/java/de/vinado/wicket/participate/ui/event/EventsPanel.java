@@ -30,12 +30,14 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
 
     private final Modal modal;
     private final IModel<List<SelectableEventDetails>> model;
+    private final EventDataProvider dataProvider;
 
     public EventsPanel(String id, IModel<EventFilter> filterModel) {
         super(id, filterModel);
 
         this.modal = modal("modal");
         this.model = eventListModel();
+        this.dataProvider = dataProvider();
     }
 
     protected Modal modal(String wicketId) {
@@ -54,6 +56,10 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
                     .collect(Collectors.toList());
             }
         };
+    }
+
+    private EventDataProvider dataProvider() {
+        return new EventDataProvider(model, getModel());
     }
 
     @Override
@@ -82,7 +88,7 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
     }
 
     private EventTable eventTable() {
-        EventTable dataTable = new EventTable("dataTable", dataProvider(), this::selectEvent);
+        EventTable dataTable = new EventTable("dataTable", dataProvider, this::selectEvent);
         dataTable.setDefaultModel(getModel());
         return dataTable;
     }
@@ -90,10 +96,6 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
     private void selectEvent(AjaxRequestTarget target, IModel<SelectableEventDetails> model) {
         Event event = model.getObject().getEvent();
         send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(event));
-    }
-
-    private EventDataProvider dataProvider() {
-        return new EventDataProvider(model, getModel());
     }
 
     @Override
