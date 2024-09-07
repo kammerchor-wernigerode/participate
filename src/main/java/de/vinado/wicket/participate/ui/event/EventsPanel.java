@@ -14,9 +14,13 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class EventsPanel extends BootstrapPanel<EventFilter> {
 
@@ -25,15 +29,31 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
     private EventService eventService;
 
     private final Modal modal;
+    private final IModel<List<SelectableEventDetails>> model;
 
     public EventsPanel(String id, IModel<EventFilter> filterModel) {
         super(id, filterModel);
 
         this.modal = modal("modal");
+        this.model = eventListModel();
     }
 
     protected Modal modal(String wicketId) {
         return new Modal(wicketId);
+    }
+
+    private IModel<List<SelectableEventDetails>> eventListModel() {
+        return new LoadableDetachableModel<>() {
+
+            @Override
+            protected List<SelectableEventDetails> load() {
+                return (getModel().getObject().isShowAll()
+                    ? eventService.listAll()
+                    : eventService.getUpcomingEventDetails().stream())
+                    .map(SelectableEventDetails::new)
+                    .collect(Collectors.toList());
+            }
+        };
     }
 
     @Override
@@ -55,6 +75,7 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
             @Override
             protected void onApply() {
                 getSession().setMetaData(ManagementSession.eventFilter, getModelObject());
+                model.detach();
                 send(EventsPanel.this, Broadcast.BREADTH, new EventFilterIntent(getModelObject()));
             }
         };
@@ -72,7 +93,7 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
     }
 
     private EventDataProvider dataProvider() {
-        return new EventDataProvider(getModel(), eventService);
+        return new EventDataProvider(model, getModel());
     }
 
     @Override
@@ -96,6 +117,7 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
     private SerializableConsumer<AjaxRequestTarget> update(IModel<EventDTO> model) {
         return target -> {
             Event event = model.map(EventDTO::getEvent).getObject();
+            EventsPanel.this.model.detach();
             send(getWebPage(), Broadcast.BREADTH, new EventSelectedEvent(event));
             Snackbar.show(target, new ResourceModel("event.add.success", "A new event has been added"));
         };
