@@ -12,15 +12,15 @@ public class EmailService {
     private final EmailDispatcher dispatcher;
     private final Sender sender;
 
-    public EmailService(EmailDispatcher dispatcher, EmailProperties properties) {
+    public EmailService(EmailDispatcher dispatcher, SenderProperties properties) {
         this.dispatcher = dispatcher;
         this.sender = sender(properties);
     }
 
-    private static Sender sender(EmailProperties properties) {
-        InternetAddress address = properties.getSender();
+    private static Sender sender(SenderProperties properties) {
+        InternetAddress from = properties.getFrom();
         InternetAddress replyTo = properties.getReplyTo();
-        return new Sender(address, replyTo);
+        return new Sender(from, replyTo);
     }
 
     public void execute(SendEmail.Builder command) throws EmailException {

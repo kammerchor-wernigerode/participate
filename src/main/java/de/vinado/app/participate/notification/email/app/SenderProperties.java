@@ -5,12 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties("app.notification.email")
+@ConfigurationProperties("app.notification.email.sender")
 @Getter
 @Setter
-public class EmailProperties {
+public class SenderProperties {
 
-    private InternetAddress sender;
+    private InternetAddress from;
 
     private InternetAddress replyTo;
 }

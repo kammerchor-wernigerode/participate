@@ -13,7 +13,7 @@ import java.util.StringJoiner;
 @RequiredArgsConstructor
 public class Sender {
 
-    InternetAddress address;
+    InternetAddress from;
     InternetAddress replyTo;
 
     public Optional<InternetAddress> replyTo() {
@@ -23,7 +23,7 @@ public class Sender {
     @Override
     public String toString() {
         return new StringJoiner(", ", Sender.class.getSimpleName() + "[", "]")
-            .add("address=" + address.toUnicodeString())
+            .add("from=" + from.toUnicodeString())
             .add("replyTo=" + replyTo.toUnicodeString())
             .toString();
     }

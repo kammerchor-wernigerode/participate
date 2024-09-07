@@ -127,7 +127,7 @@ public class JavaMailEmailDispatcher implements EmailDispatcher, InitializingBea
             MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
 
             helper.setSubject(email.subject());
-            helper.setFrom(transmission.sender().address());
+            helper.setFrom(transmission.sender().from());
 
             Optional<InternetAddress> replyTo = transmission.sender().replyTo();
             if (replyTo.isPresent()) {

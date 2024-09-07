@@ -52,8 +52,9 @@ app:
     footer: ${spring.application.name}
   notification:
     email:
-      sender: ${spring.mail.properties.mail.from}
-      reply-to: ${spring.mail.properties.mail.reply-to}
+      sender:
+        from: ${spring.mail.properties.mail.from}
+        reply-to: ${spring.mail.properties.mail.reply-to}
       dispatch:
         concurrent-transmissions: 1
         shutdown-grace-period: 30s
