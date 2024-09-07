@@ -3,10 +3,12 @@ package de.vinado.app.participate.event.support;
 import de.vinado.app.participate.event.model.EventName;
 import de.vinado.app.participate.event.model.Interval;
 import org.springframework.format.Printer;
+import org.springframework.stereotype.Component;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+@Component
 public class EventNamePrinter implements Printer<EventName> {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("MMMM yyyy");
