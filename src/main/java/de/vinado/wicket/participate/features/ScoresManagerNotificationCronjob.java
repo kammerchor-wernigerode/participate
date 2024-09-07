@@ -117,7 +117,7 @@ public class ScoresManagerNotificationCronjob {
                 .sorted(Comparator.comparing(Person::getLastName))
                 .collect(Collectors.toList());
 
-            String subject = "Participant list for event: " + event.getName();
+            String subject = "Teilnehmerliste für " + event.getName();
             String plaintextTemplatePath = "scoresManagerNotification-txt.ftl";
             Map<String, Object> data = Collections.emptyMap();
             Set<Email.Attachment> attachments = attachments(attendees);
@@ -130,7 +130,7 @@ public class ScoresManagerNotificationCronjob {
     }
 
     private Set<Email.Attachment> attachments(List<Singer> attendees) throws IOException {
-        String name = "attendee-list.csv";
+        String name = "teilnehmerliste.csv";
         MimeType type = MimeType.valueOf("text/csv");
         byte[] data = getAttendeeByteArray(attendees);
         Email.Attachment attachment = new InMemoryAttachment(name, type, data);
