@@ -16,4 +16,6 @@ class JavaMailDispatcherProperties {
 
     @NonNull
     private Duration shutdownGracePeriod;
+
+    private int recipientThreshold;
 }

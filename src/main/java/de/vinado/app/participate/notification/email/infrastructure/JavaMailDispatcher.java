@@ -19,6 +19,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -164,7 +165,16 @@ class JavaMailDispatcher implements EmailDispatcher, InitializingBean, Disposabl
 
         @Override
         public void run() {
-            dispatch(email, transmission);
+            Recipient[] recipients = transmission.recipients();
+            int batchSize = properties.getRecipientThreshold();
+            int totalRecipients = recipients.length;
+
+            for (int i = 0; i < totalRecipients; i += batchSize) {
+                int end = Math.min(totalRecipients, i + batchSize);
+                Recipient[] batch = Arrays.copyOfRange(recipients, i, end);
+                Transmission transmission = new Transmission(this.transmission.sender(), batch);
+                dispatch(email, transmission);
+            }
         }
 
         @SneakyThrows

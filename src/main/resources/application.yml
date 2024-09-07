@@ -58,6 +58,7 @@ app:
       dispatch:
         concurrent-transmissions: 1
         shutdown-grace-period: 30s
+        recipient-threshold: 100
   wicket:
     runtime-configuration: DEPLOYMENT
   google-calendar:
