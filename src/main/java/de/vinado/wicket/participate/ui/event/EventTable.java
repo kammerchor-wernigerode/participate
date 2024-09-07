@@ -65,10 +65,10 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
     private static IColumn<EventDetails, SerializableFunction<EventDetails, ?>> nameColumn(
         SerializableBiConsumer<AjaxRequestTarget, IModel<EventDetails>> selectAction,
         TooltipConfig tooltipConfig) {
-        return new AbstractColumn<>(new ResourceModel("name", "Name"), with(EventTable::eventName)) {
+        return new AbstractColumn<>(new ResourceModel("name", "Name"), with(EventName::of)) {
             @Override
             public void populateItem(Item<ICellPopulator<EventDetails>> item, String componentId, IModel<EventDetails> rowModel) {
-                AjaxLinkPanel component = new AjaxLinkPanel(componentId, rowModel.map(EventTable::eventName)) {
+                AjaxLinkPanel component = new AjaxLinkPanel(componentId, rowModel.map(EventName::of)) {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         selectAction.accept(target, rowModel);
@@ -83,10 +83,6 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
                 return "name";
             }
         };
-    }
-
-    private static EventName eventName(EventDetails event) {
-        return new EventName(event.getEventType(), event.getInterval());
     }
 
     private static IColumn<EventDetails, SerializableFunction<EventDetails, ?>> dateColumn() {
