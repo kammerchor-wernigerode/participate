@@ -34,7 +34,7 @@ import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_SING
 @Scope(SCOPE_SINGLETON)
 @Component
 @EnableConfigurationProperties(JavaMailDispatcherProperties.class)
-class JavaMailEmailDispatcher implements EmailDispatcher, InitializingBean, DisposableBean {
+class JavaMailDispatcher implements EmailDispatcher, InitializingBean, DisposableBean {
 
     private final JavaMailSender sender;
 
@@ -44,7 +44,7 @@ class JavaMailEmailDispatcher implements EmailDispatcher, InitializingBean, Disp
 
     private final BlockingQueue<DispatchTask> queue = new LinkedBlockingDeque<>();
 
-    public JavaMailEmailDispatcher(JavaMailSender sender, JavaMailDispatcherProperties properties) {
+    public JavaMailDispatcher(JavaMailSender sender, JavaMailDispatcherProperties properties) {
         this.sender = sender;
         this.executor = createExecutorService(properties);
         this.properties = properties;
