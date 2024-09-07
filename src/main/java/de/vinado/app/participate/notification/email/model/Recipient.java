@@ -53,50 +53,6 @@ public class Recipient {
             .toArray(Recipient.To[]::new);
     }
 
-    public static Recipient.Cc cc(String address) throws AddressException {
-        return cc(new InternetAddress(address));
-    }
-
-    public static Recipient.Cc cc(InternetAddress address) {
-        return new Recipient.Cc(address);
-    }
-
-    public static Recipient.Cc[] cc(String... addresses) throws AddressException {
-        List<Recipient.Cc> recipients = new ArrayList<>(addresses.length);
-        for (String address : addresses) {
-            recipients.add(cc(address));
-        }
-        return recipients.toArray(new Recipient.Cc[0]);
-    }
-
-    public static Recipient.Cc[] cc(InternetAddress... addresses) {
-        return Arrays.stream(addresses)
-            .map(Recipient::cc)
-            .toArray(Recipient.Cc[]::new);
-    }
-
-    public static Recipient.Bcc bcc(String address) throws AddressException {
-        return bcc(new InternetAddress(address));
-    }
-
-    public static Recipient.Bcc bcc(InternetAddress address) {
-        return new Recipient.Bcc(address);
-    }
-
-    public static Recipient.Bcc[] bcc(String... addresses) throws AddressException {
-        List<Recipient.Bcc> recipients = new ArrayList<>(addresses.length);
-        for (String address : addresses) {
-            recipients.add(bcc(address));
-        }
-        return recipients.toArray(new Recipient.Bcc[0]);
-    }
-
-    public static Recipient.Bcc[] bcc(InternetAddress... addresses) {
-        return Arrays.stream(addresses)
-            .map(Recipient::bcc)
-            .toArray(Recipient.Bcc[]::new);
-    }
-
     @Override
     public String toString() {
         return new StringJoiner(", ", Recipient.class.getSimpleName() + "[", "]")
@@ -110,20 +66,6 @@ public class Recipient {
 
         private To(InternetAddress address) {
             super(address, RecipientType.TO);
-        }
-    }
-
-    public static class Cc extends Recipient {
-
-        private Cc(InternetAddress address) {
-            super(address, RecipientType.CC);
-        }
-    }
-
-    public static class Bcc extends Recipient {
-
-        private Bcc(InternetAddress address) {
-            super(address, RecipientType.BCC);
         }
     }
 }
