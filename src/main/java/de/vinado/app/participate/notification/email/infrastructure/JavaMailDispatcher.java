@@ -59,16 +59,7 @@ class JavaMailDispatcher implements EmailDispatcher, InitializingBean, Disposabl
     public JavaMailDispatcher(JavaMailSender sender, JavaMailDispatcherProperties properties) {
         this.sender = sender;
         this.properties = properties;
-        this.executor = createExecutorService(properties);
-    }
-
-    private static ExecutorService createExecutorService(JavaMailDispatcherProperties properties) {
-        try {
-            int concurrentSessions = properties.getConcurrentTransmissions();
-            return Executors.newFixedThreadPool(concurrentSessions);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Number of concurrent sessions must be greater than zero");
-        }
+        this.executor = Executors.newFixedThreadPool(properties.getConcurrentTransmissions());
     }
 
     @Override

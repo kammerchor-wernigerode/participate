@@ -17,5 +17,10 @@ app:
     source: foo
   notification:
     email:
+      sender:
+        from: smtp@example.com
+        reply-to: no-reply@example.com
       dispatch:
         concurrent-transmissions: 1
+        shutdown-grace-period: 0s
+        recipient-threshold: 100
