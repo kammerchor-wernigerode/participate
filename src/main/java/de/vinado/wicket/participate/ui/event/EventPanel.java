@@ -86,7 +86,6 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         form.add(wmc);
 
         wmc.add(new Label("name"));
-        wmc.add(new Label("eventType"));
         wmc.add(new Label("displayDate"));
         wmc.add(new Label("creationDateTimeIso").add(new RelativeTimePipe()));
         wmc.add(new Label("location"));
