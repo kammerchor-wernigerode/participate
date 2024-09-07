@@ -10,7 +10,7 @@ import java.time.Duration;
 @ConfigurationProperties("app.notification.email.dispatch")
 @Getter
 @Setter
-public class JavaMailDispatcherProperties {
+class JavaMailDispatcherProperties {
 
     private int concurrentTransmissions;
 

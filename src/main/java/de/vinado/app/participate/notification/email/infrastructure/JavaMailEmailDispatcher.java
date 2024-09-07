@@ -34,7 +34,7 @@ import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_SING
 @Scope(SCOPE_SINGLETON)
 @Component
 @EnableConfigurationProperties(JavaMailDispatcherProperties.class)
-public class JavaMailEmailDispatcher implements EmailDispatcher, InitializingBean, DisposableBean {
+class JavaMailEmailDispatcher implements EmailDispatcher, InitializingBean, DisposableBean {
 
     private final JavaMailSender sender;
     private final ExecutorService executor;
