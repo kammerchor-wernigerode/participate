@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.model;
 
+import de.vinado.app.participate.event.model.Interval;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,6 +21,7 @@ import lombok.ToString;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -183,6 +185,30 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
             .filter(predicate)
             .map(Accommodation::getBeds)
             .reduce(0, Integer::sum);
+    }
+
+    @Transient
+    public Interval getInterval() {
+        LocalDate startDate = getLocalStartDate();
+        LocalDate endDate = getLocalEndDate();
+        return Interval.from(startDate).to(endDate);
+    }
+
+    @Transient
+    public LocalDate getLocalStartDate() {
+        return localDate(startDate);
+    }
+
+    @Transient
+    public LocalDate getLocalEndDate() {
+        return localDate(endDate);
+    }
+
+    private LocalDate localDate(Date date) {
+        Date value = new Date(date.getTime());
+        return value.toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate();
     }
 
     @Override

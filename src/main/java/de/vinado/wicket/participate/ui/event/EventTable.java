@@ -85,7 +85,7 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
     }
 
     private static IColumn<EventDetails, SerializableFunction<EventDetails, ?>> dateColumn() {
-        return new PropertyColumn<>(new ResourceModel("date", "Date"), with(EventDetails::getStartDate), "displayDate") {
+        return new PropertyColumn<>(new ResourceModel("date", "Date"), with(EventDetails::getLocalStartDate), "interval") {
             @Override
             public String getCssClass() {
                 return "date";
