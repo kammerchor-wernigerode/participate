@@ -16,6 +16,7 @@ import java.util.Map;
 public class TemplatedEmailFactory {
 
     private final Configuration configuration;
+
     private final ApplicationProperties properties;
 
     public Email create(String subject, String plaintextTemplatePath, String htmlTemplatePath, Map<String, Object> data) {

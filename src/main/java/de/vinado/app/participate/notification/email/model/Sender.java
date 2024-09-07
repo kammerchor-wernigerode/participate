@@ -14,6 +14,7 @@ import java.util.StringJoiner;
 public class Sender {
 
     InternetAddress from;
+
     InternetAddress replyTo;
 
     public Optional<InternetAddress> replyTo() {

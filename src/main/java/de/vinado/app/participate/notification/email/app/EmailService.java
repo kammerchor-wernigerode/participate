@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
     private final EmailDispatcher dispatcher;
+
     private final Sender sender;
 
     public EmailService(EmailDispatcher dispatcher, SenderProperties properties) {

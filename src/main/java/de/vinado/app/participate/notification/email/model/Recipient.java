@@ -23,6 +23,7 @@ import java.util.StringJoiner;
 public class Recipient {
 
     private final InternetAddress address;
+
     private final RecipientType type;
 
     public static Recipient.To to(String address) throws AddressException {

@@ -17,6 +17,7 @@ public class SimplePlaintextEmail implements Email {
 
     @Getter
     private final String subject;
+
     private final String text;
 
     @Override

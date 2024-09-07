@@ -37,7 +37,9 @@ import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_SING
 class JavaMailEmailDispatcher implements EmailDispatcher, InitializingBean, DisposableBean {
 
     private final JavaMailSender sender;
+
     private final ExecutorService executor;
+
     private final JavaMailDispatcherProperties properties;
 
     private final BlockingQueue<DispatchTask> queue = new LinkedBlockingDeque<>();
@@ -114,6 +116,7 @@ class JavaMailEmailDispatcher implements EmailDispatcher, InitializingBean, Disp
     private class DispatchTask implements Runnable {
 
         private final Email email;
+
         private final Transmission transmission;
 
         @Override

@@ -30,12 +30,17 @@ public class TemplatedEmail implements Email {
 
     @Getter
     private final String subject;
+
     private final String plaintextTemplatePath;
+
     private final String htmlTemplatePath;
+
     private final Map<String, ?> data;
+
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private final Configuration configuration;
+
     private final Set<Attachment> attachments;
 
     @Override
