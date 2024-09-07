@@ -42,6 +42,14 @@ public class EventDataProvider extends SortableDataProvider<SelectableEventDetai
         return list().count();
     }
 
+    public boolean areAllSelected() {
+        return list().allMatch(SelectableEventDetails::isSelected);
+    }
+
+    public void setAllSelected(boolean selected) {
+        list().forEach(event -> event.setSelected(selected));
+    }
+
     private Stream<SelectableEventDetails> list() {
         return model.getObject().stream()
             .filter(filter.getObject());
