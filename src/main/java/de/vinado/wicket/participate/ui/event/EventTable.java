@@ -2,6 +2,7 @@ package de.vinado.wicket.participate.ui.event;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.jquery.util.Json;
+import de.vinado.app.participate.event.model.EventName;
 import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.app.participate.wicket.bt5.tooltip.TooltipBehavior;
 import de.vinado.app.participate.wicket.bt5.tooltip.TooltipConfig;
@@ -12,12 +13,12 @@ import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.repeater.DefaultItemReuseStrategy;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 import org.danekja.java.util.function.serializable.SerializableFunction;
@@ -64,10 +65,10 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
     private static IColumn<EventDetails, SerializableFunction<EventDetails, ?>> nameColumn(
         SerializableBiConsumer<AjaxRequestTarget, IModel<EventDetails>> selectAction,
         TooltipConfig tooltipConfig) {
-        return new PropertyColumn<>(new ResourceModel("name", "Name"), with(EventDetails::getEventType), "eventType") {
+        return new AbstractColumn<>(new ResourceModel("name", "Name"), with(EventTable::eventName)) {
             @Override
             public void populateItem(Item<ICellPopulator<EventDetails>> item, String componentId, IModel<EventDetails> rowModel) {
-                AjaxLinkPanel component = new AjaxLinkPanel(componentId, new PropertyModel<>(rowModel, getPropertyExpression())) {
+                AjaxLinkPanel component = new AjaxLinkPanel(componentId, rowModel.map(EventTable::eventName)) {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         selectAction.accept(target, rowModel);
@@ -82,6 +83,10 @@ public class EventTable extends BootstrapAjaxDataTable<EventDetails, Serializabl
                 return "name";
             }
         };
+    }
+
+    private static EventName eventName(EventDetails event) {
+        return new EventName(event.getEventType(), event.getInterval());
     }
 
     private static IColumn<EventDetails, SerializableFunction<EventDetails, ?>> dateColumn() {

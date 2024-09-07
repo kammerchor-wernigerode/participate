@@ -94,7 +94,7 @@ main > {
 }
 
 .events td {
-    --cell-width-name: 250px;
+    --cell-width-name: 380px;
     --cell-width-date: 170px;
     --cell-width-location: calc(100% - var(--cell-width-name) - var(--cell-width-date) - var(--cell-width-adp));
     --cell-width-adp: 120px;
