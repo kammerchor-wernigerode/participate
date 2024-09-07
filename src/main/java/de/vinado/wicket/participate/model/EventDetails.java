@@ -189,26 +189,17 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
 
     @Transient
     public Interval getInterval() {
-        LocalDate startDate = getLocalStartDate();
-        LocalDate endDate = getLocalEndDate();
-        return Interval.from(startDate).to(endDate);
+        return event.getInterval();
     }
 
     @Transient
     public LocalDate getLocalStartDate() {
-        return localDate(startDate);
+        return event.getLocalStartDate();
     }
 
     @Transient
     public LocalDate getLocalEndDate() {
-        return localDate(endDate);
-    }
-
-    private LocalDate localDate(Date date) {
-        Date value = new Date(date.getTime());
-        return value.toInstant()
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate();
+        return event.getLocalEndDate();
     }
 
     @Override
