@@ -37,9 +37,6 @@ public class Event implements Identifiable<Long>, Hideable, Terminable {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
     private String eventType;
 
     @Column
@@ -67,9 +64,7 @@ public class Event implements Identifiable<Long>, Hideable, Terminable {
     @Column(name = "is_active", nullable = false)
     private boolean active;
 
-    public Event(String name, String eventType, String location, String description,
-                 Date startDate, Date endDate) {
-        this.name = name;
+    public Event(String eventType, String location, String description, Date startDate, Date endDate) {
         this.eventType = eventType;
         this.location = location;
         this.description = description;

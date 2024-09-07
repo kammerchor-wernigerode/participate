@@ -56,7 +56,7 @@ public class BootstrapPanel<T> extends GenericPanel<T> {
         return new WebMarkupContainer(id);
     }
 
-    protected IModel<String> titleModel() {
+    protected IModel<?> titleModel() {
         return Model.of();
     }
 

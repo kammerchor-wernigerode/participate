@@ -3,6 +3,7 @@ package de.vinado.wicket.participate.ui.event;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
+import de.vinado.app.participate.event.model.EventName;
 import de.vinado.app.participate.event.presentation.ui.InvitationForm;
 import de.vinado.app.participate.management.wicket.ManagementSession;
 import de.vinado.app.participate.wicket.bt5.modal.Modal;
@@ -85,7 +86,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         wmc.add(new UpdateOnEventBehavior<>(ParticipantTableUpdateIntent.class));
         form.add(wmc);
 
-        wmc.add(new Label("name"));
+        wmc.add(new Label("name", model.map(EventName::of)));
         wmc.add(new Label("displayDate"));
         wmc.add(new Label("creationDateTimeIso").add(new RelativeTimePipe()));
         wmc.add(new Label("location"));

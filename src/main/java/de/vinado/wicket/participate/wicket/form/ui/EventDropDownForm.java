@@ -3,11 +3,13 @@ package de.vinado.wicket.participate.wicket.form.ui;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.FormType;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarForm;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.select.BootstrapSelect;
+import de.vinado.app.participate.event.model.EventName;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.services.EventService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.form.LambdaChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -28,7 +30,7 @@ public abstract class EventDropDownForm extends NavbarForm<Participant> {
     protected void onInitialize() {
         super.onInitialize();
 
-        ChoiceRenderer<Participant> renderer = new ChoiceRenderer<>("event.name");
+        IChoiceRenderer<Participant> renderer = new LambdaChoiceRenderer<>(attendee -> EventName.of(attendee.getEvent()));
         add(new BootstrapSelect<>("event", getModel(), choiceModel(), renderer)
             .add(new AjaxFormSubmitBehavior(this, "hidden.bs.select") {
 

@@ -46,9 +46,6 @@ public class EventDetails implements Identifiable<Long>, Terminable, Hideable {
     @ToString.Exclude
     private Event event;
 
-    @Column
-    private String name;
-
     @Column(name = "type")
     private String eventType;
 

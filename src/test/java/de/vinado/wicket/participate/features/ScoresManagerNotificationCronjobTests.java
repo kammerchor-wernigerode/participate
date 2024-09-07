@@ -220,7 +220,6 @@ class ScoresManagerNotificationCronjobTests {
     private static Event createEvent(Date startDate) {
         Event event = mock(Event.class);
         when(event.getStartDate()).thenReturn(startDate);
-        when(event.getName()).thenReturn("Rehearsal Weekend");
         when(event.getEventType()).thenReturn("Rehearsal Weekend");
         when(event.getLocalStartDate()).thenReturn(LocalDate.now());
         when(event.getLocalEndDate()).thenReturn(LocalDate.now());

@@ -2,6 +2,7 @@ package de.vinado.wicket.participate.wicket.form.ui;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
+import de.vinado.app.participate.event.model.EventName;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.services.EventService;
 import lombok.AccessLevel;
@@ -16,10 +17,10 @@ import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.LambdaChoiceRenderer;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.StatelessForm;
@@ -195,7 +196,7 @@ public class FormSignInPanel extends Panel {
                 .map(Participant::getSinger)
                 .map(eventService::getParticipants);
             FormComponent<Participant> participant = new DropDownChoice<>("participant", choices,
-                new ChoiceRenderer<>("event.name"))
+                new LambdaChoiceRenderer<>(attendee -> EventName.of(attendee.getEvent())))
                 .setLabel(new ResourceModel("event", "Event"));
 
             return new Component[]{participant};
