@@ -18,6 +18,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Entity
@@ -92,6 +94,18 @@ public class Event implements Identifiable<Long>, Hideable, Terminable {
     public boolean isUpcoming() {
         Date now = new Date();
         return now.before(startDate);
+    }
+
+    @Transient
+    public LocalDate getLocalStartDate() {
+        return localDate(startDate);
+    }
+
+    private LocalDate localDate(Date date) {
+        Date value = new Date(date.getTime());
+        return value.toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate();
     }
 
     @Override

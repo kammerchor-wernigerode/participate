@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.ui.event;
 
+import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.filters.EventFilter;
 import lombok.RequiredArgsConstructor;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
@@ -52,6 +53,12 @@ public class EventDataProvider extends SortableDataProvider<SelectableEventDetai
 
     public boolean hasSelected() {
         return list().anyMatch(SelectableEventDetails::isSelected);
+    }
+
+    public Stream<EventDetails> listSelected() {
+        return list()
+            .filter(SelectableEventDetails::isSelected)
+            .map(SelectableEventDetails::getSubject);
     }
 
     private Stream<SelectableEventDetails> list() {
