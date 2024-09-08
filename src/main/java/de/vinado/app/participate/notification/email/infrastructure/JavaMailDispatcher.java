@@ -186,13 +186,15 @@ class JavaMailDispatcher implements EmailDispatcher, InitializingBean, Disposabl
             }
 
             Optional<String> text = email.textContent();
-            if (text.isPresent()) {
-                helper.setText(text.get(), false);
-            }
-
             Optional<String> html = email.htmlContent();
-            if (html.isPresent()) {
+            if (text.isPresent() && html.isPresent()) {
+                helper.setText(text.get(), html.get());
+            } else if (text.isPresent()) {
+                helper.setText(text.get(), false);
+            } else if (html.isPresent()) {
                 helper.setText(html.get(), true);
+            } else {
+                throw new IllegalStateException("Email must have either text or HTML content");
             }
 
             Iterator<Email.Attachment> attachments = email.attachments().iterator();
