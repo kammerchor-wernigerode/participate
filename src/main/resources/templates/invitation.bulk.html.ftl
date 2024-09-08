@@ -141,16 +141,16 @@
                                                 <#assign event = item.event>
                                                 <#assign participant = item.participant>
                                                 <tr>
-                                                    <td>
+                                                    <td style="padding: 2px;">
                                                         <span style="color: #3498db; font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0;">${printer.print(eventName.apply(event), .locale_object)}</span>
                                                     </td>
-                                                    <td>
+                                                    <td style="padding: 2px;">
                                                         <span style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0;"><#if event.location??>${event.location}<#else>tba.</#if></span>
                                                     </td>
-                                                    <td>
+                                                    <td style="padding: 2px;">
                                                         <span style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0;">${event.startDate?string.short} – ${event.endDate?string.short}</span>
                                                     </td>
-                                                    <td>
+                                                    <td style="padding: 2px;">
                                                         <a href="${link.apply(participant.token)}"
                                                            style="display: inline-block; color: #ffffff; background-color: #3498db; border: solid 1px #3498db; border-radius: 5px; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; margin: 0; padding: 2px 5px; text-transform: capitalize; border-color: #3498db;">
                                                             Respond
