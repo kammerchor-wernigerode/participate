@@ -14,7 +14,6 @@ import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.model.Terminable;
-import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import jakarta.mail.internet.InternetAddress;
@@ -395,7 +394,7 @@ public class EventServiceImpl extends DataService implements EventService {
     }
 
     @Override
-    public int inviteParticipants(List<Participant> participants, User organizer) {
+    public int inviteParticipants(List<Participant> participants) {
         int count = 0;
 
         try {
@@ -445,8 +444,8 @@ public class EventServiceImpl extends DataService implements EventService {
     }
 
     @Override
-    public void inviteParticipant(Participant participant, User organizer) {
-        inviteParticipants(Collections.singletonList(participant), organizer);
+    public void inviteParticipant(Participant participant) {
+        inviteParticipants(Collections.singletonList(participant));
     }
 
     @Override

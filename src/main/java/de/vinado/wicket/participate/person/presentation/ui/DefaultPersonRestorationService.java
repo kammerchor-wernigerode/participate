@@ -8,7 +8,6 @@ import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.person.model.PersonRepository;
 import de.vinado.wicket.participate.services.EventService;
 import de.vinado.wicket.participate.singer.model.SingerRepository;
-import de.vinado.wicket.participate.user.model.UserContext;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,6 @@ class DefaultPersonRestorationService implements PersonRestorationService {
     private final @NonNull PersonRepository personRepository;
     private final @NonNull EventService eventService;
     private final @NonNull SingerRepository singerRepository;
-    private final @NonNull UserContext userContext;
 
     @Override
     public void restore(@NonNull Person person) {
@@ -42,7 +40,7 @@ class DefaultPersonRestorationService implements PersonRestorationService {
             .peek(setInvitationStatus(InvitationStatus.UNINVITED))
             .collect(Collectors.toList());
 
-        eventService.inviteParticipants(participants, userContext.get());
+        eventService.inviteParticipants(participants);
     }
 
     private Function<Event, Participant> createParticipant(Singer singer) {
