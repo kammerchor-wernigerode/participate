@@ -44,7 +44,7 @@ class RemindOverdueCronjobTest {
 
         feature.run();
 
-        verify(eventService, never()).inviteParticipants(participants, null);
+        verify(eventService, never()).inviteParticipants(participants);
     }
 
     @ParameterizedTest
@@ -60,7 +60,7 @@ class RemindOverdueCronjobTest {
 
         feature.run();
 
-        verify(eventService, never()).inviteParticipants(participants, null);
+        verify(eventService, never()).inviteParticipants(participants);
     }
 
     @ParameterizedTest
@@ -76,7 +76,7 @@ class RemindOverdueCronjobTest {
 
         feature.run();
 
-        verify(eventService, times(1)).inviteParticipants(participants, null);
+        verify(eventService, times(1)).inviteParticipants(participants);
     }
 
     @ParameterizedTest
@@ -92,7 +92,7 @@ class RemindOverdueCronjobTest {
 
         feature.run();
 
-        verify(eventService, never()).inviteParticipants(participants, null);
+        verify(eventService, never()).inviteParticipants(participants);
     }
 
     private static Arguments[] nonEligibleStatuses() {

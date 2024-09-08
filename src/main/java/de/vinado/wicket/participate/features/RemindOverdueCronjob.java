@@ -49,7 +49,7 @@ public class RemindOverdueCronjob {
             .filter(InvitationStatus.by(InvitationStatus.PENDING).or(InvitationStatus.by(InvitationStatus.TENTATIVE)))
             .collect(Collectors.toList());
 
-        eventService.inviteParticipants(participants, null);
+        eventService.inviteParticipants(participants);
 
         int eventAmount = eventIds.size();
         log.info("Ran overdue job for {} event{} /w ids=[{}]", eventAmount, 1 == eventAmount ? "" : "s", StringUtils.join(eventIds, ", "));

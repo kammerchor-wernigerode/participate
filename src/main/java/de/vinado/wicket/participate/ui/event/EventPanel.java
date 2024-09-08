@@ -17,7 +17,6 @@ import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Singer;
-import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 import de.vinado.wicket.participate.model.filters.ParticipantFilter;
@@ -28,7 +27,6 @@ import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateInten
 import jakarta.mail.internet.InternetAddress;
 import lombok.SneakyThrows;
 import org.apache.wicket.Component;
-import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -152,7 +150,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     private void invite(AjaxRequestTarget target, IModel<Participant> rowModel) {
         Participant participant = rowModel.getObject();
 
-        eventService.inviteParticipant(participant, Session.get().getMetaData(ManagementSession.user));
+        eventService.inviteParticipant(participant);
 
         if (!InvitationStatus.UNINVITED.equals(participant.getInvitationStatus())) {
             Snackbar.show(target, new ResourceModel("email.send.reminder.success", "A reminder has been sent"));
@@ -253,10 +251,8 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     }
 
     private void invite(AjaxRequestTarget target) {
-        User organizer = getSession().getMetaData(ManagementSession.user);
-
         List<Participant> participants = eventService.getParticipants(getModelObject().getEvent(), false);
-        int count = eventService.inviteParticipants(participants, organizer);
+        int count = eventService.inviteParticipants(participants);
 
         send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
         Snackbar.show(target, "Einladung wurde an "
@@ -266,7 +262,6 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
     }
 
     private void remind(AjaxRequestTarget target) {
-        User organizer = getSession().getMetaData(ManagementSession.user);
         Event event = getModelObject().getEvent();
         if (!eventService.hasParticipant(event)) {
             Snackbar.show(target, "Es wurde noch niemand eingeladen!");
@@ -285,7 +280,7 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
                 public void onClick(AjaxRequestTarget target) {
                     List<Participant> participants = eventService.getParticipants(event, InvitationStatus.PENDING);
                     participants.addAll(eventService.getParticipants(event, InvitationStatus.TENTATIVE));
-                    int count = eventService.inviteParticipants(participants, organizer);
+                    int count = eventService.inviteParticipants(participants);
 
                     Snackbar.show(target, "Erinnerung wurde an "
                         + count

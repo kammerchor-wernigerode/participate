@@ -5,7 +5,6 @@ import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Singer;
-import de.vinado.wicket.participate.model.User;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.dtos.ParticipantDTO;
 
@@ -70,9 +69,9 @@ public interface EventService {
 
     List<Participant> getParticipants(Singer singer);
 
-    int inviteParticipants(List<Participant> participants, User organizer);
+    int inviteParticipants(List<Participant> participants);
 
-    void inviteParticipant(Participant participant, User organizer);
+    void inviteParticipant(Participant participant);
 
     boolean hasDeadlineExpired(Participant participant);
 

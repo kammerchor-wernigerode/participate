@@ -1,6 +1,6 @@
 package de.vinado.wicket.participate.model.filters;
 
-import de.vinado.wicket.participate.model.EventDetails;
+import de.vinado.wicket.participate.ui.event.SelectableEventDetails;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class EventFilter implements SerializablePredicate<EventDetails> {
+public class EventFilter implements SerializablePredicate<SelectableEventDetails> {
 
     private String searchTerm;
     private Date startDate;
@@ -18,32 +18,32 @@ public class EventFilter implements SerializablePredicate<EventDetails> {
     private boolean showAll;
 
     @Override
-    public boolean test(EventDetails event) {
+    public boolean test(SelectableEventDetails event) {
         return matchesSearchTerm(event)
             && greaterThenEqualsStartDate(event)
             && lessThenEqualsEndDate(event);
     }
 
-    private boolean matchesSearchTerm(EventDetails event) {
+    private boolean matchesSearchTerm(SelectableEventDetails event) {
         return matchesType(event)
             || matchesLocation(event);
     }
 
-    private boolean matchesType(EventDetails event) {
+    private boolean matchesType(SelectableEventDetails event) {
         return null == searchTerm || StringUtils.containsIgnoreCase(event.getEventType(), searchTerm);
     }
 
-    private boolean matchesLocation(EventDetails event) {
+    private boolean matchesLocation(SelectableEventDetails event) {
         return null == searchTerm || StringUtils.containsIgnoreCase(event.getLocation(), searchTerm);
     }
 
-    private boolean greaterThenEqualsStartDate(EventDetails event) {
+    private boolean greaterThenEqualsStartDate(SelectableEventDetails event) {
         if (null == this.startDate) return true;
         Date startDate = event.getStartDate();
         return this.startDate.before(startDate) || this.startDate.equals(startDate);
     }
 
-    private boolean lessThenEqualsEndDate(EventDetails event) {
+    private boolean lessThenEqualsEndDate(SelectableEventDetails event) {
         if (null == this.endDate) return true;
         Date endDate = event.getEndDate();
         return this.endDate.after(endDate) || this.endDate.equals(endDate);

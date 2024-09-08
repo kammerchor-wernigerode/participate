@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static de.vinado.app.participate.notification.email.app.SendEmail.send;
@@ -216,11 +217,12 @@ public class UserServiceImpl extends DataService implements UserService {
             data.put("firstName", person.getFirstName());
             data.put("passwordRecoveryLink", passwordRecoveryLink.toString(Url.StringMode.FULL, StandardCharsets.UTF_8));
             data.put("validDuration", validDuration);
+            Locale locale = Locale.getDefault();
             if (initial) {
-                Email email = emailFactory.create(subject, "newUser-txt.ftl", "newUser-html.ftl", data);
+                Email email = emailFactory.create(subject, "newUser-txt.ftl", "newUser-html.ftl", data, locale);
                 emailService.execute(send(email).atOnce(to(person)));
             } else {
-                Email email = emailFactory.create(subject, "passwordReset-txt.ftl", "passwordReset-html.ftl", data);
+                Email email = emailFactory.create(subject, "passwordReset-txt.ftl", "passwordReset-html.ftl", data, locale);
                 emailService.execute(send(email).atOnce(to(person)));
             }
 
@@ -254,7 +256,8 @@ public class UserServiceImpl extends DataService implements UserService {
             Map<String, Object> data = new HashMap<>();
             data.put("firstName", person.getFirstName());
 
-            Email email = emailFactory.create(subject, "passwordResetSuccess-txt.ftl", "passwordResetSuccess-html.ftl", data);
+            Locale locale = Locale.getDefault();
+            Email email = emailFactory.create(subject, "passwordResetSuccess-txt.ftl", "passwordResetSuccess-html.ftl", data, locale);
             emailService.execute(send(email).atOnce(to(person)));
 
             return true;
