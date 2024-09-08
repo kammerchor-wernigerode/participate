@@ -15,6 +15,7 @@ import de.vinado.wicket.participate.model.EventDetails;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.services.EventService;
+import de.vinado.wicket.participate.ui.event.details.ParticipantTableUpdateIntent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -186,6 +187,7 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
         private void execute(SendBulkInvitations command, AjaxRequestTarget target) {
             try {
                 commandHandler().execute(command);
+                send(getWebPage(), Broadcast.BREADTH, new ParticipantTableUpdateIntent());
                 ResourceModel message = new ResourceModel("event.invitations.sent.success", "Invitations have been sent");
                 Snackbar.show(target, message);
                 success(message.getObject());
