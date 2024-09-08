@@ -9,7 +9,7 @@ link again and simply fill out the form again.
 <#list items as item>
 <#assign event = item.event>
 <#assign participant = item.participant>
-    ${event.name}
+    ${printer.print(eventName.apply(event), .locale_object)}
         Location: <#if event.location??>${event.location}<#else>tba.</#if>
         Dates: ${event.startDate?string.short} – ${event.endDate?string.short}
         Link: ${link.apply(participant.token)}

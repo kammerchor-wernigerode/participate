@@ -25,13 +25,8 @@ public class EventFilter implements SerializablePredicate<SelectableEventDetails
     }
 
     private boolean matchesSearchTerm(SelectableEventDetails event) {
-        return matchesName(event)
-            || matchesType(event)
+        return matchesType(event)
             || matchesLocation(event);
-    }
-
-    private boolean matchesName(SelectableEventDetails event) {
-        return null == searchTerm || StringUtils.containsIgnoreCase(event.getName(), searchTerm);
     }
 
     private boolean matchesType(SelectableEventDetails event) {

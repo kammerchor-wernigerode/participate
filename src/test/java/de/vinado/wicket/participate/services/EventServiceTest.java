@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.services;
 
+import de.vinado.app.participate.event.model.EventName;
 import de.vinado.app.participate.notification.email.app.EmailService;
 import de.vinado.app.participate.notification.email.model.TemplatedEmailFactory;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
@@ -9,6 +10,7 @@ import freemarker.template.Configuration;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.format.Printer;
 
 import java.net.URI;
 import java.util.Date;
@@ -31,8 +33,9 @@ class EventServiceTest {
         Configuration configuration = mock(Configuration.class);
         ApplicationProperties applicationProperties = mock(ApplicationProperties.class);
         TemplatedEmailFactory emailFactory = new TemplatedEmailFactory(configuration, applicationProperties);
+        Printer<EventName> eventNamePrinter = mock(Printer.class);
 
-        service = new EventServiceImpl(personService, emailService, applicationProperties, emailFactory, (event, locale) -> randomUri());
+        service = new EventServiceImpl(personService, emailService, applicationProperties, emailFactory, (event, locale) -> randomUri(), eventNamePrinter);
 
         doReturn(13).when(applicationProperties).getDeadlineOffset();
     }

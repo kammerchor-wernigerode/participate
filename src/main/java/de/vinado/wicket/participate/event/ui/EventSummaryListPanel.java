@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.event.ui;
 
+import de.vinado.app.participate.event.model.EventName;
 import de.vinado.app.participate.event.presentation.ui.InvitationForm;
 import de.vinado.app.participate.wicket.bt5.modal.Modal;
 import de.vinado.wicket.participate.components.panels.BootstrapPanel;
@@ -20,7 +21,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -95,8 +95,8 @@ public class EventSummaryListPanel extends BootstrapPanel<Event> {
     }
 
     @Override
-    protected IModel<String> titleModel() {
-        return new PropertyModel<>(getModel(), "name");
+    protected IModel<?> titleModel() {
+        return getModel().map(EventName::of);
     }
 
     @Override

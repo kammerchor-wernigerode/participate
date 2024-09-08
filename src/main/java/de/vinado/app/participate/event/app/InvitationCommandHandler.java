@@ -1,5 +1,6 @@
 package de.vinado.app.participate.event.app;
 
+import de.vinado.app.participate.event.model.EventName;
 import de.vinado.app.participate.notification.email.app.EmailService;
 import de.vinado.app.participate.notification.email.model.Email;
 import de.vinado.app.participate.notification.email.model.EmailException;
@@ -13,6 +14,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.format.Printer;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
@@ -28,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
@@ -47,7 +50,9 @@ public class InvitationCommandHandler {
     private final @NonNull TemplatedEmailFactory emailFactory;
     private final @NonNull EmailService emailService;
     private final @NonNull ApplicationProperties properties;
+    private final @NonNull Printer<EventName> eventNamePrinter;
     private final @NonNull UnaryOperator<String> link = this::createFormUrl;
+    private final @NonNull Function<Event, EventName> eventName = this::createFromEvent;
 
     public void execute(@NonNull SendBulkInvitations command) throws EmailException {
         List<Event> events = command.events();
@@ -123,6 +128,8 @@ public class InvitationCommandHandler {
         data.put("items", items);
         data.put("link", link);
         data.put("calendarUrl", calendarUrl);
+        data.put("eventName", eventName);
+        data.put("printer", eventNamePrinter);
         return data;
     }
 
@@ -131,6 +138,10 @@ public class InvitationCommandHandler {
             .path("/form/participant")
             .queryParam("token", token)
             .toUriString();
+    }
+
+    private EventName createFromEvent(Event event) {
+        return EventName.of(event);
     }
 
 

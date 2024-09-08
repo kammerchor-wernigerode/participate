@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.model;
 
+import de.vinado.app.participate.event.model.Interval;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,9 +37,6 @@ public class Event implements Identifiable<Long>, Hideable, Terminable {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
     private String eventType;
 
     @Column
@@ -66,9 +64,7 @@ public class Event implements Identifiable<Long>, Hideable, Terminable {
     @Column(name = "is_active", nullable = false)
     private boolean active;
 
-    public Event(String name, String eventType, String location, String description,
-                 Date startDate, Date endDate) {
-        this.name = name;
+    public Event(String eventType, String location, String description, Date startDate, Date endDate) {
         this.eventType = eventType;
         this.location = location;
         this.description = description;
@@ -97,8 +93,20 @@ public class Event implements Identifiable<Long>, Hideable, Terminable {
     }
 
     @Transient
+    public Interval getInterval() {
+        LocalDate startDate = getLocalStartDate();
+        LocalDate endDate = getLocalEndDate();
+        return Interval.from(startDate).to(endDate);
+    }
+
+    @Transient
     public LocalDate getLocalStartDate() {
         return localDate(startDate);
+    }
+
+    @Transient
+    public LocalDate getLocalEndDate() {
+        return localDate(endDate);
     }
 
     private LocalDate localDate(Date date) {

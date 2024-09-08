@@ -1,5 +1,6 @@
 package de.vinado.wicket.participate.features;
 
+import de.vinado.app.participate.event.model.EventName;
 import de.vinado.app.participate.notification.email.app.EmailService;
 import de.vinado.app.participate.notification.email.app.SendEmail;
 import de.vinado.app.participate.notification.email.model.Emails;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.format.Printer;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -39,6 +41,7 @@ class ScoresManagerNotificationCronjobTests {
     private @Mock EventService eventService;
     private @Mock PersonService personService;
     private @Mock EmailService emailService;
+    private @Mock Printer<EventName> eventNamePrinter;
 
     private ScoresManagerNotificationCronjob cronjob;
 
@@ -53,16 +56,18 @@ class ScoresManagerNotificationCronjobTests {
             configuration,
             eventService,
             personService,
-            emailService);
+            emailService,
+            eventNamePrinter);
     }
 
     @Test
     void creatingNullArguments_shouldThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(null, configuration, eventService, personService, emailService));
-        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailFactory, null, eventService, personService, emailService));
-        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailFactory, configuration, null, personService, emailService));
-        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailFactory, configuration, eventService, null, emailService));
-        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailFactory, configuration, eventService, personService, null));
+        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(null, configuration, eventService, personService, emailService, eventNamePrinter));
+        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailFactory, null, eventService, personService, emailService, eventNamePrinter));
+        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailFactory, configuration, null, personService, emailService, eventNamePrinter));
+        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailFactory, configuration, eventService, null, emailService, eventNamePrinter));
+        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailFactory, configuration, eventService, personService, null, eventNamePrinter));
+        assertThrows(IllegalArgumentException.class, () -> new ScoresManagerNotificationCronjob(emailFactory, configuration, eventService, personService, emailService, null));
     }
 
     @Test
@@ -215,7 +220,10 @@ class ScoresManagerNotificationCronjobTests {
     private static Event createEvent(Date startDate) {
         Event event = mock(Event.class);
         when(event.getStartDate()).thenReturn(startDate);
-        when(event.getName()).thenReturn("Rehearsal Weekend");
+        when(event.getEventType()).thenReturn("Rehearsal Weekend");
+        when(event.getLocalStartDate()).thenReturn(LocalDate.now());
+        when(event.getLocalEndDate()).thenReturn(LocalDate.now());
+        when(event.getInterval()).thenCallRealMethod();
         return event;
     }
 

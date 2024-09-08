@@ -142,7 +142,7 @@
                                                 <#assign participant = item.participant>
                                                 <tr>
                                                     <td>
-                                                        <span style="color: #3498db; font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0;">${event.name}</span>
+                                                        <span style="color: #3498db; font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0;">${printer.print(eventName.apply(event), .locale_object)}</span>
                                                     </td>
                                                     <td>
                                                         <span style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0;"><#if event.location??>${event.location}<#else>tba.</#if></span>

@@ -10,7 +10,7 @@ public abstract class AjaxLinkPanel extends Panel {
 
     private AjaxLink ajaxLink;
 
-    public AjaxLinkPanel(String id, IModel<String> labelModel) {
+    public AjaxLinkPanel(String id, IModel<?> labelModel) {
         super(id, labelModel);
 
         ajaxLink = new AjaxLink<Void>("link") {
@@ -21,7 +21,7 @@ public abstract class AjaxLinkPanel extends Panel {
         };
         add(ajaxLink);
 
-        ajaxLink.add(new Label("label", labelModel.getObject()));
+        ajaxLink.add(new Label("label", labelModel));
     }
 
     public AjaxLink getAjaxLink() {

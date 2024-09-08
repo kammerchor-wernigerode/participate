@@ -9,7 +9,7 @@ kannst du den Link erneut benutzen und das Formular einfach erneut ausfüllen.
 <#list items as item>
 <#assign event = item.event>
 <#assign participant = item.participant>
-    ${event.name}
+    ${printer.print(eventName.apply(event), .locale_object)}
         Ort: <#if event.location??>${event.location}<#else>N/A</#if>
         Datum: ${event.startDate?string.short} – ${event.endDate?string.short}
         Link: ${link.apply(participant.token)}
