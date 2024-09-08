@@ -430,16 +430,17 @@ public class EventServiceImpl extends DataService implements EventService {
         Event event = participant.getEvent();
         int offset = 1 - applicationProperties.getDeadlineOffset();
         Date deadline = DateUtils.addDays(event.getStartDate(), offset);
+        Locale locale = Locale.getDefault();
 
         Map<String, Object> data = new HashMap<>();
         data.put("event", event);
         data.put("singer", singer);
         data.put("acceptLink", ParticipateUtils.generateInvitationLink(applicationProperties.getBaseUrl(), participant.getToken()));
         data.put("deadline", offset > 1 ? null : deadline);
-        data.put("calendarUrl", calendarUrl.apply(event, Locale.getDefault()));
+        data.put("calendarUrl", calendarUrl.apply(event, locale));
 
         String subject = event.getName();
-        Email email = emailFactory.create(subject, "inviteSinger-txt.ftl", "inviteSinger-html.ftl", data);
+        Email email = emailFactory.create(subject, "inviteSinger-txt.ftl", "inviteSinger-html.ftl", data, locale);
         return Map.entry(participant, email);
     }
 

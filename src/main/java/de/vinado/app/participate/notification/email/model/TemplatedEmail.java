@@ -43,6 +43,8 @@ public class TemplatedEmail implements Email {
 
     private final Set<Attachment> attachments;
 
+    private final Locale locale;
+
     @Override
     public Optional<String> textContent() {
         return Optional.ofNullable(plaintextTemplatePath)
@@ -75,7 +77,6 @@ public class TemplatedEmail implements Email {
     }
 
     private Template template(String templatePath) throws IOException {
-        Locale locale = Locale.getDefault();
         return configuration.getTemplate(templatePath, locale, ENCODING);
     }
 }

@@ -37,6 +37,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -121,7 +122,8 @@ public class ScoresManagerNotificationCronjob {
             String plaintextTemplatePath = "scoresManagerNotification-txt.ftl";
             Map<String, Object> data = Collections.emptyMap();
             Set<Email.Attachment> attachments = attachments(attendees);
-            return emailFactory.create(subject, plaintextTemplatePath, null, data, attachments);
+            Locale locale = Locale.getDefault();
+            return emailFactory.create(subject, plaintextTemplatePath, null, data, attachments, locale);
         } catch (IOException e) {
             log.error("Unable to write stream to CSV attachment", e);
         }
