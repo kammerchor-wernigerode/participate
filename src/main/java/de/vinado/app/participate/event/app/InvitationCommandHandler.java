@@ -80,6 +80,7 @@ public class InvitationCommandHandler {
             Collections.sort(items);
             Locale locale = Locale.getDefault();
             invite(singer, items, locale);
+            update(items);
         }
     }
 
@@ -143,6 +144,15 @@ public class InvitationCommandHandler {
         data.put("eventName", eventName);
         data.put("printer", eventNamePrinter);
         return data;
+    }
+
+    private void update(List<Item> items) {
+        items.stream()
+            .map(Item::getParticipant)
+            .distinct()
+            .filter(Participant::isUninvited)
+            .peek(participant -> participant.setInvitationStatus(InvitationStatus.PENDING))
+            .forEach(eventService::saveParticipant);
     }
 
     private String createFormUrl(String token) {

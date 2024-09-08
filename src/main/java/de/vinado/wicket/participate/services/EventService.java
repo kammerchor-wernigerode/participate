@@ -25,6 +25,8 @@ public interface EventService {
 
     Participant saveParticipant(ParticipantDTO dto);
 
+    void saveParticipant(Participant participant);
+
     Participant acceptEvent(ParticipantDTO dto);
 
     Participant acceptEventTentatively(ParticipantDTO dto);

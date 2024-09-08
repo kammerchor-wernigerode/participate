@@ -148,6 +148,11 @@ public class EventServiceImpl extends DataService implements EventService {
     }
 
     @Override
+    public void saveParticipant(Participant participant) {
+        merge(participant);
+    }
+
+    @Override
     public Participant acceptEvent(ParticipantDTO dto) {
         dto.setInvitationStatus(InvitationStatus.ACCEPTED);
         return saveParticipant(dto);
