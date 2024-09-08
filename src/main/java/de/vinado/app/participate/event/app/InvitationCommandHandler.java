@@ -7,6 +7,7 @@ import de.vinado.app.participate.notification.email.model.EmailException;
 import de.vinado.app.participate.notification.email.model.TemplatedEmailFactory;
 import de.vinado.wicket.participate.configuration.ApplicationProperties;
 import de.vinado.wicket.participate.model.Event;
+import de.vinado.wicket.participate.model.InvitationStatus;
 import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.Singer;
 import de.vinado.wicket.participate.services.EventService;
@@ -59,23 +60,34 @@ public class InvitationCommandHandler {
 
         if (events.size() == 1) {
             Event event = events.get(0);
-            List<Participant> participants = eventService.getUninvitedParticipants(event);
+            List<Participant> participants = eventService.getInvitedParticipants(event);
             eventService.inviteParticipants(participants);
             return;
         }
 
         MultiValueMap<Singer, Item> participants = events.stream()
-            .map(eventService::getUninvitedParticipants)
+            .map(eventService::getParticipants)
             .flatMap(List::stream)
             .collect(LinkedMultiValueMap::new, this::index, MultiValueMap::addAll);
 
         for (Map.Entry<Singer, List<Item>> entry : participants.entrySet()) {
-            Singer singer = entry.getKey();
             List<Item> items = new ArrayList<>(entry.getValue());
+            if (areAllDefinite(items)) {
+                continue;
+            }
+
+            Singer singer = entry.getKey();
             Collections.sort(items);
             Locale locale = Locale.getDefault();
             invite(singer, items, locale);
         }
+    }
+
+    private boolean areAllDefinite(List<Item> items) {
+        return items.stream()
+                .map(Item::getParticipant)
+                .map(Participant::getInvitationStatus)
+                .allMatch(InvitationStatus::isDefinite);
     }
 
     private void index(LinkedMultiValueMap<Singer, Item> map, Participant participant) {

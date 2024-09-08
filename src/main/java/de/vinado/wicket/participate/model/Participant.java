@@ -134,4 +134,9 @@ public class Participant implements Identifiable<Long>, Invitable {
     public boolean isConsiderable() {
         return invitationStatus.isConsiderable();
     }
+
+    @Transient
+    public boolean isDefinite() {
+        return invitationStatus.isDefinite();
+    }
 }
