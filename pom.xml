@@ -33,6 +33,13 @@
         <dependency.wicket-bootstrap.version>7.0.11</dependency.wicket-bootstrap.version>
         <dependency.yuicompressor.version>2.4.8</dependency.yuicompressor.version>
 
+        <convergence.asm.version>9.8</convergence.asm.version>
+        <convergence.commons-collections4.version>4.4</convergence.commons-collections4.version>
+        <convergence.commons-io.version>2.18.0</convergence.commons-io.version>
+        <convergence.commons-text.version>1.13.0</convergence.commons-text.version>
+        <convergence.jquery.version>1.12.0</convergence.jquery.version>
+        <convergence.wicket-webjars.version>4.0.8</convergence.wicket-webjars.version>
+
         <webjar.autosize.version>6.0.1</webjar.autosize.version>
         <webjar.snackbar.version>0.1.16</webjar.snackbar.version>
 
@@ -115,6 +122,37 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${dependency.guava.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>${convergence.asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${convergence.commons-collections4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${convergence.commons-io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${convergence.commons-text.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>jquery</artifactId>
+                <version>${convergence.jquery.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.agilecoders.wicket.webjars</groupId>
+                <artifactId>wicket-webjars</artifactId>
+                <version>${convergence.wicket-webjars.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -305,6 +343,24 @@
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>dependency-convergence</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <dependencyConvergence/>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
