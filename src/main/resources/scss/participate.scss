@@ -1,9 +1,9 @@
 // participate.scss
-@import "mixins";
-@import "variables";
-@import "sizing";
-@import "busy";
-@import "bootstrap";
+@use "mixins";
+@use "variables";
+@use "sizing";
+@use "busy";
+@use "bootstrap";
 
 html {
     position: relative;

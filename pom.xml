@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.3</version>
+        <version>3.5.5</version>
         <relativePath/>
     </parent>
 
@@ -24,20 +24,19 @@
         <java.version>17</java.version>
 
         <dependency.guava.version>25.1-jre</dependency.guava.version>
-        <dependency.opencsv.version>5.9</dependency.opencsv.version>
-        <dependency.sass.version>1.69.5</dependency.sass.version>
+        <dependency.opencsv.version>5.12.0</dependency.opencsv.version>
+        <dependency.sass.version>1.92.1</dependency.sass.version>
         <dependency.spring-boot-secrets-api.version>1.1.1</dependency.spring-boot-secrets-api.version>
-        <dependency.testcontainers.version>1.18.3</dependency.testcontainers.version>
-        <dependency.throwing-function.version>1.5.1</dependency.throwing-function.version>
-        <dependency.tika.version>2.9.1</dependency.tika.version>
-        <dependency.wicket.version>10.1.0</dependency.wicket.version>
-        <dependency.wicket-bootstrap.version>7.0.5</dependency.wicket-bootstrap.version>
+        <dependency.throwing-function.version>1.6.1</dependency.throwing-function.version>
+        <dependency.tika.version>3.2.2</dependency.tika.version>
+        <dependency.wicket.version>10.6.0</dependency.wicket.version>
+        <dependency.wicket-bootstrap.version>7.0.11</dependency.wicket-bootstrap.version>
         <dependency.yuicompressor.version>2.4.8</dependency.yuicompressor.version>
 
         <webjar.autosize.version>6.0.1</webjar.autosize.version>
         <webjar.snackbar.version>0.1.16</webjar.snackbar.version>
 
-        <plugin.sass.version>1.0.3</plugin.sass.version>
+        <plugin.sass.version>1.0.4</plugin.sass.version>
     </properties>
 
     <dependencyManagement>
@@ -306,6 +305,18 @@
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

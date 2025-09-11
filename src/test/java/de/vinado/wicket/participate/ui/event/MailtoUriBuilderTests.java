@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.web.util.UriComponentsBuilder.ParserType.WHAT_WG;
 
 class MailtoUriBuilderTests {
 
@@ -14,7 +15,7 @@ class MailtoUriBuilderTests {
         String email1 = "jane.deo@example.com";
         String email2 = "max.mustermann@example.com";
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("mailto:")
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("mailto:", WHAT_WG)
             .queryParam("to", FROM)
             .queryParam("bcc", email1)
             .queryParam("bcc", email2);
