@@ -1,4 +1,4 @@
-FROM maven:3.9.8-eclipse-temurin-17 AS base
+FROM maven:3.9.11-eclipse-temurin-17 AS base
 
 FROM base AS dependencies
 WORKDIR /usr/src/anwendung
@@ -27,7 +27,7 @@ COPY scripts/Healthcheck.java ./Healthcheck.java
 RUN javac -d . Healthcheck.java
 
 
-FROM eclipse-temurin:17.0.12_7-jre
+FROM eclipse-temurin:17.0.16_8-jre
 WORKDIR /opt/anwendung
 
 ARG JAR_FILE=participate-*.jar
