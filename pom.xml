@@ -23,7 +23,7 @@
         <resource.delimiter>^</resource.delimiter>
         <java.version>17</java.version>
 
-        <dependency.guava.version>25.1-jre</dependency.guava.version>
+        <dependency.guava.version>32.0.0-jre</dependency.guava.version>
         <dependency.opencsv.version>5.12.0</dependency.opencsv.version>
         <dependency.sass.version>1.92.1</dependency.sass.version>
         <dependency.spring-boot-secrets-api.version>1.1.1</dependency.spring-boot-secrets-api.version>
