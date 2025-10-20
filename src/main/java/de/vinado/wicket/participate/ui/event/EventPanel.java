@@ -1,6 +1,5 @@
 package de.vinado.wicket.participate.ui.event;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
 import de.vinado.app.participate.event.model.EventName;
@@ -163,7 +162,6 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         IModel<ParticipantDTO> model = new CompoundPropertyModel<>(new ParticipantDTO(rowModel.getObject()));
 
         modal
-            .setHeaderVisible(true)
             .size(Modal.Size.LARGE)
             .title(new ResourceModel("invitation.edit", "Edit Invitation"))
             .content(id -> new InvitationForm(id, model))
@@ -271,10 +269,9 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         IModel<String> prompt = new ResourceModel("email.send.reminder.question", "Some singers have already received an invitation. Should they be remembered?");
 
         modal
-            .setHeaderVisible(false)
             .content(id -> new SmartLinkMultiLineLabel(id, prompt))
             .addCloseAction(new ResourceModel("abort", "Abort"))
-            .addAction(id -> new BootstrapAjaxLink<Void>(id, Buttons.Type.Success) {
+            .addAction(id -> new Modal.AjaxAction(id, new ResourceModel("confirm", "Confirm"), Buttons.Type.Success) {
 
                 @Override
                 public void onClick(AjaxRequestTarget target) {
@@ -287,9 +284,9 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
                         + (count != 1 ? " Mitglieder " : " Mitglied ")
                         + "versandt.");
 
-                    modal.close(target);
+                    modal.hide(target);
                 }
-            }.setLabel(new ResourceModel("confirm", "Confirm")))
+            })
             .show(target);
     }
 
@@ -298,10 +295,9 @@ public class EventPanel extends BootstrapPanel<EventDetails> {
         CompoundPropertyModel<EventDTO> model = new CompoundPropertyModel<>(new EventDTO(event));
 
         modal
-            .setHeaderVisible(true)
             .size(Modal.Size.LARGE)
             .title(new ResourceModel("event.edit", "Edit Event"))
-            .content(new AddEditEventPanel(modal.getContentId(), model))
+            .content(id -> new AddEditEventPanel(id, model))
             .addCloseAction(new ResourceModel("cancel", "cancel"))
             .addSubmitAction(new ResourceModel("save", "Save"), onUpdate(model))
             .show(target);

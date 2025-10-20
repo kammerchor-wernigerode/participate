@@ -130,7 +130,7 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
         modal
             .size(Modal.Size.LARGE)
             .title(title)
-            .content(new AddEditEventPanel(modal.getContentId(), model))
+            .content(id -> new AddEditEventPanel(id, model))
             .addCloseAction(new ResourceModel("cancel", "Cancel"))
             .addSubmitAction(new ResourceModel("save", "Save"), update(model))
             .show(target);

@@ -1,22 +1,29 @@
-<!DOCTYPE html>
-<html xmlns:wicket="http://wicket.apache.org">
-<head>
-    <meta charset="utf-8"/>
-</head>
+<!doctype html>
+<html lang="en" xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:panel>
     <div class="modal-dialog" wicket:id="dialog">
         <div class="modal-content">
             <div class="modal-header" wicket:id="header">
-                <h4 class="modal-title" wicket:id="title"></h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true" wicket:id="times"></button>
+                <span class="modal-title fs-5" wicket:id="title"></span>
+                <button
+                    type="button"
+                    class="btn-close nobusy"
+                    aria-label="Close"
+                    wicket:message="aria-label:close"
+                    wicket:id="closeButton"
+                ></button>
             </div>
             <div class="modal-body" wicket:id="body">
-                <div wicket:id="content"></div>
+                <wicket:container wicket:id="content"></wicket:container>
             </div>
             <div class="modal-footer" wicket:id="footer">
                 <wicket:container wicket:id="actions">
-                    <button type="button" wicket:id="action"></button>
+                    <wicket:container wicket:id="action">
+                        <button wicket:id="button">
+                            <span wicket:id="label"></span>
+                        </button>
+                    </wicket:container>
                 </wicket:container>
             </div>
         </div>

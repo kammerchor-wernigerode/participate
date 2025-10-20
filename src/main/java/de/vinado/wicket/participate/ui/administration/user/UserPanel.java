@@ -1,9 +1,9 @@
 package de.vinado.wicket.participate.ui.administration.user;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome6IconType;
+import de.vinado.app.participate.wicket.bt5.modal.Modal;
 import de.vinado.wicket.common.UpdateOnEventBehavior;
 import de.vinado.wicket.participate.components.TextAlign;
 import de.vinado.wicket.participate.components.panels.BootstrapAjaxLinkPanel;
@@ -89,7 +89,6 @@ public class UserPanel extends BootstrapPanel<Void> {
         IModel<AddUserDTO> model = new CompoundPropertyModel<>(new AddUserDTO());
 
         modal
-            .setHeaderVisible(true)
             .title(new ResourceModel("user.add", "Add User"))
             .content(id -> new AddUserPanel(id, model))
             .addCloseAction(new ResourceModel("cancel", "Cancel"))
@@ -196,17 +195,17 @@ public class UserPanel extends BootstrapPanel<Void> {
                         IModel<String> prompt = new ResourceModel("user.remove.person.question", "Are you sure you want to remove the user-person association?");
 
                         modal
-                            .setHeaderVisible(false)
                             .content(id -> new SmartLinkMultiLineLabel(id, prompt))
                             .addCloseAction(new ResourceModel("abort", "Abort"))
-                            .addAction(id -> new BootstrapAjaxLink<Void>(id, Buttons.Type.Success) {
+                            .addAction(id -> new Modal.AjaxAction(id, new ResourceModel("confirm", "Confirm"),
+                                Buttons.Type.Success) {
 
                                 @Override
-                                public void onClick(AjaxRequestTarget target) {
+                                protected void onClick(AjaxRequestTarget target) {
                                     unassign(rowModel.getObject());
                                     send(getWebPage(), Broadcast.BREADTH, new UserTableUpdateIntent());
 
-                                    modal.close(target);
+                                    modal.hide(target);
                                 }
 
                                 private void unassign(User user) {
@@ -214,7 +213,7 @@ public class UserPanel extends BootstrapPanel<Void> {
                                     dto.setPerson(null);
                                     userService.saveUser(dto);
                                 }
-                            }.setLabel(new ResourceModel("confirm", "Confirm")))
+                            })
                             .show(target);
                     }
 
@@ -222,7 +221,6 @@ public class UserPanel extends BootstrapPanel<Void> {
                         IModel<AddUserDTO> model = new CompoundPropertyModel<>(new AddUserDTO(rowModel.getObject()));
 
                         modal
-                            .setHeaderVisible(true)
                             .title(new ResourceModel("person.assign", "Assign Person"))
                             .content(id -> new AddPersonToUserPanel(id, model))
                             .addCloseAction(new ResourceModel("cancel", "Cancel"))
@@ -297,7 +295,6 @@ public class UserPanel extends BootstrapPanel<Void> {
                         IModel<PersonDTO> model = new CompoundPropertyModel<>(new PersonDTO(person));
 
                         modal
-                            .setHeaderVisible(true)
                             .title(new ResourceModel("person.edit", "Edit Person"))
                             .content(id -> new AddEditPersonPanel(id, model))
                             .addCloseAction(new ResourceModel("cancel", "Cancel"))
