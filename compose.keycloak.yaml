@@ -1,20 +1,17 @@
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:22.0
+    image: keycloak/keycloak:26.4
+    command: start-dev --import-realm
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: superadmin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: secret
+      KC_HEALTH_ENABLED: 'true'
+    volumes:
+      - ./docker/keycloak/provisioning:/opt/keycloak/data/import/
+      - ./docker/keycloak/healthcheck.sh:/opt/keycloak/healthcheck.sh:ro
     ports:
       - "8180:8080"
-    volumes:
-      - ./docker/keycloak/provisioning:/opt/keycloak/data/import
-      - ./docker/keycloak/healthcheck.sh:/opt/keycloak/healthcheck.sh
-    command: |
-      start-dev
-      --import-realm
-    environment:
-      KC_HOSTNAME_STRICT: 'false'
-      KC_HEALTH_ENABLED: 'true'
-      KEYCLOAK_ADMIN: superadmin
-      KEYCLOAK_ADMIN_PASSWORD: secret
     healthcheck:
-      test: ["CMD", "bash", "/opt/keycloak/healthcheck.sh"]
+      test: [ "CMD", "bash", "/opt/keycloak/healthcheck.sh" ]
       interval: 10s
       start_period: 30s
