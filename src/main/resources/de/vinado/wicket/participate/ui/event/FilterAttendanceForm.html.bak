@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<wicket:panel>
+    <form wicket:id="form">
+        <div class="mb-3">
+            <label class="form-label" wicket:id="statusesLabel"></label>
+            <select multiple="multiple" class="form-select" wicket:id="statuses">
+                <option wicket:id="defaultChoices"></option>
+            </select>
+        </div>
+        <input type="checkbox" wicket:id="negate"/>
+    </form>
+</wicket:panel>
+</body>
+</html>

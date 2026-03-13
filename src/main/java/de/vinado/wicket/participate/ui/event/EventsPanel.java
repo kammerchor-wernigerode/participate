@@ -12,6 +12,8 @@ import de.vinado.wicket.participate.components.panels.BootstrapPanel;
 import de.vinado.wicket.participate.components.snackbar.Snackbar;
 import de.vinado.wicket.participate.model.Event;
 import de.vinado.wicket.participate.model.EventDetails;
+import de.vinado.wicket.participate.model.InvitationStatus;
+import de.vinado.wicket.participate.model.Participant;
 import de.vinado.wicket.participate.model.dtos.EventDTO;
 import de.vinado.wicket.participate.model.filters.EventFilter;
 import de.vinado.wicket.participate.services.EventService;
@@ -29,7 +31,9 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -146,7 +150,7 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
     }
 
 
-    private static class SendInvitationLink extends AjaxLink<Void> {
+    private class SendInvitationLink extends AjaxLink<Void> {
 
         @SpringBean
         private Holder<InvitationCommandHandler> commandHandler;
@@ -180,8 +184,31 @@ public class EventsPanel extends BootstrapPanel<EventFilter> {
                 .filter(Event::isUpcoming)
                 .toList();
 
-            SendBulkInvitations command = new SendBulkInvitations(events);
+            FilterAttendanceForm.Data formData = new FilterAttendanceForm.Data(events);
+            IModel<FilterAttendanceForm.Data> model = new CompoundPropertyModel<>(formData);
+            modal
+                .title(new ResourceModel("email.send.invitation", "Send Invitation"))
+                .content(id -> new FilterAttendanceForm(id, model))
+                .addCloseAction(new ResourceModel("cancel", "Cancel"))
+                .addSubmitAction(new ResourceModel("send", "Send"), sendBulkInvitations(model))
+                .show(target);
+        }
+
+        private SerializableConsumer<AjaxRequestTarget> sendBulkInvitations(IModel<FilterAttendanceForm.Data> model) {
+            return target -> sendBulkInvitations(model, target);
+        }
+
+        private void sendBulkInvitations(IModel<FilterAttendanceForm.Data> model, AjaxRequestTarget target) {
+            FilterAttendanceForm.Data data = model.getObject();
+            SendBulkInvitations command = new SendBulkInvitations(data.getEvents(), consider(data.getStatuses()));
             execute(command, target);
+        }
+
+        private Predicate<Participant> consider(Collection<InvitationStatus> statuses) {
+            return participant -> {
+                InvitationStatus status = participant.getInvitationStatus();
+                return statuses.contains(status);
+            };
         }
 
         private void execute(SendBulkInvitations command, AjaxRequestTarget target) {

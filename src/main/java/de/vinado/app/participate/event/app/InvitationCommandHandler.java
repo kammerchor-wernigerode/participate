@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
@@ -57,10 +58,13 @@ public class InvitationCommandHandler {
 
     public void execute(@NonNull SendBulkInvitations command) throws EmailException {
         List<Event> events = command.events();
+        Predicate<Participant> filter = command.filter();
 
         if (events.size() == 1) {
             Event event = events.get(0);
-            List<Participant> participants = eventService.getInvitedParticipants(event);
+            List<Participant> participants = eventService.getInvitedParticipants(event).stream()
+                .filter(filter)
+                .collect(Collectors.toList());
             eventService.inviteParticipants(participants);
             return;
         }
@@ -68,6 +72,7 @@ public class InvitationCommandHandler {
         MultiValueMap<Singer, Item> participants = events.stream()
             .map(eventService::getParticipants)
             .flatMap(List::stream)
+            .filter(filter)
             .collect(LinkedMultiValueMap::new, this::index, MultiValueMap::addAll);
 
         for (Map.Entry<Singer, List<Item>> entry : participants.entrySet()) {
