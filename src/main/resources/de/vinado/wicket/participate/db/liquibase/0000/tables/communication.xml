@@ -23,7 +23,7 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="0000-tables-communication" author="Vincent Nadoll" dbms="h2">
+    <changeSet id="0000-tables-communication" author="Vincent Nadoll" dbms="h2,postgresql">
         <createTable tableName="communication">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_communication"/>

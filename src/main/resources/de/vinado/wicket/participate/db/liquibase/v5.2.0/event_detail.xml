@@ -14,4 +14,15 @@
             <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="../v3.1.0/v_event_details.sql"/>
         </rollback>
     </changeSet>
+
+    <changeSet id="v5.2.0-v_event_details" author="kcw" dbms="postgresql">
+        <sql>
+            DROP VIEW IF EXISTS v_event_details;
+        </sql>
+        <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="v_event_details.postgresql.sql"/>
+
+        <rollback>
+            <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="../v3.1.0/v_event_details.postgresql.sql"/>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

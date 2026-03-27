@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:17.9-alpine:///
+
+  test:
+    database.replace: none

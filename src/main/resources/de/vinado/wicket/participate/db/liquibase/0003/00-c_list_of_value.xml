@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="0003-lov-remove_invitation_status" author="Vincent Nadoll">
+    <changeSet id="0003-lov-remove_invitation_status" author="Vincent Nadoll" dbms="mariadb">
         <dropForeignKeyConstraint baseTableName="m_member_event" constraintName="fk_m_ev_member_invite_status"/>
         <renameColumn tableName="m_member_event" oldColumnName="invitation_status_id" newColumnName="invitation_status"
                       columnDataType="INT"/>
@@ -16,6 +16,27 @@
         <update tableName="m_member_event">
             <column name="invitation_status" valueNumeric="3"/>
             <where>is_invited = 0</where>
+        </update>
+
+        <delete tableName="c_list_of_value">
+            <where>dtype = 'invitationStatus'</where>
+        </delete>
+
+        <dropColumn tableName="m_member_event" columnName="is_invited"/>
+    </changeSet>
+
+    <changeSet id="0003-lov-remove_invitation_status" author="Vincent Nadoll" dbms="postgresql">
+        <dropForeignKeyConstraint baseTableName="m_member_event" constraintName="fk_m_ev_member_invite_status"/>
+        <renameColumn tableName="m_member_event" oldColumnName="invitation_status_id" newColumnName="invitation_status"
+                      columnDataType="INT"/>
+
+        <update tableName="m_member_event">
+            <column name="invitation_status" type="INT" defaultValue="3"
+                    valueComputed="(SELECT lov.sort_order FROM c_list_of_value lov WHERE m_member_event.invitation_status = lov.id)"/>
+        </update>
+        <update tableName="m_member_event">
+            <column name="invitation_status" valueNumeric="3"/>
+            <where>is_invited = false</where>
         </update>
 
         <delete tableName="c_list_of_value">

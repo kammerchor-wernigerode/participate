@@ -24,4 +24,11 @@
         </sql>
         <sqlFile path="de/vinado/wicket/participate/db/liquibase/0003/v_event_details.sql"/>
     </changeSet>
+
+    <changeSet id="0003-v_event_details" author="Vincent Nadoll" runOnChange="true" dbms="postgresql">
+        <sql>
+            DROP VIEW IF EXISTS v_event_details;
+        </sql>
+        <sqlFile path="de/vinado/wicket/participate/db/liquibase/0003/v_event_details.postgresql.sql"/>
+    </changeSet>
 </databaseChangeLog>

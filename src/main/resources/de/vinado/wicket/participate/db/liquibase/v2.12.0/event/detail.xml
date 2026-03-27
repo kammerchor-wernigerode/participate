@@ -15,4 +15,16 @@
             <dropView viewName="v_participant_car"/>
         </rollback>
     </changeSet>
+
+    <changeSet id="v2.12.0-v_event_details" author="Vincent Nadoll" dbms="postgresql">
+        <sql>
+            DROP VIEW IF EXISTS v_event_details;
+        </sql>
+        <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="v_event_details.postgresql.sql"/>
+
+        <rollback>
+            <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="../../0005/v_event_details.postgresql.sql"/>
+            <dropView viewName="v_participant_car"/>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>
