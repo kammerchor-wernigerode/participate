@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.5</version>
+        <version>3.5.13</version>
         <relativePath/>
     </parent>
 
@@ -34,11 +34,13 @@
         <dependency.yuicompressor.version>2.4.8</dependency.yuicompressor.version>
 
         <convergence.asm.version>9.8</convergence.asm.version>
-        <convergence.commons-collections4.version>4.4</convergence.commons-collections4.version>
-        <convergence.commons-io.version>2.18.0</convergence.commons-io.version>
-        <convergence.commons-text.version>1.13.0</convergence.commons-text.version>
+        <convergence.checker-qual.version>3.52.0</convergence.checker-qual.version>
+        <convergence.commons-collections4.version>4.5.0</convergence.commons-collections4.version>
+        <convergence.commons-io.version>2.19.0</convergence.commons-io.version>
+        <convergence.commons-text.version>1.13.1</convergence.commons-text.version>
         <convergence.jquery.version>1.12.0</convergence.jquery.version>
-        <convergence.wicket-webjars.version>4.0.8</convergence.wicket-webjars.version>
+        <convergence.nimbus-jose-jwt.version>9.37.4</convergence.nimbus-jose-jwt.version>
+        <convergence.wicket-webjars.version>4.0.11</convergence.wicket-webjars.version>
 
         <webjar.autosize.version>6.0.1</webjar.autosize.version>
         <webjar.snackbar.version>0.1.16</webjar.snackbar.version>
@@ -130,6 +132,11 @@
                 <version>${convergence.asm.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.checkerframework</groupId>
+                <artifactId>checker-qual</artifactId>
+                <version>${convergence.checker-qual.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-collections4</artifactId>
                 <version>${convergence.commons-collections4.version}</version>
@@ -148,6 +155,11 @@
                 <groupId>org.webjars</groupId>
                 <artifactId>jquery</artifactId>
                 <version>${convergence.jquery.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${convergence.nimbus-jose-jwt.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.agilecoders.wicket.webjars</groupId>
