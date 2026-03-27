@@ -37,5 +37,7 @@ COPY --from=healthcheck-builder /usr/src/healthcheck/Healthcheck.class /usr/loca
 HEALTHCHECK --interval=20s --timeout=5s --retries=5 --start-period=30s \
     CMD ["/opt/java/openjdk/bin/java", "-cp", "/usr/local/bin", "Healthcheck"]
 
+ENV SPRING_PROFILES_ACTIVE=mariadb
+
 EXPOSE 8080
 CMD ["/opt/java/openjdk/bin/java", "-Djava.security.egd=file:/dev/urandom", "-jar" ,"/opt/anwendung/server.jar"]

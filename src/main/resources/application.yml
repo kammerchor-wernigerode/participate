@@ -14,12 +14,6 @@ spring:
     properties:
       hibernate.format_sql: true
 
-  datasource:
-    url: jdbc:mariadb://localhost:3306/participate?allowPublicKeyRetrieval=true&sslMode=disable
-    username: participate
-    password: participate
-    hikari.max-lifetime: 600000
-
   liquibase:
     change-log: 'classpath:/de/vinado/wicket/participate/db/liquibase/changelog.xml'
 
