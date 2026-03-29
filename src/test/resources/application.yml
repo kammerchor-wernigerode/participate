@@ -1,11 +1,15 @@
 spring:
   main.banner-mode: "off"
 
-  datasource.url: jdbc:tc:mariadb:10.11:///
+  datasource:
+    url: jdbc:h2:mem:;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
 
-  liquibase:
-    enabled: true
-    change-log: classpath:/de/vinado/wicket/participate/db/liquibase/changelog.xml
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: create
+
+  liquibase.enabled: false
 
   mail:
     host: localhost

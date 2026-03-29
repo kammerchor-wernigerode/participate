@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:tc:postgresql:17.9-alpine:///
+    url: jdbc:tc:mariadb:10.11:///
 
   jpa:
     hibernate:
