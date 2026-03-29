@@ -1,0 +1,2 @@
+org.springframework.boot.jackson2.autoconfigure.Jackson2AutoConfiguration
+de.kammerchorwernigerode.app.participate.hypersistence.HypersistenceAutoConfiguration

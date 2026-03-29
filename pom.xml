@@ -51,6 +51,7 @@
         <java.version>25</java.version>
 
         <dependency.checkstyle.version>10.17.0</dependency.checkstyle.version>
+        <dependency.hypersistence.version>3.15.2</dependency.hypersistence.version>
 
         <convergence.commons-text.version>1.15.0</convergence.commons-text.version>
 
@@ -59,6 +60,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>io.hypersistence</groupId>
+                <artifactId>hypersistence-utils-hibernate-71</artifactId>
+                <version>${dependency.hypersistence.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>
@@ -91,6 +98,15 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.hypersistence</groupId>
+            <artifactId>hypersistence-utils-hibernate-71</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-jackson2</artifactId>
         </dependency>
 
         <dependency>
