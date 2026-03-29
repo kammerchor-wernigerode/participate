@@ -341,4 +341,8 @@
         <addUniqueConstraint tableName="participants" columnNames="token" constraintName="uc_token"/>
     </changeSet>
 
+    <changeSet id="v5.4.0-tag" author="Vincent Nadoll">
+        <tagDatabase tag="5.4.0"/>
+    </changeSet>
+
 </databaseChangeLog>
