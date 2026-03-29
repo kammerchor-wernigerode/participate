@@ -2,7 +2,9 @@ package de.vinado.wicket.participate.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +17,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "singers")
+@PrimaryKeyJoinColumn(name = "person_id")
 @Polymorphism(type = PolymorphismType.EXPLICIT)
 @Getter
 @Setter
@@ -22,8 +25,8 @@ import java.util.Objects;
 @ToString
 public class Singer extends Person implements Hideable {
 
-    @Enumerated
-    @Column(columnDefinition = "integer")
+    @Enumerated(EnumType.STRING)
+    @Column
     private Voice voice;
 
     @Column(name = "is_active", nullable = false)
