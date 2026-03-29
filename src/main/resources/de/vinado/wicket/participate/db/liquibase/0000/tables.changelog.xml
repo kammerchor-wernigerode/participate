@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+<databaseChangeLog
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+    logicalFilePath="de/vinado/wicket/participate/db/liquibase/0000/tables.changelog.xml"
+>
 
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/c_list_of_value.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/communication.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/addresses.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/attribute.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/persons.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/users.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/user_rec_tokens.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/members.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/groups.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/roles.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/events.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_person_role.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_role_permission.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_member_event.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_member_group.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_group_event.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_address_person.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_address_event.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_attribute_person.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0000/tables/m_communication_person.xml"/>
+    <include relativeToChangelogFile="true" file="tables/c_list_of_value.xml"/>
+    <include relativeToChangelogFile="true" file="tables/communication.xml"/>
+    <include relativeToChangelogFile="true" file="tables/addresses.xml"/>
+    <include relativeToChangelogFile="true" file="tables/attribute.xml"/>
+    <include relativeToChangelogFile="true" file="tables/persons.xml"/>
+    <include relativeToChangelogFile="true" file="tables/users.xml"/>
+    <include relativeToChangelogFile="true" file="tables/user_rec_tokens.xml"/>
+    <include relativeToChangelogFile="true" file="tables/members.xml"/>
+    <include relativeToChangelogFile="true" file="tables/groups.xml"/>
+    <include relativeToChangelogFile="true" file="tables/roles.xml"/>
+    <include relativeToChangelogFile="true" file="tables/events.xml"/>
+    <include relativeToChangelogFile="true" file="tables/m_person_role.xml"/>
+    <include relativeToChangelogFile="true" file="tables/m_role_permission.xml"/>
+    <include relativeToChangelogFile="true" file="tables/m_member_event.xml"/>
+    <include relativeToChangelogFile="true" file="tables/m_member_group.xml"/>
+    <include relativeToChangelogFile="true" file="tables/m_group_event.xml"/>
+    <include relativeToChangelogFile="true" file="tables/m_address_person.xml"/>
+    <include relativeToChangelogFile="true" file="tables/m_address_event.xml"/>
+    <include relativeToChangelogFile="true" file="tables/m_attribute_person.xml"/>
+    <include relativeToChangelogFile="true" file="tables/m_communication_person.xml"/>
 </databaseChangeLog>

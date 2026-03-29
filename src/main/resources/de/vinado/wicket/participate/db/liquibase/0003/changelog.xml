@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+<databaseChangeLog
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+    logicalFilePath="de/vinado/wicket/participate/db/liquibase/0003/changelog.xml"
+>
 
-    <include file="de/vinado/wicket/participate/db/liquibase/0003/00-c_list_of_value.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0003/01-addresses.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0003/02-attributes.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0003/03-communications.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0003/04-roles.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0003/05-lov.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0003/06-groups.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0003/07-participants_singers_persons.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0003/views.changelog.xml"/>
-    <include file="de/vinado/wicket/participate/db/liquibase/0003/08-events.xml"/>
+    <include relativeToChangelogFile="true" file="00-c_list_of_value.xml"/>
+    <include relativeToChangelogFile="true" file="01-addresses.xml"/>
+    <include relativeToChangelogFile="true" file="02-attributes.xml"/>
+    <include relativeToChangelogFile="true" file="03-communications.xml"/>
+    <include relativeToChangelogFile="true" file="04-roles.xml"/>
+    <include relativeToChangelogFile="true" file="05-lov.xml"/>
+    <include relativeToChangelogFile="true" file="06-groups.xml"/>
+    <include relativeToChangelogFile="true" file="07-participants_singers_persons.xml"/>
+    <include relativeToChangelogFile="true" file="views.changelog.xml"/>
+    <include relativeToChangelogFile="true" file="08-events.xml"/>
 </databaseChangeLog>

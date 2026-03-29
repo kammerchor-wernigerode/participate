@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+<databaseChangeLog
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+    logicalFilePath="de/vinado/wicket/participate/db/liquibase/0004/changelog.xml"
+>
 
     <changeSet id="0004-drop_views" author="Vincent Nadoll" runOnChange="true" dbms="mariadb">
         <sql>
@@ -36,13 +40,13 @@
         <sql>
             DROP VIEW IF EXISTS v_event_details;
         </sql>
-        <sqlFile path="de/vinado/wicket/participate/db/liquibase/0003/v_event_details.sql"/>
+        <sqlFile relativeToChangelogFile="true" path="../0003/v_event_details.sql"/>
     </changeSet>
 
     <changeSet id="0004-v_event_details" author="Vincent Nadoll" runOnChange="true" dbms="postgresql">
         <sql>
             DROP VIEW IF EXISTS v_event_details;
         </sql>
-        <sqlFile path="de/vinado/wicket/participate/db/liquibase/0003/v_event_details.postgresql.sql"/>
+        <sqlFile relativeToChangelogFile="true" path="../0003/v_event_details.postgresql.sql"/>
     </changeSet>
 </databaseChangeLog>
