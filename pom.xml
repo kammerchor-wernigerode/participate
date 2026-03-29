@@ -1,173 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.13</version>
+        <version>4.0.5</version>
         <relativePath/>
     </parent>
 
-    <groupId>de.vinado.wicket</groupId>
+    <groupId>de.kammerchorwernigerode.app</groupId>
     <artifactId>participate</artifactId>
-    <packaging>jar</packaging>
     <version>6.0.0-SNAPSHOT</version>
 
-    <name>participate</name>
-    <description>Participation Manager for Kammerchor Wernigerode e.V.</description>
+    <url>https://github.com/kammerchor-wernigerode/participate</url>
+
+    <licenses>
+        <license>
+            <name>Apache License</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>Kammerchor Wernigerode e.V.</name>
+        <url>https://kammerchor-wernigerode.de</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>Vincent Nadoll</name>
+            <email>vincent.nadoll@gmail.com</email>
+            <url>https://vinado.de</url>
+            <roles>
+                <role>project admin</role>
+                <role>lead developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/kammerchor-wernigerode/participate.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/kammerchor-wernigerode/participate.git</developerConnection>
+        <url>https://github.com/kammerchor-wernigerode/participate.git</url>
+    </scm>
 
     <properties>
-        <resource.delimiter>^</resource.delimiter>
-        <java.version>17</java.version>
-
-        <dependency.guava.version>32.0.0-jre</dependency.guava.version>
-        <dependency.opencsv.version>5.12.0</dependency.opencsv.version>
-        <dependency.sass.version>1.92.1</dependency.sass.version>
-        <dependency.spring-boot-secrets-api.version>1.1.1</dependency.spring-boot-secrets-api.version>
-        <dependency.throwing-function.version>1.6.1</dependency.throwing-function.version>
-        <dependency.tika.version>3.2.2</dependency.tika.version>
-        <dependency.wicket.version>10.6.0</dependency.wicket.version>
-        <dependency.wicket-bootstrap.version>7.0.11</dependency.wicket-bootstrap.version>
-        <dependency.yuicompressor.version>2.4.8</dependency.yuicompressor.version>
-
-        <convergence.asm.version>9.8</convergence.asm.version>
-        <convergence.checker-qual.version>3.52.0</convergence.checker-qual.version>
-        <convergence.commons-collections4.version>4.5.0</convergence.commons-collections4.version>
-        <convergence.commons-io.version>2.19.0</convergence.commons-io.version>
-        <convergence.commons-text.version>1.13.1</convergence.commons-text.version>
-        <convergence.jquery.version>1.12.0</convergence.jquery.version>
-        <convergence.nimbus-jose-jwt.version>9.37.4</convergence.nimbus-jose-jwt.version>
-        <convergence.wicket-webjars.version>4.0.11</convergence.wicket-webjars.version>
-
-        <webjar.autosize.version>6.0.1</webjar.autosize.version>
-        <webjar.snackbar.version>0.1.16</webjar.snackbar.version>
-
-        <plugin.sass.version>1.0.4</plugin.sass.version>
+        <java.version>25</java.version>
     </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>de.vinado.boot</groupId>
-                <artifactId>spring-boot-secrets-api</artifactId>
-                <version>${dependency.spring-boot-secrets-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-core</artifactId>
-                <version>${dependency.wicket.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-spring</artifactId>
-                <version>${dependency.wicket.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-auth-roles</artifactId>
-                <version>${dependency.wicket.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wicketstuff</groupId>
-                <artifactId>wicketstuff-select2</artifactId>
-                <version>${dependency.wicket.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wicketstuff</groupId>
-                <artifactId>wicketstuff-clipboardjs</artifactId>
-                <version>${dependency.wicket.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-tester</artifactId>
-                <version>${dependency.wicket.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.agilecoders.wicket</groupId>
-                <artifactId>wicket-bootstrap-extensions</artifactId>
-                <version>${dependency.wicket-bootstrap.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.webjars.npm</groupId>
-                <artifactId>autosize</artifactId>
-                <version>${webjar.autosize.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.webjars</groupId>
-                <artifactId>node-snackbar</artifactId>
-                <version>${webjar.snackbar.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.yahoo.platform.yui</groupId>
-                <artifactId>yuicompressor</artifactId>
-                <version>${dependency.yuicompressor.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tika</groupId>
-                <artifactId>tika-core</artifactId>
-                <version>${dependency.tika.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.opencsv</groupId>
-                <artifactId>opencsv</artifactId>
-                <version>${dependency.opencsv.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.pivovarit</groupId>
-                <artifactId>throwing-function</artifactId>
-                <version>${dependency.throwing-function.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${dependency.guava.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm</artifactId>
-                <version>${convergence.asm.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.checkerframework</groupId>
-                <artifactId>checker-qual</artifactId>
-                <version>${convergence.checker-qual.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-collections4</artifactId>
-                <version>${convergence.commons-collections4.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${convergence.commons-io.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-text</artifactId>
-                <version>${convergence.commons-text.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.webjars</groupId>
-                <artifactId>jquery</artifactId>
-                <version>${convergence.jquery.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.nimbusds</groupId>
-                <artifactId>nimbus-jose-jwt</artifactId>
-                <version>${convergence.nimbus-jose-jwt.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.agilecoders.wicket.webjars</groupId>
-                <artifactId>wicket-webjars</artifactId>
-                <version>${convergence.wicket-webjars.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -180,109 +62,42 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-liquibase</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+            <artifactId>spring-boot-starter-security-oauth2-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
+            <artifactId>spring-boot-starter-webmvc</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.vinado.boot</groupId>
-            <artifactId>spring-boot-secrets-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-spring</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-auth-roles</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wicketstuff</groupId>
-            <artifactId>wicketstuff-select2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wicketstuff</groupId>
-            <artifactId>wicketstuff-clipboardjs</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-tester</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.agilecoders.wicket</groupId>
-            <artifactId>wicket-bootstrap-extensions</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars.npm</groupId>
-            <artifactId>autosize</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>node-snackbar</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.yahoo.platform.yui</groupId>
-            <artifactId>yuicompressor</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tika</groupId>
-            <artifactId>tika-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.opencsv</groupId>
-            <artifactId>opencsv</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.pivovarit</groupId>
-            <artifactId>throwing-function</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
+            <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-docker-compose</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
@@ -301,7 +116,32 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
+            <artifactId>spring-boot-starter-actuator-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-liquibase-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security-oauth2-client-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -310,84 +150,24 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
+            <artifactId>testcontainers-mariadb</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>mariadb</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
+            <artifactId>testcontainers-postgresql</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <filtering>true</filtering>
-                <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>**/*.scss</exclude>
-                    <exclude>**/*.sample.*</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>target/generated-sources/src/main/java</directory>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
-            <resource>
-                <filtering>false</filtering>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**</include>
-                </includes>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
-            </resource>
-        </resources>
-
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>us.hebi.sass</groupId>
-                    <artifactId>sass-cli-maven-plugin</artifactId>
-                    <version>${plugin.sass.version}</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>dependency-convergence</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <dependencyConvergence/>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -398,6 +178,15 @@
                             <artifactId>lombok</artifactId>
                         </path>
                     </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>
+                        -XX:+EnableDynamicAgentLoading
+                    </argLine>
                 </configuration>
             </plugin>
             <plugin>
@@ -412,25 +201,7 @@
                     </excludes>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>us.hebi.sass</groupId>
-                <artifactId>sass-cli-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <sassVersion>${dependency.sass.version}</sassVersion>
-                    <args>
-                        <arg>${project.basedir}/src/main/resources/scss:${project.build.directory}/generated-sources/src/main/java/de/vinado/wicket/participate/resources/css</arg>
-                        <arg>--no-source-map</arg>
-                    </args>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
+
 </project>

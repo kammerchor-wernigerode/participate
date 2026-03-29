@@ -1,35 +1,51 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
     <option name="LINE_SEPARATOR" value="&#10;" />
-    <option name="FORMATTER_TAGS_ENABLED" value="true" />
+    <HTMLCodeStyleSettings>
+      <option name="HTML_SPACE_INSIDE_EMPTY_TAG" value="true" />
+      <option name="HTML_DO_NOT_INDENT_CHILDREN_OF" value="" />
+    </HTMLCodeStyleSettings>
     <JavaCodeStyleSettings>
       <option name="SUBCLASS_NAME_PREFIX" value="Default" />
       <option name="TEST_NAME_SUFFIX" value="Tests" />
       <option name="SUBCLASS_NAME_SUFFIX" value="" />
-      <option name="REPLACE_INSTANCEOF_AND_CAST" value="true" />
-      <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="99" />
-      <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="99" />
+      <option name="INSERT_INNER_CLASS_IMPORTS" value="true" />
+      <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="999" />
+      <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="999" />
       <option name="PACKAGES_TO_USE_IMPORT_ON_DEMAND">
         <value>
-          <package name="org.mockito.Mockito" withSubpackages="false" static="true" />
-          <package name="org.mockito.ArgumentMatchers" withSubpackages="false" static="true" />
-          <package name="org.junit.jupiter.api.Assertions" withSubpackages="false" static="true" />
+          <package name="org.mockito.Mockito" withSubpackages="true" static="true" />
+          <package name="org.junit.jupiter.api.Assertions" withSubpackages="true" static="true" />
+          <package name="org.assertj.core.api.Assertions" withSubpackages="true" static="true" />
+          <package name="org.mockito.ArgumentMatchers" withSubpackages="true" static="true" />
         </value>
       </option>
       <option name="IMPORT_LAYOUT_TABLE">
         <value>
+          <package name="" withSubpackages="true" static="false" module="true" />
           <package name="" withSubpackages="true" static="false" />
           <emptyLine />
           <package name="java" withSubpackages="true" static="false" />
+          <package name="jakarta" withSubpackages="true" static="false" />
           <package name="javax" withSubpackages="true" static="false" />
+          <emptyLine />
+          <package name="lombok" withSubpackages="true" static="false" />
           <emptyLine />
           <package name="" withSubpackages="true" static="true" />
         </value>
       </option>
-      <option name="JD_INDENT_ON_CONTINUATION" value="true" />
     </JavaCodeStyleSettings>
+    <codeStyleSettings language="HTML">
+      <indentOptions>
+        <option name="INDENT_SIZE" value="2" />
+        <option name="CONTINUATION_INDENT_SIZE" value="4" />
+        <option name="TAB_SIZE" value="2" />
+      </indentOptions>
+    </codeStyleSettings>
     <codeStyleSettings language="JAVA">
-      <option name="WRAP_COMMENTS" value="true" />
+      <indentOptions>
+        <option name="CONTINUATION_INDENT_SIZE" value="4" />
+      </indentOptions>
     </codeStyleSettings>
   </code_scheme>
 </component>

@@ -1,78 +1,19 @@
 spring:
   application:
-    name: Participate
+    name: participate
 
   profiles:
-    group:
-      oidc: oauth2
+    default: postgresql
+
+  main:
+    banner-mode: off
+
+  docker.compose.enabled: false
 
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: validate
-    show-sql: false
-    open-in-view: true
-    properties:
-      hibernate.format_sql: true
 
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.xml
-
-  mail:
-    host: localhost
-    port: 587
-    username:
-    password:
-    test-connection: true
-    properties:
-      mail.smtp.auth: false
-      mail.smtp.localhost: localhost
-      mail.from: smtp@example.com
-      mail.reply-to: ${spring.mail.properties.mail.from}
-      mail.smtp.starttls.enable: false
-
-app:
-  version: "^project.version^"
-  base-url: http://localhost:8080
-  customer: Default Customer
-  participate-password: f0rmp4ss
-  deadline-offset: -1
-  organization-responsible:
-  sleeping-place-responsible:
-  crypto:
-    session-secret:
-    pbe-salt:
-    pbe-iteration-count: 1000
-  mail:
-    footer: ${spring.application.name}
-  notification:
-    email:
-      sender:
-        from: ${spring.mail.properties.mail.from}
-        reply-to: ${spring.mail.properties.mail.reply-to}
-      dispatch:
-        concurrent-transmissions: 1
-        shutdown-grace-period: 30s
-        recipient-threshold: 100
-  wicket:
-    runtime-configuration: DEPLOYMENT
-  google-calendar:
-    source: foo
-
-  features:
-    remind-overdue:
-      enabled: false
-      cron-expression: 0 0 9 ? * SUN
-      offset: 14
-    scores-manager-notification:
-      enabled: false
-      cron-expression: 0 0 9 ? * SUN
-      offset: 7
-      scores-manager-email:
-
-management:
-  server:
-    port: 8081
-  endpoints:
-    web:
-      exposure:
-        include: health

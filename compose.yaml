@@ -1,27 +1,37 @@
 volumes:
   postgres_data:
+  mariadb_data:
 
 services:
-  mariadb:
-    profiles:
-      - mariadb
-    image: mariadb:10.11
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./docker/mariadb/dumps/:/docker-entrypoint-initdb.d/
+  keycloak:
+    image: keycloak/keycloak:26.5.6
+    command: [ "start-dev", "--import-realm" ]
     environment:
-      MARIADB_RANDOM_ROOT_PASSWORD: 'yes'
-      MARIADB_DATABASE: participate
-      MARIADB_USER: participate
-      MARIADB_PASSWORD: participate
-      MARIADB_AUTO_UPGRADE: 'true'
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: 4ll3gr0
+      KC_HOSTNAME: http://localhost:9080
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: 'true'
+      KC_HOSTNAME_STRICT: 'false'
+      KC_HEALTH_ENABLED: 'true'
+      TZ: Europe/Berlin
+    volumes:
+      - ./docker/keycloak/healthcheck.sh:/opt/keycloak/healthcheck.sh:ro
+      - ./docker/keycloak/provisioning/:/opt/keycloak/data/import/:rw
+    ports:
+      - "9080:8080"
+      - "9000:9000"
+    healthcheck:
+      test: [ "CMD", "bash", "/opt/keycloak/healthcheck.sh" ]
+      interval: 10s
+      start_period: 30s
 
   postgres:
     profiles:
-      - postgres
+      - postgresql
     image: postgres:17.9-alpine
     environment:
+      POSTGRES_DB: participate_local
+      POSTGRES_USER: participate_app
       POSTGRES_PASSWORD: 3_dZ-LNHjRpe
       TZ: Europe/Berlin
     volumes:
@@ -30,16 +40,28 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: [ "CMD-SHELL", "pg_isready -U participate_app -d participate_local" ]
       interval: 10s
-      timeout: 2s
-      retries: 3
-      start_period: 5s
+      start_interval: 2s
+      start_period: 1m
 
-  fakesmtp:
-    image: ghusta/fakesmtp:2.3-jre17
-    stop_signal: SIGKILL
-    ports:
-      - "587:25"
+  mariadb:
+    profiles:
+      - mariadb
+    image: mariadb:10.11
+    environment:
+      MARIADB_DATABASE: participate_local
+      MARIADB_USER: participate_app
+      MARIADB_PASSWORD: 3_dZ-LNHjRpe
+      MARIADB_AUTO_UPGRADE: 'true'
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'true'
     volumes:
-      - $HOME/received-emails/:/var/mail
+      - mariadb_data:/var/lib/mysql/:rw
+      - ./docker/mariadb/provisioning/:/docker-entrypoint-initdb.d/:ro
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      interval: 10s
+      start_interval: 2s
+      start_period: 1m

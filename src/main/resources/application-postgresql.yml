@@ -1,4 +1,4 @@
 spring:
   docker.compose:
     profiles:
-      active: mariadb
+      active: postgresql

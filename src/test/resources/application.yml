@@ -1,30 +1,22 @@
 spring:
-  main.banner-mode: "off"
+  application:
+    name: participate
+
+  main:
+    banner-mode: off
+
+  docker.compose.enabled: false
 
   datasource:
     url: jdbc:h2:mem:;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
 
   jpa:
-    open-in-view: true
+    open-in-view: false
     hibernate:
       ddl-auto: create
 
   liquibase.enabled: false
 
-  mail:
-    host: localhost
-    port: 587
-
-app:
-  base-url: http://localhost:8080
-  google-calendar:
-    source: foo
-  notification:
-    email:
-      sender:
-        from: smtp@example.com
-        reply-to: no-reply@example.com
-      dispatch:
-        concurrent-transmissions: 1
-        shutdown-grace-period: 0s
-        recipient-threshold: 100
+logging:
+  level:
+    root: warn

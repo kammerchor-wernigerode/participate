@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd"
+    logicalFilePath="de/vinado/wicket/participate/db/liquibase/changelog-5.4.0.xml"
+>
+
+    <changeSet id="v6.0.0-prepare" author="Vincent Nadoll">
+        <dropView ifExists="true" viewName="v_event_details"/>
+        <dropView ifExists="true" viewName="v_participants_accepted"/>
+        <dropView ifExists="true" viewName="v_participants_declined"/>
+        <dropView ifExists="true" viewName="v_participants_pending"/>
+        <dropView ifExists="true" viewName="v_participants_tentative"/>
+        <dropView ifExists="true" viewName="v_participants_soprano"/>
+        <dropView ifExists="true" viewName="v_participant_alto"/>
+        <dropView ifExists="true" viewName="v_participant_tenor"/>
+        <dropView ifExists="true" viewName="v_participant_bass"/>
+        <dropView ifExists="true" viewName="v_participant_car"/>
+
+        <dropForeignKeyConstraint baseTableName="singers" constraintName="fk_singers_person_id"/>
+        <renameTable oldTableName="singers" newTableName="musicians"/>
+
+        <dropNotNullConstraint tableName="persons" columnName="email" columnDataType="varchar(255)"/>
+        <renameColumn tableName="persons" oldColumnName="email" newColumnName="email_address"/>
+        <renameColumn tableName="persons" oldColumnName="creation_date" newColumnName="created_date_time"/>
+        <renameColumn tableName="persons" oldColumnName="last_modified" newColumnName="last_modified_date_time"/>
+        <sql splitStatements="true" dbms="postgresql,h2">
+            ALTER TABLE persons
+                ALTER
+                    COLUMN created_date_time TYPE timestamp with time zone
+                    USING created_date_time AT TIME ZONE 'Europe/Berlin',
+                ALTER
+                    COLUMN last_modified_date_time TYPE timestamp with time zone
+                    USING last_modified_date_time AT TIME ZONE 'Europe/Berlin';
+
+            ALTER TABLE persons
+                ALTER COLUMN created_date_time SET DEFAULT CURRENT_TIMESTAMP,
+                ALTER COLUMN last_modified_date_time SET DEFAULT CURRENT_TIMESTAMP;
+
+            ALTER TABLE persons
+                ALTER COLUMN created_date_time SET NOT NULL,
+                ALTER COLUMN last_modified_date_time SET NOT NULL;
+        </sql>
+        <sql splitStatements="true" dbms="mariadb">
+            ALTER TABLE persons
+                MODIFY COLUMN created_date_time TIMESTAMP (6) NOT NULL,
+                MODIFY COLUMN last_modified_date_time TIMESTAMP (6) NOT NULL;
+        </sql>
+        <modifyDataType tableName="persons" columnName="email_address" newDataType="varchar(255)"/>
+        <modifyDataType tableName="persons" columnName="first_name" newDataType="varchar(255)"/>
+        <modifyDataType tableName="persons" columnName="last_name" newDataType="varchar(255)"/>
+        <addColumn tableName="persons">
+            <column name="file_name" type="varchar(255)">
+                <constraints unique="true" uniqueConstraintName="uc_file_name"/>
+            </column>
+        </addColumn>
+        <dropUniqueConstraint tableName="persons" constraintName="uc_email"/>
+        <addUniqueConstraint tableName="persons" columnNames="email_address" constraintName="uc_email_address"/>
+
+        <dropNotNullConstraint tableName="events" columnName="event_type" columnDataType="varchar(255)"/>
+        <renameColumn tableName="events" oldColumnName="event_type" newColumnName="summary"/>
+        <renameColumn tableName="events" oldColumnName="start_date" newColumnName="start_date_time"/>
+        <renameColumn tableName="events" oldColumnName="end_date" newColumnName="end_date_time"/>
+        <renameColumn tableName="events" oldColumnName="creation_date" newColumnName="created_date_time"/>
+        <renameColumn tableName="events" oldColumnName="last_modified" newColumnName="last_modified_date_time"/>
+        <modifyDataType tableName="events" columnName="summary" newDataType="varchar(255)"/>
+        <modifyDataType tableName="events" columnName="location" newDataType="varchar(255)"/>
+        <modifyDataType tableName="events" columnName="start_date_time" newDataType="datetime"/>
+        <modifyDataType tableName="events" columnName="end_date_time" newDataType="datetime"/>
+        <addColumn tableName="events">
+            <column name="start_zone" type="varchar(255)" value="Europe/Berlin">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_zone" type="varchar(255)" value="Europe/Berlin">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <sql>
+            UPDATE participants
+            SET from_date = (SELECT start_date_time FROM events WHERE participants.event_id = events.id)
+            WHERE from_date IS NULL;
+
+            UPDATE participants
+            SET to_date = (SELECT end_date_time FROM events WHERE participants.event_id = events.id)
+            WHERE to_date IS NULL;
+        </sql>
+        <sql splitStatements="true" dbms="postgresql,h2">
+            UPDATE events
+            SET start_date_time = (start_date_time AT TIME ZONE start_zone) AT TIME ZONE 'UTC';
+            UPDATE events
+            SET end_date_time = (end_date_time AT TIME ZONE end_zone) AT TIME ZONE 'UTC';
+
+            ALTER TABLE events
+                ALTER
+                    COLUMN start_date_time TYPE timestamp with time zone
+                    USING start_date_time AT TIME ZONE 'UTC',
+                ALTER
+                    COLUMN end_date_time TYPE timestamp with time zone
+                    USING end_date_time AT TIME ZONE 'UTC',
+                ALTER
+                    COLUMN created_date_time TYPE timestamp with time zone
+                    USING created_date_time AT TIME ZONE 'Europe/Berlin',
+                ALTER
+                    COLUMN last_modified_date_time TYPE timestamp with time zone
+                    USING last_modified_date_time AT TIME ZONE 'Europe/Berlin';
+
+            ALTER TABLE events
+                ALTER COLUMN created_date_time SET DEFAULT CURRENT_TIMESTAMP,
+                ALTER COLUMN last_modified_date_time SET DEFAULT CURRENT_TIMESTAMP;
+
+            ALTER TABLE events
+                ALTER COLUMN start_date_time SET NOT NULL,
+                ALTER COLUMN end_date_time SET NOT NULL,
+                ALTER COLUMN created_date_time SET NOT NULL,
+                ALTER COLUMN last_modified_date_time SET NOT NULL;
+        </sql>
+        <sql splitStatements="true" dbms="mariadb">
+            UPDATE events
+            SET start_date_time = CONVERT_TZ(start_date_time, start_zone, 'UTC');
+
+            UPDATE events
+            SET end_date_time = CONVERT_TZ(end_date_time, end_zone, 'UTC');
+
+            ALTER TABLE events
+                MODIFY COLUMN start_date_time TIMESTAMP (6) NOT NULL,
+                MODIFY COLUMN end_date_time TIMESTAMP (6) NOT NULL,
+                MODIFY COLUMN created_date_time TIMESTAMP (6) NOT NULL DEFAULT CURRENT_TIMESTAMP (6),
+                MODIFY COLUMN last_modified_date_time TIMESTAMP (6) NOT NULL DEFAULT CURRENT_TIMESTAMP (6);
+        </sql>
+        <sql dbms="postgresql,h2">
+            DELETE
+            FROM participants USING events
+            WHERE participants.event_id = events.id
+              AND events.is_active = false
+        </sql>
+        <sql dbms="mariadb">
+            DELETE
+            participants
+            FROM participants
+                     INNER JOIN events ON participants.event_id = events.id
+            WHERE events.is_active = FALSE
+        </sql>
+        <delete tableName="events">
+            <where>:name = :value</where>
+            <whereParams>
+                <param name="is_active" valueBoolean="false"/>
+            </whereParams>
+        </delete>
+        <dropColumn tableName="events" columnName="is_active"/>
+
+        <dropAllForeignKeyConstraints baseTableName="participants"/>
+        <renameColumn tableName="participants" oldColumnName="singer_id" newColumnName="person_id"/>
+        <addUniqueConstraint tableName="musicians" columnNames="person_id" constraintName="uc_person_id"/>
+
+        <createSequence sequenceName="seq_musicians" incrementBy="1" startValue="1"/>
+        <addColumn tableName="musicians">
+            <column name="id" type="bigint" defaultValueSequenceNext="seq_musicians">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <dropPrimaryKey tableName="musicians"/>
+        <addPrimaryKey tableName="musicians" columnNames="id" constraintName="pk_musicians"/>
+        <addForeignKeyConstraint baseTableName="musicians"
+                                 baseColumnNames="person_id"
+                                 constraintName="fk_musicians_person_id"
+                                 referencedTableName="persons"
+                                 referencedColumnNames="id"/>
+        <sql>
+            UPDATE musicians SET is_active = NOT is_active
+        </sql>
+        <renameColumn tableName="musicians" oldColumnName="is_active" newColumnName="is_deleted"/>
+
+        <dropPrimaryKey tableName="participants"/>
+        <renameTable oldTableName="participants" newTableName="attendees"/>
+        <addPrimaryKey tableName="attendees" columnNames="event_id,person_id" constraintName="pk_attendees"/>
+        <addForeignKeyConstraint baseTableName="attendees"
+                                 baseColumnNames="event_id"
+                                 constraintName="fk_attendees_event_id"
+                                 referencedTableName="events"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="attendees"
+                                 baseColumnNames="person_id"
+                                 constraintName="fk_attendees_person_id"
+                                 referencedTableName="persons"
+                                 referencedColumnNames="id"/>
+
+        <renameColumn tableName="attendees" oldColumnName="from_date" newColumnName="from_date_time"/>
+        <renameColumn tableName="attendees" oldColumnName="to_date" newColumnName="to_date_time"/>
+        <addNotNullConstraint tableName="attendees" columnName="from_date_time" columnDataType="datetime"/>
+        <addNotNullConstraint tableName="attendees" columnName="to_date_time" columnDataType="datetime"/>
+
+        <dropSequence sequenceName="seq_user_rec_tokens"/>
+        <dropTable cascadeConstraints="true" tableName="user_rec_tokens"/>
+    </changeSet>
+
+    <changeSet id="v6.0.0-table-attendees_expand_domain_key" author="Vincent Nadoll" dbms="postgresql,h2">
+        <dropColumn tableName="attendees" columnName="id"/>
+        <addColumn tableName="attendees">
+            <column name="domain_key" type="uuid">
+                <constraints unique="true" uniqueConstraintName="uc_attendees_domain_key"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="v6.0.0-table-attendees_expand_domain_key" author="Vincent Nadoll" dbms="mariadb">
+        <dropColumn tableName="attendees" columnName="id"/>
+        <addColumn tableName="attendees">
+            <column name="domain_key" type="uuid">
+                <constraints unique="true" uniqueConstraintName="uc_attendees_domain_key"/>
+            </column>
+        </addColumn>
+        <dropSequence sequenceName="seq_participants"/>
+    </changeSet>
+
+    <changeSet id="v6.0.0-table-attendees_contract_domain_key" author="Vincent Nadoll">
+        <preConditions onFail="CONTINUE" onError="HALT">
+            <columnExists tableName="attendees" columnName="domain_key"/>
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM attendees
+                WHERE domain_key IS NULL
+            </sqlCheck>
+        </preConditions>
+
+        <addNotNullConstraint tableName="attendees" columnName="domain_key" columnDataType="uuid"/>
+        <dropNotNullConstraint tableName="attendees" columnName="token" columnDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="v6.0.0-table-drop_legacy_uc" author="Vincent Nadoll" dbms="postgresql,h2">
+        <dropUniqueConstraint tableName="attendees" constraintName="uc_event_to_member"/>
+    </changeSet>
+
+</databaseChangeLog>

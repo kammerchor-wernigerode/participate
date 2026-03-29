@@ -17,4 +17,20 @@
     <include relativeToChangelogFile="true" file="data/members.xml"/>
     <include relativeToChangelogFile="true" file="data/groups.xml"/>
     <include relativeToChangelogFile="true" file="data/m_member_group.xml"/>
+
+    <changeSet id="0000-data-delete_default_users" author="Vincent Nadoll">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="2">
+                SELECT COUNT(*)
+                FROM persons
+            </sqlCheck>
+        </preConditions>
+
+        <delete tableName="m_member_group"/>
+        <delete tableName="members"/>
+        <delete tableName="users"/>
+        <delete tableName="m_person_role"/>
+        <delete tableName="persons"/>
+    </changeSet>
+
 </databaseChangeLog>

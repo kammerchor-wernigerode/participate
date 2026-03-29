@@ -1,0 +1,22 @@
+spring:
+  docker.compose:
+    enabled: true
+    lifecycle-management: start_only
+    readiness:
+      wait: only_if_started
+    start:
+      skip: never
+      log-level: debug
+
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:9080/realms/local
+            user-name-attribute: sub
+        registration:
+          keycloak:
+            client-id: participate
+            client-secret: HizmgIafi7qLMZCg4ywlUVNkl6BJZM3r
+            scope: openid, email, profile
