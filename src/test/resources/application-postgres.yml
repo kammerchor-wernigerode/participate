@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:17.9-alpine:///
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  liquibase:
+    enabled: true
+    change-log: classpath:/de/vinado/wicket/participate/db/liquibase/changelog.xml
+
+  test:
+    database.replace: none

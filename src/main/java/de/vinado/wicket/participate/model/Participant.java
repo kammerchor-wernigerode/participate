@@ -5,6 +5,7 @@ import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -41,7 +43,8 @@ import static de.vinado.wicket.participate.model.InvitationStatus.UNINVITED;
 public class Participant implements Identifiable<Long>, Invitable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "participants_seq", sequenceName = "seq_participants", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "participants_seq")
     @Setter(AccessLevel.NONE)
     private Long id;
 
@@ -58,8 +61,8 @@ public class Participant implements Identifiable<Long>, Invitable {
     @JoinColumn(name = "singer_id", nullable = false)
     private Singer singer;
 
-    @Enumerated
-    @Column(nullable = false, columnDefinition = "integer")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private InvitationStatus invitationStatus;
 
     @Temporal(TemporalType.TIMESTAMP)

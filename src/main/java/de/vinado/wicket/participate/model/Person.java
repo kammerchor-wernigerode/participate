@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,7 +31,8 @@ import java.util.Objects;
 public class Person implements Identifiable<Long> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "persons_seq", sequenceName = "seq_persons", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "persons_seq")
     @Setter(AccessLevel.NONE)
     private Long id;
 

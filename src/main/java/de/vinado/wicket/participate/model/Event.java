@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -32,7 +33,8 @@ import java.util.Date;
 public class Event implements Identifiable<Long>, Hideable, Terminable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "events_seq", sequenceName = "seq_events", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "events_seq")
     @Setter(AccessLevel.NONE)
     private Long id;
 

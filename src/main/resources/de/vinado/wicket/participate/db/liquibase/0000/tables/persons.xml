@@ -30,7 +30,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="0000-tables-persons" author="Julius Felchow" dbms="h2">
+    <changeSet id="0000-tables-persons" author="Julius Felchow" dbms="h2,postgresql">
         <createTable tableName="persons">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_persons"/>

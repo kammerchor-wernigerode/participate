@@ -19,4 +19,20 @@
             </update>
         </rollback>
     </changeSet>
+
+    <changeSet id="v2.15.0-v_event_details" author="Vincent Nadoll" dbms="postgresql">
+        <sql>
+            DROP VIEW IF EXISTS v_event_details;
+        </sql>
+        <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="v_event_details.postgresql.sql"/>
+
+        <rollback>
+            <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="../../v2.12.0/event/v_event_details.postgresql.sql"/>
+            <dropView viewName="v_participants_tentative"/>
+            <update tableName="participants">
+                <column name="invitation_status" type="INT" valueNumeric="3"/>
+                <where>invitation_status = 4</where>
+            </update>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

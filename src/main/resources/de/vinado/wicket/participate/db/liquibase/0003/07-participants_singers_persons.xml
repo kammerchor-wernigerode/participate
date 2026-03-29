@@ -194,4 +194,81 @@
 
     </changeSet>
 
+    <changeSet id="0003-singers" author="Vincent Nadoll" dbms="postgresql">
+        <renameTable oldTableName="members" newTableName="singers"/>
+
+        <sql>
+            ALTER TABLE singers ALTER COLUMN id TYPE BIGINT;
+            ALTER TABLE singers ALTER COLUMN id SET NOT NULL;
+        </sql>
+
+        <sql>
+            UPDATE singers SET id = person_id;
+        </sql>
+
+        <dropForeignKeyConstraint baseTableName="singers" constraintName="fk_member_person"/>
+        <dropUniqueConstraint tableName="singers" constraintName="uc_members"/>
+        <dropColumn tableName="singers" columnName="person_id"/>
+
+        <addForeignKeyConstraint baseTableName="singers"
+                                 baseColumnNames="id"
+                                 constraintName="FK_personreference"
+                                 referencedTableName="persons"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="0003-participants" author="Vincent Nadoll" dbms="postgresql">
+        <dropForeignKeyConstraint baseTableName="m_member_event" constraintName="fk_m_ev_member_events"/>
+        <dropForeignKeyConstraint baseTableName="m_member_event" constraintName="fk_m_ev_member_members"/>
+
+        <renameColumn tableName="m_member_event" oldColumnName="needs_dinner" newColumnName="need_catering"
+                      columnDataType="BOOLEAN"/>
+        <renameColumn tableName="m_member_event" oldColumnName="needs_place_to_sleep" newColumnName="need_accommodation"
+                      columnDataType="BOOLEAN"/>
+
+        <sql>
+            UPDATE m_member_event
+            SET comment = CONCAT(comment, E'\n\n', dinner_comment);
+        </sql>
+
+        <sql>
+            UPDATE m_member_event
+            SET comment = CONCAT(comment, E'\n\n', needs_place_to_sleep_comment);
+        </sql>
+
+        <renameTable oldTableName="m_member_event" newTableName="participants"/>
+        <renameColumn tableName="participants" oldColumnName="member_id" newColumnName="singer_id"
+                      columnDataType="BIGINT"/>
+        <modifyDataType tableName="participants" columnName="comment" newDataType="TEXT"/>
+
+        <sql>
+            ALTER TABLE participants DROP CONSTRAINT pk_m_member_event;
+            ALTER TABLE participants ALTER COLUMN id TYPE BIGINT;
+            ALTER TABLE participants ALTER COLUMN id SET NOT NULL;
+        </sql>
+
+        <dropColumn tableName="participants" columnName="dinner_comment"/>
+        <dropColumn tableName="participants" columnName="needs_place_to_sleep_comment"/>
+        <dropColumn tableName="participants" columnName="is_reviewed"/>
+
+        <addNotNullConstraint tableName="participants" columnName="id" columnDataType="BIGINT"/>
+        <addNotNullConstraint tableName="participants" columnName="event_id" columnDataType="BIGINT"/>
+        <addNotNullConstraint tableName="participants" columnName="singer_id" columnDataType="BIGINT"/>
+        <addNotNullConstraint tableName="participants" columnName="invitation_status" columnDataType="INT"/>
+        <addPrimaryKey tableName="participants" columnNames="id, event_id, singer_id, token"
+                       constraintName="PK_participants"/>
+        <addUniqueConstraint tableName="participants" columnNames="token" constraintName="UC_participanttoken"/>
+        <addForeignKeyConstraint baseTableName="participants"
+                                 baseColumnNames="event_id"
+                                 constraintName="FK_eventreference"
+                                 referencedTableName="events"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="participants"
+                                 baseColumnNames="singer_id"
+                                 constraintName="FK_participatingsingerreference"
+                                 referencedTableName="singers"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+
 </databaseChangeLog>

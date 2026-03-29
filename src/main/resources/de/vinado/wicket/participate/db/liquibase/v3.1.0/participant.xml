@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
-    <changeSet id="v3.1.0-participants" author="Vincent Nadoll">
+    <changeSet id="v3.1.0-participants" author="Vincent Nadoll" dbms="mariadb">
         <addColumn tableName="participants">
             <column type="VARCHAR(255)" name="accommodation_status" afterColumn="need_accommodation"/>
             <column type="INT" name="accommodation_bed_count" afterColumn="accommodation_status"/>
@@ -19,6 +19,32 @@
             <column name="accommodation_status" value="NO_NEED"/>
             <where>need_accommodation = false</where>
         </update>
+
+        <dropColumn tableName="participants">
+            <column name="need_accommodation"/>
+        </dropColumn>
+        <dropColumn tableName="participants">
+            <column name="need_catering"/>
+        </dropColumn>
+    </changeSet>
+
+    <changeSet id="v3.1.0-participants" author="Vincent Nadoll" dbms="postgresql">
+        <addColumn tableName="participants">
+            <column type="VARCHAR(255)" name="accommodation_status"/>
+            <column type="INT" name="accommodation_bed_count"/>
+        </addColumn>
+
+        <update tableName="participants">
+            <column name="accommodation_status" value="SEARCHING"/>
+            <column name="accommodation_bed_count" valueNumeric="1"/>
+            <where>need_accommodation = true</where>
+        </update>
+        <update tableName="participants">
+            <column name="accommodation_status" value="NO_NEED"/>
+            <where>need_accommodation = false</where>
+        </update>
+
+        <dropView viewName="v_event_details"/>
 
         <dropColumn tableName="participants">
             <column name="need_accommodation"/>

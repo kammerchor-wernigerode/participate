@@ -1,6 +1,11 @@
+volumes:
+  postgres_data:
+
 services:
-  database:
-    image: mariadb:10.2
+  mariadb:
+    profiles:
+      - mariadb
+    image: mariadb:10.11
     ports:
       - "3306:3306"
     volumes:
@@ -10,6 +15,26 @@ services:
       MARIADB_DATABASE: participate
       MARIADB_USER: participate
       MARIADB_PASSWORD: participate
+      MARIADB_AUTO_UPGRADE: 'true'
+
+  postgres:
+    profiles:
+      - postgres
+    image: postgres:17.9-alpine
+    environment:
+      POSTGRES_PASSWORD: 3_dZ-LNHjRpe
+      TZ: Europe/Berlin
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/:rw
+      - ./docker/postgres/provisioning/:/docker-entrypoint-initdb.d/:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 2s
+      retries: 3
+      start_period: 5s
 
   fakesmtp:
     image: ghusta/fakesmtp:2.3-jre17

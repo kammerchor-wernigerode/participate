@@ -32,7 +32,7 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="0000-tables-users" author="Vincent Nadoll" dbms="h2">
+    <changeSet id="0000-tables-users" author="Vincent Nadoll" dbms="h2,postgresql">
         <createTable tableName="users">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users"/>

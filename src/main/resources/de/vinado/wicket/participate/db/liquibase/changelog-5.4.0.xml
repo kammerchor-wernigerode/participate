@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd">
+
+    <changeSet id="v5.4.0-string_enumerations" author="Vincent Nadoll" dbms="mariadb">
+        <sql>
+            DROP VIEW IF EXISTS v_event_details;
+            DROP VIEW IF EXISTS v_participants_accepted;
+            DROP VIEW IF EXISTS v_participants_declined;
+            DROP VIEW IF EXISTS v_participants_pending;
+            DROP VIEW IF EXISTS v_participants_tentative;
+            DROP VIEW IF EXISTS v_participants_soprano;
+            DROP VIEW IF EXISTS v_participant_alto;
+            DROP VIEW IF EXISTS v_participant_tenor;
+            DROP VIEW IF EXISTS v_participant_bass;
+            DROP VIEW IF EXISTS v_participant_car;
+
+            ALTER TABLE participants
+                MODIFY invitation_status VARCHAR(16) NOT NULL;
+            UPDATE participants
+            SET invitation_status = CASE invitation_status
+                                        WHEN '0' THEN 'ACCEPTED'
+                                        WHEN '1' THEN 'DECLINED'
+                                        WHEN '2' THEN 'PENDING'
+                                        WHEN '3' THEN 'UNINVITED'
+                                        WHEN '4' THEN 'TENTATIVE'
+                                        ELSE invitation_status
+                END;
+            UPDATE participants
+            SET accommodation_status = CASE accommodation_status
+                                           WHEN '0' THEN 'SEARCHING'
+                                           WHEN '1' THEN 'OFFERING'
+                                           WHEN '2' THEN 'NO_NEED'
+                                           ELSE accommodation_status
+                END;
+
+            ALTER TABLE singers
+                MODIFY voice VARCHAR(16);
+            UPDATE singers
+            SET voice = CASE voice
+                            WHEN '0' THEN 'SOPRANO'
+                            WHEN '1' THEN 'ALTO'
+                            WHEN '2' THEN 'TENOR'
+                            WHEN '3' THEN 'BASS'
+                            ELSE voice
+                END;
+        </sql>
+
+        <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="v5.4.0/v_participant_views_01.mariadb.sql"/>
+        <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="v5.2.0/v_event_details.sql"/>
+    </changeSet>
+
+    <changeSet id="v5.4.0-string_enumerations" author="Vincent Nadoll" dbms="postgresql">
+        <sql>
+            DROP VIEW IF EXISTS v_event_details;
+            DROP VIEW IF EXISTS v_participants_accepted;
+            DROP VIEW IF EXISTS v_participants_declined;
+            DROP VIEW IF EXISTS v_participants_pending;
+            DROP VIEW IF EXISTS v_participants_tentative;
+            DROP VIEW IF EXISTS v_participants_soprano;
+            DROP VIEW IF EXISTS v_participant_alto;
+            DROP VIEW IF EXISTS v_participant_tenor;
+            DROP VIEW IF EXISTS v_participant_bass;
+            DROP VIEW IF EXISTS v_participant_car;
+
+            ALTER TABLE participants
+                ALTER COLUMN invitation_status TYPE VARCHAR(16)
+                    USING invitation_status::text;
+            UPDATE participants
+            SET invitation_status = CASE invitation_status
+                                        WHEN '0' THEN 'ACCEPTED'
+                                        WHEN '1' THEN 'DECLINED'
+                                        WHEN '2' THEN 'PENDING'
+                                        WHEN '3' THEN 'UNINVITED'
+                                        WHEN '4' THEN 'TENTATIVE'
+                                        ELSE invitation_status
+                END;
+            UPDATE participants
+            SET accommodation_status = CASE accommodation_status
+                                           WHEN '0' THEN 'SEARCHING'
+                                           WHEN '1' THEN 'OFFERING'
+                                           WHEN '2' THEN 'NO_NEED'
+                                           ELSE accommodation_status
+                END;
+
+            ALTER TABLE singers
+                ALTER COLUMN voice TYPE VARCHAR(16)
+                    USING voice::text;
+            UPDATE singers
+            SET voice = CASE voice
+                            WHEN '0' THEN 'SOPRANO'
+                            WHEN '1' THEN 'ALTO'
+                            WHEN '2' THEN 'TENOR'
+                            WHEN '3' THEN 'BASS'
+                            ELSE voice
+                END;
+        </sql>
+
+        <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="v5.4.0/v_participant_views_01.postgresql.sql"/>
+        <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="v5.2.0/v_event_details.postgresql.sql"/>
+    </changeSet>
+
+    <changeSet id="v5.4.0-align_booleans" author="Vincent Nadoll" dbms="mariadb">
+        <sql>
+            DROP VIEW IF EXISTS v_event_details;
+            ALTER TABLE events
+                MODIFY is_active BOOLEAN NOT NULL DEFAULT TRUE;
+            ALTER TABLE singers
+                MODIFY is_active BOOLEAN NOT NULL DEFAULT TRUE;
+            ALTER TABLE users
+                MODIFY is_admin BOOLEAN NOT NULL DEFAULT FALSE;
+            ALTER TABLE users
+                MODIFY is_enabled BOOLEAN NOT NULL DEFAULT TRUE;
+            ALTER TABLE users
+                MODIFY is_active BOOLEAN NOT NULL DEFAULT TRUE;
+            DROP FUNCTION IF EXISTS CAST_TO_BIT;
+        </sql>
+
+        <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="v5.4.0/v_event_details.sql"/>
+    </changeSet>
+
+    <changeSet id="v5.4.0-align_booleans" author="Vincent Nadoll" dbms="postgresql">
+        <sql>
+            DROP VIEW IF EXISTS v_event_details;
+        </sql>
+
+        <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="v5.4.0/v_event_details.sql"/>
+    </changeSet>
+
+    <changeSet id="v5.4.0-align_primary_keys" author="Vincent Nadoll" dbms="mariadb">
+        <sql>
+            CREATE SEQUENCE IF NOT EXISTS seq_events START WITH 1 INCREMENT BY 1;
+            CREATE SEQUENCE IF NOT EXISTS seq_persons START WITH 1 INCREMENT BY 1;
+            CREATE SEQUENCE IF NOT EXISTS seq_users START WITH 1 INCREMENT BY 1;
+            CREATE SEQUENCE IF NOT EXISTS seq_user_rec_tokens START WITH 1 INCREMENT BY 1;
+            CREATE SEQUENCE IF NOT EXISTS seq_participants START WITH 1 INCREMENT BY 1;
+
+            SET @next_events_id = (SELECT COALESCE(MAX(id), 0) + 1
+                                   FROM events);
+            SET @next_persons_id = (SELECT COALESCE(MAX(id), 0) + 1
+                                    FROM persons);
+            SET @next_users_id = (SELECT COALESCE(MAX(id), 0) + 1
+                                  FROM users);
+            SET @next_user_rec_tokens_id = (SELECT COALESCE(MAX(id), 0) + 1
+                                            FROM user_rec_tokens);
+            SET @next_participants_id = (SELECT COALESCE(MAX(id), 0) + 1
+                                         FROM participants);
+
+            SET @sql = CONCAT('ALTER SEQUENCE seq_events RESTART WITH ', @next_events_id);
+            PREPARE stmt FROM @sql;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+
+            SET @sql = CONCAT('ALTER SEQUENCE seq_persons RESTART WITH ', @next_persons_id);
+            PREPARE stmt FROM @sql;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+
+            SET @sql = CONCAT('ALTER SEQUENCE seq_users RESTART WITH ', @next_users_id);
+            PREPARE stmt FROM @sql;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+
+            SET @sql = CONCAT('ALTER SEQUENCE seq_user_rec_tokens RESTART WITH ', @next_user_rec_tokens_id);
+            PREPARE stmt FROM @sql;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+
+            SET @sql = CONCAT('ALTER SEQUENCE seq_participants RESTART WITH ', @next_participants_id);
+            PREPARE stmt FROM @sql;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+
+            ALTER TABLE events
+                MODIFY id BIGINT NOT NULL DEFAULT (NEXT VALUE FOR seq_events);
+            ALTER TABLE persons
+                MODIFY id BIGINT NOT NULL DEFAULT (NEXT VALUE FOR seq_persons);
+            ALTER TABLE users
+                MODIFY id BIGINT NOT NULL DEFAULT (NEXT VALUE FOR seq_users);
+            ALTER TABLE user_rec_tokens
+                MODIFY id BIGINT NOT NULL DEFAULT (NEXT VALUE FOR seq_user_rec_tokens);
+
+            ALTER TABLE participants
+                DROP PRIMARY KEY,
+                ADD CONSTRAINT pk_participants PRIMARY KEY (id);
+            ALTER TABLE participants
+                MODIFY id BIGINT NOT NULL DEFAULT (NEXT VALUE FOR seq_participants);
+        </sql>
+    </changeSet>
+
+    <changeSet id="v5.4.0-align_primary_keys" author="Vincent Nadoll" dbms="postgresql">
+        <sql>
+            CREATE SEQUENCE IF NOT EXISTS seq_events START WITH 1 INCREMENT BY 1;
+            CREATE SEQUENCE IF NOT EXISTS seq_persons START WITH 1 INCREMENT BY 1;
+            CREATE SEQUENCE IF NOT EXISTS seq_users START WITH 1 INCREMENT BY 1;
+            CREATE SEQUENCE IF NOT EXISTS seq_user_rec_tokens START WITH 1 INCREMENT BY 1;
+            CREATE SEQUENCE IF NOT EXISTS seq_participants START WITH 1 INCREMENT BY 1;
+
+            SELECT setval('seq_events', COALESCE((SELECT MAX(id) FROM events), 0) + 1, false);
+            SELECT setval('seq_persons', COALESCE((SELECT MAX(id) FROM persons), 0) + 1, false);
+            SELECT setval('seq_users', COALESCE((SELECT MAX(id) FROM users), 0) + 1, false);
+            SELECT setval('seq_user_rec_tokens', COALESCE((SELECT MAX(id) FROM user_rec_tokens), 0) + 1, false);
+            SELECT setval('seq_participants', COALESCE((SELECT MAX(id) FROM participants), 0) + 1, false);
+
+            ALTER TABLE singers
+                ALTER COLUMN id DROP IDENTITY IF EXISTS;
+            ALTER TABLE singers
+                ALTER COLUMN id DROP DEFAULT;
+            DROP SEQUENCE IF EXISTS members_id_seq;
+
+            ALTER TABLE events
+                ALTER COLUMN id DROP IDENTITY IF EXISTS;
+            ALTER TABLE persons
+                ALTER COLUMN id DROP IDENTITY IF EXISTS;
+            ALTER TABLE users
+                ALTER COLUMN id DROP IDENTITY IF EXISTS;
+            ALTER TABLE user_rec_tokens
+                ALTER COLUMN id DROP IDENTITY IF EXISTS;
+            ALTER TABLE participants
+                ALTER COLUMN id DROP IDENTITY IF EXISTS;
+
+            ALTER TABLE events
+                ALTER COLUMN id SET DEFAULT nextval('seq_events');
+            ALTER TABLE persons
+                ALTER COLUMN id SET DEFAULT nextval('seq_persons');
+            ALTER TABLE users
+                ALTER COLUMN id SET DEFAULT nextval('seq_users');
+            ALTER TABLE user_rec_tokens
+                ALTER COLUMN id SET DEFAULT nextval('seq_user_rec_tokens');
+            ALTER TABLE participants
+                ALTER COLUMN id SET DEFAULT nextval('seq_participants');
+
+            ALTER SEQUENCE seq_events OWNED BY events.id;
+            ALTER SEQUENCE seq_persons OWNED BY persons.id;
+            ALTER SEQUENCE seq_users OWNED BY users.id;
+            ALTER SEQUENCE seq_user_rec_tokens OWNED BY user_rec_tokens.id;
+            ALTER SEQUENCE seq_participants OWNED BY participants.id;
+
+            ALTER TABLE participants
+                DROP CONSTRAINT IF EXISTS pk_participants;
+            ALTER TABLE participants
+                DROP CONSTRAINT IF EXISTS "PK_participants";
+            ALTER TABLE participants
+                DROP CONSTRAINT IF EXISTS participants_pkey;
+            ALTER TABLE participants
+                ADD CONSTRAINT pk_participants PRIMARY KEY (id);
+        </sql>
+
+        <sql splitStatements="false">
+            DO
+            $$
+                DECLARE
+                    row              record;
+                    DECLARE new_name text;
+                BEGIN
+                    FOR row IN
+                        SELECT tc.table_name, tc.constraint_name
+                        FROM information_schema.table_constraints tc
+                        WHERE tc.constraint_type = 'PRIMARY KEY'
+                          AND tc.table_schema = 'public'
+                          AND tc.table_name IN
+                              ('events', 'persons', 'users', 'singers', 'user_rec_tokens', 'participants')
+                        LOOP
+                            new_name := 'pk_' || row.table_name;
+                            IF row.constraint_name != new_name THEN
+                                EXECUTE format('ALTER TABLE %I RENAME CONSTRAINT %I TO %I', row.table_name,
+                                               row.constraint_name, new_name);
+                            END IF;
+                        END LOOP;
+                END
+            $$;
+        </sql>
+    </changeSet>
+
+    <changeSet id="v5.4.0-align_foreign_keys" author="Vincent Nadoll">
+        <sql>
+            DROP VIEW IF EXISTS v_event_details;
+            DROP VIEW IF EXISTS v_participants_accepted;
+            DROP VIEW IF EXISTS v_participants_declined;
+            DROP VIEW IF EXISTS v_participants_pending;
+            DROP VIEW IF EXISTS v_participants_tentative;
+            DROP VIEW IF EXISTS v_participants_soprano;
+            DROP VIEW IF EXISTS v_participant_alto;
+            DROP VIEW IF EXISTS v_participant_tenor;
+            DROP VIEW IF EXISTS v_participant_bass;
+            DROP VIEW IF EXISTS v_participant_car;
+        </sql>
+
+        <dropForeignKeyConstraint baseTableName="participants" constraintName="FK_participatingsingerreference"/>
+        <dropForeignKeyConstraint baseTableName="singers" constraintName="FK_personreference"/>
+
+        <renameColumn tableName="singers" oldColumnName="id" newColumnName="person_id"
+                      columnDataType="BIGINT NOT NULL"/>
+
+        <addForeignKeyConstraint baseTableName="singers"
+                                 baseColumnNames="person_id"
+                                 constraintName="fk_singers_person_id"
+                                 referencedTableName="persons"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="participants"
+                                 baseColumnNames="singer_id"
+                                 constraintName="fk_participants_singer_id"
+                                 referencedTableName="singers"
+                                 referencedColumnNames="person_id"/>
+
+        <dropForeignKeyConstraint baseTableName="participants" constraintName="FK_eventreference"/>
+        <addForeignKeyConstraint baseTableName="participants"
+                                 baseColumnNames="event_id"
+                                 constraintName="fk_participants_event_id"
+                                 referencedTableName="events"
+                                 referencedColumnNames="id"/>
+
+        <dropForeignKeyConstraint baseTableName="users" constraintName="fk_user_person"/>
+        <addForeignKeyConstraint baseTableName="users"
+                                 baseColumnNames="person_id"
+                                 constraintName="fk_users_person_id"
+                                 referencedTableName="persons"
+                                 referencedColumnNames="id"/>
+
+        <dropForeignKeyConstraint baseTableName="user_rec_tokens" constraintName="fk_users"/>
+        <addForeignKeyConstraint baseTableName="user_rec_tokens"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_user_rec_tokens_user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+
+        <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="v5.4.0/v_participant_views_02.mariadb.sql"
+                 dbms="mariadb"/>
+        <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="v5.4.0/v_participant_views_02.postgresql.sql"
+                 dbms="postgresql"/>
+        <sqlFile relativeToChangelogFile="true" encoding="UTF-8" path="v5.4.0/v_event_details.sql"/>
+    </changeSet>
+
+    <changeSet id="v5.4.0-align_unique_constraints" author="Vincent Nadoll">
+        <dropUniqueConstraint tableName="persons" constraintName="UC_email"/>
+        <addUniqueConstraint tableName="persons" columnNames="email" constraintName="uc_email"/>
+
+        <dropUniqueConstraint tableName="participants" constraintName="UC_participanttoken"/>
+        <addUniqueConstraint tableName="participants" columnNames="token" constraintName="uc_token"/>
+    </changeSet>
+
+    <changeSet id="v5.4.0-tag" author="Vincent Nadoll">
+        <tagDatabase tag="5.4.0"/>
+    </changeSet>
+
+</databaseChangeLog>

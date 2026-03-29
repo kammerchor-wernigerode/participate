@@ -1,0 +1,23 @@
+LOAD DATABASE
+    FROM mysql://participate:participate@localhost:3306/participate
+    INTO postgresql://postgres:3_dZ-LNHjRpe@localhost:5432/postgres
+
+ alter schema 'participate' rename to 'public'
+
+ WITH truncate,
+      create no tables,
+      reset sequences
+
+ excluding table names matching 'databasechangelog'
+ excluding table names matching 'databasechangeloglock'
+
+
+ SET work_mem to '64MB',
+ maintenance_work_mem to '256MB'
+
+ CAST type datetime to timestamp,
+      type timestamp to timestamp,
+      type tinyint when (= precision 1) to boolean
+
+ BEFORE LOAD DO
+ $$ create schema if not exists public; $$;
