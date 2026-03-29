@@ -15,7 +15,7 @@ spring:
       hibernate.format_sql: true
 
   liquibase:
-    change-log: 'classpath:/de/vinado/wicket/participate/db/liquibase/changelog.xml'
+    change-log: classpath:/db/changelog/db.changelog-master.xml
 
   mail:
     host: localhost
