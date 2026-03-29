@@ -50,7 +50,11 @@
     <properties>
         <java.version>25</java.version>
 
+        <dependency.checkstyle.version>10.17.0</dependency.checkstyle.version>
+
         <convergence.commons-text.version>1.15.0</convergence.commons-text.version>
+
+        <plugin.checkstyle.version>3.4.0</plugin.checkstyle.version>
     </properties>
 
     <dependencyManagement>
@@ -179,6 +183,23 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${plugin.checkstyle.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>${dependency.checkstyle.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -193,6 +214,37 @@
                             <rules>
                                 <dependencyConvergence/>
                             </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>${project.basedir}/checkstyle.xml</configLocation>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>lint-sources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <suppressionsLocation>${project.basedir}/checkstyle-suppressions.xml</suppressionsLocation>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>lint-tests</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectories>${project.basedir}/src/test/</sourceDirectories>
+                            <suppressionsLocation>${project.basedir}/checkstyle-suppressions.xml</suppressionsLocation>
+                            <suppressionsLocation>${project.basedir}/checkstyle-suppressions-tests.xml</suppressionsLocation>
                         </configuration>
                     </execution>
                 </executions>
