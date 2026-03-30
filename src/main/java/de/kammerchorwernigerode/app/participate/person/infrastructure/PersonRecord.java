@@ -1,5 +1,6 @@
 package de.kammerchorwernigerode.app.participate.person.infrastructure;
 
+import de.kammerchorwernigerode.app.participate.musician.infrastructure.MusicianRecord;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.jspecify.annotations.NonNull;
@@ -9,11 +10,13 @@ import org.springframework.data.util.ProxyUtils;
 
 import java.time.Instant;
 import java.util.Optional;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -55,6 +58,10 @@ public class PersonRecord implements Persistable<Long> {
     @Column(name = "email_address", unique = true)
     @Nullable
     private String emailAddress;
+
+    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "person", orphanRemoval = true)
+    @Nullable
+    private MusicianRecord musician;
 
     @CreationTimestamp
     @Column(name = "created_date_time", nullable = false, updatable = false)
