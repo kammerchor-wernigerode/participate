@@ -1,5 +1,6 @@
 package de.kammerchorwernigerode.app.participate.person.infrastructure;
 
+import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord;
 import de.kammerchorwernigerode.app.participate.musician.infrastructure.MusicianRecord;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -9,6 +10,8 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.util.ProxyUtils;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -16,6 +19,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.SequenceGenerator;
@@ -62,6 +66,10 @@ public class PersonRecord implements Persistable<Long> {
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "person", orphanRemoval = true)
     @Nullable
     private MusicianRecord musician;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "person", orphanRemoval = true)
+    @NonNull
+    private List<AttendeeRecord> attendances = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "created_date_time", nullable = false, updatable = false)

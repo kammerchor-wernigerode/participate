@@ -9,13 +9,17 @@ import org.springframework.data.util.ProxyUtils;
 
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -65,6 +69,10 @@ public class EventRecord implements Persistable<Long>, Comparable<EventRecord> {
     @Column(name = "description")
     @Nullable
     private String description;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event", orphanRemoval = true)
+    @NonNull
+    private List<AttendeeRecord> attendees = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "created_date_time", nullable = false, updatable = false)
