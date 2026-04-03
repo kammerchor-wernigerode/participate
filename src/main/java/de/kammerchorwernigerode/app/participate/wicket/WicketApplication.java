@@ -1,6 +1,12 @@
 package de.kammerchorwernigerode.app.participate.wicket;
 
 import de.agilecoders.wicket.webjars.settings.WebjarsSettings;
+import de.kammerchorwernigerode.app.participate.wicket.bootstrap.BootstrapResourceAppender;
+import org.apache.wicket.application.ComponentInitializationListenerCollection;
+import org.apache.wicket.csp.CSPDirective;
+import org.apache.wicket.csp.CSPDirectiveSrcValue;
+import org.apache.wicket.csp.ContentSecurityPolicySettings;
+import org.apache.wicket.markup.html.HeaderResponseDecoratorCollection;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.settings.DebugSettings.ClassOutputStrategy;
@@ -22,11 +28,21 @@ public abstract class WicketApplication extends WebApplication {
         MarkupSettings markupSettings = getMarkupSettings();
         configure(markupSettings);
 
+        ContentSecurityPolicySettings cspSettings = getCspSettings();
+        configure(cspSettings);
+
         DebugSettings debugSettings = getDebugSettings();
         configure(debugSettings);
 
+        ComponentInitializationListenerCollection componentInitializationListeners =
+            getComponentInitializationListeners();
+        configure(componentInitializationListeners);
+
         WebjarsSettings webjarsSettings = getWebjarsSettings();
         configure(webjarsSettings);
+
+        HeaderResponseDecoratorCollection headerResponseDecorators = getHeaderResponseDecorators();
+        configure(headerResponseDecorators);
     }
 
     protected void configure(MarkupSettings settings) {
@@ -36,6 +52,13 @@ public abstract class WicketApplication extends WebApplication {
         settings.setStripWicketTags(true);
     }
 
+    private void configure(ContentSecurityPolicySettings settings) {
+        settings.blocking().strict()
+            .add(CSPDirective.STYLE_SRC, CSPDirectiveSrcValue.SELF)
+            .add(CSPDirective.IMG_SRC, "data:")
+        ;
+    }
+
     protected void configure(DebugSettings settings) {
         if (usesDevelopmentConfig()) {
             settings.setComponentPathAttributeName("data-wicket-path");
@@ -43,8 +66,16 @@ public abstract class WicketApplication extends WebApplication {
         }
     }
 
+    private void configure(ComponentInitializationListenerCollection listeners) {
+        listeners.add(new BootstrapResourceAppender());
+    }
+
     protected void configure(WebjarsSettings settings) {
         settings.useCdnResources(false);
+    }
+
+    private void configure(HeaderResponseDecoratorCollection decorators) {
+        decorators.add(new JavaScriptFilteredIntoFooterHeaderResponseDecorator());
     }
 
     public WebjarsSettings getWebjarsSettings() {

@@ -50,20 +50,38 @@
     <properties>
         <java.version>25</java.version>
 
+        <sass.source.directory>${project.basedir}/src/main/resources/scss</sass.source.directory>
+        <sass.target.directory>${project.build.directory}/generated-sources/src/main/resources/css</sass.target.directory>
+        <webjars.target.directory>${project.build.directory}/webjars</webjars.target.directory>
+
         <dependency.checkstyle.version>10.17.0</dependency.checkstyle.version>
         <dependency.hypersistence.version>3.15.2</dependency.hypersistence.version>
         <dependency.java-uuid-generator.version>5.2.0</dependency.java-uuid-generator.version>
         <dependency.wicket.version>10.8.0</dependency.wicket.version>
         <dependency.wicket-webjars.version>4.0.14</dependency.wicket-webjars.version>
 
+        <webjar.bootstrap.version>5.3.8</webjar.bootstrap.version>
+        <webjar.bootstrap-icons.version>1.13.1</webjar.bootstrap-icons.version>
+
         <convergence.asm.version>9.9</convergence.asm.version>
         <convergence.commons-text.version>1.15.0</convergence.commons-text.version>
 
         <plugin.checkstyle.version>3.4.0</plugin.checkstyle.version>
+        <plugin.dart-sass.version>1.5.0</plugin.dart-sass.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>bootstrap</artifactId>
+                <version>${webjar.bootstrap.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars.npm</groupId>
+                <artifactId>bootstrap-icons</artifactId>
+                <version>${webjar.bootstrap-icons.version}</version>
+            </dependency>
             <dependency>
                 <groupId>io.hypersistence</groupId>
                 <artifactId>hypersistence-utils-hibernate-71</artifactId>
@@ -134,6 +152,14 @@
             <artifactId>spring-boot-starter-webmvc</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>bootstrap-icons</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.hypersistence</groupId>
             <artifactId>hypersistence-utils-hibernate-71</artifactId>
@@ -257,6 +283,48 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/*.scss</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>${project.build.directory}/generated-sources/src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <filtering>false</filtering>
+                <directory>src/test/resources</directory>
+            </testResource>
+            <testResource>
+                <filtering>false</filtering>
+                <directory>src/test/java</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
+
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -270,6 +338,11 @@
                             <version>${dependency.checkstyle.version}</version>
                         </dependency>
                     </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>io.github.cleydyr</groupId>
+                    <artifactId>dart-sass-maven-plugin</artifactId>
+                    <version>${plugin.dart-sass.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -322,6 +395,48 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <artifactItems>
+                        <artifactItem>
+                            <groupId>org.webjars</groupId>
+                            <artifactId>bootstrap</artifactId>
+                            <outputDirectory>${webjars.target.directory}/bootstrap</outputDirectory>
+                        </artifactItem>
+                    </artifactItems>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.github.cleydyr</groupId>
+                <artifactId>dart-sass-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>compile-sass</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <version>1.78.0</version>
+                    <embedSourceMap>true</embedSourceMap>
+                    <loadPaths>
+                        ${webjars.target.directory}/bootstrap/META-INF/resources/webjars/bootstrap/${webjar.bootstrap.version}
+                    </loadPaths>
+                    <inputFolder>${sass.source.directory}</inputFolder>
+                    <outputFolder>${sass.target.directory}</outputFolder>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
