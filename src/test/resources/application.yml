@@ -17,6 +17,10 @@ spring:
 
   liquibase.enabled: false
 
+wicket:
+  management:
+    runtime-configuration: development
+
 logging:
   level:
     root: warn

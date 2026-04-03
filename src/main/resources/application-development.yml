@@ -28,3 +28,7 @@ app:
         registration:
           keycloak:
             roles-json-path: $.resource_access.participate.roles[*]
+
+wicket:
+  management:
+    runtime-configuration: development
