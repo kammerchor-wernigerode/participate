@@ -1,9 +1,11 @@
 package de.kammerchorwernigerode.app.participate.wicket.management;
 
 import de.kammerchorwernigerode.app.participate.wicket.WicketProperties;
+import de.kammerchorwernigerode.app.participate.wicket.configuration.WicketConfigurer;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.spring.SpringWebApplicationFactory;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
@@ -24,6 +26,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 import java.util.EnumSet;
+import java.util.function.Consumer;
 import jakarta.servlet.DispatcherType;
 
 import lombok.RequiredArgsConstructor;
@@ -61,11 +64,17 @@ class ManagementWicketConfiguration implements ApplicationContextAware, Environm
     }
 
     @Bean
-    public ManagementWicketApplication managementWicketApplication() {
+    public ManagementWicketApplication managementWicketApplication(
+        ObjectProvider<WicketConfigurer> configurers) {
         ManagementWicketApplication application = new ManagementWicketApplication(environment);
         SpringComponentInjector springComponentInjector = new SpringComponentInjector(application, applicationContext);
         application.getComponentInstantiationListeners().add(springComponentInjector);
+        configurers.stream().forEach(configure(application));
         return application;
+    }
+
+    private static Consumer<WicketConfigurer> configure(ManagementWicketApplication application) {
+        return configurer -> configurer.init(application);
     }
 
     @Bean
