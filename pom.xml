@@ -54,6 +54,7 @@
         <dependency.hypersistence.version>3.15.2</dependency.hypersistence.version>
         <dependency.java-uuid-generator.version>5.2.0</dependency.java-uuid-generator.version>
         <dependency.wicket.version>10.8.0</dependency.wicket.version>
+        <dependency.wicket-webjars.version>4.0.14</dependency.wicket-webjars.version>
 
         <convergence.asm.version>9.9</convergence.asm.version>
         <convergence.commons-text.version>1.15.0</convergence.commons-text.version>
@@ -87,6 +88,11 @@
                 <groupId>org.apache.wicket</groupId>
                 <artifactId>wicket-spring</artifactId>
                 <version>${dependency.wicket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.agilecoders.wicket.webjars</groupId>
+                <artifactId>wicket-webjars</artifactId>
+                <version>${dependency.wicket-webjars.version}</version>
             </dependency>
 
             <dependency>
@@ -155,6 +161,10 @@
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.agilecoders.wicket.webjars</groupId>
+            <artifactId>wicket-webjars</artifactId>
         </dependency>
 
         <dependency>

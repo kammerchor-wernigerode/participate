@@ -1,5 +1,7 @@
 package de.kammerchorwernigerode.app.participate.wicket.management;
 
+import de.agilecoders.wicket.webjars.WicketWebjars;
+import de.agilecoders.wicket.webjars.settings.WebjarsSettings;
 import de.kammerchorwernigerode.app.participate.wicket.WicketApplication;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -40,6 +42,9 @@ public class ManagementWicketApplication extends WicketApplication
 
         SecuritySettings securitySettings = getSecuritySettings();
         configure(securitySettings);
+
+        WebjarsSettings webjarsSettings = getWebjarsSettings();
+        WicketWebjars.install(this, webjarsSettings);
     }
 
     protected void configure(SecuritySettings settings) {
