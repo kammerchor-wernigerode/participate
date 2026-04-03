@@ -2,6 +2,7 @@ package de.kammerchorwernigerode.app.participate.wicket.management;
 
 import de.agilecoders.wicket.webjars.WicketWebjars;
 import de.agilecoders.wicket.webjars.settings.WebjarsSettings;
+import de.kammerchorwernigerode.app.participate.event.presentation.ui.EventsPage;
 import de.kammerchorwernigerode.app.participate.wicket.WicketApplication;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -12,7 +13,6 @@ import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSessio
 import org.apache.wicket.authroles.authorization.strategies.role.IRoleCheckingStrategy;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy;
-import org.apache.wicket.mock.MockHomePage;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.settings.SecuritySettings;
@@ -28,7 +28,7 @@ public class ManagementWicketApplication extends WicketApplication
 
     @Override
     public Class<? extends Page> getHomePage() {
-        return MockHomePage.class;
+        return EventsPage.class;
     }
 
     @Override
