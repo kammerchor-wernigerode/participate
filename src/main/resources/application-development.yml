@@ -20,3 +20,11 @@ spring:
             client-id: participate
             client-secret: HizmgIafi7qLMZCg4ywlUVNkl6BJZM3r
             scope: openid, email, profile
+
+app:
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            roles-json-path: $.resource_access.participate.roles[*]

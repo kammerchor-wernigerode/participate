@@ -3,7 +3,7 @@ spring:
     name: participate
 
   profiles:
-    default: postgresql
+    default: postgresql, oauth2
 
   main:
     banner-mode: off
