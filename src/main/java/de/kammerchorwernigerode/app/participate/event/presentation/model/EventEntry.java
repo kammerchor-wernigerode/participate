@@ -1,4 +1,4 @@
-package de.kammerchorwernigerode.app.participate.event.presentation.ui;
+package de.kammerchorwernigerode.app.participate.event.presentation.model;
 
 import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.Subselect;

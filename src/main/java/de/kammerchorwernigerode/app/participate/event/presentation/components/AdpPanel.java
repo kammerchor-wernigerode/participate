@@ -1,5 +1,6 @@
-package de.kammerchorwernigerode.app.participate.event.presentation.ui;
+package de.kammerchorwernigerode.app.participate.event.presentation.components;
 
+import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntry;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.CssContentHeaderItem;

@@ -1,4 +1,4 @@
-package de.kammerchorwernigerode.app.participate.event.presentation.ui;
+package de.kammerchorwernigerode.app.participate.event.presentation.model;
 
 import org.danekja.java.util.function.serializable.SerializableSupplier;
 import org.springframework.data.jpa.domain.Specification;

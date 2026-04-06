@@ -1,6 +1,7 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.ui;
 
-import de.kammerchorwernigerode.app.participate.event.presentation.ui.table.EventTablePanel;
+import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntrySpecification;
+import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.table.EventTablePanel;
 import de.kammerchorwernigerode.app.participate.wicket.ParticipatePage;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.model.CompoundPropertyModel;
