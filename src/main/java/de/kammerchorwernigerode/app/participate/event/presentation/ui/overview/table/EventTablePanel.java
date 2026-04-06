@@ -5,8 +5,8 @@ import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEn
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntryRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntrySpecification;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.table.BootstrapDataTable;
 import org.apache.wicket.Component;
-import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
@@ -46,7 +46,7 @@ public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
         EventDataProvider dataProvider = new EventDataProvider(eventEntryRepository, model);
         List<IColumn<EventEntry, String>> columns = createColumns();
         dataProvider.setOrder("startInstant", SortOrder.ASCENDING);
-        DataTable<EventEntry, String> table = new AjaxFallbackDefaultDataTable<>("table", columns, dataProvider,
+        DataTable<EventEntry, String> table = new BootstrapDataTable<>("table", columns, dataProvider,
             Integer.MAX_VALUE);
         table.setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
         add(table);

@@ -10,6 +10,10 @@ public class IconBehavior extends org.apache.wicket.behavior.Behavior {
     private final IModel<IconType> type;
     private final IModel<String> value;
 
+    public IconBehavior(IconType type) {
+        this(Model.of(type));
+    }
+
     public IconBehavior(IModel<IconType> type) {
         this.type = type;
         this.value = Model.of("");
