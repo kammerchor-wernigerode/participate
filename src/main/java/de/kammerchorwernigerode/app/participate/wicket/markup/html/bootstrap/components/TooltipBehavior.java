@@ -7,6 +7,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +20,10 @@ public class TooltipBehavior extends Behavior {
         """;
 
     private final IModel<String> model;
+
+    public TooltipBehavior(String tooltip) {
+        this.model = Model.of(tooltip);
+    }
 
     @Override
     public void bind(Component component) {

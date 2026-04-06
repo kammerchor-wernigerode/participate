@@ -4,9 +4,13 @@ import de.kammerchorwernigerode.app.participate.event.presentation.components.Ad
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntryRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntrySpecification;
+import de.kammerchorwernigerode.app.participate.event.presentation.model.EventSelected;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.table.BootstrapDataTable;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.LinkColumn;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
@@ -54,7 +58,7 @@ public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
 
     private List<IColumn<EventEntry, String>> createColumns() {
         List<IColumn<EventEntry, String>> columns = new ArrayList<>();
-        columns.add(new LambdaColumn<>(new ResourceModel("event.summary"), EventEntry::getSummary));
+        columns.add(new SummaryColumn(new ResourceModel("event.summary")));
         columns.add(new LambdaColumn<>(new ResourceModel("date"), "startInstant", this::printRange));
         columns.add(new LambdaColumn<>(new ResourceModel("event.location"), EventEntry::getLocation));
         columns.add(new AdpColumn(new ResourceModel("event.adp.abbrev")));
@@ -67,6 +71,19 @@ public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
         return formatter.format(event.getStart()) + "–" + formatter.format(event.getEnd());
     }
 
+
+    private class SummaryColumn extends LinkColumn<EventEntry, String> {
+
+        public SummaryColumn(IModel<String> displayModel) {
+            super(displayModel, EventEntry::getSummary);
+        }
+
+        @Override
+        protected void onClick(AjaxRequestTarget target, IModel<EventEntry> rowModel) {
+            EventEntry entry = rowModel.getObject();
+            send(getPage(), Broadcast.BREADTH, new EventSelected(entry.getId()));
+        }
+    }
 
     private static class AdpColumn extends AbstractColumn<EventEntry, String> {
 
