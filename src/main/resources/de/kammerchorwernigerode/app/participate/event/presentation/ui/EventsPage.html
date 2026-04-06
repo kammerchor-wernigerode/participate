@@ -5,6 +5,18 @@
     </head>
     <body>
         <wicket:extend>
+            <div class="row">
+                <div class="col-xl-7 d-flex flex-column">
+                    <div class="mb-3">
+                        <h2 class="text-truncate">
+                            <i class="bi bi-calendar-fill"></i>
+                            <wicket:message key="events"></wicket:message>
+                        </h2>
+                    </div>
+
+                    <div wicket:id="events"></div>
+                </div>
+            </div>
         </wicket:extend>
     </body>
 </html>
