@@ -1,4 +1,4 @@
-package de.kammerchorwernigerode.app.participate.wicket.bootstrap.icon;
+package de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon;
 
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.image.IconType;
 

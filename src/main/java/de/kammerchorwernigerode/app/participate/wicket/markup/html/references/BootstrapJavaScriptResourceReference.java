@@ -1,4 +1,4 @@
-package de.kammerchorwernigerode.app.participate.wicket.bootstrap;
+package de.kammerchorwernigerode.app.participate.wicket.markup.html.references;
 
 import de.agilecoders.wicket.webjars.request.resource.WebjarsJavaScriptResourceReference;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;

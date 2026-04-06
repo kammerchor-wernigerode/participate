@@ -1,4 +1,4 @@
-package de.kammerchorwernigerode.app.participate.wicket.bootstrap.icon;
+package de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon;
 
 import de.agilecoders.wicket.webjars.request.resource.WebjarsCssResourceReference;
 import org.apache.wicket.markup.head.CssHeaderItem;

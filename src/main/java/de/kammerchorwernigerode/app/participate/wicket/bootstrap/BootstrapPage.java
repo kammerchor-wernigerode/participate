@@ -16,7 +16,7 @@ import java.util.Locale;
 
 import lombok.NoArgsConstructor;
 
-import static de.kammerchorwernigerode.app.participate.wicket.JavaScriptFilteredIntoFooterHeaderResponseDecorator.FILTER_NAME;
+import static de.kammerchorwernigerode.app.participate.wicket.markup.html.RenderJavaScriptToFooterHeaderResponseDecorator.FILTER_NAME;
 
 @NoArgsConstructor
 public abstract class BootstrapPage extends WebPage {

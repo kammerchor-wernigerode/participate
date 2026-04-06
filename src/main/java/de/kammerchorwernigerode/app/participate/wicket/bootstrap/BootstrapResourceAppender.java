@@ -1,5 +1,6 @@
 package de.kammerchorwernigerode.app.participate.wicket.bootstrap;
 
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.behavior.BootstrapBehavior;
 import org.apache.wicket.Component;
 import org.apache.wicket.application.IComponentInitializationListener;
 

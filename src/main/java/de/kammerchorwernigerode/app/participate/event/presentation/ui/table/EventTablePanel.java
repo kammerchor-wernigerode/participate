@@ -4,7 +4,7 @@ import de.kammerchorwernigerode.app.participate.event.presentation.ui.AdpPanel;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.EventEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.EventEntryRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.EventEntrySpecification;
-import de.kammerchorwernigerode.app.participate.wicket.bootstrap.tooltip.TooltipBehavior;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;

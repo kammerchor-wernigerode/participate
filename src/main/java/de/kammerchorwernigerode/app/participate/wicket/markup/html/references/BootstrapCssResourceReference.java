@@ -1,4 +1,4 @@
-package de.kammerchorwernigerode.app.participate.wicket.bootstrap;
+package de.kammerchorwernigerode.app.participate.wicket.markup.html.references;
 
 import css.Scope;
 import org.apache.wicket.markup.head.CssHeaderItem;

@@ -1,6 +1,8 @@
-package de.kammerchorwernigerode.app.participate.wicket.bootstrap;
+package de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.behavior;
 
-import de.kammerchorwernigerode.app.participate.wicket.bootstrap.icon.BootstrapIconsResourceReference;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.BootstrapIconsResourceReference;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.references.BootstrapCssResourceReference;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.references.BootstrapJavaScriptResourceReference;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.head.IHeaderResponse;

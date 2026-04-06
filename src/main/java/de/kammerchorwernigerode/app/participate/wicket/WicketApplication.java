@@ -2,6 +2,7 @@ package de.kammerchorwernigerode.app.participate.wicket;
 
 import de.agilecoders.wicket.webjars.settings.WebjarsSettings;
 import de.kammerchorwernigerode.app.participate.wicket.bootstrap.BootstrapResourceAppender;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.RenderJavaScriptToFooterHeaderResponseDecorator;
 import org.apache.wicket.application.ComponentInitializationListenerCollection;
 import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.csp.CSPDirectiveSrcValue;
@@ -75,7 +76,7 @@ public abstract class WicketApplication extends WebApplication {
     }
 
     private void configure(HeaderResponseDecoratorCollection decorators) {
-        decorators.add(new JavaScriptFilteredIntoFooterHeaderResponseDecorator());
+        decorators.add(new RenderJavaScriptToFooterHeaderResponseDecorator());
     }
 
     public WebjarsSettings getWebjarsSettings() {
