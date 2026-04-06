@@ -1,7 +1,7 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.ui;
 
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.table.EventTablePanel;
-import de.kammerchorwernigerode.app.participate.wicket.bootstrap.BootstrapPage;
+import de.kammerchorwernigerode.app.participate.wicket.ParticipatePage;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
@@ -11,7 +11,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import java.time.Instant;
 import java.time.ZoneId;
 
-public class EventsPage extends BootstrapPage {
+public class EventsPage extends ParticipatePage {
 
     @Override
     protected void onInitialize() {

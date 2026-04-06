@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" xmlns:wicket="http://wicket.apache.org">
+    <head>
+        <meta charset="utf-8">
+        <title>Participate</title>
+    </head>
+    <body>
+        <wicket:extend>
+            <nav class="navbar navbar-expand-sm bg-body-tertiary fixed-top">
+                <div class="container-fluid">
+                    <a href="#" class="navbar-brand" wicket:id="homeNavbarLink"></a>
+                    <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
+                            aria-expanded="false" wicket:id="navbarToggler">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" wicket:id="navbarCollapse">
+                        <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                            <li class="nav-item">
+                                <a href="#" class="nav-link" wicket:id="eventsNavbarLink"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="container-fluid">
+                <wicket:child />
+            </main>
+        </wicket:extend>
+    </body>
+</html>
