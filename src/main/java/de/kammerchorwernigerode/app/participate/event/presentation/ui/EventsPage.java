@@ -49,7 +49,6 @@ public class EventsPage extends ParticipatePage {
         EventEntrySpecification eventSpecification = new EventEntrySpecification(this::minInstant);
         IModel<EventEntrySpecification> specModel = new CompoundPropertyModel<>(eventSpecification);
         EventTablePanel eventTablePanel = new EventTablePanel("events", specModel);
-        eventTablePanel.setOutputMarkupId(true);
         add(eventTablePanel);
 
 

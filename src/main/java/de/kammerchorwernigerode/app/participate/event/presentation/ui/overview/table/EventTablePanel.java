@@ -6,7 +6,6 @@ import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEn
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntrySpecification;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventSelected;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.table.BootstrapDataTable;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.LinkColumn;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -14,7 +13,6 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -50,8 +48,7 @@ public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
         EventDataProvider dataProvider = new EventDataProvider(eventEntryRepository, model);
         List<IColumn<EventEntry, String>> columns = createColumns();
         dataProvider.setOrder("startInstant", SortOrder.ASCENDING);
-        DataTable<EventEntry, String> table = new BootstrapDataTable<>("table", columns, dataProvider,
-            Integer.MAX_VALUE);
+        EventTable table = new EventTable("table", columns, dataProvider, Integer.MAX_VALUE);
         table.setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
         add(table);
     }
