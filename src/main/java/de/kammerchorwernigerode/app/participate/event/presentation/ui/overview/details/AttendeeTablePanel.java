@@ -5,12 +5,11 @@ import de.kammerchorwernigerode.app.participate.event.presentation.components.In
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeEntryRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeEntrySpecification;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.table.BootstrapDataTable;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.EnumLambdaColumn;
+import org.apache.wicket.Session;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -43,8 +42,8 @@ public class AttendeeTablePanel extends GenericPanel<AttendeeEntrySpecification>
         AttendeeDataProvider dataProvider = new AttendeeDataProvider(attendeeEntryRepository, model);
         dataProvider.setOrder("invitationStatusOrder", SortOrder.ASCENDING);
         List<IColumn<AttendeeEntry, String>> columns = createColumns();
-        DataTable<AttendeeEntry, String> table = new BootstrapDataTable<>("table", columns, dataProvider,
-            Integer.MAX_VALUE);
+        int rowsPerPage = getRowsPerPage();
+        AttendeeTable table = new AttendeeTable("table", columns, dataProvider, rowsPerPage);
         table.setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
         add(table);
     }
@@ -66,6 +65,12 @@ public class AttendeeTablePanel extends GenericPanel<AttendeeEntrySpecification>
         String lastName = entry.getLastName();
         String firstName = entry.getFirstName();
         return firstName + " " + lastName;
+    }
+
+    private int getRowsPerPage() {
+        Session session = Session.get();
+        Long rowsPerPage = session.getMetaData(AttendeeTable.attendeeTablePageSize);
+        return Math.toIntExact(rowsPerPage);
     }
 
 

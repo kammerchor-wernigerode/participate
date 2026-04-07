@@ -1,6 +1,7 @@
 package de.kammerchorwernigerode.app.participate.wicket.management;
 
 import de.kammerchorwernigerode.app.participate.event.infrastructure.EventRecordRepository;
+import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.details.AttendeeTable;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
@@ -35,6 +36,7 @@ public class ManagementWicketSession extends AbstractAuthenticatedWebSession {
         this.eventRecordRepository = eventRecordRepository;
 
         setMetaData(selectedEventId, getNextEventId());
+        setMetaData(AttendeeTable.attendeeTablePageSize, 15L);
     }
 
     @Override
