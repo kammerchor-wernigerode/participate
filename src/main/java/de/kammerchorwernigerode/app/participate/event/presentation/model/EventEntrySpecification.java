@@ -22,11 +22,11 @@ public class EventEntrySpecification implements Specification<EventEntry> {
 
     @Override
     public Predicate toPredicate(Root<EventEntry> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-        return cb.and(startInstantGreaterThanOrEqualTo(root, query, cb));
+        return cb.and(endInstantGreaterThanOrEqualTo(root, query, cb));
     }
 
-    private Predicate startInstantGreaterThanOrEqualTo(Root<EventEntry> root, CriteriaQuery<?> query,
-                                                       CriteriaBuilder cb) {
+    private Predicate endInstantGreaterThanOrEqualTo(Root<EventEntry> root, CriteriaQuery<?> query,
+                                                     CriteriaBuilder cb) {
         if (this.all) {
             return cb.conjunction();
         }
@@ -36,6 +36,6 @@ public class EventEntrySpecification implements Specification<EventEntry> {
             return cb.disjunction();
         }
 
-        return cb.greaterThanOrEqualTo(root.get(EventEntry_.startInstant), instant);
+        return cb.greaterThanOrEqualTo(root.get(EventEntry_.endInstant), instant);
     }
 }
