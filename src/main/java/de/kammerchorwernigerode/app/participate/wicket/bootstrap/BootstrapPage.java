@@ -1,5 +1,7 @@
 package de.kammerchorwernigerode.app.participate.wicket.bootstrap;
 
+import de.kammerchorwernigerode.app.participate.wicket.WicketApplication;
+import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
@@ -16,8 +18,6 @@ import java.util.Locale;
 
 import lombok.NoArgsConstructor;
 
-import static de.kammerchorwernigerode.app.participate.wicket.markup.html.RenderJavaScriptToFooterHeaderResponseDecorator.FILTER_NAME;
-
 @NoArgsConstructor
 public abstract class BootstrapPage extends WebPage {
 
@@ -31,7 +31,9 @@ public abstract class BootstrapPage extends WebPage {
         Label title = new Label("title", titleModel());
         htmlTag.add(title);
 
-        HeaderResponseContainer headerResponseContainer = new HeaderResponseContainer("footer-bucket", FILTER_NAME);
+        Application application = Application.get();
+        String filterName = application.getMetaData(WicketApplication.footerBucketNameKey);
+        HeaderResponseContainer headerResponseContainer = new HeaderResponseContainer("footer-bucket", filterName);
         htmlTag.add(headerResponseContainer);
     }
 

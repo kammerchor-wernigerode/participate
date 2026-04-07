@@ -3,6 +3,7 @@ package de.kammerchorwernigerode.app.participate.wicket;
 import de.agilecoders.wicket.webjars.settings.WebjarsSettings;
 import de.kammerchorwernigerode.app.participate.wicket.bootstrap.BootstrapResourceAppender;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.RenderJavaScriptToFooterHeaderResponseDecorator;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.application.ComponentInitializationListenerCollection;
 import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.csp.CSPDirectiveSrcValue;
@@ -19,12 +20,18 @@ import lombok.Setter;
 
 public abstract class WicketApplication extends WebApplication {
 
+    private static final String FOOTER_BUCKET_NAME = "footer-bucket";
+
+    public static final MetaDataKey<String> footerBucketNameKey = new MetaDataKey<>() { };
+
     @Setter
     private WebjarsSettings webjarsSettings;
 
     @Override
     protected void init() {
         super.init();
+
+        setMetaData(footerBucketNameKey, FOOTER_BUCKET_NAME);
 
         MarkupSettings markupSettings = getMarkupSettings();
         configure(markupSettings);
