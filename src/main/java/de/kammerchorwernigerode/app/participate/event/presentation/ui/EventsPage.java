@@ -9,7 +9,9 @@ import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.d
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.table.EventTablePanel;
 import de.kammerchorwernigerode.app.participate.wicket.ParticipatePage;
 import de.kammerchorwernigerode.app.participate.wicket.behavior.OnEventBehavior;
+import de.kammerchorwernigerode.app.participate.wicket.management.ManagementWicketSession;
 import org.apache.wicket.Component;
+import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
@@ -31,9 +33,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Optional;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 public class EventsPage extends ParticipatePage {
 
@@ -101,7 +101,9 @@ public class EventsPage extends ParticipatePage {
 
         @Override
         protected void onEvent(Component component, EventSelected payload) {
-            model.setEventId(payload.eventId());
+            Long eventId = payload.eventId();
+            Session session = Session.get();
+            session.setMetaData(ManagementWicketSession.selectedEventId, eventId);
 
             Panel replacement = createEventPanel(model);
             eventPanel.replaceWith(replacement);
@@ -119,12 +121,10 @@ public class EventsPage extends ParticipatePage {
         private final EventEntryRepository eventEntryRepository;
         private final Specification<EventEntry> specification;
 
-        @Getter
-        @Setter
-        private Long eventId;
-
         @Override
         protected EventEntry load() {
+            Session session = Session.get();
+            Long eventId = session.getMetaData(ManagementWicketSession.selectedEventId);
             return Optional.ofNullable(eventId)
                 .flatMap(eventEntryRepository::findById)
                 .or(this::findFirst)

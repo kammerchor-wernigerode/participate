@@ -1,5 +1,7 @@
 package de.kammerchorwernigerode.app.participate.wicket.management;
 
+import de.kammerchorwernigerode.app.participate.event.infrastructure.EventRecordRepository;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.request.Request;
@@ -10,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
@@ -20,11 +23,30 @@ import static java.util.function.Predicate.not;
 
 public class ManagementWicketSession extends AbstractAuthenticatedWebSession {
 
-    private final Environment environment;
+    public static MetaDataKey<Long> selectedEventId = new MetaDataKey<>() { };
 
-    public ManagementWicketSession(Request request, Environment environment) {
+    private final Environment environment;
+    private final EventRecordRepository eventRecordRepository;
+
+    public ManagementWicketSession(Request request, Environment environment,
+                                   EventRecordRepository eventRecordRepository) {
         super(request);
         this.environment = environment;
+        this.eventRecordRepository = eventRecordRepository;
+
+        setMetaData(selectedEventId, getNextEventId());
+    }
+
+    @Override
+    public void onInvalidate() {
+        super.onInvalidate();
+
+        setMetaData(selectedEventId, getNextEventId());
+    }
+
+    private Long getNextEventId() {
+        return eventRecordRepository.findFirstIdByEndInstantGreaterThanEqualOrderByStartInstantAsc(Instant.now())
+            .orElse(null);
     }
 
     @Override

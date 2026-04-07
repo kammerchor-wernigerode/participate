@@ -1,5 +1,6 @@
 package de.kammerchorwernigerode.app.participate.wicket.management;
 
+import de.kammerchorwernigerode.app.participate.event.infrastructure.EventRecordRepository;
 import de.kammerchorwernigerode.app.participate.wicket.WicketProperties;
 import de.kammerchorwernigerode.app.participate.wicket.configuration.WicketConfigurer;
 import org.apache.wicket.protocol.http.WicketFilter;
@@ -65,8 +66,8 @@ class ManagementWicketConfiguration implements ApplicationContextAware, Environm
 
     @Bean
     public ManagementWicketApplication managementWicketApplication(
-        ObjectProvider<WicketConfigurer> configurers) {
-        ManagementWicketApplication application = new ManagementWicketApplication(environment);
+        ObjectProvider<WicketConfigurer> configurers, EventRecordRepository eventRecordRepository) {
+        ManagementWicketApplication application = new ManagementWicketApplication(environment, eventRecordRepository);
         SpringComponentInjector springComponentInjector = new SpringComponentInjector(application, applicationContext);
         application.getComponentInstantiationListeners().add(springComponentInjector);
         configurers.stream().forEach(configure(application));

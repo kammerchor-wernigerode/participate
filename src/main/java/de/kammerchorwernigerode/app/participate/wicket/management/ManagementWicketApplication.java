@@ -2,6 +2,7 @@ package de.kammerchorwernigerode.app.participate.wicket.management;
 
 import de.agilecoders.wicket.webjars.WicketWebjars;
 import de.agilecoders.wicket.webjars.settings.WebjarsSettings;
+import de.kammerchorwernigerode.app.participate.event.infrastructure.EventRecordRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.EventsPage;
 import de.kammerchorwernigerode.app.participate.wicket.WicketApplication;
 import org.apache.wicket.Component;
@@ -25,6 +26,7 @@ public class ManagementWicketApplication extends WicketApplication
     implements IRoleCheckingStrategy, IUnauthorizedComponentInstantiationListener {
 
     private final Environment environment;
+    private final EventRecordRepository eventRecordRepository;
 
     @Override
     public Class<? extends Page> getHomePage() {
@@ -33,7 +35,7 @@ public class ManagementWicketApplication extends WicketApplication
 
     @Override
     public Session newSession(Request request, Response response) {
-        return new ManagementWicketSession(request, environment);
+        return new ManagementWicketSession(request, environment, eventRecordRepository);
     }
 
     @Override
