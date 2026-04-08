@@ -86,5 +86,10 @@ public class AttendeeTablePanel extends GenericPanel<AttendeeEntrySpecification>
             IModel<InvitationStatus> model = rowModel.map(AttendeeEntry::getInvitationStatus);
             cellItem.add(new InvitationStatusIcon(componentId, model));
         }
+
+        @Override
+        public String getCssClass() {
+            return "w-1 text-nowrap";
+        }
     }
 }
