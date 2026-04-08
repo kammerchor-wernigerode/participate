@@ -1,7 +1,7 @@
 package de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.table.sort;
 
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.image.IconBehavior;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.IconBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort.AjaxOrderByLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState;

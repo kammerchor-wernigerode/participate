@@ -1,7 +1,7 @@
 package de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button;
 
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.image.Icon;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.image.IconType;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.Icon;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.IconType;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;

@@ -1,4 +1,4 @@
-package de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.image;
+package de.kammerchorwernigerode.app.participate.wicket.markup.html.image;
 
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;

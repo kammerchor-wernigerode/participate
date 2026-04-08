@@ -1,6 +1,6 @@
 package de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon;
 
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.image.IconType;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.IconType;
 
 public class Bi extends IconType {
 

@@ -3,7 +3,7 @@ package de.kammerchorwernigerode.app.participate.event.presentation.components;
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.InvitationStatus;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.image.Icon;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.Icon;
 import org.apache.wicket.Application;
 import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.markup.html.panel.GenericPanel;
