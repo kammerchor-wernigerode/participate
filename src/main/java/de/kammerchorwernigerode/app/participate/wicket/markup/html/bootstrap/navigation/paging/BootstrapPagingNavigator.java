@@ -50,7 +50,7 @@ public class BootstrapPagingNavigator extends AjaxPagingNavigator {
     protected void onComponentTag(ComponentTag tag) {
         super.onComponentTag(tag);
 
-        tag.put("class", "pagination mb-0");
+        tag.put("class", "pagination pagination-sm mb-0");
     }
 
     @Override
