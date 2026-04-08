@@ -1,4 +1,4 @@
-package de.kammerchorwernigerode.app.participate.wicket.markup.html.navigation.paging;
+package de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.navigation.paging;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;

@@ -1,4 +1,4 @@
-package de.kammerchorwernigerode.app.participate.wicket.markup.html.navigation.paging;
+package de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.navigation.paging;
 
 import org.apache.wicket.extensions.markup.html.repeater.data.table.NavigatorLabel;
 import org.apache.wicket.markup.html.WebMarkupContainer;

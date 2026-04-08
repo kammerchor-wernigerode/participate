@@ -1,8 +1,8 @@
 package de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.table.toolbars;
 
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.navigation.paging.BootstrapNavigatorLabel;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.navigation.paging.BootstrapPageSizeSelector;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.navigation.paging.BootstrapPagingNavigator;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.navigation.paging.BootstrapNavigatorLabel;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.navigation.paging.BootstrapPageSizeSelector;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.navigation.paging.BootstrapPagingNavigator;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
