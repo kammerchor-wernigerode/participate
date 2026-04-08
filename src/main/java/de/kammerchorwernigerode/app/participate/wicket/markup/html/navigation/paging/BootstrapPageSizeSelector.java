@@ -6,6 +6,8 @@ import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.form.LambdaChoiceRenderer;
 import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -15,20 +17,24 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 
+import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-public class BootstrapPageSizeSelector extends GenericPanel<Long> {
+public class BootstrapPageSizeSelector extends GenericPanel<BootstrapPageSizeSelector.Option> {
 
-    private final long initialPageSize;
+    private final Option initialPageSize;
     private final DataTable<?, ?> table;
 
     public BootstrapPageSizeSelector(String id, DataTable<?, ?> table) {
-        super(id, new CompoundPropertyModel<>(table.getItemsPerPage()));
-        this.initialPageSize = table.getItemsPerPage();
+        super(id, new CompoundPropertyModel<>(new Option(table.getItemsPerPage())));
+        this.initialPageSize = new Option(table.getItemsPerPage());
         this.table = table;
     }
 
@@ -45,27 +51,27 @@ public class BootstrapPageSizeSelector extends GenericPanel<Long> {
         super.onConfigure();
 
         long currentPageSize = table.getItemsPerPage();
-        setModelObject(currentPageSize);
+        setModelObject(new Option(currentPageSize));
     }
 
     protected void onPageSizeChanged() {
     }
 
 
-    private class SelectorForm extends Form<Long> {
+    private class SelectorForm extends Form<Option> {
 
-        private final IModel<List<Long>> pageSizes;
+        private final IModel<List<Option>> pageSizes;
 
-        public SelectorForm(String id, IModel<Long> model) {
+        public SelectorForm(String id, IModel<Option> model) {
             super(id, model);
             this.pageSizes = new PageSizesModel(table.getDataProvider(), initialPageSize);
         }
 
         @Override
         protected void onSubmit() {
-            Long pageSize = getModelObject();
+            Option pageSize = getModelObject();
 
-            table.setItemsPerPage(pageSize);
+            table.setItemsPerPage(pageSize.value);
             table.setCurrentPage(0);
 
             onPageSizeChanged();
@@ -79,7 +85,9 @@ public class BootstrapPageSizeSelector extends GenericPanel<Long> {
 
             table.setOutputMarkupId(true);
 
-            DropDownChoice<Long> select = new DropDownChoice<>("select", getModel(), pageSizes);
+            IChoiceRenderer<Option> renderer = new LambdaChoiceRenderer<>(option -> getString(option.resourceKey, null,
+                String.valueOf(option.value)), Option::getValue);
+            DropDownChoice<Option> select = new DropDownChoice<>("select", getModel(), pageSizes, renderer);
             select.add(new PageSizeSelectBehavior());
             select.setLabel(new ResourceModel("PageSizeSelector.label"));
             add(select);
@@ -92,7 +100,7 @@ public class BootstrapPageSizeSelector extends GenericPanel<Long> {
         protected void onConfigure() {
             super.onConfigure();
 
-            List<Long> options = pageSizes.getObject();
+            List<Option> options = pageSizes.getObject();
             if (options.contains(getModelObject())) {
                 return;
             }
@@ -123,25 +131,45 @@ public class BootstrapPageSizeSelector extends GenericPanel<Long> {
 
 
     @RequiredArgsConstructor
-    private static class PageSizesModel extends LoadableDetachableModel<List<Long>> {
+    private static class PageSizesModel extends LoadableDetachableModel<List<Option>> {
 
         private static final List<Long> VALUES = List.of(5L, 10L, 25L, 50L, 100L, 250L, 500L);
 
         private final IDataProvider<?> dataProvider;
-        private final long initialPageSize;
+        private final Option initialPageSize;
 
         @Override
-        protected List<Long> load() {
+        protected List<Option> load() {
             long providerSize = dataProvider.size();
             long totalSize = Math.max(1, providerSize);
 
-            SortedSet<Long> options = new TreeSet<>(VALUES);
+            SortedSet<Option> options = VALUES.stream()
+                .map(Option::new)
+                .collect(Collectors.toCollection(TreeSet::new));
             options.add(initialPageSize);
-            options.add(totalSize);
+            options.add(new Option("PageSizeSelector.option.all", totalSize));
 
             return options.stream()
-                .filter(option -> option <= totalSize)
+                .filter(option -> option.value <= totalSize)
                 .toList();
+        }
+    }
+
+    @Data
+    @RequiredArgsConstructor
+    public static class Option implements Comparable<Option>, Serializable {
+
+        private final String resourceKey;
+        private final long value;
+
+        public Option(long value) {
+            this(String.valueOf(value), value);
+        }
+
+        @Override
+        public int compareTo(Option that) {
+            return Comparator.comparing(Option::getValue)
+                .compare(this, that);
         }
     }
 }
