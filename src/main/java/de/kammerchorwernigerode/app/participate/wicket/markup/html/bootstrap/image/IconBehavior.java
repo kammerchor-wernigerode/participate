@@ -1,11 +1,12 @@
 package de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.image;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-public class IconBehavior extends org.apache.wicket.behavior.Behavior {
+public class IconBehavior extends Behavior {
 
     private final IModel<IconType> type;
     private final IModel<String> value;
