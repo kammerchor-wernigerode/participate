@@ -3,7 +3,7 @@ package de.kammerchorwernigerode.app.participate.wicket.management;
 import de.agilecoders.wicket.webjars.WicketWebjars;
 import de.agilecoders.wicket.webjars.settings.WebjarsSettings;
 import de.kammerchorwernigerode.app.participate.event.infrastructure.EventRecordRepository;
-import de.kammerchorwernigerode.app.participate.event.presentation.ui.EventsPage;
+import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.EventsPage;
 import de.kammerchorwernigerode.app.participate.wicket.WicketApplication;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;

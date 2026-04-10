@@ -1,10 +1,11 @@
-package de.kammerchorwernigerode.app.participate.event.presentation.ui;
+package de.kammerchorwernigerode.app.participate.event.presentation.ui.overview;
 
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntryRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntrySpecification;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntry_;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventSelected;
+import de.kammerchorwernigerode.app.participate.event.presentation.ui.EventsCssResourceReference;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.details.EventPanel;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.table.EventTablePanel;
 import de.kammerchorwernigerode.app.participate.wicket.ParticipatePage;

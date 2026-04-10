@@ -1,6 +1,6 @@
 package de.kammerchorwernigerode.app.participate.wicket;
 
-import de.kammerchorwernigerode.app.participate.event.presentation.ui.EventsPage;
+import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.EventsPage;
 import de.kammerchorwernigerode.app.participate.wicket.bootstrap.BootstrapPage;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
