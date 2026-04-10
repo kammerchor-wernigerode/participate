@@ -3,7 +3,11 @@ package de.kammerchorwernigerode.app.participate.wicket.management;
 import de.kammerchorwernigerode.app.participate.event.infrastructure.EventRecordRepository;
 import de.kammerchorwernigerode.app.participate.wicket.WicketProperties;
 import de.kammerchorwernigerode.app.participate.wicket.configuration.WicketConfigurer;
+import org.apache.wicket.Session;
+import org.apache.wicket.application.ComponentInstantiationListenerCollection;
 import org.apache.wicket.protocol.http.WicketFilter;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.spring.SpringWebApplicationFactory;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.beans.factory.ObjectProvider;
@@ -67,11 +71,8 @@ class ManagementWicketConfiguration implements ApplicationContextAware, Environm
     @Bean
     public ManagementWicketApplication managementWicketApplication(
         ObjectProvider<WicketConfigurer> configurers, EventRecordRepository eventRecordRepository) {
-        ManagementWicketApplication application = new ManagementWicketApplication(environment, eventRecordRepository);
-        SpringComponentInjector springComponentInjector = new SpringComponentInjector(application, applicationContext);
-        application.getComponentInstantiationListeners().add(springComponentInjector);
-        configurers.stream().forEach(configure(application));
-        return application;
+        return new SpringManagementWicketApplication(applicationContext, environment, eventRecordRepository,
+            configurers);
     }
 
     private static Consumer<WicketConfigurer> configure(ManagementWicketApplication application) {
@@ -93,6 +94,35 @@ class ManagementWicketConfiguration implements ApplicationContextAware, Environm
         return registration;
     }
 
+
+    @RequiredArgsConstructor
+    private static class SpringManagementWicketApplication extends ManagementWicketApplication {
+
+        private final ApplicationContext applicationContext;
+        private final Environment environment;
+        private final EventRecordRepository eventRecordRepository;
+        private final ObjectProvider<WicketConfigurer> configurers;
+
+        @Override
+        public Session newSession(Request request, Response response) {
+            return new ManagementWicketSession(request, environment, eventRecordRepository);
+        }
+
+        @Override
+        protected void init() {
+            super.init();
+
+            ComponentInstantiationListenerCollection instantiationListeners = getComponentInstantiationListeners();
+            configure(instantiationListeners);
+
+            configurers.stream()
+                .forEach(ManagementWicketConfiguration.configure(this));
+        }
+
+        protected void configure(ComponentInstantiationListenerCollection listeners) {
+            listeners.add(new SpringComponentInjector(this, applicationContext));
+        }
+    }
 
     @Profile("oauth2")
     @Configuration

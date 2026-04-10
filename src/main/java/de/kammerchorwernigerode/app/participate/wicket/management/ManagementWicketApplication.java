@@ -2,22 +2,17 @@ package de.kammerchorwernigerode.app.participate.wicket.management;
 
 import de.agilecoders.wicket.webjars.WicketWebjars;
 import de.agilecoders.wicket.webjars.settings.WebjarsSettings;
-import de.kammerchorwernigerode.app.participate.event.infrastructure.EventRecordRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.EventsPage;
 import de.kammerchorwernigerode.app.participate.wicket.WicketApplication;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.Session;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.IRoleCheckingStrategy;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy;
-import org.apache.wicket.request.Request;
-import org.apache.wicket.request.Response;
 import org.apache.wicket.settings.SecuritySettings;
-import org.springframework.core.env.Environment;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,17 +20,9 @@ import lombok.RequiredArgsConstructor;
 public class ManagementWicketApplication extends WicketApplication
     implements IRoleCheckingStrategy, IUnauthorizedComponentInstantiationListener {
 
-    private final Environment environment;
-    private final EventRecordRepository eventRecordRepository;
-
     @Override
     public Class<? extends Page> getHomePage() {
         return EventsPage.class;
-    }
-
-    @Override
-    public Session newSession(Request request, Response response) {
-        return new ManagementWicketSession(request, environment, eventRecordRepository);
     }
 
     @Override
