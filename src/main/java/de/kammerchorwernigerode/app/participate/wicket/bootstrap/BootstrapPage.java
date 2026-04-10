@@ -13,6 +13,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.Locale;
 
@@ -20,6 +21,10 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public abstract class BootstrapPage extends WebPage {
+
+    public BootstrapPage(PageParameters parameters) {
+        super(parameters);
+    }
 
     @Override
     protected void onInitialize() {

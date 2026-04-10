@@ -14,10 +14,18 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class ParticipatePage extends BootstrapPage {
+
+    public ParticipatePage(PageParameters parameters) {
+        super(parameters);
+    }
 
     @Override
     protected void onInitialize() {
