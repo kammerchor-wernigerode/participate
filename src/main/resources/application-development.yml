@@ -27,6 +27,7 @@ app:
       client:
         registration:
           keycloak:
+            account-url: ${spring.security.oauth2.client.provider.keycloak.issuer-uri}/account
             roles-json-path: $.resource_access.${spring.security.oauth2.client.registration.keycloak.client-id}.roles[*]
 
 wicket:

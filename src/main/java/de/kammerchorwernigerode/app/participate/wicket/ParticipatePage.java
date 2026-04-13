@@ -2,6 +2,7 @@ package de.kammerchorwernigerode.app.participate.wicket;
 
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.EventsPage;
 import de.kammerchorwernigerode.app.participate.security.AuthenticationResolver;
+import de.kammerchorwernigerode.app.participate.security.core.AccountUrl;
 import de.kammerchorwernigerode.app.participate.wicket.bootstrap.BootstrapPage;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
@@ -14,6 +15,8 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
@@ -31,6 +34,9 @@ public class ParticipatePage extends BootstrapPage {
 
     @SpringBean
     private AuthenticationResolver authenticationResolver;
+
+    @SpringBean
+    private AccountUrl accountUrl;
 
     public ParticipatePage(PageParameters parameters) {
         super(parameters);
@@ -66,6 +72,9 @@ public class ParticipatePage extends BootstrapPage {
         userNameLabel.setRenderBodyOnly(true);
         navbarCollapse.add(userNameLabel);
 
+        IModel<String> accountUrlModel = () -> accountUrl.get().toString();
+        ExternalLink accountSettingsLink = new ExternalLink("accountSettingsLink", accountUrlModel);
+        navbarCollapse.add(accountSettingsLink);
 
         visitChildren(BookmarkablePageLink.class, new ActivePageLinkVisitor());
     }
