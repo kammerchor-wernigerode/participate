@@ -41,7 +41,7 @@ public class PersonTablePanel extends GenericPanel<PersonEntrySpecification> {
 
         List<IColumn<PersonEntry, String[]>> columns = createColumns();
         PersonDataProvider dataProvider = new PersonDataProvider(personEntryRepository, model);
-        dataProvider.setPropertySortOrder(NAME_SORT_PROPERTY, SortOrder.ASCENDING);
+        dataProvider.setSort(NAME_SORT_PROPERTY, SortOrder.ASCENDING);
         int rowsPerPage = getRowsPerPage();
         PersonTable table = new PersonTable("table", columns, dataProvider, rowsPerPage);
         table.setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());

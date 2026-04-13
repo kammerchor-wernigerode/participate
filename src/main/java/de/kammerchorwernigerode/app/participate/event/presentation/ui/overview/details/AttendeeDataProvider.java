@@ -4,7 +4,7 @@ import de.kammerchorwernigerode.app.participate.event.presentation.model.Attende
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeEntryRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeEntrySpecification;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeEntry_;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.util.JpaDataProvider;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.util.SimpleJpaDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.danekja.java.util.function.serializable.SerializableFunction;
@@ -14,7 +14,7 @@ import org.springframework.data.jpa.domain.JpaSort;
 
 import java.util.Objects;
 
-public class AttendeeDataProvider extends JpaDataProvider<AttendeeEntry> {
+public class AttendeeDataProvider extends SimpleJpaDataProvider<AttendeeEntry> {
 
     public AttendeeDataProvider(AttendeeEntryRepository attendeeEntryRepository,
                                 IModel<AttendeeEntrySpecification> filterState) {
