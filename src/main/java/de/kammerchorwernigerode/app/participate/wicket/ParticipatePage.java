@@ -1,6 +1,7 @@
 package de.kammerchorwernigerode.app.participate.wicket;
 
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.EventsPage;
+import de.kammerchorwernigerode.app.participate.security.AuthenticationResolver;
 import de.kammerchorwernigerode.app.participate.wicket.bootstrap.BootstrapPage;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
@@ -11,17 +12,25 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.head.CssContentHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
+import org.springframework.security.core.AuthenticatedPrincipal;
 
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @NoArgsConstructor
 public class ParticipatePage extends BootstrapPage {
+
+    @SpringBean
+    private AuthenticationResolver authenticationResolver;
 
     public ParticipatePage(PageParameters parameters) {
         super(parameters);
@@ -51,6 +60,12 @@ public class ParticipatePage extends BootstrapPage {
         eventsNavbarLink.setIcon(Bi.calendar_fill);
         eventsNavbarLink.setBody(new ResourceModel("events"));
         navbarCollapse.add(eventsNavbarLink);
+
+
+        Label userNameLabel = new Label("usernameLabel", new UsernameModel(authenticationResolver));
+        userNameLabel.setRenderBodyOnly(true);
+        navbarCollapse.add(userNameLabel);
+
 
         visitChildren(BookmarkablePageLink.class, new ActivePageLinkVisitor());
     }
@@ -83,6 +98,18 @@ public class ParticipatePage extends BootstrapPage {
             Page page = link.getPage();
             Class<? extends Page> pageClass = page.getClass();
             return pageClass.equals(link.getPageClass());
+        }
+    }
+
+    @RequiredArgsConstructor
+    private static class UsernameModel extends LoadableDetachableModel<String> {
+
+        private final AuthenticationResolver authenticationResolver;
+
+        @Override
+        protected String load() {
+            AuthenticatedPrincipal principal = authenticationResolver.resolveUser();
+            return principal.getName();
         }
     }
 }
