@@ -26,6 +26,8 @@ import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.springframework.security.core.AuthenticatedPrincipal;
 
+import jakarta.servlet.ServletContext;
+
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
@@ -37,6 +39,9 @@ public class ParticipatePage extends BootstrapPage {
 
     @SpringBean
     private AccountUrl accountUrl;
+
+    @SpringBean
+    private ServletContext servletContext;
 
     public ParticipatePage(PageParameters parameters) {
         super(parameters);
@@ -75,6 +80,9 @@ public class ParticipatePage extends BootstrapPage {
         IModel<String> accountUrlModel = () -> accountUrl.get().toString();
         ExternalLink accountSettingsLink = new ExternalLink("accountSettingsLink", accountUrlModel);
         navbarCollapse.add(accountSettingsLink);
+
+        ExternalLink signOutLink = new ExternalLink("signOutLink", servletContext.getContextPath() + "/logout");
+        navbarCollapse.add(signOutLink);
 
         visitChildren(BookmarkablePageLink.class, new ActivePageLinkVisitor());
     }
