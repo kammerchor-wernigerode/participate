@@ -14,7 +14,7 @@ spring:
         provider:
           keycloak:
             issuer-uri: http://localhost:9080/realms/local
-            user-name-attribute: sub
+            user-name-attribute: preferred_username
         registration:
           keycloak:
             client-id: participate
