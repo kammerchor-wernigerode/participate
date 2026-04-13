@@ -8,6 +8,7 @@ import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.tab
 import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.Session;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDataProvider;
 import org.apache.wicket.markup.repeater.Item;
@@ -15,6 +16,7 @@ import org.apache.wicket.markup.repeater.OddEvenItem;
 import org.apache.wicket.model.IModel;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public class EventTable extends BootstrapDataTable<EventEntry, String> {
 
@@ -44,15 +46,16 @@ public class EventTable extends BootstrapDataTable<EventEntry, String> {
         protected void onConfigure() {
             super.onConfigure();
 
+            Predicate<Behavior> isHighlighted = HIGHLIGHT_BEHAVIOR::equals;
+            getBehaviors().stream()
+                .filter(isHighlighted)
+                .forEach(this::remove);
+
             Long itemEventId = getItemEventId();
             Long selectedEventId = getSelectedEventId();
 
             if (itemEventId.equals(selectedEventId)) {
                 add(HIGHLIGHT_BEHAVIOR);
-            } else {
-                getBehaviors().stream()
-                    .filter(HIGHLIGHT_BEHAVIOR::equals)
-                    .forEach(this::remove);
             }
         }
 
