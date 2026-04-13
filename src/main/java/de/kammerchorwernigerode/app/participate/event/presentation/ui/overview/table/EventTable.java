@@ -36,7 +36,7 @@ public class EventTable extends BootstrapDataTable<EventEntry, String> {
     private static class HighlightSelectedItem extends OddEvenItem<EventEntry> {
 
         private static final AttributeAppender HIGHLIGHT_BEHAVIOR =
-            ClassAttributeModifier.append("class", "table-primary");
+            ClassAttributeModifier.append("class", "table-active");
 
         public HighlightSelectedItem(String id, int index, IModel<EventEntry> model) {
             super(id, index, model);
