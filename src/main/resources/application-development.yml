@@ -27,7 +27,7 @@ app:
       client:
         registration:
           keycloak:
-            roles-json-path: $.resource_access.participate.roles[*]
+            roles-json-path: $.resource_access.${spring.security.oauth2.client.registration.keycloak.client-id}.roles[*]
 
 wicket:
   management:
