@@ -17,11 +17,11 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public abstract class JpaDataProvider<T extends Serializable, S> implements ISortableDataProvider<T, S>,
-    IFilterStateLocator<Specification<T>> {
+public abstract class JpaDataProvider<T extends Serializable, S, F extends Specification<T>>
+    implements ISortableDataProvider<T, S>, IFilterStateLocator<F> {
 
     private final JpaSpecificationExecutor<T> jpaSpecificationExecutor;
-    private final IModel<Specification<T>> filterState;
+    private final IModel<F> filterState;
 
     @Override
     public Iterator<? extends T> iterator(long first, long count) {
@@ -44,12 +44,12 @@ public abstract class JpaDataProvider<T extends Serializable, S> implements ISor
     }
 
     @Override
-    public Specification<T> getFilterState() {
+    public F getFilterState() {
         return filterState.getObject();
     }
 
     @Override
-    public void setFilterState(Specification<T> state) {
+    public void setFilterState(F state) {
         filterState.setObject(state);
     }
 

@@ -12,13 +12,14 @@ import java.io.Serializable;
 import lombok.Getter;
 import lombok.NonNull;
 
-public abstract class CompoundJpaDataProvider<T extends Serializable> extends JpaDataProvider<T, String[]> {
+public abstract class CompoundJpaDataProvider<T extends Serializable, F extends Specification<T>>
+    extends JpaDataProvider<T, String[], F> {
 
     @Getter
     private final SortState sortState = new SortState();
 
     public CompoundJpaDataProvider(JpaSpecificationExecutor<T> jpaSpecificationExecutor,
-                                   IModel<Specification<T>> filterState) {
+                                   IModel<F> filterState) {
         super(jpaSpecificationExecutor, filterState);
     }
 

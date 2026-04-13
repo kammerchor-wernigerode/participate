@@ -7,17 +7,16 @@ import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEn
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.util.SimpleJpaDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.danekja.java.util.function.serializable.SerializableFunction;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.JpaSort;
 
 import java.util.Objects;
 
-public class EventDataProvider extends SimpleJpaDataProvider<EventEntry> {
+public class EventDataProvider extends SimpleJpaDataProvider<EventEntry, EventEntrySpecification> {
 
     public EventDataProvider(EventEntryRepository eventEntryRepository,
                              IModel<EventEntrySpecification> filterState) {
-        super(eventEntryRepository, filterState.map(SerializableFunction.identity()));
+        super(eventEntryRepository, filterState);
     }
 
     @Override

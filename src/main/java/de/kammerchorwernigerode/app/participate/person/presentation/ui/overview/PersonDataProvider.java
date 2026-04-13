@@ -7,14 +7,13 @@ import de.kammerchorwernigerode.app.participate.person.presentation.model.Person
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.util.CompoundJpaDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.danekja.java.util.function.serializable.SerializableFunction;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.JpaSort;
 
 import java.util.Objects;
 
-public class PersonDataProvider extends CompoundJpaDataProvider<PersonEntry> {
+public class PersonDataProvider extends CompoundJpaDataProvider<PersonEntry, PersonEntrySpecification> {
 
     public static final String[] NAME_SORT_PROPERTY = {
         "fileName",
@@ -24,7 +23,7 @@ public class PersonDataProvider extends CompoundJpaDataProvider<PersonEntry> {
 
     public PersonDataProvider(PersonEntryRepository personEntryRepository,
                               IModel<PersonEntrySpecification> filterState) {
-        super(personEntryRepository, filterState.map(SerializableFunction.identity()));
+        super(personEntryRepository, filterState);
     }
 
     public Sort getSort() {
