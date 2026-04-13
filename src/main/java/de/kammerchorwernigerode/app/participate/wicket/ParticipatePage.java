@@ -1,6 +1,7 @@
 package de.kammerchorwernigerode.app.participate.wicket;
 
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.EventsPage;
+import de.kammerchorwernigerode.app.participate.person.presentation.ui.overview.PersonsPage;
 import de.kammerchorwernigerode.app.participate.security.AuthenticationResolver;
 import de.kammerchorwernigerode.app.participate.security.core.AccountUrl;
 import de.kammerchorwernigerode.app.participate.wicket.bootstrap.BootstrapPage;
@@ -71,6 +72,12 @@ public class ParticipatePage extends BootstrapPage {
         eventsNavbarLink.setIcon(Bi.calendar_fill);
         eventsNavbarLink.setBody(new ResourceModel("events"));
         navbarCollapse.add(eventsNavbarLink);
+
+        BootstrapBookmarkablePageLink<Void> personsNavbarLink =
+            new BootstrapBookmarkablePageLink<>("personsNavbarLink", PersonsPage.class);
+        personsNavbarLink.setIcon(Bi.people_fill);
+        personsNavbarLink.setBody(new ResourceModel("persons"));
+        navbarCollapse.add(personsNavbarLink);
 
 
         Label userNameLabel = new Label("usernameLabel", new UsernameModel(authenticationResolver));
