@@ -40,21 +40,23 @@ public class AttendeeTablePanel extends GenericPanel<AttendeeEntrySpecification>
         IModel<AttendeeEntrySpecification> model = getModel();
 
         AttendeeDataProvider dataProvider = new AttendeeDataProvider(attendeeEntryRepository, model);
-        dataProvider.setOrder("invitationStatusOrder", SortOrder.ASCENDING);
-        List<IColumn<AttendeeEntry, String>> columns = createColumns();
+        dataProvider.setSort(new String[]{"invitationStatusOrder"}, SortOrder.ASCENDING);
+        List<IColumn<AttendeeEntry, String[]>> columns = createColumns();
         int rowsPerPage = getRowsPerPage();
         AttendeeTable table = new AttendeeTable("table", columns, dataProvider, rowsPerPage);
         table.setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
         add(table);
     }
 
-    private List<IColumn<AttendeeEntry, String>> createColumns() {
-        List<IColumn<AttendeeEntry, String>> columns = new ArrayList<>();
-        columns.add(new InvitationStatusColumn());
-        columns.add(new LambdaColumn<>(new ResourceModel("person.name"), this::printName));
-        columns.add(new EnumLambdaColumn<>(new ResourceModel("musician.voice"), "voiceOrder", AttendeeEntry::getVoice));
+    // @checkstyle:off: LineLength
+    private List<IColumn<AttendeeEntry, String[]>> createColumns() {
+        List<IColumn<AttendeeEntry, String[]>> columns = new ArrayList<>();
+        columns.add(new InvitationStatusColumn<>(new String[]{"invitationStatusOrder"}));
+        columns.add(new LambdaColumn<>(new ResourceModel("person.name"), new String[]{"fileName", "firstName", "lastName"}, this::printName));
+        columns.add(new EnumLambdaColumn<>(new ResourceModel("musician.voice"), new String[]{"voiceOrder"}, AttendeeEntry::getVoice));
         return columns;
     }
+    // @checkstyle:on: LineLength
 
     private String printName(AttendeeEntry entry) {
         String fileName = entry.getFileName();
@@ -74,10 +76,10 @@ public class AttendeeTablePanel extends GenericPanel<AttendeeEntrySpecification>
     }
 
 
-    private static class InvitationStatusColumn extends AbstractColumn<AttendeeEntry, String> {
+    private static class InvitationStatusColumn<S> extends AbstractColumn<AttendeeEntry, S> {
 
-        public InvitationStatusColumn() {
-            super(Model.of(), "invitationStatusOrder");
+        public InvitationStatusColumn(S sortProperty) {
+            super(Model.of(), sortProperty);
         }
 
         @Override

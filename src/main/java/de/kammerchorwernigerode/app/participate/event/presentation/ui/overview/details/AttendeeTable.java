@@ -9,12 +9,12 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDat
 
 import java.util.List;
 
-public class AttendeeTable extends BootstrapDataTable<AttendeeEntry, String> {
+public class AttendeeTable extends BootstrapDataTable<AttendeeEntry, String[]> {
 
     public static final MetaDataKey<Long> attendeeTablePageSize = new MetaDataKey<>() { };
 
-    public AttendeeTable(String id, List<? extends IColumn<AttendeeEntry, String>> columns,
-                         ISortableDataProvider<AttendeeEntry, String> dataProvider, int rowsPerPage) {
+    public AttendeeTable(String id, List<? extends IColumn<AttendeeEntry, String[]>> columns,
+                         ISortableDataProvider<AttendeeEntry, String[]> dataProvider, int rowsPerPage) {
         super(id, columns, dataProvider, rowsPerPage);
     }
 
