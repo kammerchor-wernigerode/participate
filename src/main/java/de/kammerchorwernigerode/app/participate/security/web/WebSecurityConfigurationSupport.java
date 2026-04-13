@@ -10,7 +10,8 @@ public class WebSecurityConfigurationSupport {
     @Bean
     public SecurityFilterChain rootFilterChain(HttpSecurity http) {
         http
-            .securityMatcher(PathPatternRequestMatcher.withDefaults().matcher("/**"))
+            .securityMatcher(PathPatternRequestMatcher.withDefaults()
+                .matcher("/**"))
             .authorizeHttpRequests(authorize -> authorize
                 .anyRequest().permitAll())
         ;
