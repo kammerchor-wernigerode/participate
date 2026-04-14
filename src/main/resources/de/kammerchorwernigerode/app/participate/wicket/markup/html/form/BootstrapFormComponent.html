@@ -1,0 +1,15 @@
+<!doctype html>
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+    <wicket:container wicket:id="layout"></wicket:container>
+    <div wicket:id="feedback"></div>
+
+    <wicket:fragment wicket:id="default">
+        <label class="form-label" wicket:id="label"></label>
+        <input wicket:id="control">
+    </wicket:fragment>
+
+    <wicket:fragment wicket:id="floatingLabel">
+        <input wicket:id="control">
+        <label wicket:id="label"></label>
+    </wicket:fragment>
+</wicket:panel>
