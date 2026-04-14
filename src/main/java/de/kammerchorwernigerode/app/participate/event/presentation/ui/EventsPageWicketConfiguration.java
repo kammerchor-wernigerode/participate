@@ -2,6 +2,7 @@ package de.kammerchorwernigerode.app.participate.event.presentation.ui;
 
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.creation.EventCreationPage;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.details.EventDetailsPage;
+import de.kammerchorwernigerode.app.participate.event.presentation.ui.edit.EventEditPage;
 import de.kammerchorwernigerode.app.participate.wicket.configuration.WicketConfigurer;
 import de.kammerchorwernigerode.app.participate.wicket.management.ManagementWicketApplication;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -17,6 +18,7 @@ class EventsPageWicketConfiguration implements WicketConfigurer {
 
     private void mountPages(WebApplication webApplication) {
         webApplication.mountPage("/events/${id}", EventDetailsPage.class);
+        webApplication.mountPage("/events/${id}/edit", EventEditPage.class);
         webApplication.mountPage("/events/new", EventCreationPage.class);
     }
 }
