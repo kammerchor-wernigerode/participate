@@ -17,7 +17,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
@@ -27,10 +26,10 @@ import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.springframework.security.core.AuthenticatedPrincipal;
 
+import java.net.URI;
 import jakarta.servlet.ServletContext;
 
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @NoArgsConstructor
 public class ParticipatePage extends BootstrapPage {
@@ -80,12 +79,11 @@ public class ParticipatePage extends BootstrapPage {
         navbarCollapse.add(personsNavbarLink);
 
 
-        Label userNameLabel = new Label("usernameLabel", new UsernameModel(authenticationResolver));
+        Label userNameLabel = new Label("usernameLabel", new UsernameModel());
         userNameLabel.setRenderBodyOnly(true);
         navbarCollapse.add(userNameLabel);
 
-        IModel<String> accountUrlModel = () -> accountUrl.get().toString();
-        ExternalLink accountSettingsLink = new ExternalLink("accountSettingsLink", accountUrlModel);
+        ExternalLink accountSettingsLink = new ExternalLink("accountSettingsLink", new AccountUrlModel());
         navbarCollapse.add(accountSettingsLink);
 
         ExternalLink signOutLink = new ExternalLink("signOutLink", servletContext.getContextPath() + "/logout");
@@ -125,15 +123,21 @@ public class ParticipatePage extends BootstrapPage {
         }
     }
 
-    @RequiredArgsConstructor
-    private static class UsernameModel extends LoadableDetachableModel<String> {
-
-        private final AuthenticationResolver authenticationResolver;
+    private class UsernameModel extends LoadableDetachableModel<String> {
 
         @Override
         protected String load() {
             AuthenticatedPrincipal principal = authenticationResolver.resolveUser();
             return principal.getName();
+        }
+    }
+
+    private class AccountUrlModel extends LoadableDetachableModel<String> {
+
+        @Override
+        protected String load() {
+            URI uri = accountUrl.get();
+            return uri.toString();
         }
     }
 }
