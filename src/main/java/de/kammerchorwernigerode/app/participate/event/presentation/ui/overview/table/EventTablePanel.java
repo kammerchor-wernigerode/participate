@@ -5,7 +5,10 @@ import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEn
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntryRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntrySpecification;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventSelected;
+import de.kammerchorwernigerode.app.participate.event.presentation.ui.creation.EventCreationPage;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.LinkColumn;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -51,6 +54,12 @@ public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
         EventTable table = new EventTable("table", columns, dataProvider, Integer.MAX_VALUE);
         table.setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
         add(table);
+
+        BootstrapBookmarkablePageLink<Void> createEventLink = new BootstrapBookmarkablePageLink<>("createEventLink",
+            EventCreationPage.class);
+        createEventLink.setIcon(Bi.plus_lg);
+        createEventLink.setBody(new ResourceModel("EventTablePanel.create"));
+        add(createEventLink);
     }
 
     private List<IColumn<EventEntry, String>> createColumns() {

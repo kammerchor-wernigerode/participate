@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+    <form wicket:id="form">
+        <div class="d-flex d-sm-none justify-content-between mb-5">
+            <a href="#" class="btn btn-link" wicket:id="backLink"></a>
+            <button type="submit" class="btn btn-link" wicket:id="saveLink">
+                <wicket:message key="save" />
+            </button>
+        </div>
+
+        <div class="row">
+            <div class="order-3 col d-none d-sm-block mt-2">
+                <button type="submit" class="btn btn-outline-primary" wicket:id="saveButton">
+                    <wicket:message key="save" />
+                </button>
+            </div>
+
+            <div class="d-flex flex-column order-2 col-12 col-sm-7 col-md-6">
+                <div class="d-flex align-items-start">
+                    <div class="d-none d-sm-block mt-2 me-1">
+                        <a href="#" class="btn btn-link" wicket:id="backButton">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
+                    </div>
+
+                    <div class="d-flex flex-column gap-5 mb-3 ps-4 ps-sm-0 w-100">
+                        <div wicket:id="summary"></div>
+
+                        <div class="d-flex flex-column flex-xl-row align-items-xl-center gap-1">
+                            <div class="mb-2 mb-lg-2 w-100" wicket:id="startDateTime"></div>
+                            <span class="d-none d-xl-inline-flex" wicket:id="to"></span>
+                            <div class="mb-2 mb-lg-2 w-100" wicket:id="endDateTime"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-sm-7 col-md-6">
+                <ul class="nav nav-tabs ms-4 ms-sm-5">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" aria-current="step" wicket:id="detailsLink"></a>
+                    </li>
+                </ul>
+
+                <div role="tabpanel" class="pt-3">
+                    <div class="d-flex flex-row mb-3">
+                        <div class="d-flex">
+                            <div class="pt-3 px-1 px-sm-3">
+                                <i class="bi bi-pin-map text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column gap-3 w-100">
+                            <div wicket:id="location"></div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-row mb-3">
+                        <div class="d-flex">
+                            <div class="pt-3 px-1 px-sm-3">
+                                <i class="bi bi-sticky text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column gap-3 w-100">
+                            <div wicket:id="description"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</wicket:panel>

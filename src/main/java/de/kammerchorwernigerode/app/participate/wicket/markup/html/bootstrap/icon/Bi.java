@@ -12,6 +12,7 @@ public class Bi extends IconType {
     public static final Bi circle = new Bi("circle");
     public static final Bi circle_fill = new Bi("circle-fill");
     public static final Bi people_fill = new Bi("people-fill");
+    public static final Bi plus_lg = new Bi("plus-lg");
     public static final Bi question = new Bi("question");
     public static final Bi x = new Bi("x");
 
