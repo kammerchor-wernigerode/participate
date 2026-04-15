@@ -60,7 +60,7 @@ public abstract class WicketApplication extends WebApplication {
         settings.setStripWicketTags(true);
     }
 
-    private void configure(ContentSecurityPolicySettings settings) {
+    protected void configure(ContentSecurityPolicySettings settings) {
         settings.blocking().strict()
             .add(CSPDirective.STYLE_SRC, CSPDirectiveSrcValue.SELF)
             .add(CSPDirective.IMG_SRC, "data:")
@@ -74,7 +74,7 @@ public abstract class WicketApplication extends WebApplication {
         }
     }
 
-    private void configure(ComponentInitializationListenerCollection listeners) {
+    protected void configure(ComponentInitializationListenerCollection listeners) {
         listeners.add(new BootstrapResourceAppender());
     }
 
@@ -82,7 +82,7 @@ public abstract class WicketApplication extends WebApplication {
         settings.useCdnResources(false);
     }
 
-    private void configure(HeaderResponseDecoratorCollection decorators) {
+    protected void configure(HeaderResponseDecoratorCollection decorators) {
         decorators.add(new RenderJavaScriptToFooterHeaderResponseDecorator());
     }
 
