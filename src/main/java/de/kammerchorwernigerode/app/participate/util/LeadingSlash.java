@@ -1,6 +1,5 @@
 package de.kammerchorwernigerode.app.participate.util;
 
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import lombok.NonNull;
@@ -19,7 +18,7 @@ public enum LeadingSlash {
         return modification.apply(input);
     }
 
-    public static Function<String, String> ensure(@NonNull LeadingSlash presence) {
+    public static UnaryOperator<String> ensure(@NonNull LeadingSlash presence) {
         return input -> ensure(input, presence);
     }
 
