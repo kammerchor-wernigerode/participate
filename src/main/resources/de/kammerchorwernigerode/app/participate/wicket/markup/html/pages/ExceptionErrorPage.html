@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" xmlns:wicket="http://wicket.apache.org">
+    <head>
+        <meta charset="utf-8">
+        <title>Error</title>
+    </head>
+    <body>
+        <wicket:extend>
+            <div class="container-fluid py-4">
+                <header class="pb-3 mb-4 border-bottom">
+                    <h1 class="display-3">
+                        <wicket:message key="ExceptionErrorPage.title.error">Error</wicket:message>
+                    </h1>
+                </header>
+
+                <div class="fs-4 mb-5">
+                    <wicket:message key="ExceptionErrorPage.message.message">
+                        The statement could not be executed. An error has occurred in the application.
+                    </wicket:message>
+                </div>
+
+                <pre class="border border-light rounded-3 p-2 col-md-8 mb-4" wicket:id="message"></pre>
+
+                <div class="mb-5">
+                    <button type="button" class="btn btn-primary" wicket:id="stacktraceToggle">
+                        <wicket:message key="ExceptionErrorPage.label.showStackTrace">Show Stacktrace</wicket:message>
+                    </button>
+                    <a class="btn btn-secondary" wicket:id="homepageLink">
+                        <wicket:message key="ExceptionErrorPage.label.homePage">Back to Homepage</wicket:message>
+                    </a>
+                </div>
+
+                <div class="mb-5" wicket:id="markupContainer">
+                    <h2>
+                        <wicket:message key="ExceptionErrorPage.title.markup">Markup</wicket:message>
+                    </h2>
+                    <p>
+                        <wicket:message key="ExceptionErrorPage.message.markup">The problem is in</wicket:message>
+                        <code wicket:id="resource"></code>:
+                    </p>
+                    <pre class="border border-light rounded-3 p-2 col-md-8" wicket:id="markup"></pre>
+                </div>
+
+                <div class="mb-5" wicket:id="stacktraceContainer">
+                    <h2>
+                        <wicket:message key="ExceptionErrorPage.title.stacktrace">Stacktrace</wicket:message>
+                    </h2>
+                    <pre class="border border-light rounded-3 p-2 col-md-8" wicket:id="stacktrace"></pre>
+                </div>
+            </div>
+        </wicket:extend>
+    </body>
+</html>

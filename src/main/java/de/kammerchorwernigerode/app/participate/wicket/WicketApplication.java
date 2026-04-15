@@ -3,6 +3,8 @@ package de.kammerchorwernigerode.app.participate.wicket;
 import de.agilecoders.wicket.webjars.settings.WebjarsSettings;
 import de.kammerchorwernigerode.app.participate.wicket.bootstrap.BootstrapResourceAppender;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.RenderJavaScriptToFooterHeaderResponseDecorator;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.pages.ExceptionErrorPage;
+import de.kammerchorwernigerode.app.participate.wicket.request.ExceptionMapper;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.application.ComponentInitializationListenerCollection;
 import org.apache.wicket.csp.CSPDirective;
@@ -10,8 +12,10 @@ import org.apache.wicket.csp.CSPDirectiveSrcValue;
 import org.apache.wicket.csp.ContentSecurityPolicySettings;
 import org.apache.wicket.markup.html.HeaderResponseDecoratorCollection;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.settings.ApplicationSettings;
 import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.settings.DebugSettings.ClassOutputStrategy;
+import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.settings.MarkupSettings;
 
 import java.nio.charset.StandardCharsets;
@@ -51,6 +55,16 @@ public abstract class WicketApplication extends WebApplication {
 
         HeaderResponseDecoratorCollection headerResponseDecorators = getHeaderResponseDecorators();
         configure(headerResponseDecorators);
+
+        mountPage("/error", ExceptionErrorPage.class);
+
+        ApplicationSettings applicationSettings = getApplicationSettings();
+        configure(applicationSettings);
+
+        ExceptionSettings exceptionSettings = getExceptionSettings();
+        configure(exceptionSettings);
+
+        setExceptionMapperProvider(ExceptionMapper::new);
     }
 
     protected void configure(MarkupSettings settings) {
@@ -84,6 +98,14 @@ public abstract class WicketApplication extends WebApplication {
 
     protected void configure(HeaderResponseDecoratorCollection decorators) {
         decorators.add(new RenderJavaScriptToFooterHeaderResponseDecorator());
+    }
+
+    protected void configure(ApplicationSettings settings) {
+        settings.setInternalErrorPage(ExceptionErrorPage.class);
+    }
+
+    protected void configure(ExceptionSettings settings) {
+        settings.setUnexpectedExceptionDisplay(ExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
     }
 
     public WebjarsSettings getWebjarsSettings() {
