@@ -51,6 +51,8 @@ public class EventEditPage extends ParticipatePage implements IGenericComponent<
         @Override
         protected void onSubmit() {
             setResponsePage(EventsPage.class);
+            String message = getString("EventEditForm.submit.success");
+            getSession().success(message);
         }
     }
 

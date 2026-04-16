@@ -29,6 +29,8 @@ public class EventCreationPage extends ParticipatePage {
         @Override
         protected void onSubmit() {
             setResponsePage(EventsPage.class);
+            String message = getString("EventCreationForm.submit.success");
+            getSession().success(message);
         }
     }
 }
