@@ -9,6 +9,7 @@ import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class BootstrapBookmarkablePageLink<T> extends BookmarkablePageLink<T> {
 
@@ -16,7 +17,11 @@ public class BootstrapBookmarkablePageLink<T> extends BookmarkablePageLink<T> {
     private final Label label;
 
     public <P extends Page> BootstrapBookmarkablePageLink(String id, Class<P> pageClass) {
-        super(id, pageClass);
+        this(id, pageClass, null);
+    }
+
+    public <P extends Page> BootstrapBookmarkablePageLink(String id, Class<P> pageClass, PageParameters parameters) {
+        super(id, pageClass, parameters);
         this.icon = new Icon("icon", null);
         this.label = new Label("label", Model.of());
     }

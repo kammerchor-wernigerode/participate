@@ -2,10 +2,15 @@ package de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.
 
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeEntrySpecification;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntry;
+import de.kammerchorwernigerode.app.participate.event.presentation.ui.edit.EventEditPage;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
 
 import java.time.format.DateTimeFormatter;
@@ -35,6 +40,14 @@ public class EventPanel extends GenericPanel<EventEntry> {
             .flatMap(CompoundPropertyModel::new);
         AttendeeTablePanel attendeeTablePanel = new AttendeeTablePanel("attendeeTablePanel", specModel);
         add(attendeeTablePanel);
+
+        PageParameters eventParameters = new PageParameters();
+        eventParameters.set("id", model.getObject().getId());
+        BootstrapBookmarkablePageLink<Void> editEventLink = new BootstrapBookmarkablePageLink<>("editEventLink",
+            EventEditPage.class, eventParameters);
+        editEventLink.setIcon(Bi.pencil_square);
+        editEventLink.setBody(new ResourceModel("EventPanel.event.edit"));
+        add(editEventLink);
     }
 
     private String printTitle(EventEntry entry) {
