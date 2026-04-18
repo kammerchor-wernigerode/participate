@@ -2,6 +2,7 @@ package de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.
 
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeEntrySpecification;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntry;
+import de.kammerchorwernigerode.app.participate.event.presentation.ui.details.EventDetailsPage;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.edit.EventEditPage;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.basic.RelativeTimeLabel;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
@@ -75,6 +76,13 @@ public class EventPanel extends GenericPanel<EventEntry> {
 
         PageParameters eventParameters = new PageParameters();
         eventParameters.set("id", model.getObject().getId());
+
+        BootstrapBookmarkablePageLink<Void> eventDetailsLink = new BootstrapBookmarkablePageLink<>("eventDetailsLink",
+            EventDetailsPage.class, eventParameters);
+        eventDetailsLink.setIcon(Bi.box_arrow_up_right);
+        eventDetailsLink.setBody(new ResourceModel("EventPanel.event.details"));
+        add(eventDetailsLink);
+
         BootstrapBookmarkablePageLink<Void> editEventLink = new BootstrapBookmarkablePageLink<>("editEventLink",
             EventEditPage.class, eventParameters);
         editEventLink.setIcon(Bi.pencil_square);

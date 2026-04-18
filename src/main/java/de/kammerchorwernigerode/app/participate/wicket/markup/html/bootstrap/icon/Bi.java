@@ -4,6 +4,7 @@ import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.IconTyp
 
 public class Bi extends IconType {
 
+    public static final Bi box_arrow_up_right = new Bi("box-arrow-up-right");
     public static final Bi calendar_fill = new Bi("calendar-fill");
     public static final Bi check = new Bi("check");
     public static final Bi chevron_double_down = new Bi("chevron-double-down");
