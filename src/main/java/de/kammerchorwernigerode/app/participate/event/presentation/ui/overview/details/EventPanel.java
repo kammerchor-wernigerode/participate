@@ -3,8 +3,10 @@ package de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeEntrySpecification;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.edit.EventEditPage;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.basic.RelativeTimeLabel;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
+import org.apache.wicket.extensions.markup.html.basic.SmartLinkMultiLineLabel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -14,12 +16,15 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
 
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Optional;
 
 import static java.util.function.Predicate.not;
 
 public class EventPanel extends GenericPanel<EventEntry> {
 
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
+        .ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT);
     private static final DateTimeFormatter MONTH_FORMATTER = DateTimeFormatter.ofPattern("MMMM yyyy");
 
     public EventPanel(String id, IModel<EventEntry> model) {
@@ -36,6 +41,33 @@ public class EventPanel extends GenericPanel<EventEntry> {
         title.setRenderBodyOnly(true);
         add(title);
 
+        Label date = new Label("date", model.map(this::printDate));
+        add(date);
+
+        RelativeTimeLabel createdDate = new RelativeTimeLabel("createdDate", model.map(this::printCreatedDate));
+        add(createdDate);
+
+        Label location = new Label("location", model.map(EventEntry::getLocation)) {
+
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+                setVisible(!Strings.isEmpty(getDefaultModelObjectAsString()));
+            }
+        };
+        add(location);
+
+        SmartLinkMultiLineLabel description = new SmartLinkMultiLineLabel("description",
+            model.map(EventEntry::getDescription)) {
+
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+                setVisible(!Strings.isEmpty(getDefaultModelObjectAsString()));
+            }
+        };
+        add(description);
+
         IModel<AttendeeEntrySpecification> specModel = model.map(this::createAttendeeEntrySpecification)
             .flatMap(CompoundPropertyModel::new);
         AttendeeTablePanel attendeeTablePanel = new AttendeeTablePanel("attendeeTablePanel", specModel);
@@ -48,6 +80,18 @@ public class EventPanel extends GenericPanel<EventEntry> {
         editEventLink.setIcon(Bi.pencil_square);
         editEventLink.setBody(new ResourceModel("EventPanel.event.edit"));
         add(editEventLink);
+    }
+
+    private Object printCreatedDate(EventEntry eventEntry) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_INSTANT.localizedBy(getLocale());
+        return formatter.format(eventEntry.getCreatedDate());
+    }
+
+    private String printDate(EventEntry entry) {
+        DateTimeFormatter formatter = DATE_TIME_FORMATTER.localizedBy(getLocale());
+        String startDateTime = formatter.format(entry.getStart());
+        String endDateTime = formatter.format(entry.getEnd());
+        return startDateTime + "–" + endDateTime;
     }
 
     private String printTitle(EventEntry entry) {

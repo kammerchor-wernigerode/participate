@@ -17,6 +17,32 @@
                 </div>
             </div>
 
+            <dl class="row">
+                <dt class="col-sm-3 text-sm-end">
+                    <wicket:message key="event.date"></wicket:message>:
+                </dt>
+                <dd class="col-sm-9" wicket:id="date"></dd>
+
+                <dt class="col-sm-3 text-sm-end">
+                    <wicket:message key="event.createdDate"></wicket:message>:
+                </dt>
+                <dd class="col-sm-9" wicket:id="createdDate"></dd>
+
+                <wicket:enclosure>
+                    <dt class="col-sm-3 text-sm-end">
+                        <wicket:message key="event.location"></wicket:message>:
+                    </dt>
+                    <dd class="col-sm-9" wicket:id="location"></dd>
+                </wicket:enclosure>
+
+                <wicket:enclosure>
+                    <dt class="col-sm-3 text-sm-end">
+                        <wicket:message key="event.description"></wicket:message>:
+                    </dt>
+                    <dd class="col-sm-9" wicket:id="description"></dd>
+                </wicket:enclosure>
+            </dl>
+
             <div wicket:id="attendeeTablePanel"></div>
         </wicket:panel>
     </body>

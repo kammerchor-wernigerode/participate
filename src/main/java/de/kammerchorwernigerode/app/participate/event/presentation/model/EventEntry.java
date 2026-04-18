@@ -29,6 +29,8 @@ import lombok.NoArgsConstructor;
            e.end_date_time                                                   AS end_date_time,
            e.end_zone                                                        AS end_zone,
            e.location                                                        AS location,
+           e.description                                                     AS description,
+           e.created_date_time                                               AS created_date_time,
            SUM(CASE WHEN a.invitation_status = 'ACCEPTED' THEN 1 ELSE 0 END) AS accepted_count,
            SUM(CASE WHEN a.invitation_status = 'DECLINED' THEN 1 ELSE 0 END) AS declined_count,
            SUM(CASE WHEN a.invitation_status = 'PENDING' THEN 1 ELSE 0 END)  AS pending_count
@@ -67,6 +69,14 @@ public class EventEntry implements Serializable {
     @Column(name = "location", nullable = false)
     @Nullable
     private String location;
+
+    @Column(name = "description")
+    @Nullable
+    private String description;
+
+    @Column(name = "created_date_time", nullable = false)
+    @NonNull
+    private Instant createdDate;
 
     @Column(name = "accepted_count", nullable = false)
     private Long accepted;
