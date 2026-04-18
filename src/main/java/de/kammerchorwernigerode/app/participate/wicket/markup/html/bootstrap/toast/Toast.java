@@ -18,7 +18,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -27,9 +26,6 @@ import lombok.Data;
 import lombok.SneakyThrows;
 
 public class Toast extends GenericPanel<FeedbackMessage> {
-
-    @SpringBean
-    private ObjectMapper objectMapper;
 
     private Options options = new Options();
 
@@ -79,14 +75,19 @@ public class Toast extends GenericPanel<FeedbackMessage> {
         response.render(OnDomReadyHeaderItem.forScript("%s.show()".formatted(initializationScript)));
     }
 
-    @SneakyThrows
     private String createInitializationScript(String markupId, Options options) {
         String jsonOptions = "{}";
         if (null != options) {
-            jsonOptions = objectMapper.writeValueAsString(options);
+            jsonOptions = serialize(options);
         }
 
         return "new bootstrap.Toast(document.getElementById('" + markupId + "'), " + jsonOptions + ")";
+    }
+
+    @SneakyThrows
+    private String serialize(Options options) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(options);
     }
 
 
