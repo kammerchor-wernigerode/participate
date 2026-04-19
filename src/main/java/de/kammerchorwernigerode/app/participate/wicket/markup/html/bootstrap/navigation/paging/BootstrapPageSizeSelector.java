@@ -1,131 +1,126 @@
 package de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.navigation.paging;
 
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.navigation.paging.BootstrapPageSizeSelector.Option;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
+import org.apache.wicket.extensions.markup.html.form.select.Select;
+import org.apache.wicket.extensions.markup.html.form.select.SelectOptions;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
-import org.apache.wicket.markup.html.form.LambdaChoiceRenderer;
-import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.request.cycle.RequestCycle;
 
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
-public class BootstrapPageSizeSelector extends GenericPanel<BootstrapPageSizeSelector.Option> {
+public class BootstrapPageSizeSelector extends GenericPanel<Option> {
+
+    private final DataTable<?, ?> table;
 
     private final Option initialPageSize;
-    private final DataTable<?, ?> table;
+    private final IModel<List<Option>> pageSizes;
 
     public BootstrapPageSizeSelector(String id, DataTable<?, ?> table) {
         super(id, new CompoundPropertyModel<>(new Option(table.getItemsPerPage())));
-        this.initialPageSize = new Option(table.getItemsPerPage());
+
         this.table = table;
+        this.initialPageSize = new Option(table.getItemsPerPage());
+        this.pageSizes = new PageSizesModel(table.getDataProvider(), initialPageSize);
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
-        SelectorForm form = new SelectorForm("form", getModel());
-        add(form);
+        table.setOutputMarkupId(true);
+
+        Select<Option> select = new Select<>("select", getModel());
+        select.add(new AjaxFormComponentUpdatingBehavior("change") {
+
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                IModel<Option> model = getModel();
+                Option pageSize = model.getObject();
+
+                table.setItemsPerPage(pageSize.getValue());
+                table.setCurrentPage(0);
+                model.setObject(pageSize);
+                target.add(table);
+                onPageSizeChanged();
+            }
+        });
+        add(select);
+
+        SelectOptions<Option> options = new SelectOptions<>("pageSizes", pageSizes, new OptionRenderer());
+        select.add(options);
+
+        Label label = new Label("label", new ResourceModel("PageSizeSelector.label")) {
+
+            @Override
+            protected void onComponentTag(ComponentTag tag) {
+                super.onComponentTag(tag);
+
+                tag.put("for", select.getMarkupId());
+            }
+        };
+        add(label);
     }
 
     @Override
     protected void onConfigure() {
         super.onConfigure();
 
-        long currentPageSize = table.getItemsPerPage();
-        setModelObject(new Option(currentPageSize));
+        IModel<Option> model = getModel();
+
+        Option current = new Option(table.getItemsPerPage());
+        modelChanging();
+        model.setObject(current);
+
+        setVisible(table.getRowCount() != 0);
+
+        List<Option> options = pageSizes.getObject();
+        if (!options.contains(current)) {
+            model.setObject(options.isEmpty() ? initialPageSize : options.getLast());
+        }
+        modelChanged();
+    }
+
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        pageSizes.detach();
     }
 
     protected void onPageSizeChanged() {
     }
 
 
-    private class SelectorForm extends Form<Option> {
+    private class OptionRenderer implements IOptionRenderer<Option> {
 
-        private final IModel<List<Option>> pageSizes;
-
-        public SelectorForm(String id, IModel<Option> model) {
-            super(id, model);
-            this.pageSizes = new PageSizesModel(table.getDataProvider(), initialPageSize);
+        @Override
+        public String getDisplayValue(Option option) {
+            return getString(option.getResourceKey(), null, String.valueOf(option.getValue()));
         }
 
         @Override
-        protected void onSubmit() {
-            Option pageSize = getModelObject();
-
-            table.setItemsPerPage(pageSize.value);
-            table.setCurrentPage(0);
-
-            onPageSizeChanged();
-            RequestCycle.get().find(AjaxRequestTarget.class)
-                .ifPresent(target -> target.add(table));
-        }
-
-        @Override
-        protected void onInitialize() {
-            super.onInitialize();
-
-            table.setOutputMarkupId(true);
-
-            IChoiceRenderer<Option> renderer = new LambdaChoiceRenderer<>(option -> getString(option.resourceKey, null,
-                String.valueOf(option.value)), Option::getValue);
-            DropDownChoice<Option> select = new DropDownChoice<>("select", getModel(), pageSizes, renderer);
-            select.add(new PageSizeSelectBehavior());
-            select.setLabel(new ResourceModel("PageSizeSelector.label"));
-            add(select);
-
-            SimpleFormComponentLabel label = new SimpleFormComponentLabel("label", select);
-            add(label);
-        }
-
-        @Override
-        protected void onConfigure() {
-            super.onConfigure();
-
-            List<Option> options = pageSizes.getObject();
-            if (options.contains(getModelObject())) {
-                return;
-            }
-
-            setModelObject(options.isEmpty() ? initialPageSize : options.getLast());
-        }
-
-        @Override
-        protected void detachModel() {
-            super.detachModel();
-            pageSizes.detach();
-        }
-
-
-        private static class PageSizeSelectBehavior extends AjaxFormSubmitBehavior {
-
-            public PageSizeSelectBehavior() {
-                super("change");
-            }
-
-            @Override
-            protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
-                super.updateAjaxAttributes(attributes);
-                attributes.setPreventDefault(true);
-            }
+        public IModel<Option> getModel(Option option) {
+            return new OptionModel(option);
         }
     }
 
@@ -150,16 +145,31 @@ public class BootstrapPageSizeSelector extends GenericPanel<BootstrapPageSizeSel
             options.add(new Option("PageSizeSelector.option.all", totalSize));
 
             return options.stream()
-                .filter(option -> option.value <= totalSize)
+                .filter(option -> option.getValue() <= totalSize)
                 .toList();
+        }
+    }
+
+    private static class OptionModel extends Model<Option> {
+
+        public OptionModel(Option option) {
+            super(option);
+        }
+
+        @Override
+        public int hashCode() {
+            Option option = getObject();
+            return Objects.hash(option.getValue());
         }
     }
 
     @Data
     @RequiredArgsConstructor
+    @EqualsAndHashCode(onlyExplicitlyIncluded = true)
     public static class Option implements Comparable<Option>, Serializable {
 
         private final String resourceKey;
+        @EqualsAndHashCode.Include
         private final long value;
 
         public Option(long value) {

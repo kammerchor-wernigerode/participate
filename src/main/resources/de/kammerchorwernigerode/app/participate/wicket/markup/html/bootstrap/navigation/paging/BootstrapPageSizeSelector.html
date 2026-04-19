@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <wicket:panel xmlns:wicket="http://wicket.apache.org">
-    <form class="d-flex gap-2" wicket:id="form">
+    <div class="d-flex gap-2">
         <label class="flex-shrink-0 col-form-label" wicket:id="label"></label>
-        <select class="form-select form-select-sm" wicket:id="select"></select>
-    </form>
+        <select class="form-select form-select-sm" wicket:id="select">
+            <option wicket:id="pageSizes"></option>
+        </select>
+    </div>
 </wicket:panel>
