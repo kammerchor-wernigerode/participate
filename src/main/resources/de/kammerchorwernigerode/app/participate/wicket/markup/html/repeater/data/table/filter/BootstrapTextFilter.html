@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wicket:panel xmlns:wicket="http://wicket.apache.org">
-    <input type="text" class="form-control form-control-sm" wicket:id="filter" />
+    <div class="input-group input-group-sm">
+        <input type="text" class="form-control form-control-sm" wicket:id="filter" />
+        <button type="submit" class="btn btn-sm btn-outline-secondary" wicket:id="reset">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
 </wicket:panel>
