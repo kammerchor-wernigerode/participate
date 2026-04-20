@@ -5,6 +5,7 @@ import de.kammerchorwernigerode.app.participate.event.presentation.components.In
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeEntryRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeEntrySpecification;
+import de.kammerchorwernigerode.app.participate.musician.infrastructure.Voice;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.EnumLambdaColumn;
 import org.apache.wicket.Session;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
@@ -52,22 +53,11 @@ public class AttendeeTablePanel extends GenericPanel<AttendeeEntrySpecification>
     private List<IColumn<AttendeeEntry, String[]>> createColumns() {
         List<IColumn<AttendeeEntry, String[]>> columns = new ArrayList<>();
         columns.add(new InvitationStatusColumn<>(new String[]{"invitationStatusOrder"}));
-        columns.add(new LambdaColumn<>(new ResourceModel("person.name"), new String[]{"fileName", "firstName", "lastName"}, this::printName));
-        columns.add(new EnumLambdaColumn<>(new ResourceModel("musician.voice"), new String[]{"voiceOrder"}, AttendeeEntry::getVoice));
+        columns.add(new AttendeeNameColumn<>(new ResourceModel("person.name"), new String[]{"fileName", "firstName", "lastName"}));
+        columns.add(new VoiceColumn<>(new ResourceModel("musician.voice"), new String[]{"voiceOrder"}));
         return columns;
     }
     // @checkstyle:on: LineLength
-
-    private String printName(AttendeeEntry entry) {
-        String fileName = entry.getFileName();
-        if (!Strings.isEmpty(fileName)) {
-            return fileName;
-        }
-
-        String lastName = entry.getLastName();
-        String firstName = entry.getFirstName();
-        return firstName + " " + lastName;
-    }
 
     private int getRowsPerPage() {
         Session session = Session.get();
@@ -92,6 +82,31 @@ public class AttendeeTablePanel extends GenericPanel<AttendeeEntrySpecification>
         @Override
         public String getCssClass() {
             return "w-1 text-nowrap";
+        }
+    }
+
+    private static class AttendeeNameColumn<S> extends LambdaColumn<AttendeeEntry, S> {
+
+        public AttendeeNameColumn(IModel<String> displayModel, S sortProperty) {
+            super(displayModel, sortProperty, AttendeeNameColumn::printName);
+        }
+
+        private static String printName(AttendeeEntry entry) {
+            String fileName = entry.getFileName();
+            if (!Strings.isEmpty(fileName)) {
+                return fileName;
+            }
+
+            String lastName = entry.getLastName();
+            String firstName = entry.getFirstName();
+            return firstName + " " + lastName;
+        }
+    }
+
+    private static class VoiceColumn<S> extends EnumLambdaColumn<AttendeeEntry, Voice, S> {
+
+        public VoiceColumn(IModel<String> displayModel, S sortProperty) {
+            super(displayModel, sortProperty, AttendeeEntry::getVoice);
         }
     }
 }
