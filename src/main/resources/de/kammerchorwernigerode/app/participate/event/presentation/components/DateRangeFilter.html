@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+    <div class="d-flex align-items-center gap-1">
+        <div class="input-group input-group-sm">
+            <input type="datetime-local" class="form-control form-control-sm" wicket:id="startDateTime">
+            <button type="submit" class="btn btn-sm btn-outline-secondary" wicket:id="startDateTimeReset">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <span class="d-none d-xl-inline-flex">
+            <wicket:message key="DateRangeFilter.to"></wicket:message>
+        </span>
+        <div class="input-group input-group-sm">
+            <input type="datetime-local" class="form-control form-control-sm" wicket:id="endDateTime">
+            <button type="submit" class="btn btn-sm btn-outline-secondary" wicket:id="endDateTimeReset">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    </div>
+</wicket:panel>

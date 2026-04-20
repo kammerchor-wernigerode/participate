@@ -1,6 +1,8 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.table;
 
 import de.kammerchorwernigerode.app.participate.event.presentation.components.AdpPanel;
+import de.kammerchorwernigerode.app.participate.event.presentation.components.DateRangeFilter;
+import de.kammerchorwernigerode.app.participate.event.presentation.model.DateRange;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntryRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntrySpecification;
@@ -10,6 +12,7 @@ import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.but
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.LinkColumn;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.filter.BootstrapTextFilter;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -19,10 +22,14 @@ import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterToolbar;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -48,13 +55,19 @@ public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
         super.onInitialize();
 
         IModel<EventEntrySpecification> model = getModel();
-
         EventDataProvider dataProvider = new EventDataProvider(eventEntryRepository, model);
-        List<IColumn<EventEntry, String>> columns = createColumns();
         dataProvider.setOrder("startInstant", SortOrder.ASCENDING);
+
+
+        FilterForm<EventEntrySpecification> filterForm = new FilterForm<>("filterForm", dataProvider);
+        add(filterForm);
+
+        List<IColumn<EventEntry, String>> columns = createColumns();
         EventTable table = new EventTable("table", columns, dataProvider, Integer.MAX_VALUE);
         table.setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
-        add(table);
+        table.addTopToolbar(new FilterToolbar(table, filterForm));
+        filterForm.add(table);
+
 
         BootstrapBookmarkablePageLink<Void> createEventLink = new BootstrapBookmarkablePageLink<>("createEventLink",
             EventCreationPage.class);
@@ -73,7 +86,8 @@ public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
     }
 
 
-    private class SummaryColumn<S> extends LinkColumn<EventEntry, S> {
+    private class SummaryColumn<S> extends LinkColumn<EventEntry, S>
+        implements IFilteredColumn<EventEntry, S> {
 
         public SummaryColumn(IModel<String> displayModel) {
             super(displayModel, EventEntry::getSummary);
@@ -84,10 +98,21 @@ public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
             EventEntry entry = rowModel.getObject();
             send(getPage(), Broadcast.BREADTH, new EventSelected(entry.getId()));
         }
+
+        @Override
+        public BootstrapTextFilter<String> getFilter(String componentId, FilterForm<?> form) {
+            IModel<EventEntrySpecification> specModel = form.getModel()
+                .filter(EventEntrySpecification.class::isInstance)
+                .map(EventEntrySpecification.class::cast);
+            IModel<String> model = LambdaModel.of(specModel, EventEntrySpecification::getSummary,
+                EventEntrySpecification::setSummary);
+            return new BootstrapTextFilter<>(componentId, model, form);
+        }
     }
 
 
-    private static class DateColumn<S> extends LambdaColumn<EventEntry, S> {
+    private static class DateColumn<S> extends LambdaColumn<EventEntry, S>
+        implements IFilteredColumn<EventEntry, S> {
 
         public DateColumn(IModel<String> displayModel, S sortProperty) {
             super(displayModel, sortProperty, DateColumn::printRange);
@@ -99,12 +124,32 @@ public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
             DateTimeFormatter formatter = FORMATTER.localizedBy(locale);
             return formatter.format(event.getStart()) + "–" + formatter.format(event.getEnd());
         }
+
+        @Override
+        public Component getFilter(String componentId, FilterForm<?> form) {
+            IModel<EventEntrySpecification> specModel = form.getModel()
+                .filter(EventEntrySpecification.class::isInstance)
+                .map(EventEntrySpecification.class::cast);
+            IModel<DateRange> model = specModel.map(EventEntrySpecification::getDateRange);
+            return new DateRangeFilter(componentId, model, form);
+        }
     }
 
-    private static class LocationColumn<S> extends LambdaColumn<EventEntry, S> {
+    private static class LocationColumn<S> extends LambdaColumn<EventEntry, S>
+        implements IFilteredColumn<EventEntry, S> {
 
         public LocationColumn(IModel<String> displayModel) {
             super(displayModel, EventEntry::getLocation);
+        }
+
+        @Override
+        public Component getFilter(String componentId, FilterForm<?> form) {
+            IModel<EventEntrySpecification> specModel = form.getModel()
+                .filter(EventEntrySpecification.class::isInstance)
+                .map(EventEntrySpecification.class::cast);
+            IModel<String> model = LambdaModel.of(specModel, EventEntrySpecification::getLocation,
+                EventEntrySpecification::setLocation);
+            return new BootstrapTextFilter<>(componentId, model, form);
         }
     }
 
