@@ -117,6 +117,11 @@
                 <artifactId>wicket-webjars</artifactId>
                 <version>${dependency.wicket-webjars.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wicketstuff</groupId>
+                <artifactId>wicketstuff-clipboardjs</artifactId>
+                <version>${dependency.wicket.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.ow2.asm</groupId>
@@ -200,6 +205,10 @@
         <dependency>
             <groupId>de.agilecoders.wicket.webjars</groupId>
             <artifactId>wicket-webjars</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wicketstuff</groupId>
+            <artifactId>wicketstuff-clipboardjs</artifactId>
         </dependency>
 
         <dependency>

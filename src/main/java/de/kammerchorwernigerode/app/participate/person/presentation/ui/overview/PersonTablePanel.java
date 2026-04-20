@@ -5,9 +5,14 @@ import de.kammerchorwernigerode.app.participate.person.presentation.components.E
 import de.kammerchorwernigerode.app.participate.person.presentation.model.PersonEntry;
 import de.kammerchorwernigerode.app.participate.person.presentation.model.PersonEntryRepository;
 import de.kammerchorwernigerode.app.participate.person.presentation.model.PersonEntrySpecification;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.ContentDivision;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.Icon;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.EnumLambdaColumn;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.filter.BootstrapChoiceFilter;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.filter.BootstrapTextFilter;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
@@ -22,12 +27,14 @@ import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
+import org.wicketstuff.clipboardjs.ClipboardJsBehavior;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -138,7 +145,22 @@ public class PersonTablePanel extends GenericPanel<PersonEntrySpecification> {
         @Override
         public void populateItem(Item<ICellPopulator<PersonEntry>> cellItem, String componentId,
                                  IModel<PersonEntry> rowModel) {
-            cellItem.add(new EmailLinkLabel(componentId, rowModel));
+            ContentDivision div = new ContentDivision(componentId);
+            div.add(ClassAttributeModifier.append("class", "d-flex gap-2"));
+
+            RepeatingView view = new RepeatingView(div.getChildId());
+            div.add(view);
+
+
+            EmailLinkLabel emailLinkLabel = new EmailLinkLabel(view.newChildId(), rowModel);
+            view.add(emailLinkLabel);
+
+            Icon.Panel icon = new Icon.Panel(view.newChildId(), Bi.copy);
+            icon.add(new ClipboardJsBehavior().setTarget(emailLinkLabel));
+            icon.add(AttributeModifier.replace("role", "button"));
+            view.add(icon);
+
+            cellItem.add(div);
         }
 
         @Override
