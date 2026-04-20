@@ -41,7 +41,7 @@ public class PersonEntrySpecification implements Specification<PersonEntry> {
             return cb.conjunction();
         }
 
-        String[] tokens = Arrays.stream(this.name.trim().split("\\s+"))
+        String[] tokens = Arrays.stream(this.name.toLowerCase().trim().split("\\s+"))
             .filter(StringUtils::hasText)
             .toArray(String[]::new);
 
@@ -71,7 +71,7 @@ public class PersonEntrySpecification implements Specification<PersonEntry> {
 
     private Predicate emailIlike(Root<PersonEntry> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         return StringUtils.hasText(this.emailAddress)
-            ? like(root.get(PersonEntry_.emailAddress), this.emailAddress, cb)
+            ? like(cb.lower(root.get(PersonEntry_.emailAddress)), this.emailAddress.toLowerCase(), cb)
             : cb.conjunction();
     }
 
