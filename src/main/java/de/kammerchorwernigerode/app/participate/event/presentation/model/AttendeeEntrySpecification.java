@@ -1,6 +1,7 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.model;
 
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord_;
+import org.apache.wicket.model.IModel;
 import org.springframework.data.jpa.domain.Specification;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -15,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AttendeeEntrySpecification implements Specification<AttendeeEntry> {
 
-    private final Long eventId;
+    private final IModel<Long> eventId;
 
     @Override
     public Predicate toPredicate(Root<AttendeeEntry> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -23,6 +24,6 @@ public class AttendeeEntrySpecification implements Specification<AttendeeEntry> 
     }
 
     private Predicate eventIdEqual(Root<AttendeeEntry> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-        return cb.equal(root.get(AttendeeEntry_.id).get(AttendeeRecord_.Id_.eventId), this.eventId);
+        return cb.equal(root.get(AttendeeEntry_.id).get(AttendeeRecord_.Id_.eventId), this.eventId.getObject());
     }
 }

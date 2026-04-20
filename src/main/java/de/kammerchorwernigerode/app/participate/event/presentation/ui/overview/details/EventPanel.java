@@ -69,8 +69,8 @@ public class EventPanel extends GenericPanel<EventEntry> {
         };
         add(description);
 
-        IModel<AttendeeEntrySpecification> specModel = model.map(this::createAttendeeEntrySpecification)
-            .flatMap(CompoundPropertyModel::new);
+        AttendeeEntrySpecification attendeeSpecification = new AttendeeEntrySpecification(model.map(EventEntry::getId));
+        IModel<AttendeeEntrySpecification> specModel = new CompoundPropertyModel<>(attendeeSpecification);
         AttendeeTablePanel attendeeTablePanel = new AttendeeTablePanel("attendeeTablePanel", specModel);
         add(attendeeTablePanel);
 
@@ -109,10 +109,5 @@ public class EventPanel extends GenericPanel<EventEntry> {
             .filter(not(Strings::isEmpty))
             .orElseGet(() -> getString("event"));
         return name + " " + monthYear;
-    }
-
-    private AttendeeEntrySpecification createAttendeeEntrySpecification(EventEntry event) {
-        Long eventId = event.getId();
-        return new AttendeeEntrySpecification(eventId);
     }
 }
