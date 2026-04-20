@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
@@ -88,7 +88,11 @@ public class PersonTablePanel extends GenericPanel<PersonEntrySpecification> {
 
         @Override
         public Component getFilter(String componentId, FilterForm<?> form) {
-            IModel<String> model = new PropertyModel<>(form.getDefaultModel(), "name");
+            IModel<PersonEntrySpecification> specModel = form.getModel()
+                .filter(PersonEntrySpecification.class::isInstance)
+                .map(PersonEntrySpecification.class::cast);
+            IModel<String> model = LambdaModel.of(specModel, PersonEntrySpecification::getName,
+                PersonEntrySpecification::setName);
             return new BootstrapTextFilter<>(componentId, model, form);
         }
 
@@ -113,7 +117,11 @@ public class PersonTablePanel extends GenericPanel<PersonEntrySpecification> {
 
         @Override
         public Component getFilter(String componentId, FilterForm<?> form) {
-            IModel<Voice> model = new PropertyModel<>(form.getDefaultModelObject(), "voice");
+            IModel<PersonEntrySpecification> specModel = form.getModel()
+                .filter(PersonEntrySpecification.class::isInstance)
+                .map(PersonEntrySpecification.class::cast);
+            IModel<Voice> model = LambdaModel.of(specModel, PersonEntrySpecification::getVoice,
+                PersonEntrySpecification::setVoice);
             List<Voice> choices = Arrays.asList(Voice.values());
             IChoiceRenderer<Voice> renderer = new EnumChoiceRenderer<>(form);
             return new BootstrapChoiceFilter<>(componentId, model, form, choices, renderer, true);
@@ -135,7 +143,11 @@ public class PersonTablePanel extends GenericPanel<PersonEntrySpecification> {
 
         @Override
         public Component getFilter(String componentId, FilterForm<?> form) {
-            IModel<String> model = new PropertyModel<>(form.getDefaultModel(), "emailAddress");
+            IModel<PersonEntrySpecification> specModel = form.getModel()
+                .filter(PersonEntrySpecification.class::isInstance)
+                .map(PersonEntrySpecification.class::cast);
+            IModel<String> model = LambdaModel.of(specModel, PersonEntrySpecification::getEmailAddress,
+                PersonEntrySpecification::setEmailAddress);
             return new BootstrapTextFilter<>(componentId, model, form);
         }
     }
