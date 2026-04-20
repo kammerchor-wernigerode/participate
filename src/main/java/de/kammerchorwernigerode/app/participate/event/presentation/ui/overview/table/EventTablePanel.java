@@ -11,6 +11,7 @@ import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.com
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.LinkColumn;
 import org.apache.wicket.Component;
+import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
@@ -64,21 +65,15 @@ public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
 
     private List<IColumn<EventEntry, String>> createColumns() {
         List<IColumn<EventEntry, String>> columns = new ArrayList<>();
-        columns.add(new SummaryColumn(new ResourceModel("event.summary")));
-        columns.add(new LambdaColumn<>(new ResourceModel("date"), "startInstant", this::printRange));
-        columns.add(new LambdaColumn<>(new ResourceModel("event.location"), EventEntry::getLocation));
-        columns.add(new AdpColumn(new ResourceModel("event.adp.abbrev")));
+        columns.add(new SummaryColumn<>(new ResourceModel("event.summary")));
+        columns.add(new DateColumn<>(new ResourceModel("date"), "startInstant"));
+        columns.add(new LocationColumn<>(new ResourceModel("event.location")));
+        columns.add(new AdpColumn<>(new ResourceModel("event.adp.abbrev")));
         return columns;
     }
 
-    private String printRange(EventEntry event) {
-        Locale locale = getLocale();
-        DateTimeFormatter formatter = FORMATTER.localizedBy(locale);
-        return formatter.format(event.getStart()) + "–" + formatter.format(event.getEnd());
-    }
 
-
-    private class SummaryColumn extends LinkColumn<EventEntry, String> {
+    private class SummaryColumn<S> extends LinkColumn<EventEntry, S> {
 
         public SummaryColumn(IModel<String> displayModel) {
             super(displayModel, EventEntry::getSummary);
@@ -91,7 +86,29 @@ public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
         }
     }
 
-    private static class AdpColumn extends AbstractColumn<EventEntry, String> {
+
+    private static class DateColumn<S> extends LambdaColumn<EventEntry, S> {
+
+        public DateColumn(IModel<String> displayModel, S sortProperty) {
+            super(displayModel, sortProperty, DateColumn::printRange);
+        }
+
+        private static String printRange(EventEntry event) {
+            Session session = Session.get();
+            Locale locale = session.getLocale();
+            DateTimeFormatter formatter = FORMATTER.localizedBy(locale);
+            return formatter.format(event.getStart()) + "–" + formatter.format(event.getEnd());
+        }
+    }
+
+    private static class LocationColumn<S> extends LambdaColumn<EventEntry, S> {
+
+        public LocationColumn(IModel<String> displayModel) {
+            super(displayModel, EventEntry::getLocation);
+        }
+    }
+
+    private static class AdpColumn<S> extends AbstractColumn<EventEntry, S> {
 
         public AdpColumn(IModel<String> displayModel) {
             super(displayModel);
