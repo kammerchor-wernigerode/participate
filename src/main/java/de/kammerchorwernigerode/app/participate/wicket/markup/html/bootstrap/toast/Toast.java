@@ -59,7 +59,7 @@ public class Toast extends GenericPanel<FeedbackMessage> {
 
     private String getButtonCssClassName(FeedbackMessage feedbackMessage) {
         String key = CssUtils.key(Toast.class, feedbackMessage.getLevelAsString());
-        return getString(key);
+        return getString(key, null, "");
     }
 
     @Override
