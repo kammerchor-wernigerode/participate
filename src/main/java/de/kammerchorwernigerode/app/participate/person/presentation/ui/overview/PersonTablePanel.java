@@ -5,6 +5,8 @@ import de.kammerchorwernigerode.app.participate.person.presentation.components.E
 import de.kammerchorwernigerode.app.participate.person.presentation.model.PersonEntry;
 import de.kammerchorwernigerode.app.participate.person.presentation.model.PersonEntryRepository;
 import de.kammerchorwernigerode.app.participate.person.presentation.model.PersonEntrySpecification;
+import de.kammerchorwernigerode.app.participate.wicket.bootstrap.BootstrapPage;
+import de.kammerchorwernigerode.app.participate.wicket.clipboardjs.ClipboardJsBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.ContentDivision;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.Icon;
@@ -15,6 +17,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
@@ -34,7 +37,6 @@ import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
-import org.wicketstuff.clipboardjs.ClipboardJsBehavior;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -156,7 +158,15 @@ public class PersonTablePanel extends GenericPanel<PersonEntrySpecification> {
             view.add(emailLinkLabel);
 
             Icon.Panel icon = new Icon.Panel(view.newChildId(), Bi.copy);
-            icon.add(new ClipboardJsBehavior().setTarget(emailLinkLabel));
+            icon.add(new ClipboardJsBehavior() {
+
+                @Override
+                protected void onSuccess(AjaxRequestTarget target) {
+                    String message = icon.getString("EmailAddressColumn.copy.onSuccess");
+                    icon.success(message);
+                    BootstrapPage.get().updateToaster();
+                }
+            }.setTarget(emailLinkLabel));
             icon.add(AttributeModifier.replace("role", "button"));
             view.add(icon);
 
