@@ -9,7 +9,7 @@ import de.kammerchorwernigerode.app.participate.event.presentation.model.Attende
 import de.kammerchorwernigerode.app.participate.event.presentation.model.InvitationStatusSelection;
 import de.kammerchorwernigerode.app.participate.musician.infrastructure.Voice;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.EnumLambdaColumn;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.filter.BootstrapChoiceFilter;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.filter.BootstrapMultipleChoiceFilter;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.filter.BootstrapTextFilter;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
@@ -154,11 +154,10 @@ public class AttendeeTablePanel extends GenericPanel<AttendeeEntrySpecification>
             IModel<AttendeeEntrySpecification> specModel = form.getModel()
                 .filter(AttendeeEntrySpecification.class::isInstance)
                 .map(AttendeeEntrySpecification.class::cast);
-            IModel<Voice> model = LambdaModel.of(specModel, AttendeeEntrySpecification::getVoice,
-                AttendeeEntrySpecification::setVoice);
+            IModel<List<Voice>> model = specModel.map(AttendeeEntrySpecification::getVoices);
             List<Voice> choices = Arrays.asList(Voice.values());
             IChoiceRenderer<Voice> renderer = new EnumChoiceRenderer<>(form);
-            return new BootstrapChoiceFilter<>(componentId, model, form, choices, renderer, true);
+            return new BootstrapMultipleChoiceFilter<>(componentId, model, form, choices, renderer, true);
         }
     }
 }

@@ -5,6 +5,7 @@ import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRec
 import de.kammerchorwernigerode.app.participate.musician.infrastructure.Voice;
 import org.apache.wicket.model.IModel;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -29,14 +30,14 @@ public class AttendeeEntrySpecification implements Specification<AttendeeEntry> 
 
     private InvitationStatusSelection invitationStatusSelection = new InvitationStatusSelection();
     private String name;
-    private Voice voice;
+    private List<Voice> voices = new ArrayList<>();
 
     @Override
     public Predicate toPredicate(Root<AttendeeEntry> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         return cb.and(eventIdEqual(root, query, cb),
             invitationStatusIn(root, query, cb),
             nameIlike(root, query, cb),
-            voiceEquals(root, query, cb));
+            voicesIn(root, query, cb));
     }
 
     private Predicate eventIdEqual(Root<AttendeeEntry> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -100,10 +101,17 @@ public class AttendeeEntrySpecification implements Specification<AttendeeEntry> 
         return cb.and(perToken.toArray(Predicate[]::new));
     }
 
-    private Predicate voiceEquals(Root<AttendeeEntry> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-        return null == this.voice
-            ? cb.conjunction()
-            : cb.equal(root.get(AttendeeEntry_.voice), this.voice);
+    private Predicate voicesIn(Root<AttendeeEntry> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        if (CollectionUtils.isEmpty(this.voices)) {
+            return cb.conjunction();
+        }
+
+        In<Voice> in = cb.in(root.get(AttendeeEntry_.voice));
+        for (Voice voice : this.voices) {
+            in.value(voice);
+        }
+
+        return in;
     }
 
     private static String escape(String input) {

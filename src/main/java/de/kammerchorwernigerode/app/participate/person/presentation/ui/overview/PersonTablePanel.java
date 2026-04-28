@@ -11,7 +11,7 @@ import de.kammerchorwernigerode.app.participate.wicket.markup.html.ContentDivisi
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.Icon;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.EnumLambdaColumn;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.filter.BootstrapChoiceFilter;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.filter.BootstrapMultipleChoiceFilter;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.filter.BootstrapTextFilter;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ClassAttributeModifier;
@@ -129,11 +129,10 @@ public class PersonTablePanel extends GenericPanel<PersonEntrySpecification> {
             IModel<PersonEntrySpecification> specModel = form.getModel()
                 .filter(PersonEntrySpecification.class::isInstance)
                 .map(PersonEntrySpecification.class::cast);
-            IModel<Voice> model = LambdaModel.of(specModel, PersonEntrySpecification::getVoice,
-                PersonEntrySpecification::setVoice);
+            IModel<List<Voice>> model = specModel.map(PersonEntrySpecification::getVoices);
             List<Voice> choices = Arrays.asList(Voice.values());
             IChoiceRenderer<Voice> renderer = new EnumChoiceRenderer<>(form);
-            return new BootstrapChoiceFilter<>(componentId, model, form, choices, renderer, true);
+            return new BootstrapMultipleChoiceFilter<>(componentId, model, form, choices, renderer, true);
         }
     }
 

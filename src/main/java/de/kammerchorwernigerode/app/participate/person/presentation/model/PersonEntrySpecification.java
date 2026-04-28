@@ -2,12 +2,14 @@ package de.kammerchorwernigerode.app.participate.person.presentation.model;
 
 import de.kammerchorwernigerode.app.participate.musician.infrastructure.Voice;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
@@ -21,14 +23,14 @@ public class PersonEntrySpecification implements Specification<PersonEntry> {
     private final boolean deleted = false;
 
     private String name;
-    private Voice voice;
+    private List<Voice> voices = new ArrayList<>();
     private String emailAddress;
 
     @Override
     public Predicate toPredicate(Root<PersonEntry> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         return cb.and(deletedEquals(root, query, cb),
             textIlike(root, query, cb),
-            voiceEquals(root, query, cb),
+            voicesIn(root, query, cb),
             emailIlike(root, query, cb));
     }
 
@@ -63,10 +65,17 @@ public class PersonEntrySpecification implements Specification<PersonEntry> {
         return cb.and(perToken.toArray(Predicate[]::new));
     }
 
-    private Predicate voiceEquals(Root<PersonEntry> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-        return null == voice
-            ? cb.conjunction()
-            : cb.equal(root.get(PersonEntry_.voice), this.voice);
+    private Predicate voicesIn(Root<PersonEntry> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        if (CollectionUtils.isEmpty(this.voices)) {
+            return cb.conjunction();
+        }
+
+        In<Voice> in = cb.in(root.get(PersonEntry_.voice));
+        for (Voice voice : this.voices) {
+            in.value(voice);
+        }
+
+        return in;
     }
 
     private Predicate emailIlike(Root<PersonEntry> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
