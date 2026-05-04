@@ -5,6 +5,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -23,6 +24,7 @@ import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import jakarta.servlet.http.HttpServletRequest;
@@ -92,9 +94,30 @@ public class ExceptionErrorPage extends AbstractErrorPage
 
         IModel<Data> model = getModel();
 
+        WebMarkupContainer container = new WebMarkupContainer("container") {
+
+            @Override
+            protected void onComponentTag(ComponentTag tag) {
+                super.onComponentTag(tag);
+
+                List<String> classes = new ArrayList<>();
+                Data data = getModelObject();
+                if (data.isShowDetails()) {
+                    classes.add("container-fluid");
+                } else {
+                    classes.add("container");
+                }
+                classes.add("py-4");
+
+                String cssClassNames = String.join(" ", classes);
+                tag.put("class", cssClassNames);
+            }
+        };
+        add(container);
+
         StringResourceModel titleModel = new StringResourceModel("ExceptionErrorPage.title.error", getModel());
         Label titleLabel = new Label("titleLabel", titleModel);
-        add(titleLabel);
+        container.add(titleLabel);
 
         MultiLineLabel messageLabel = new MultiLineLabel("message", model.map(this::getMessage)) {
 
@@ -107,10 +130,10 @@ public class ExceptionErrorPage extends AbstractErrorPage
                 setVisible(showDetails && !Strings.isEmpty(getMessage(data)));
             }
         };
-        add(messageLabel);
+        container.add(messageLabel);
 
         BookmarkablePageLink<Void> homepageLink = homePageLink("homepageLink");
-        add(homepageLink);
+        container.add(homepageLink);
 
 
         WebMarkupContainer markupContainer = new WebMarkupContainer("markupContainer") {
@@ -127,7 +150,7 @@ public class ExceptionErrorPage extends AbstractErrorPage
             }
         };
         markupContainer.setOutputMarkupPlaceholderTag(true);
-        add(markupContainer);
+        container.add(markupContainer);
 
         WebMarkupContainer stacktraceContainer = new WebMarkupContainer("stacktraceContainer") {
 
@@ -142,7 +165,7 @@ public class ExceptionErrorPage extends AbstractErrorPage
             }
         };
         stacktraceContainer.setOutputMarkupPlaceholderTag(true);
-        add(stacktraceContainer);
+        container.add(stacktraceContainer);
 
 
         Label resourceLabel = new Label("resource", model.map(Data::getResource));
@@ -177,7 +200,7 @@ public class ExceptionErrorPage extends AbstractErrorPage
                 target.add(stacktraceContainer);
             }
         };
-        add(toggleStacktraceLink);
+        container.add(toggleStacktraceLink);
     }
 
     private Throwable getThrowable(Data data) {
