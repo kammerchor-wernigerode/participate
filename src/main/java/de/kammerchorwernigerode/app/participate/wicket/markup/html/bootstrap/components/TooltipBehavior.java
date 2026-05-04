@@ -8,6 +8,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.string.Strings;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,14 +23,23 @@ public class TooltipBehavior extends Behavior {
     private final IModel<String> model;
 
     public TooltipBehavior(String tooltip) {
-        this.model = Model.of(tooltip);
+        this(Model.of(tooltip));
+    }
+
+    public boolean hasTooltip() {
+        return model
+            .filter(title -> !Strings.isEmpty(title))
+            .isPresent()
+            .getObject();
     }
 
     @Override
     public void bind(Component component) {
         super.bind(component);
 
-        component.add(new AttributeModifier("data-bs-toggle", "tooltip"));
+        if (hasTooltip()) {
+            component.add(new AttributeModifier("data-bs-toggle", "tooltip"));
+        }
     }
 
     @Override
