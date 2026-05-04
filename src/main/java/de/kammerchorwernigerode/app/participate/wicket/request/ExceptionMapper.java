@@ -1,7 +1,9 @@
 package de.kammerchorwernigerode.app.participate.wicket.request;
 
 import de.kammerchorwernigerode.app.participate.wicket.ModelNotFoundException;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.pages.AbstractErrorPage;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.pages.ExceptionErrorPage;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.pages.NotFoundErrorPage;
 import org.apache.wicket.DefaultExceptionMapper;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.core.request.handler.PageProvider;
@@ -29,7 +31,7 @@ public class ExceptionMapper extends DefaultExceptionMapper implements IExceptio
         int statusCode = determineStatusCode(e);
         String errorMessage = e.getLocalizedMessage();
         ErrorAttributes errorAttributes = new ErrorAttributes(statusCode, errorMessage, requestUrl.toString(), e);
-        ExceptionErrorPage page = new ExceptionErrorPage(errorAttributes);
+        AbstractErrorPage page = createErrorPage(errorAttributes);
 
         PageProvider pageProvider = new PageProvider(page);
         return new RenderPageRequestHandler(pageProvider);
@@ -46,5 +48,14 @@ public class ExceptionMapper extends DefaultExceptionMapper implements IExceptio
         }
 
         return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+    }
+
+    private AbstractErrorPage createErrorPage(ErrorAttributes errorAttributes) {
+        int statusCode = errorAttributes.getStatusCode();
+        if (HttpServletResponse.SC_NOT_FOUND == statusCode) {
+            return new NotFoundErrorPage(errorAttributes);
+        }
+
+        return new ExceptionErrorPage(errorAttributes);
     }
 }

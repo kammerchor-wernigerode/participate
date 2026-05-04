@@ -4,6 +4,7 @@ import de.agilecoders.wicket.webjars.settings.WebjarsSettings;
 import de.kammerchorwernigerode.app.participate.wicket.bootstrap.BootstrapResourceAppender;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.RenderJavaScriptToFooterHeaderResponseDecorator;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.pages.ExceptionErrorPage;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.pages.NotFoundErrorPage;
 import de.kammerchorwernigerode.app.participate.wicket.request.ExceptionMapper;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.application.ComponentInitializationListenerCollection;
@@ -57,6 +58,7 @@ public abstract class WicketApplication extends WebApplication {
         configure(headerResponseDecorators);
 
         mountPage("/error", ExceptionErrorPage.class);
+        mountPage("/not-found", NotFoundErrorPage.class);
 
         ApplicationSettings applicationSettings = getApplicationSettings();
         configure(applicationSettings);
