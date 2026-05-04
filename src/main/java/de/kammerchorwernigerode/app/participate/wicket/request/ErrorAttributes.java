@@ -9,8 +9,7 @@ import lombok.Value;
 @Value
 public class ErrorAttributes implements Serializable {
 
-    @Nullable
-    Integer statusCode;
+    int statusCode;
 
     @Nullable
     String message;

@@ -15,6 +15,7 @@ import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
@@ -56,9 +57,9 @@ public class ExceptionErrorPage extends AbstractErrorPage
         Request request = requestCycle.getRequest();
         HttpServletRequest httpServletRequest = (HttpServletRequest) request.getContainerRequest();
 
-        Integer statusCode = Optional.ofNullable(httpServletRequest.getAttribute(ERROR_STATUS_CODE))
+        int statusCode = Optional.ofNullable(httpServletRequest.getAttribute(ERROR_STATUS_CODE))
             .map(ExceptionErrorPage::toInteger)
-            .orElse(null);
+            .orElse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
         String message = Optional.ofNullable(httpServletRequest.getAttribute(ERROR_MESSAGE))
             .map(Object::toString)
@@ -90,6 +91,10 @@ public class ExceptionErrorPage extends AbstractErrorPage
         super.onInitialize();
 
         IModel<Data> model = getModel();
+
+        StringResourceModel titleModel = new StringResourceModel("ExceptionErrorPage.title.error", getModel());
+        Label titleLabel = new Label("titleLabel", titleModel);
+        add(titleLabel);
 
         MultiLineLabel messageLabel = new MultiLineLabel("message", model.map(this::getMessage)) {
 
@@ -252,8 +257,7 @@ public class ExceptionErrorPage extends AbstractErrorPage
 
         Data data = getModelObject();
         ErrorAttributes attributes = data.getAttributes();
-        Integer statusCode = Optional.ofNullable(attributes.getStatusCode())
-            .orElse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        int statusCode = attributes.getStatusCode();
         response.setStatus(statusCode);
     }
 
