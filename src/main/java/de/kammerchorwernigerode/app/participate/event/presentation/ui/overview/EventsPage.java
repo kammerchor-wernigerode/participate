@@ -47,6 +47,8 @@ public class EventsPage extends ParticipatePage {
     protected void onInitialize() {
         super.onInitialize();
 
+        setLayout(Layout.FLUID);
+
         EventEntrySpecification eventSpecification = new EventEntrySpecification(this::minInstant);
         IModel<EventEntrySpecification> specModel = new CompoundPropertyModel<>(eventSpecification);
         EventTablePanel eventTablePanel = new EventTablePanel("events", specModel);

@@ -11,8 +11,10 @@ import org.apache.wicket.Application;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.Page;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.CssContentHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -29,7 +31,10 @@ import org.springframework.security.core.AuthenticatedPrincipal;
 import java.net.URI;
 import jakarta.servlet.ServletContext;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @NoArgsConstructor
 public class ParticipatePage extends BootstrapPage {
@@ -43,8 +48,16 @@ public class ParticipatePage extends BootstrapPage {
     @SpringBean
     private ServletContext servletContext;
 
+    @Getter
+    private Layout layout = Layout.BOXED;
+
     public ParticipatePage(PageParameters parameters) {
         super(parameters);
+    }
+
+    public ParticipatePage setLayout(Layout layout) {
+        this.layout = layout;
+        return this;
     }
 
     @Override
@@ -90,6 +103,17 @@ public class ParticipatePage extends BootstrapPage {
         navbarCollapse.add(signOutLink);
 
         visitChildren(BookmarkablePageLink.class, new ActivePageLinkVisitor());
+
+
+        TransparentWebMarkupContainer mainContainer = new TransparentWebMarkupContainer("mainContainer") {
+
+            @Override
+            protected void onComponentTag(ComponentTag tag) {
+                super.onComponentTag(tag);
+                tag.put("class", layout.getCssClassName());
+            }
+        };
+        add(mainContainer);
     }
 
     @Override
@@ -122,6 +146,18 @@ public class ParticipatePage extends BootstrapPage {
             return pageClass.equals(link.getPageClass());
         }
     }
+
+    @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+    public enum Layout {
+
+        BOXED("container"),
+        FLUID("container-fluid"),
+        ;
+
+        @Getter
+        private final String cssClassName;
+    }
+
 
     private class UsernameModel extends LoadableDetachableModel<String> {
 
