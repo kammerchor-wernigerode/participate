@@ -41,6 +41,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import static de.kammerchorwernigerode.app.participate.util.LeadingSlash.PRESENT;
+import static jakarta.servlet.DispatcherType.ERROR;
 import static jakarta.servlet.DispatcherType.REQUEST;
 import static org.apache.wicket.protocol.http.WicketFilter.APP_FACT_PARAM;
 import static org.apache.wicket.protocol.http.WicketFilter.FILTER_MAPPING_PARAM;
@@ -53,7 +54,7 @@ class ManagementWicketConfiguration implements ApplicationContextAware, Environm
     public static final String APP_ROOT = "";
 
     private static final String RUNTIME_CONFIGURATION_PARAM = "configuration";
-    private static final EnumSet<DispatcherType> DISPATCHER_TYPES = EnumSet.of(REQUEST);
+    private static final EnumSet<DispatcherType> DISPATCHER_TYPES = EnumSet.of(REQUEST, ERROR);
     private static final String[] IGNORED_PATHS = {
         "/favicon.ico",
         "/robots.txt",
