@@ -1,5 +1,6 @@
 package de.kammerchorwernigerode.app.participate.wicket.request;
 
+import de.kammerchorwernigerode.app.participate.wicket.ModelNotFoundException;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.pages.ExceptionErrorPage;
 import org.apache.wicket.DefaultExceptionMapper;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -25,12 +26,25 @@ public class ExceptionMapper extends DefaultExceptionMapper implements IExceptio
 
         Request request = requestCycle.getRequest();
         Url requestUrl = request.getUrl();
-        int statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+        int statusCode = determineStatusCode(e);
         String errorMessage = e.getLocalizedMessage();
         ErrorAttributes errorAttributes = new ErrorAttributes(statusCode, errorMessage, requestUrl.toString(), e);
         ExceptionErrorPage page = new ExceptionErrorPage(errorAttributes);
 
         PageProvider pageProvider = new PageProvider(page);
         return new RenderPageRequestHandler(pageProvider);
+    }
+
+    private int determineStatusCode(Throwable throwable) {
+        Throwable cause = throwable;
+        while (null != cause && cause.getCause() != cause) {
+            if (cause instanceof ModelNotFoundException) {
+                return HttpServletResponse.SC_NOT_FOUND;
+            }
+
+            cause = cause.getCause();
+        }
+
+        return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
     }
 }
