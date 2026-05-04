@@ -1,6 +1,7 @@
 package de.kammerchorwernigerode.app.participate.wicket.markup.html.pages;
 
 import de.kammerchorwernigerode.app.participate.wicket.request.ErrorAttributes;
+import org.apache.wicket.Application;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -39,8 +40,9 @@ public class ExceptionErrorPage extends AbstractErrorPage
     }
 
     public ExceptionErrorPage(ErrorAttributes errorAttributes) {
-        Data data = new Data(errorAttributes);
-        if (errorAttributes.getThrowable() instanceof MarkupException markupException) {
+        boolean showDetails = Application.get().usesDevelopmentConfig();
+        Data data = new Data(errorAttributes, showDetails);
+        if (showDetails && errorAttributes.getThrowable() instanceof MarkupException markupException) {
             MarkupStream markupStream = markupException.getMarkupStream();
             data.setResource(markupStream.getResource().toString());
             data.setMarkup(markupStream.toHtmlDebugString());
@@ -95,8 +97,9 @@ public class ExceptionErrorPage extends AbstractErrorPage
             protected void onConfigure() {
                 super.onConfigure();
 
-                String message = getDefaultModelObjectAsString();
-                setVisible(!Strings.isEmpty(message));
+                Data data = getModelObject();
+                boolean showDetails = data.isShowDetails();
+                setVisible(showDetails && !Strings.isEmpty(getMessage(data)));
             }
         };
         add(messageLabel);
@@ -112,9 +115,10 @@ public class ExceptionErrorPage extends AbstractErrorPage
                 super.onConfigure();
 
                 Data data = model.getObject();
+                boolean showDetails = data.isShowDetails();
                 boolean showStacktrace = data.isShowStacktrace();
                 String resource = data.getResource();
-                setVisible(showStacktrace && !Strings.isEmpty(resource));
+                setVisible(showDetails && showStacktrace && !Strings.isEmpty(resource));
             }
         };
         markupContainer.setOutputMarkupPlaceholderTag(true);
@@ -127,8 +131,9 @@ public class ExceptionErrorPage extends AbstractErrorPage
                 super.onConfigure();
 
                 Data data = model.getObject();
+                boolean showDetails = data.isShowDetails();
                 boolean showStacktrace = data.isShowStacktrace();
-                setVisible(showStacktrace);
+                setVisible(showDetails && showStacktrace && null != getThrowable(data));
             }
         };
         stacktraceContainer.setOutputMarkupPlaceholderTag(true);
@@ -151,6 +156,15 @@ public class ExceptionErrorPage extends AbstractErrorPage
         AjaxLink<Void> toggleStacktraceLink = new AjaxLink<>("stacktraceToggle") {
 
             @Override
+            protected void onConfigure() {
+                super.onConfigure();
+
+                Data data = model.getObject();
+                boolean showDetails = data.isShowDetails();
+                setVisible(showDetails && (null != getThrowable(data) || !Strings.isEmpty(data.getResource())));
+            }
+
+            @Override
             public void onClick(AjaxRequestTarget target) {
                 Data data = model.getObject();
                 data.toggleStacktrace();
@@ -167,6 +181,10 @@ public class ExceptionErrorPage extends AbstractErrorPage
     }
 
     private String printStacktrace(Throwable throwable) {
+        if (throwable == null) {
+            return "";
+        }
+
         List<Throwable> al = convertToList(throwable);
         StringBuilder sb = new StringBuilder(256);
 
@@ -251,6 +269,7 @@ public class ExceptionErrorPage extends AbstractErrorPage
     static class Data implements Serializable {
 
         private final ErrorAttributes attributes;
+        private final boolean showDetails;
 
         private String resource = "";
         private String markup = "";
