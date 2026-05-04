@@ -12,14 +12,16 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.io.Serializable;
 import java.util.Iterator;
-import java.util.List;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public abstract class JpaDataProvider<T extends Serializable, S, F extends Specification<T>>
     implements ISortableDataProvider<T, S>, IFilterStateLocator<F> {
 
+    @Getter(AccessLevel.PROTECTED)
     private final JpaSpecificationExecutor<T> jpaSpecificationExecutor;
     private final IModel<F> filterState;
 
@@ -31,8 +33,7 @@ public abstract class JpaDataProvider<T extends Serializable, S, F extends Speci
         Pageable pageable = new OffsetPageRequest(first, count, sort);
 
         Page<T> page = jpaSpecificationExecutor.findAll(spec, pageable);
-        List<T> content = page.getContent();
-        return content.iterator();
+        return page.iterator();
     }
 
     public abstract Sort getSort();
