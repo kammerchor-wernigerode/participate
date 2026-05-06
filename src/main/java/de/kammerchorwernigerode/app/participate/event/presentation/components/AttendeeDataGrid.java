@@ -4,6 +4,7 @@ import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRec
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDetailsEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDto;
 import de.kammerchorwernigerode.app.participate.musician.infrastructure.Voice;
+import de.kammerchorwernigerode.app.participate.wicket.behavior.FocusTrackingBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.form.CheckBoxBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.form.DropDownChoiceBehavior;
@@ -116,6 +117,7 @@ public class AttendeeDataGrid extends Panel {
 
             TextField<String> commentTextField = new TextField<>("comment", commentModel);
             commentTextField.add(new TextFieldBehavior(TextFieldBehavior.Size.SMALL));
+            commentTextField.add(new FocusTrackingBehavior());
             commentCell.add(commentTextField);
 
 
@@ -127,6 +129,7 @@ public class AttendeeDataGrid extends Panel {
 
             CheckBox accommodationNeededCheckBox = new CheckBox("accommodationNeeded", accommodationNeededModel);
             accommodationNeededCheckBox.add(new CheckBoxBehavior());
+            accommodationNeededCheckBox.add(new FocusTrackingBehavior());
             accommodationNeededCell.add(accommodationNeededCheckBox);
 
 
@@ -136,6 +139,7 @@ public class AttendeeDataGrid extends Panel {
                 bedsOfferedCountModel, Integer.class);
             bedsOfferedCountNumberTextField.setMinimum(0);
             bedsOfferedCountNumberTextField.add(new TextFieldBehavior(TextFieldBehavior.Size.SMALL));
+            bedsOfferedCountNumberTextField.add(new FocusTrackingBehavior());
             AttendeeCells.decorateIncrement(bedsOfferedCountNumberTextField, bedsOfferedCountModel);
             form.add(bedsOfferedCountNumberTextField);
 
@@ -148,6 +152,7 @@ public class AttendeeDataGrid extends Panel {
 
             CheckBox byCarCheckBox = new CheckBox("byCar", byCarModel);
             byCarCheckBox.add(new CheckBoxBehavior());
+            byCarCheckBox.add(new FocusTrackingBehavior());
             byCarCell.add(byCarCheckBox);
 
 
@@ -157,6 +162,7 @@ public class AttendeeDataGrid extends Panel {
                 carSeatCountModel, Integer.class);
             carSeatCountNumberTextField.setMinimum(0);
             carSeatCountNumberTextField.add(new TextFieldBehavior(TextFieldBehavior.Size.SMALL));
+            carSeatCountNumberTextField.add(new FocusTrackingBehavior());
             AttendeeCells.decorateIncrement(carSeatCountNumberTextField, carSeatCountModel);
             form.add(carSeatCountNumberTextField);
 
@@ -170,6 +176,7 @@ public class AttendeeDataGrid extends Panel {
             DropDownChoice<InvitationStatus> invitationStatusDropDownChoice = new DropDownChoice<>("invitationStatus",
                 invitationStatusModel, AttendeeDataView::supplyPresenceChoices, new EnumChoiceRenderer<>());
             invitationStatusDropDownChoice.add(new DropDownChoiceBehavior(DropDownChoiceBehavior.Size.SMALL));
+            invitationStatusDropDownChoice.add(new FocusTrackingBehavior());
             AttendeeCells.decorateStatus(invitationStatusDropDownChoice, invitationStatusModel);
             invitationStatusCell.add(invitationStatusDropDownChoice);
 
