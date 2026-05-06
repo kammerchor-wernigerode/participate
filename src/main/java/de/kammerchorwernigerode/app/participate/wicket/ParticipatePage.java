@@ -125,6 +125,7 @@ public class ParticipatePage extends BootstrapPage {
                 padding-top: 4.5rem;
             }\
             """, "participate-page"));
+        response.render(ParticipateCssResourceReference.asHeaderItem());
     }
 
 

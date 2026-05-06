@@ -1,0 +1,30 @@
+@import "overrides";
+@import "scss/functions";
+@import "scss/variables";
+@import "scss/variables-dark";
+
+.datagrid {
+    display: table;
+    border-collapse: collapse;
+}
+
+.datagrid-head {
+    display: table-header-group;
+}
+
+.datagrid-body {
+    display: table-row-group;
+}
+
+.datagrid-row {
+    display: table-row;
+}
+
+.datagrid-cell, .datagrid-header {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.datagrid-header {
+    font-weight: bold;
+}

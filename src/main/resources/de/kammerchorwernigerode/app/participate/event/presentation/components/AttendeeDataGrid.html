@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+    <div class="datagrid-head" role="rowgroup">
+        <div class="datagrid-row border-top border-bottom" role="row">
+            <div class="datagrid-header border-start border-end px-2 py-1 w-50 text-nowrap" role="columnheader">
+                <wicket:message key="attendee.comment"></wicket:message>
+            </div>
+            <div class="datagrid-header border-start border-end px-2 py-1 w-1 text-nowrap" role="columnheader">
+                <wicket:message key="attendee.accommodationNeeded"></wicket:message>
+            </div>
+            <div class="datagrid-header border-start border-end px-2 py-1 w-1 text-nowrap" role="columnheader">
+                <wicket:message key="attendee.offeredBeds"></wicket:message>
+            </div>
+            <div class="datagrid-header border-start border-end px-2 py-1 w-1 text-nowrap" role="columnheader">
+                <wicket:message key="attendee.byCar"></wicket:message>
+            </div>
+            <div class="datagrid-header border-start border-end px-2 py-1 w-1 text-nowrap" role="columnheader">
+                <wicket:message key="count"></wicket:message>
+            </div>
+            <div class="datagrid-header border-start border-end px-2 py-1 w-1 text-nowrap" role="columnheader">
+                <wicket:message key="person.name"></wicket:message>
+            </div>
+            <div class="datagrid-header border-start border-end px-2 py-1" role="columnheader">
+                <wicket:message key="attendee.presence"></wicket:message>
+            </div>
+        </div>
+    </div>
+
+    <div class="datagrid-body" role="rowgroup">
+        <wicket:container wicket:id="rows">
+        </wicket:container>
+    </div>
+</wicket:panel>
