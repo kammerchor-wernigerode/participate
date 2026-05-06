@@ -186,7 +186,12 @@ public class AttendeeDataGrid extends Panel {
                     protected void onEvent(AjaxRequestTarget target) {
                         super.onEvent(target);
 
-                        target.add(form);
+                        if ("invitationStatus".equals(formComponent.getId())) {
+                            AttendeeDataGrid dataGrid = findParent(AttendeeDataGrid.class);
+                            target.add(dataGrid);
+                        } else {
+                            target.add(form);
+                        }
                     }
                 });
             });
