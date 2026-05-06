@@ -85,6 +85,7 @@ public class AttendeeDataGrid extends Panel {
             IModel<Boolean> accommodationNeededModel = LambdaModel.of(model,
                 AttendeeDto::isAccommodationNeeded, AttendeeDto::setAccommodationNeeded);
             WebMarkupContainer accommodationNeededCell = new WebMarkupContainer("accommodationNeededCell");
+            AttendeeCells.decorateSelection(accommodationNeededCell, accommodationNeededModel);
             form.add(accommodationNeededCell);
 
             CheckBox accommodationNeededCheckBox = new CheckBox("accommodationNeeded", accommodationNeededModel);
@@ -98,12 +99,14 @@ public class AttendeeDataGrid extends Panel {
                 bedsOfferedCountModel, Integer.class);
             bedsOfferedCountNumberTextField.setMinimum(0);
             bedsOfferedCountNumberTextField.add(new TextFieldBehavior(TextFieldBehavior.Size.SMALL));
+            AttendeeCells.decorateIncrement(bedsOfferedCountNumberTextField, bedsOfferedCountModel);
             form.add(bedsOfferedCountNumberTextField);
 
 
             IModel<Boolean> byCarModel = LambdaModel.of(model,
                 AttendeeDto::isByCar, AttendeeDto::setByCar);
             WebMarkupContainer byCarCell = new WebMarkupContainer("byCarCell");
+            AttendeeCells.decorateSelection(byCarCell, byCarModel);
             form.add(byCarCell);
 
             CheckBox byCarCheckBox = new CheckBox("byCar", byCarModel);
@@ -117,21 +120,25 @@ public class AttendeeDataGrid extends Panel {
                 carSeatCountModel, Integer.class);
             carSeatCountNumberTextField.setMinimum(0);
             carSeatCountNumberTextField.add(new TextFieldBehavior(TextFieldBehavior.Size.SMALL));
+            AttendeeCells.decorateIncrement(carSeatCountNumberTextField, carSeatCountModel);
             form.add(carSeatCountNumberTextField);
 
 
             IModel<InvitationStatus> invitationStatusModel = LambdaModel.of(model,
                 AttendeeDto::getInvitationStatus, AttendeeDto::setInvitationStatus);
             WebMarkupContainer invitationStatusCell = new WebMarkupContainer("invitationStatusCell");
+            AttendeeCells.decorateStatus(invitationStatusCell, invitationStatusModel);
             form.add(invitationStatusCell);
 
             DropDownChoice<InvitationStatus> invitationStatusDropDownChoice = new DropDownChoice<>("invitationStatus",
                 invitationStatusModel, AttendeeDataView::supplyPresenceChoices, new EnumChoiceRenderer<>());
             invitationStatusDropDownChoice.add(new DropDownChoiceBehavior(DropDownChoiceBehavior.Size.SMALL));
+            AttendeeCells.decorateStatus(invitationStatusDropDownChoice, invitationStatusModel);
             invitationStatusCell.add(invitationStatusDropDownChoice);
 
 
             Label nameCell = new Label("name", item.getModel().map(this::printName));
+            AttendeeCells.decorateStatus(nameCell, invitationStatusModel);
             form.add(nameCell);
         }
 
