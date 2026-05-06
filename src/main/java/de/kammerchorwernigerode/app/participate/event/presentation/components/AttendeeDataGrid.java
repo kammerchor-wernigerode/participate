@@ -11,6 +11,8 @@ import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.for
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.util.Attributes;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ClassAttributeModifier;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.CssContentHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -175,6 +177,19 @@ public class AttendeeDataGrid extends Panel {
             Label nameCell = new Label("name", item.getModel().map(this::printName));
             AttendeeCells.decorateStatus(nameCell, invitationStatusModel);
             form.add(nameCell);
+
+
+            form.visitFormComponents((formComponent, ignored) -> {
+                formComponent.add(new AjaxFormSubmitBehavior("change") {
+
+                    @Override
+                    protected void onEvent(AjaxRequestTarget target) {
+                        super.onEvent(target);
+
+                        target.add(form);
+                    }
+                });
+            });
         }
 
         protected void onPopulate(Item<AttendeeDetailsEntry> item) {
