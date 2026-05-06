@@ -3,12 +3,17 @@ package de.kammerchorwernigerode.app.participate.event.presentation.ui.details;
 import de.kammerchorwernigerode.app.participate.event.infrastructure.EventRecordRepository;
 import de.kammerchorwernigerode.app.participate.wicket.ModelNotFoundException;
 import de.kammerchorwernigerode.app.participate.wicket.ParticipatePage;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.tabs.Tabs;
 import org.apache.wicket.IGenericComponent;
+import org.apache.wicket.extensions.markup.html.tabs.ITab;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +27,25 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
         super(parameters);
 
         setModel(new EventIdEntryModel(parameters, eventRecordRepository));
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        setLayout(Layout.FLUID);
+
+        IModel<Long> model = getModel();
+
+        List<ITab> tabs = createTabs(model);
+        Tabs<ITab> tabbedPanel = new Tabs<>("tabs", tabs);
+        add(tabbedPanel);
+    }
+
+    private List<ITab> createTabs(IModel<Long> model) {
+        List<ITab> tabs = new ArrayList<>();
+
+        return tabs;
     }
 
 
