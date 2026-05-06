@@ -1,5 +1,6 @@
 package de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.navigation.paging;
 
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.util.Attributes;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.Component;
@@ -22,10 +23,8 @@ import org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigation;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.HashSet;
+import java.util.Set;
 
 public class BootstrapPagingNavigator extends AjaxPagingNavigator {
 
@@ -97,19 +96,14 @@ public class BootstrapPagingNavigator extends AjaxPagingNavigator {
         protected void onComponentTag(ComponentTag tag) {
             super.onComponentTag(tag);
 
-            List<String> classes = Optional.ofNullable(tag.getAttribute("class"))
-                .map(value -> value.split("\\s+"))
-                .map(Arrays::asList)
-                .map(ArrayList::new)
-                .orElseGet(ArrayList::new);
+            Set<String> classes = new HashSet<>();
             classes.add("page-item");
 
             if (!getParent().get(childId).isEnabled()) {
                 classes.add("disabled");
             }
 
-            String cssClassNames = String.join(" ", classes);
-            tag.put("class", cssClassNames);
+            Attributes.addClass(tag, classes);
         }
     }
 
