@@ -3,13 +3,17 @@ package de.kammerchorwernigerode.app.participate.event.presentation.components;
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.InvitationStatus;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDetailsEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDto;
+import de.kammerchorwernigerode.app.participate.musician.infrastructure.Voice;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.form.CheckBoxBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.form.DropDownChoiceBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.form.TextFieldBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.util.Attributes;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.CssContentHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -28,6 +32,7 @@ import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.util.string.Strings;
 
 import java.util.List;
+import java.util.Objects;
 
 public class AttendeeDataGrid extends Panel {
 
@@ -42,6 +47,8 @@ public class AttendeeDataGrid extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
+        setOutputMarkupId(true);
+
         add(dataView);
     }
 
@@ -54,19 +61,47 @@ public class AttendeeDataGrid extends Panel {
         tag.put("aria-rowcount", dataView.size());
     }
 
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+
+        String markupId = getMarkupId();
+        response.render(CssContentHeaderItem.forCSS("""
+                #%s .datagrid-group-start > .datagrid-cell {
+                    border-top: 3px solid var(--bs-border-color) !important;
+                }\
+                """.formatted(markupId),
+            markupId + "-styles"));
+    }
+
 
     private static class AttendeeDataView extends DataView<AttendeeDetailsEntry> {
+
+        private Voice prevVoice;
+        private Integer prevInvitationStatusOrder;
+        private boolean startNewGroup;
 
         protected AttendeeDataView(String id, IDataProvider<AttendeeDetailsEntry> dataProvider) {
             super(id, dataProvider);
         }
 
         @Override
+        protected void onBeforeRender() {
+            prevVoice = null;
+            prevInvitationStatusOrder = null;
+            startNewGroup = false;
+            super.onBeforeRender();
+        }
+
+        @Override
         protected void populateItem(Item<AttendeeDetailsEntry> item) {
+            onPopulate(item);
+
             AttendeeDetailsEntry entry = item.getModelObject();
             AttendeeDto attendeeDto = createAttendeeDto(entry);
             IModel<AttendeeDto> model = new CompoundPropertyModel<>(attendeeDto);
             Form<AttendeeDto> form = new Form<>("form", model);
+            form.add(ClassAttributeModifier.append("class", startNewGroup ? "datagrid-group-start" : null));
             form.add(AttributeModifier.replace("aria-rowindex", item.getIndex()));
             item.add(form);
 
@@ -140,6 +175,28 @@ public class AttendeeDataGrid extends Panel {
             Label nameCell = new Label("name", item.getModel().map(this::printName));
             AttendeeCells.decorateStatus(nameCell, invitationStatusModel);
             form.add(nameCell);
+        }
+
+        protected void onPopulate(Item<AttendeeDetailsEntry> item) {
+            AttendeeDetailsEntry entry = item.getModelObject();
+            int index = item.getIndex();
+            Voice voice = entry.getVoice();
+            int invitationStatusOrder = entry.getInvitationStatusOrder();
+
+            boolean isFirstRow = index == 0;
+            boolean orderBoundaryFromZeroToOne =
+                prevInvitationStatusOrder != null
+                    && prevInvitationStatusOrder == 0
+                    && invitationStatusOrder == 1;
+            boolean voiceChangedInZeroBlock =
+                invitationStatusOrder == 0
+                    && prevInvitationStatusOrder != null
+                    && prevInvitationStatusOrder == 0
+                    && !Objects.equals(prevVoice, voice);
+
+            startNewGroup = isFirstRow || voiceChangedInZeroBlock || orderBoundaryFromZeroToOne;
+            prevVoice = voice;
+            prevInvitationStatusOrder = invitationStatusOrder;
         }
 
         private AttendeeDto createAttendeeDto(AttendeeDetailsEntry entry) {
