@@ -28,6 +28,33 @@
 
     <div class="datagrid-body" role="rowgroup">
         <wicket:container wicket:id="rows">
+            <form class="datagrid-row" role="row" wicket:id="form">
+                <div class="datagrid-cell border-start border-end border-bottom w-50 text-nowrap" role="cell"
+                     wicket:id="commentCell">
+                    <input type="text" class="shadow-none border-0 rounded-0" wicket:id="comment" />
+                </div>
+                <div class="datagrid-cell border-start border-end border-bottom text-center w-1 text-nowrap" role="cell"
+                     wicket:id="accommodationNeededCell">
+                    <input type="checkbox" wicket:id="accommodationNeeded" />
+                </div>
+                <div class="datagrid-cell border-start border-end border-bottom w-1 text-nowrap" role="cell">
+                    <input type="number" class="shadow-none border-0 rounded-0" wicket:id="bedsOfferedCount" />
+                </div>
+                <div class="datagrid-cell border-start border-end border-bottom text-center w-1 text-nowrap" role="cell"
+                     wicket:id="byCarCell">
+                    <input type="checkbox" wicket:id="byCar" />
+                </div>
+                <div class="datagrid-cell border-start border-end border-bottom w-1 text-nowrap" role="cell">
+                    <input type="number" class="shadow-none border-0 rounded-0" wicket:id="carSeatCount" />
+                </div>
+                <div class="datagrid-cell border-start border-end border-bottom px-2 py-1 small w-1 text-nowrap"
+                     role="cell" wicket:id="name">
+                </div>
+                <div class="datagrid-cell border-start border-end border-bottom" role="cell"
+                     wicket:id="invitationStatusCell">
+                    <select class="shadow-none border-0 rounded-0" wicket:id="invitationStatus"></select>
+                </div>
+            </form>
         </wicket:container>
     </div>
 </wicket:panel>
