@@ -9,6 +9,8 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.ZoneId;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -47,6 +49,12 @@ import static de.kammerchorwernigerode.app.participate.event.infrastructure.Atte
                ELSE 0
                END             AS car_seat_count,
            a.comment           AS comment,
+           a.from_date_time    AS from_date_time,
+           a.to_date_time      AS to_date_time,
+           e.start_date_time   AS start_date_time,
+           e.start_zone        AS start_zone,
+           e.end_date_time     AS end_date_time,
+           e.end_zone          AS end_zone,
            CASE
                WHEN a.invitation_status = 'TENTATIVE' THEN 0
                WHEN a.invitation_status = 'ACCEPTED' THEN 0
@@ -61,6 +69,7 @@ import static de.kammerchorwernigerode.app.participate.event.infrastructure.Atte
                WHEN m.voice = 'BASS' THEN 4
                END             AS voice_order
     FROM attendees AS a
+             JOIN events AS e ON a.event_id = e.id
              JOIN persons AS p ON a.person_id = p.id
              LEFT JOIN musicians AS m ON p.id = m.person_id
     """)
@@ -110,6 +119,30 @@ public class AttendeeDetailsEntry implements Serializable {
     @Column(name = "comment")
     @Nullable
     private String comment;
+
+    @Column(name = "from_date_time")
+    @NonNull
+    private Instant fromInstant;
+
+    @Column(name = "to_date_time")
+    @NonNull
+    private Instant toInstant;
+
+    @Column(name = "start_date_time")
+    @NonNull
+    private Instant startInstant;
+
+    @Column(name = "start_zone")
+    @NonNull
+    private ZoneId startZoneId;
+
+    @Column(name = "end_date_time")
+    @NonNull
+    private Instant endInstant;
+
+    @Column(name = "end_zone")
+    @NonNull
+    private ZoneId endZoneId;
 
     @Column(name = "invitation_status_order")
     private int invitationStatusOrder;

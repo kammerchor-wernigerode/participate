@@ -4,6 +4,7 @@ import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRec
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.InvitationStatus;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import lombok.Data;
 
@@ -17,4 +18,6 @@ public class AttendeeDto implements Serializable {
     private boolean byCar;
     private int carSeatCount;
     private String comment;
+    private LocalDateTime from;
+    private LocalDateTime to;
 }

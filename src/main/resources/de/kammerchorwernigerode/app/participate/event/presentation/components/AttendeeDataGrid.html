@@ -23,6 +23,9 @@
             <div class="datagrid-header border-start border-end px-2 py-1" role="columnheader">
                 <wicket:message key="attendee.presence"></wicket:message>
             </div>
+            <div class="datagrid-header border-start border-end px-2 py-1" role="columnheader">
+                <wicket:message key="attendee.presenceNote"></wicket:message>
+            </div>
         </div>
     </div>
 
@@ -53,6 +56,10 @@
                 <div class="datagrid-cell border-start border-end border-bottom" role="cell"
                      wicket:id="invitationStatusCell">
                     <select class="shadow-none border-0 rounded-0" wicket:id="invitationStatus"></select>
+                </div>
+                <div class="datagrid-cell border-start border-end border-bottom px-2 py-1 small w-1 text-nowrap"
+                     role="cell" wicket:id="periodCell">
+                    <span wicket:id="periodLabel"></span>
                 </div>
             </form>
         </wicket:container>
