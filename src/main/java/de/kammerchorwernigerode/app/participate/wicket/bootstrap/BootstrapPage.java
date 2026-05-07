@@ -2,6 +2,7 @@ package de.kammerchorwernigerode.app.participate.wicket.bootstrap;
 
 import de.kammerchorwernigerode.app.participate.wicket.WicketApplication;
 import de.kammerchorwernigerode.app.participate.wicket.feedback.GlobalFeedbackMessageFilter;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.modal.Modal;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.toast.ToastContainer;
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
@@ -20,9 +21,14 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.Locale;
 
+import lombok.Getter;
+
 public abstract class BootstrapPage extends WebPage {
 
     private final ToastContainer toaster;
+
+    @Getter
+    private final Modal modal;
 
     public BootstrapPage() {
         this(null);
@@ -32,6 +38,7 @@ public abstract class BootstrapPage extends WebPage {
         super(parameters);
 
         this.toaster = new ToastContainer("toaster", new GlobalFeedbackMessageFilter());
+        this.modal = new Modal("modal");
     }
 
     @Override
@@ -46,6 +53,8 @@ public abstract class BootstrapPage extends WebPage {
 
         toaster.setOutputMarkupId(true);
         htmlTag.add(toaster);
+
+        htmlTag.add(modal);
 
         Application application = Application.get();
         String filterName = application.getMetaData(WicketApplication.footerBucketNameKey);
