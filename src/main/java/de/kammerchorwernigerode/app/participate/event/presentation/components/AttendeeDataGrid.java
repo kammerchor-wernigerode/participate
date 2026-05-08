@@ -196,8 +196,8 @@ public class AttendeeDataGrid extends Panel {
             AttendeeCells.decorateStatus(periodCell, invitationStatusModel);
             form.add(periodCell);
 
-            Label periodLabel = new Label("periodLabel", item.getModel().map(this::printPeriod));
-            periodLabel.add(new TooltipBehavior(item.getModel().map(this::printRange)));
+            Label periodLabel = new Label("periodLabel", model.combineWith(item.getModel(), this::printPeriod));
+            periodLabel.add(new TooltipBehavior(model.map(this::printRange)));
             periodCell.add(periodLabel);
 
 
@@ -275,18 +275,16 @@ public class AttendeeDataGrid extends Panel {
             return firstName + " " + lastName;
         }
 
-        private String printRange(AttendeeDetailsEntry entry) {
+        private String printRange(AttendeeDto dto) {
             Session session = Session.get();
             Locale locale = session.getLocale();
             DateTimeFormatter formatter = FORMATTER.localizedBy(locale);
 
-            LocalDateTime from = LocalDateTime.ofInstant(entry.getFromInstant(), entry.getStartZoneId());
-            LocalDateTime to = LocalDateTime.ofInstant(entry.getToInstant(), entry.getEndZoneId());
-            return formatter.format(from) + "–" + formatter.format(to);
+            return formatter.format(dto.getFrom()) + "–" + formatter.format(dto.getTo());
         }
 
-        private String printPeriod(AttendeeDetailsEntry entry) {
-            AttendanceLabel label = create(entry);
+        private String printPeriod(AttendeeDto dto, AttendeeDetailsEntry entry) {
+            AttendanceLabel label = create(dto, entry);
 
             if (!label.hasCustomFrom() && !label.hasCustomTo()) {
                 return getString("attendance.full");
@@ -306,11 +304,11 @@ public class AttendeeDataGrid extends Panel {
             return getString(key, () -> vars);
         }
 
-        private AttendanceLabel create(AttendeeDetailsEntry entry) {
+        private AttendanceLabel create(AttendeeDto dto, AttendeeDetailsEntry entry) {
             ZonedDateTime eventStart = entry.getStartInstant().atZone(entry.getStartZoneId());
             ZonedDateTime eventEnd = entry.getEndInstant().atZone(entry.getEndZoneId());
-            ZonedDateTime from = entry.getFromInstant().atZone(entry.getStartZoneId());
-            ZonedDateTime to = entry.getToInstant().atZone(entry.getEndZoneId());
+            ZonedDateTime from = dto.getFrom().atZone(entry.getStartZoneId());
+            ZonedDateTime to = dto.getTo().atZone(entry.getEndZoneId());
 
             boolean hasCustomFrom = !from.toInstant().equals(eventStart.toInstant());
             boolean hasCustomTo = !to.toInstant().equals(eventEnd.toInstant());
