@@ -9,12 +9,16 @@ import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.com
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.form.CheckBoxBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.form.DropDownChoiceBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.form.TextFieldBehavior;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.modal.Modal;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.modal.ModalHiddenEventBehavior;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.form.LocalDateTimeFormControl;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.util.Attributes;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.CssContentHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -26,6 +30,7 @@ import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -33,6 +38,7 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.string.Strings;
 
 import java.time.DayOfWeek;
@@ -200,6 +206,31 @@ public class AttendeeDataGrid extends Panel {
             periodLabel.add(new TooltipBehavior(model.map(this::printRange)));
             periodCell.add(periodLabel);
 
+            Modal modal = new Modal("modal")
+                .centered(true)
+                .size(Modal.Size.SMALL)
+                .title(new ResourceModel("attendee.presence"))
+                .content(id -> new PeriodModalContent(id, model))
+                .addCloseAction(new ResourceModel("close"))
+                .addSubmitAction(new ResourceModel("save"));
+            modal.add(new ModalHiddenEventBehavior() {
+
+                @Override
+                protected void onEvent(AjaxRequestTarget target) {
+                    super.onEvent(target);
+                    target.add(form);
+                }
+            });
+            periodCell.add(modal);
+            AjaxLink<AttendeeDto> periodLink = new AjaxLink<>("periodLink", model) {
+
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    modal.show(target);
+                }
+            };
+            periodCell.add(periodLink);
+
 
             Label nameCell = new Label("name", item.getModel().map(this::printName));
             AttendeeCells.decorateStatus(nameCell, invitationStatusModel);
@@ -326,6 +357,31 @@ public class AttendeeDataGrid extends Panel {
                 case 17, 18, 19, 20, 21, 22, 23 -> DayPeriod.EVENING;
                 default -> throw new IllegalStateException();
             };
+        }
+
+
+        private static class PeriodModalContent extends GenericPanel<AttendeeDto> {
+
+            public PeriodModalContent(String id, IModel<AttendeeDto> model) {
+                super(id, model);
+            }
+
+            @Override
+            protected void onInitialize() {
+                super.onInitialize();
+
+                IModel<AttendeeDto> model = getModel();
+
+                IModel<LocalDateTime> fromModel = LambdaModel.of(model, AttendeeDto::getFrom, AttendeeDto::setFrom);
+                LocalDateTimeFormControl fromControl = new LocalDateTimeFormControl("from", fromModel);
+                fromControl.setLabel(new ResourceModel("AttendeeForm.from"));
+                add(fromControl);
+
+                IModel<LocalDateTime> toModel = LambdaModel.of(model, AttendeeDto::getTo, AttendeeDto::setTo);
+                LocalDateTimeFormControl toControl = new LocalDateTimeFormControl("to", toModel);
+                toControl.setLabel(new ResourceModel("AttendeeForm.to"));
+                add(toControl);
+            }
         }
     }
 

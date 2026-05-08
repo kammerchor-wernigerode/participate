@@ -57,9 +57,15 @@
                      wicket:id="invitationStatusCell">
                     <select class="shadow-none border-0 rounded-0" wicket:id="invitationStatus"></select>
                 </div>
-                <div class="datagrid-cell border-start border-end border-bottom px-2 py-1 small w-1 text-nowrap"
-                     role="cell" wicket:id="periodCell">
-                    <span wicket:id="periodLabel"></span>
+                <div class="datagrid-cell border-start border-end border-bottom w-1 text-nowrap" role="cell"
+                     wicket:id="periodCell">
+                    <div class="d-flex gap-2 align-items-center justify-content-between">
+                        <span class="px-2 py-1 small" wicket:id="periodLabel"></span>
+                        <a href="#" class="btn btn-sm btn-link text-reset" wicket:id="periodLink">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                    </div>
+                    <div wicket:id="modal"></div>
                 </div>
             </form>
         </wicket:container>
