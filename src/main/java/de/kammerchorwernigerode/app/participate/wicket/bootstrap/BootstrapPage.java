@@ -3,6 +3,7 @@ package de.kammerchorwernigerode.app.participate.wicket.bootstrap;
 import de.kammerchorwernigerode.app.participate.wicket.WicketApplication;
 import de.kammerchorwernigerode.app.participate.wicket.feedback.GlobalFeedbackMessageFilter;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.modal.Modal;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.modal.ResetModalBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.toast.ToastContainer;
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
@@ -54,6 +55,7 @@ public abstract class BootstrapPage extends WebPage {
         toaster.setOutputMarkupId(true);
         htmlTag.add(toaster);
 
+        modal.add(new ResetModalBehavior());
         htmlTag.add(modal);
 
         Application application = Application.get();

@@ -1,14 +1,12 @@
 package de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.modal;
 
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.modal.Modal.Fullscreen;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.modal.Modal.Size;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.EventPropagation;
 
-public class ModalHiddenEventBehavior extends AjaxEventBehavior {
+public abstract class ModalHiddenEventBehavior extends AjaxEventBehavior {
 
     public ModalHiddenEventBehavior() {
         super("hidden.bs.modal");
@@ -32,7 +30,6 @@ public class ModalHiddenEventBehavior extends AjaxEventBehavior {
             return;
         }
 
-        resetComponents(modal);
         discard(modal, target);
     }
 
@@ -43,23 +40,12 @@ public class ModalHiddenEventBehavior extends AjaxEventBehavior {
         attributes.setEventPropagation(EventPropagation.BUBBLE);
     }
 
-    private void resetComponents(Modal modal) {
-        modal
-            .staticBackdrop(false)
-            .scrollable(false)
-            .centered(false)
-            .disableAnimation(false)
-            .size(Size.DEFAULT)
-            .fullscreen(Fullscreen.DEFAULT)
-            .clearActions();
-    }
-
     private void discard(Modal modal, AjaxRequestTarget target) {
         modal.setVisible(false);
         target.add(modal);
     }
 
-    private Modal getModal() {
+    protected Modal getModal() {
         return (Modal) getComponent();
     }
 }

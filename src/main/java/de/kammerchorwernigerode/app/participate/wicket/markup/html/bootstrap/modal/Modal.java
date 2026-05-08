@@ -90,8 +90,6 @@ public class Modal extends Panel {
         WebMarkupContainer dialog;
         add(dialog = new Dialog("dialog"));
         dialog.add(header, body, footer);
-
-        add(new ModalHiddenEventBehavior());
     }
 
     @Override
