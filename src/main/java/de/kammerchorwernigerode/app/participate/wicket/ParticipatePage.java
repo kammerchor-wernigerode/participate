@@ -174,7 +174,7 @@ public class ParticipatePage extends BootstrapPage {
         @Override
         protected String load() {
             URI uri = accountUrl.get();
-            return uri.toString();
+            return null == uri ? null : uri.toString();
         }
     }
 }
