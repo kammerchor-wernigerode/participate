@@ -96,14 +96,16 @@ public class EventPanel extends GenericPanel<EventEntry> {
     }
 
     private String printDate(EventEntry entry) {
-        DateTimeFormatter formatter = DATE_TIME_FORMATTER.localizedBy(getLocale());
-        String startDateTime = formatter.format(entry.getStart());
-        String endDateTime = formatter.format(entry.getEnd());
+        DateTimeFormatter dateTimeFormatter = DATE_TIME_FORMATTER.localizedBy(getLocale());
+        DateTimeFormatter startFormatter = dateTimeFormatter.withZone(entry.getStartZoneId());
+        DateTimeFormatter endFormatter = dateTimeFormatter.withZone(entry.getEndZoneId());
+        String startDateTime = startFormatter.format(entry.getStart());
+        String endDateTime = endFormatter.format(entry.getEnd());
         return startDateTime + "–" + endDateTime;
     }
 
     private String printTitle(EventEntry entry) {
-        DateTimeFormatter formatter = MONTH_FORMATTER.localizedBy(getLocale());
+        DateTimeFormatter formatter = MONTH_FORMATTER.localizedBy(getLocale()).withZone(entry.getStartZoneId());
         String monthYear = formatter.format(entry.getStart());
         String name = Optional.ofNullable(entry.getSummary())
             .filter(not(Strings::isEmpty))
