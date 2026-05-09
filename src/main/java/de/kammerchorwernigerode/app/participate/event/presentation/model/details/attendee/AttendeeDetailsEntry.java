@@ -10,6 +10,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -122,11 +123,11 @@ public class AttendeeDetailsEntry implements Serializable {
 
     @Column(name = "from_date_time")
     @NonNull
-    private Instant fromInstant;
+    private LocalDateTime fromDateTime;
 
     @Column(name = "to_date_time")
     @NonNull
-    private Instant toInstant;
+    private LocalDateTime toDateTime;
 
     @Column(name = "start_date_time")
     @NonNull

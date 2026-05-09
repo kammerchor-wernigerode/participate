@@ -285,8 +285,8 @@ public class AttendeeDataGrid extends Panel {
             dto.setByCar(entry.isByCar());
             dto.setCarSeatCount(entry.getCarSeatCount());
             dto.setComment(entry.getComment());
-            dto.setFrom(LocalDateTime.ofInstant(entry.getFromInstant(), entry.getStartZoneId()));
-            dto.setTo(LocalDateTime.ofInstant(entry.getToInstant(), entry.getEndZoneId()));
+            dto.setFrom(entry.getFromDateTime());
+            dto.setTo(entry.getToDateTime());
             return dto;
         }
 
@@ -338,18 +338,18 @@ public class AttendeeDataGrid extends Panel {
         private AttendanceLabel create(AttendeeDto dto, AttendeeDetailsEntry entry) {
             ZonedDateTime eventStart = entry.getStartInstant().atZone(entry.getStartZoneId());
             ZonedDateTime eventEnd = entry.getEndInstant().atZone(entry.getEndZoneId());
-            ZonedDateTime from = dto.getFrom().atZone(entry.getStartZoneId());
-            ZonedDateTime to = dto.getTo().atZone(entry.getEndZoneId());
+            LocalDateTime from = dto.getFrom();
+            LocalDateTime to = dto.getTo();
 
-            boolean hasCustomFrom = !from.toInstant().equals(eventStart.toInstant());
-            boolean hasCustomTo = !to.toInstant().equals(eventEnd.toInstant());
+            boolean hasCustomFrom = !from.equals(eventStart.toLocalDateTime());
+            boolean hasCustomTo = !to.equals(eventEnd.toLocalDateTime());
 
             DayPeriodLabel fromLabel = new DayPeriodLabel(from.getDayOfWeek(), toDayPeriod(from));
             DayPeriodLabel toLabel = new DayPeriodLabel(to.getDayOfWeek(), toDayPeriod(to));
             return new AttendanceLabel(hasCustomFrom, hasCustomTo, fromLabel, toLabel);
         }
 
-        private DayPeriod toDayPeriod(ZonedDateTime dateTime) {
+        private DayPeriod toDayPeriod(LocalDateTime dateTime) {
             return switch (dateTime.getHour()) {
                 case 0, 1, 2, 3, 4, 5 -> DayPeriod.NIGHT;
                 case 6, 7, 8, 9, 10, 11 -> DayPeriod.MORNING;

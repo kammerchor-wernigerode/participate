@@ -9,7 +9,7 @@ import org.springframework.data.util.ProxyUtils;
 
 import java.io.Serializable;
 import java.net.URI;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -72,11 +72,11 @@ public class AttendeeRecord implements Persistable<AttendeeRecord.Id> {
 
     @Column(name = "from_date_time", nullable = false)
     @NonNull
-    private Instant from;
+    private LocalDateTime from;
 
     @Column(name = "to_date_time", nullable = false)
     @NonNull
-    private Instant to;
+    private LocalDateTime to;
 
     @Column(name = "comment")
     @Nullable
