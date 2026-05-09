@@ -3,15 +3,18 @@ package de.kammerchorwernigerode.app.participate.wicket.markup.html.form;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.panel.Feedback;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ClassAttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.feedback.FeedbackMessages;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.danekja.java.util.function.serializable.SerializableFunction;
 
 import lombok.Getter;
 
@@ -19,6 +22,8 @@ public abstract class BootstrapFormComponent<T, R> extends FormComponentPanel<R>
 
     @Getter
     private final FormComponent<T> formComponent;
+    private final WebMarkupContainer container;
+    private final InputAdornment endAdornment;
     private final Feedback feedback;
 
     @Getter
@@ -26,7 +31,9 @@ public abstract class BootstrapFormComponent<T, R> extends FormComponentPanel<R>
 
     public BootstrapFormComponent(String id, IModel<R> model) {
         super(id, model);
+        this.container = new WebMarkupContainer("container");
         this.formComponent = createFormComponent("control");
+        this.endAdornment = new InputAdornment("endAdornment");
         this.feedback = new Feedback("feedback", this);
     }
 
@@ -34,6 +41,11 @@ public abstract class BootstrapFormComponent<T, R> extends FormComponentPanel<R>
 
     public BootstrapFormComponent<T, R> setLayout(Layout layout) {
         this.layout = layout;
+        return this;
+    }
+
+    public BootstrapFormComponent<T, R> addEndAdornment(SerializableFunction<String, Component> constructor) {
+        endAdornment.addChild(constructor);
         return this;
     }
 
@@ -54,11 +66,14 @@ public abstract class BootstrapFormComponent<T, R> extends FormComponentPanel<R>
             default:
                 throw new WicketRuntimeException("Unsupported layout" + layout);
         }
+        fragment.add(container);
         add(fragment);
+
+        container.add(endAdornment);
 
         formComponent.setModel(new CompoundPropertyModel<>(null));
         formComponent.add(ClassAttributeModifier.append("class", getCssClassName()));
-        fragment.add(formComponent);
+        container.add(formComponent);
 
         FormLabel label = new FormLabel("label", this)
             .references(formComponent);
@@ -66,6 +81,21 @@ public abstract class BootstrapFormComponent<T, R> extends FormComponentPanel<R>
 
         feedback.setOutputMarkupId(true);
         add(feedback);
+    }
+
+    @Override
+    protected void onConfigure() {
+        super.onConfigure();
+
+        container.setRenderBodyOnly(true);
+        if (Layout.FLOATING_LABEL.equals(layout)) {
+            return;
+        }
+
+        if (endAdornment.isVisible()) {
+            container.setRenderBodyOnly(false);
+            container.add(ClassAttributeModifier.append("class", "input-group"));
+        }
     }
 
     @Override

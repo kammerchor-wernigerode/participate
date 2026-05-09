@@ -5,11 +5,17 @@
 
     <wicket:fragment wicket:id="default">
         <label class="form-label" wicket:id="label"></label>
-        <textarea wicket:id="control"></textarea>
+        <div wicket:id="container">
+            <textarea wicket:id="control"></textarea>
+            <wicket:container wicket:id="endAdornment"></wicket:container>
+        </div>
     </wicket:fragment>
 
     <wicket:fragment wicket:id="floatingLabel">
-        <textarea wicket:id="control"></textarea>
+        <div wicket:id="container">
+            <textarea wicket:id="control"></textarea>
+            <wicket:container wicket:id="endAdornment"></wicket:container>
+        </div>
         <label wicket:id="label"></label>
     </wicket:fragment>
 </wicket:panel>
