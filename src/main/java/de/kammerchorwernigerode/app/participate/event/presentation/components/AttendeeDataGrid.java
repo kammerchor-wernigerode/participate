@@ -5,6 +5,7 @@ import de.kammerchorwernigerode.app.participate.event.presentation.model.details
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDto;
 import de.kammerchorwernigerode.app.participate.musician.infrastructure.Voice;
 import de.kammerchorwernigerode.app.participate.wicket.behavior.FocusTrackingBehavior;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.Anchor;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.form.CheckBoxBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.form.DropDownChoiceBehavior;
@@ -28,6 +29,7 @@ import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -39,10 +41,13 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.Strings;
 
 import java.time.DayOfWeek;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -210,7 +215,7 @@ public class AttendeeDataGrid extends Panel {
                 .centered(true)
                 .size(Modal.Size.SMALL)
                 .title(new ResourceModel("attendee.presence"))
-                .content(id -> new PeriodModalContent(id, model))
+                .content(id -> new PeriodModalContent(id, model, item.getModel()))
                 .addCloseAction(new ResourceModel("close"))
                 .addSubmitAction(new ResourceModel("save"));
             modal.add(new ModalHiddenEventBehavior() {
@@ -362,8 +367,14 @@ public class AttendeeDataGrid extends Panel {
 
         private static class PeriodModalContent extends GenericPanel<AttendeeDto> {
 
-            public PeriodModalContent(String id, IModel<AttendeeDto> model) {
+            private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
+                .ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.SHORT);
+
+            private final IModel<AttendeeDetailsEntry> entry;
+
+            public PeriodModalContent(String id, IModel<AttendeeDto> model, IModel<AttendeeDetailsEntry> entry) {
                 super(id, model);
+                this.entry = entry;
             }
 
             @Override
@@ -374,13 +385,83 @@ public class AttendeeDataGrid extends Panel {
 
                 IModel<LocalDateTime> fromModel = LambdaModel.of(model, AttendeeDto::getFrom, AttendeeDto::setFrom);
                 LocalDateTimeFormControl fromControl = new LocalDateTimeFormControl("from", fromModel);
+                fromControl.setOutputMarkupId(true);
                 fromControl.setLabel(new ResourceModel("AttendeeForm.from"));
+                fromControl.addEndAdornment(id -> {
+                    IModel<LocalDateTime> start = entry.map(entry -> {
+                        Instant instant = entry.getStartInstant();
+                        ZoneId zoneId = entry.getStartZoneId();
+                        return LocalDateTime.ofInstant(instant, zoneId);
+                    });
+
+                    Anchor anchor = new Anchor(id);
+
+                    FormComponent<LocalDateTime> formComponent = fromControl.getFormComponent();
+                    ResetLocalDateTimeLink link = new ResetLocalDateTimeLink(anchor.getLinkId(), start, formComponent);
+                    link.add(ClassAttributeModifier.append("class", "btn btn-outline-secondary"));
+                    link.add(new TooltipBehavior(start.map(PeriodModalContent.this::print)));
+                    link.setBody(() -> "<i class=\"bi bi-arrow-counterclockwise\"></i>");
+                    link.setEscapeModelStrings(false);
+
+                    anchor.add(link);
+                    return anchor;
+                });
                 add(fromControl);
+
 
                 IModel<LocalDateTime> toModel = LambdaModel.of(model, AttendeeDto::getTo, AttendeeDto::setTo);
                 LocalDateTimeFormControl toControl = new LocalDateTimeFormControl("to", toModel);
+                toControl.setOutputMarkupId(true);
                 toControl.setLabel(new ResourceModel("AttendeeForm.to"));
+                toControl.addEndAdornment(id -> {
+                    IModel<LocalDateTime> end = entry.map(entry -> {
+                        Instant instant = entry.getEndInstant();
+                        ZoneId zoneId = entry.getEndZoneId();
+                        return LocalDateTime.ofInstant(instant, zoneId);
+                    });
+
+                    Anchor anchor = new Anchor(id);
+
+                    FormComponent<LocalDateTime> formComponent = toControl.getFormComponent();
+                    ResetLocalDateTimeLink link = new ResetLocalDateTimeLink(anchor.getLinkId(), end, formComponent);
+                    link.add(ClassAttributeModifier.append("class", "btn btn-outline-secondary"));
+                    link.add(new TooltipBehavior(end.map(PeriodModalContent.this::print)));
+                    link.setBody(() -> "<i class=\"bi bi-arrow-counterclockwise\"></i>");
+                    link.setEscapeModelStrings(false);
+
+                    anchor.add(link);
+                    return anchor;
+                });
                 add(toControl);
+            }
+
+            private String print(LocalDateTime dateTime) {
+                DateTimeFormatter formatter = DATE_TIME_FORMATTER.localizedBy(getLocale());
+                return formatter.format(dateTime);
+            }
+
+
+            private static class ResetLocalDateTimeLink extends AjaxLink<LocalDateTime> {
+
+                private final FormComponent<LocalDateTime> formComponent;
+
+                public ResetLocalDateTimeLink(String id, IModel<LocalDateTime> model,
+                                              FormComponent<LocalDateTime> formComponent) {
+                    super(id, model);
+                    this.formComponent = formComponent;
+                }
+
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    IConverter<LocalDateTime> converter = formComponent.getConverter(LocalDateTime.class);
+
+                    String markupId = formComponent.getMarkupId();
+                    String value = converter.convertToString(getModelObject(), getLocale());
+                    target.appendJavaScript("""
+                        const inputEl = document.getElementById("%s");
+                        inputEl.value = "%s"\
+                        """.formatted(markupId, value));
+                }
             }
         }
     }
