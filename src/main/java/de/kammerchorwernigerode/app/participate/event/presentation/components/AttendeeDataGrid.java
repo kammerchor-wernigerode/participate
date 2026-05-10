@@ -301,8 +301,8 @@ public class AttendeeDataGrid extends Panel {
             dto.setByCar(entry.isByCar());
             dto.setCarSeatCount(entry.getCarSeatCount());
             dto.setComment(entry.getComment());
-            dto.setFrom(entry.getFromDateTime());
-            dto.setTo(entry.getToDateTime());
+            dto.setFromDateTime(entry.getFromDateTime());
+            dto.setToDateTime(entry.getToDateTime());
             return dto;
         }
 
@@ -327,7 +327,7 @@ public class AttendeeDataGrid extends Panel {
             Locale locale = session.getLocale();
             DateTimeFormatter formatter = FORMATTER.localizedBy(locale);
 
-            return formatter.format(dto.getFrom()) + "–" + formatter.format(dto.getTo());
+            return formatter.format(dto.getFromDateTime()) + "–" + formatter.format(dto.getToDateTime());
         }
 
         private String printPeriod(AttendeeDto dto, AttendeeDetailsEntry entry) {
@@ -354,8 +354,8 @@ public class AttendeeDataGrid extends Panel {
         private AttendanceLabel create(AttendeeDto dto, AttendeeDetailsEntry entry) {
             ZonedDateTime eventStart = entry.getStartInstant().atZone(entry.getStartZoneId());
             ZonedDateTime eventEnd = entry.getEndInstant().atZone(entry.getEndZoneId());
-            LocalDateTime from = dto.getFrom();
-            LocalDateTime to = dto.getTo();
+            LocalDateTime from = dto.getFromDateTime();
+            LocalDateTime to = dto.getToDateTime();
 
             boolean hasCustomFrom = !from.equals(eventStart.toLocalDateTime());
             boolean hasCustomTo = !to.equals(eventEnd.toLocalDateTime());
@@ -394,8 +394,9 @@ public class AttendeeDataGrid extends Panel {
 
                 IModel<AttendeeDto> model = getModel();
 
-                IModel<LocalDateTime> fromModel = LambdaModel.of(model, AttendeeDto::getFrom, AttendeeDto::setFrom);
-                LocalDateTimeFormControl fromControl = new LocalDateTimeFormControl("from", fromModel);
+                IModel<LocalDateTime> fromModel = LambdaModel.of(model,
+                    AttendeeDto::getFromDateTime, AttendeeDto::setFromDateTime);
+                LocalDateTimeFormControl fromControl = new LocalDateTimeFormControl("fromDateTime", fromModel);
                 fromControl.setOutputMarkupId(true);
                 fromControl.setLabel(new ResourceModel("AttendeeForm.from"));
                 fromControl.addEndAdornment(id -> {
@@ -420,8 +421,9 @@ public class AttendeeDataGrid extends Panel {
                 add(fromControl);
 
 
-                IModel<LocalDateTime> toModel = LambdaModel.of(model, AttendeeDto::getTo, AttendeeDto::setTo);
-                LocalDateTimeFormControl toControl = new LocalDateTimeFormControl("to", toModel);
+                IModel<LocalDateTime> toModel = LambdaModel.of(model,
+                    AttendeeDto::getToDateTime, AttendeeDto::setToDateTime);
+                LocalDateTimeFormControl toControl = new LocalDateTimeFormControl("toDateTime", toModel);
                 toControl.setOutputMarkupId(true);
                 toControl.setLabel(new ResourceModel("AttendeeForm.to"));
                 toControl.addEndAdornment(id -> {

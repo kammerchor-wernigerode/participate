@@ -72,11 +72,11 @@ public class AttendeeRecord implements Persistable<AttendeeRecord.Id> {
 
     @Column(name = "from_date_time", nullable = false)
     @NonNull
-    private LocalDateTime from;
+    private LocalDateTime fromDateTime;
 
     @Column(name = "to_date_time", nullable = false)
     @NonNull
-    private LocalDateTime to;
+    private LocalDateTime toDateTime;
 
     @Column(name = "comment")
     @Nullable

@@ -18,6 +18,6 @@ public class AttendeeDto implements Serializable {
     private boolean byCar;
     private int carSeatCount;
     private String comment;
-    private LocalDateTime from;
-    private LocalDateTime to;
+    private LocalDateTime fromDateTime;
+    private LocalDateTime toDateTime;
 }

@@ -39,8 +39,8 @@ public interface AttendanceProjection {
 
         AccommodationStatus getAccommodationStatus();
 
-        LocalDateTime getFrom();
+        LocalDateTime getFromDateTime();
 
-        LocalDateTime getTo();
+        LocalDateTime getToDateTime();
     }
 }

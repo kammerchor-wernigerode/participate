@@ -148,8 +148,8 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
                     if (status == InvitationStatus.ACCEPTED) {
                         maxCount++;
 
-                        if (Objects.equals(participation.getFrom(), eventStartLocal)
-                            && Objects.equals(participation.getTo(), eventEndLocal)) {
+                        if (Objects.equals(participation.getFromDateTime(), eventStartLocal)
+                            && Objects.equals(participation.getToDateTime(), eventEndLocal)) {
                             permanentCount++;
                         }
                     }
