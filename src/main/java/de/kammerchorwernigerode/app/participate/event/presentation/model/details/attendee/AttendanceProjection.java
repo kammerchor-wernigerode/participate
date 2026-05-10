@@ -2,45 +2,21 @@ package de.kammerchorwernigerode.app.participate.event.presentation.model.detail
 
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.AccommodationStatus;
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.InvitationStatus;
+import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeProjection;
+import de.kammerchorwernigerode.app.participate.event.presentation.model.EventProjection;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.io.Serializable;
 import java.util.List;
 
-public interface AttendanceProjection {
-
-    Long getId();
-
-    Instant getStartInstant();
-
-    default ZonedDateTime getStartDateTime() {
-        return getStartInstant().atZone(ZoneOffset.UTC);
-    }
-
-    ZoneId getStartZoneId();
-
-    Instant getEndInstant();
-
-    default ZonedDateTime getEndDateTime() {
-        return getEndInstant().atZone(ZoneOffset.UTC);
-    }
-
-    ZoneId getEndZoneId();
+public interface AttendanceProjection extends EventProjection, Serializable {
 
     List<Participation> getAttendees();
 
 
-    interface Participation {
+    interface Participation extends AttendeeProjection, Serializable {
 
         InvitationStatus getInvitationStatus();
 
         AccommodationStatus getAccommodationStatus();
-
-        LocalDateTime getFromDateTime();
-
-        LocalDateTime getToDateTime();
     }
 }

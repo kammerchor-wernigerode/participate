@@ -40,7 +40,7 @@ import lombok.NoArgsConstructor;
              LEFT JOIN musicians AS m ON p.id = m.person_id
     """)
 @Synchronize({"persons", "musicians"})
-public class PersonEntry implements Serializable {
+public class PersonEntry implements PersonProjection, Serializable {
 
     @Id
     @Column(name = "id")

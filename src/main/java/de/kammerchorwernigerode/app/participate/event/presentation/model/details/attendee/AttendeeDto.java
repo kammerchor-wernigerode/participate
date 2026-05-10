@@ -2,6 +2,7 @@ package de.kammerchorwernigerode.app.participate.event.presentation.model.detail
 
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.Id;
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.InvitationStatus;
+import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeProjection;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class AttendeeDto implements Serializable {
+public class AttendeeDto implements AttendeeProjection, Serializable {
 
     private final Id id;
     private InvitationStatus invitationStatus;

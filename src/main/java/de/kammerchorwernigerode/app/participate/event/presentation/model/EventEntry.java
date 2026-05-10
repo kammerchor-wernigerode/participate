@@ -39,7 +39,7 @@ import lombok.NoArgsConstructor;
     GROUP BY e.id
     """)
 @Synchronize({"events", "attendees"})
-public class EventEntry implements Serializable {
+public class EventEntry implements EventProjection, Serializable {
 
     @Id
     @Column(name = "id", nullable = false, updatable = false)
