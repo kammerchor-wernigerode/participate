@@ -64,16 +64,18 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
 
         setLayout(Layout.FLUID);
 
+        PageParameters parameters = getPageParameters();
         IModel<EventProjection> model = getModel();
 
         List<ITab> tabs = createTabs(model);
         Tabs<ITab> tabbedPanel = new Tabs<>("tabs", tabs);
+        tabbedPanel.setSelectedTab(parameters.get("tab").toInt(0));
         add(tabbedPanel);
 
 
         IModel<EventProjection> previousEvent = model.map(this::previousEvent);
         Boolean hasPrevious = previousEvent.isPresent().getObject();
-        PageParameters previousParameters = new PageParameters()
+        PageParameters previousParameters = new PageParameters(parameters)
             .set("id", previousEvent.map(EventReference::getId).getObject());
         BookmarkablePageLink<Void> previousLink = new BookmarkablePageLink<>("previousLink", EventDetailsPage.class,
             previousParameters);
@@ -93,7 +95,7 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
 
         IModel<EventProjection> nextEvent = model.map(this::nextEvent);
         Boolean hasNext = nextEvent.isPresent().getObject();
-        PageParameters nextParameters = new PageParameters()
+        PageParameters nextParameters = new PageParameters(parameters)
             .set("id", nextEvent.map(EventReference::getId).getObject());
         BookmarkablePageLink<Void> nextLink = new BookmarkablePageLink<>("nextLink", EventDetailsPage.class,
             nextParameters);
