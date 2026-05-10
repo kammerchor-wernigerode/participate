@@ -1,6 +1,7 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.components;
 
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.InvitationStatus;
+import de.kammerchorwernigerode.app.participate.event.presentation.AttendeePeriodPrinter;
 import de.kammerchorwernigerode.app.participate.event.presentation.components.AttendeeDataGrid.Event.ItemUpdated;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDetailsEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDto;
@@ -17,7 +18,6 @@ import de.kammerchorwernigerode.app.participate.wicket.markup.html.form.LocalDat
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.util.Attributes;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ClassAttributeModifier;
-import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -43,9 +43,9 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.io.IClusterable;
-import org.apache.wicket.util.string.Strings;
 
 import java.time.DayOfWeek;
 import java.time.Instant;
@@ -103,11 +103,12 @@ public class AttendeeDataGrid extends Panel {
 
     private static class AttendeeDataView extends DataView<AttendeeDetailsEntry> {
 
-        private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
-
         private Voice prevVoice;
         private Integer prevInvitationStatusOrder;
         private boolean startNewGroup;
+
+        @SpringBean
+        private AttendeePeriodPrinter attendeePeriodPrinter;
 
         protected AttendeeDataView(String id, IDataProvider<AttendeeDetailsEntry> dataProvider) {
             super(id, dataProvider);
@@ -248,7 +249,7 @@ public class AttendeeDataGrid extends Panel {
             periodCell.add(periodLink);
 
 
-            Label nameCell = new Label("name", item.getModel().map(this::printName));
+            Label nameCell = new Label("name", item.getModel().map(AttendeeDetailsEntry::getDisplayName));
             AttendeeCells.decorateStatus(nameCell, invitationStatusModel);
             form.add(nameCell);
 
@@ -311,23 +312,9 @@ public class AttendeeDataGrid extends Panel {
             return List.of(values);
         }
 
-        private String printName(AttendeeDetailsEntry entry) {
-            String fileName = entry.getFileName();
-            if (!Strings.isEmpty(fileName)) {
-                return fileName;
-            }
-
-            String lastName = entry.getLastName();
-            String firstName = entry.getFirstName();
-            return firstName + " " + lastName;
-        }
-
         private String printRange(AttendeeDto dto) {
-            Session session = Session.get();
-            Locale locale = session.getLocale();
-            DateTimeFormatter formatter = FORMATTER.localizedBy(locale);
-
-            return formatter.format(dto.getFromDateTime()) + "–" + formatter.format(dto.getToDateTime());
+            Locale locale = getLocale();
+            return attendeePeriodPrinter.print(dto, locale);
         }
 
         private String printPeriod(AttendeeDto dto, AttendeeDetailsEntry entry) {

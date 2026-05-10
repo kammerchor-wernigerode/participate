@@ -36,7 +36,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.string.Strings;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -92,7 +91,7 @@ public class PersonTablePanel extends GenericPanel<PersonEntrySpecification> {
         implements IFilteredColumn<PersonEntry, S> {
 
         public PersonNameColumn(IModel<String> displayModel, S sortProperty) {
-            super(displayModel, sortProperty, PersonNameColumn::printName);
+            super(displayModel, sortProperty, PersonEntry::getDisplayName);
         }
 
         @Override
@@ -103,17 +102,6 @@ public class PersonTablePanel extends GenericPanel<PersonEntrySpecification> {
             IModel<String> model = LambdaModel.of(specModel, PersonEntrySpecification::getName,
                 PersonEntrySpecification::setName);
             return new BootstrapTextFilter<>(componentId, model, form);
-        }
-
-        private static String printName(PersonEntry entry) {
-            String fileName = entry.getFileName();
-            if (!Strings.isEmpty(fileName)) {
-                return fileName;
-            }
-
-            String lastName = entry.getLastName();
-            String firstName = entry.getFirstName();
-            return firstName + " " + lastName;
         }
     }
 

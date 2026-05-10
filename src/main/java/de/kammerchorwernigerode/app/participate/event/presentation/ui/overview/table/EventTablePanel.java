@@ -1,11 +1,13 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.table;
 
+import de.kammerchorwernigerode.app.participate.event.presentation.EventPeriodDatePrinter;
 import de.kammerchorwernigerode.app.participate.event.presentation.components.AdpPanel;
 import de.kammerchorwernigerode.app.participate.event.presentation.components.DateRangeFilter;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.DateRange;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntryRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntrySpecification;
+import de.kammerchorwernigerode.app.participate.event.presentation.model.EventProjection;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventSelected;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.creation.EventCreationPage;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
@@ -32,19 +34,18 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.springframework.format.Printer;
 
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
-
     @SpringBean
     private EventEntryRepository eventEntryRepository;
+
+    @SpringBean
+    private EventPeriodDatePrinter eventPeriodDatePrinter;
 
     public EventTablePanel(String id, IModel<EventEntrySpecification> model) {
         super(id, model);
@@ -79,7 +80,7 @@ public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
     private List<IColumn<EventEntry, String>> createColumns() {
         List<IColumn<EventEntry, String>> columns = new ArrayList<>();
         columns.add(new SummaryColumn<>(new ResourceModel("event.summary")));
-        columns.add(new DateColumn<>(new ResourceModel("date"), "startInstant"));
+        columns.add(new DateColumn<>(new ResourceModel("date"), "startInstant", eventPeriodDatePrinter));
         columns.add(new LocationColumn<>(new ResourceModel("event.location")));
         columns.add(new AdpColumn<>(new ResourceModel("event.adp.abbrev")));
         return columns;
@@ -114,15 +115,8 @@ public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
     private static class DateColumn<S> extends LambdaColumn<EventEntry, S>
         implements IFilteredColumn<EventEntry, S> {
 
-        public DateColumn(IModel<String> displayModel, S sortProperty) {
-            super(displayModel, sortProperty, DateColumn::printRange);
-        }
-
-        private static String printRange(EventEntry event) {
-            Session session = Session.get();
-            Locale locale = session.getLocale();
-            DateTimeFormatter formatter = FORMATTER.localizedBy(locale);
-            return formatter.format(event.getStart()) + "–" + formatter.format(event.getEnd());
+        public DateColumn(IModel<String> displayModel, S sortProperty, Printer<? super EventProjection> printer) {
+            super(displayModel, sortProperty, event -> printer.print(event, Session.get().getLocale()));
         }
 
         @Override

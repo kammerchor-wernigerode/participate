@@ -1,5 +1,7 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.details;
 
+import de.kammerchorwernigerode.app.participate.event.presentation.EventPeriodDateTimePrinter;
+import de.kammerchorwernigerode.app.participate.event.presentation.EventTitlePrinter;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeEntrySpecification;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.details.EventDetailsPage;
@@ -14,19 +16,19 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.Optional;
-
-import static java.util.function.Predicate.not;
+import java.util.Locale;
 
 public class EventPanel extends GenericPanel<EventEntry> {
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
-        .ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT);
-    private static final DateTimeFormatter MONTH_FORMATTER = DateTimeFormatter.ofPattern("MMMM yyyy");
+    @SpringBean
+    private EventPeriodDateTimePrinter eventPeriodDateTimePrinter;
+
+    @SpringBean
+    private EventTitlePrinter eventTitlePrinter;
 
     public EventPanel(String id, IModel<EventEntry> model) {
         super(id, model);
@@ -96,20 +98,12 @@ public class EventPanel extends GenericPanel<EventEntry> {
     }
 
     private String printDate(EventEntry entry) {
-        DateTimeFormatter dateTimeFormatter = DATE_TIME_FORMATTER.localizedBy(getLocale());
-        DateTimeFormatter startFormatter = dateTimeFormatter.withZone(entry.getStartZoneId());
-        DateTimeFormatter endFormatter = dateTimeFormatter.withZone(entry.getEndZoneId());
-        String startDateTime = startFormatter.format(entry.getStart());
-        String endDateTime = endFormatter.format(entry.getEnd());
-        return startDateTime + "–" + endDateTime;
+        Locale locale = getLocale();
+        return eventPeriodDateTimePrinter.print(entry, locale);
     }
 
     private String printTitle(EventEntry entry) {
-        DateTimeFormatter formatter = MONTH_FORMATTER.localizedBy(getLocale()).withZone(entry.getStartZoneId());
-        String monthYear = formatter.format(entry.getStart());
-        String name = Optional.ofNullable(entry.getSummary())
-            .filter(not(Strings::isEmpty))
-            .orElseGet(() -> getString("event"));
-        return name + " " + monthYear;
+        Locale locale = getLocale();
+        return eventTitlePrinter.print(entry, locale);
     }
 }
