@@ -1,6 +1,7 @@
 package de.kammerchorwernigerode.app.participate.wicket.management;
 
 import de.kammerchorwernigerode.app.participate.event.infrastructure.EventRecordRepository;
+import de.kammerchorwernigerode.app.participate.event.infrastructure.EventReference;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.details.AttendeeTable;
 import de.kammerchorwernigerode.app.participate.person.presentation.ui.overview.PersonTable;
 import org.apache.wicket.MetaDataKey;
@@ -49,7 +50,8 @@ public class ManagementWicketSession extends AbstractAuthenticatedWebSession {
     }
 
     private Long getNextEventId() {
-        return eventRecordRepository.findFirstIdByEndInstantGreaterThanEqualOrderByStartInstantAsc(Instant.now())
+        return eventRecordRepository.findFirstByEndInstantGreaterThanEqualOrderByStartInstantAsc(Instant.now())
+            .map(EventReference::getId)
             .orElse(null);
     }
 
