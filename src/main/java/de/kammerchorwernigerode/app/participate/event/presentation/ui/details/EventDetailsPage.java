@@ -3,17 +3,24 @@ package de.kammerchorwernigerode.app.participate.event.presentation.ui.details;
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.AccommodationStatus;
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.InvitationStatus;
 import de.kammerchorwernigerode.app.participate.event.infrastructure.EventRecordRepository;
+import de.kammerchorwernigerode.app.participate.event.presentation.EventPeriodDatePrinter;
+import de.kammerchorwernigerode.app.participate.event.presentation.EventTitlePrinter;
 import de.kammerchorwernigerode.app.participate.event.presentation.components.AttendeeDataGridTabPanel;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventProjection;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendanceProjection;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendanceSummaryEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDetailsSpecification;
 import de.kammerchorwernigerode.app.participate.wicket.ModelNotFoundException;
+import de.kammerchorwernigerode.app.participate.wicket.ParticipateCssResourceReference;
 import de.kammerchorwernigerode.app.participate.wicket.ParticipatePage;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.tabs.Tabs;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
+import org.apache.wicket.markup.head.CssContentHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
@@ -34,6 +41,12 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
     @SpringBean
     private EventRecordRepository eventRecordRepository;
 
+    @SpringBean
+    private EventTitlePrinter eventTitlePrinter;
+
+    @SpringBean
+    private EventPeriodDatePrinter eventPeriodDatePrinter;
+
     public EventDetailsPage(PageParameters parameters) {
         super(parameters);
 
@@ -51,6 +64,23 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
         List<ITab> tabs = createTabs(model);
         Tabs<ITab> tabbedPanel = new Tabs<>("tabs", tabs);
         add(tabbedPanel);
+
+
+        Label titleLabel = new Label("title", model.map(event -> eventTitlePrinter.print(event, getLocale())));
+        titleLabel.add(new TooltipBehavior(model.map(event -> eventPeriodDatePrinter.print(event, getLocale()))));
+        add(titleLabel);
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+
+        response.render(CssContentHeaderItem.forCSS("""
+            body {
+                padding-bottom: 4.5rem;
+            }\
+            """, "event-details-page"));
+        response.render(ParticipateCssResourceReference.asHeaderItem());
     }
 
     private List<ITab> createTabs(IModel<EventProjection> model) {
