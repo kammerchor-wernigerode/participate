@@ -4,6 +4,7 @@ import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRec
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.InvitationStatus;
 import de.kammerchorwernigerode.app.participate.event.infrastructure.EventRecordRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.components.AttendeeDataGridTabPanel;
+import de.kammerchorwernigerode.app.participate.event.presentation.model.EventProjection;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendanceProjection;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendanceSummaryEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDetailsSpecification;
@@ -25,11 +26,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 
-public class EventDetailsPage extends ParticipatePage implements IGenericComponent<Long, EventDetailsPage> {
+public class EventDetailsPage extends ParticipatePage implements IGenericComponent<EventProjection, EventDetailsPage> {
 
     @SpringBean
     private EventRecordRepository eventRecordRepository;
@@ -37,7 +37,7 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
     public EventDetailsPage(PageParameters parameters) {
         super(parameters);
 
-        setModel(new EventIdEntryModel(parameters, eventRecordRepository));
+        setModel(new EventModel(parameters, eventRecordRepository));
     }
 
     @Override
@@ -46,19 +46,22 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
 
         setLayout(Layout.FLUID);
 
-        IModel<Long> model = getModel();
+        IModel<EventProjection> model = getModel();
 
         List<ITab> tabs = createTabs(model);
         Tabs<ITab> tabbedPanel = new Tabs<>("tabs", tabs);
         add(tabbedPanel);
     }
 
-    private List<ITab> createTabs(IModel<Long> model) {
+    private List<ITab> createTabs(IModel<EventProjection> model) {
         List<ITab> tabs = new ArrayList<>();
 
+        IModel<Long> eventIdModel = model.map(EventProjection::getId);
+
         AttendeeDataGridTabPanel.Data attendeesTabPanelData = new AttendeeDataGridTabPanel.Data();
-        attendeesTabPanelData.setSpecification(new AttendeeDetailsSpecification(model));
-        attendeesTabPanelData.setAttendanceSummaryModel(new AttendanceSummaryModel(model, eventRecordRepository));
+        attendeesTabPanelData.setSpecification(new AttendeeDetailsSpecification(eventIdModel));
+        AttendanceSummaryModel attendanceSummaryModel = new AttendanceSummaryModel(eventIdModel, eventRecordRepository);
+        attendeesTabPanelData.setAttendanceSummaryModel(attendanceSummaryModel);
         IModel<AttendeeDataGridTabPanel.Data> attendeesTabPanelModel =
             new CompoundPropertyModel<>(attendeesTabPanelData);
         tabs.add(new AttendeesTab(new ResourceModel("attendees"), attendeesTabPanelModel));
@@ -83,22 +86,21 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
     }
 
     @RequiredArgsConstructor
-    private static class EventIdEntryModel extends LoadableDetachableModel<Long> {
+    private static class EventModel extends LoadableDetachableModel<EventProjection> {
 
         private final PageParameters parameters;
         private final EventRecordRepository eventRecordRepository;
 
         @Override
-        protected Long load() {
+        protected EventProjection load() {
             StringValue idParam = parameters.get("id");
-            return findEventEntry(idParam);
+            return findEventProjection(idParam);
         }
 
-        private Long findEventEntry(StringValue idParam) {
+        private EventProjection findEventProjection(StringValue idParam) {
             try {
                 Long eventId = idParam.toOptionalLong();
-                return Optional.ofNullable(eventId)
-                    .filter(eventRecordRepository::existsById)
+                return eventRecordRepository.findProjectionById(eventId)
                     .orElseThrow();
             } catch (Exception e) {
                 throw new ModelNotFoundException("Event w/ id=" + idParam + " could not be found", e);
