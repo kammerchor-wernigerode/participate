@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+    <div class="row fs-5 fw-bold text-wrap align-items-lg-center mb-2 mb-md-4">
+        <div class="col-9">
+            <wicket:message key="attendee.count"></wicket:message>:
+        </div>
+        <div class="col-3" wicket:id="attendeeCount"></div>
+    </div>
+
+    <div class="row fs-5 fw-bold text-wrap align-items-lg-center mb-2 mb-md-4">
+        <div class="col-9">
+            <wicket:message key="attendee.neededBeds"></wicket:message>:
+        </div>
+        <div class="col-3" wicket:id="requiredBedCount"></div>
+    </div>
+
+    <div class="row mb-2 mb-md-4">
+        <div class="col-9">
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="bg-success-subtle">
+                            <wicket:message key="InvitationStatus.ACCEPTED"></wicket:message>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bg-warning-subtle">
+                            <wicket:message key="InvitationStatus.TENTATIVE"></wicket:message>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bg-danger-subtle">
+                            <wicket:message key="InvitationStatus.DECLINED"></wicket:message>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row mb-2 mb-md-4">
+        <div class="col">
+            <div class="row">
+                <div class="col-9">
+                    <wicket:message key="attendee.cast.permanent"></wicket:message>:
+                </div>
+                <div class="col-3" wicket:id="permanentCount"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-9">
+                    <wicket:message key="attendee.cast.max"></wicket:message>:
+                </div>
+                <div class="col-3" wicket:id="maxCount"></div>
+            </div>
+        </div>
+    </div>
+</wicket:panel>

@@ -1,6 +1,7 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.components;
 
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.InvitationStatus;
+import de.kammerchorwernigerode.app.participate.event.presentation.components.AttendeeDataGrid.Event.ItemUpdated;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDetailsEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDto;
 import de.kammerchorwernigerode.app.participate.musician.infrastructure.Voice;
@@ -20,6 +21,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.CssContentHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -42,6 +44,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.string.Strings;
 
 import java.time.DayOfWeek;
@@ -125,7 +128,15 @@ public class AttendeeDataGrid extends Panel {
             AttendeeDetailsEntry entry = item.getModelObject();
             AttendeeDto attendeeDto = createAttendeeDto(entry);
             IModel<AttendeeDto> model = new CompoundPropertyModel<>(attendeeDto);
-            Form<AttendeeDto> form = new Form<>("form", model);
+            Form<AttendeeDto> form = new Form<>("form", model) {
+
+                @Override
+                protected void onSubmit() {
+                    super.onSubmit();
+
+                    send(getPage(), Broadcast.BREADTH, new ItemUpdated());
+                }
+            };
             form.add(ClassAttributeModifier.append("class", startNewGroup ? "datagrid-group-start" : null));
             form.add(AttributeModifier.replace("aria-rowindex", item.getIndex()));
             item.add(form);
@@ -483,5 +494,12 @@ public class AttendeeDataGrid extends Panel {
         AFTERNOON,
         EVENING,
         ;
+    }
+
+    public interface Event extends IClusterable {
+
+
+        record ItemUpdated() implements Event {
+        }
     }
 }

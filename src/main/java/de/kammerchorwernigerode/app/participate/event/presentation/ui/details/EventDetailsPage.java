@@ -1,7 +1,11 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.ui.details;
 
+import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.AccommodationStatus;
+import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.InvitationStatus;
 import de.kammerchorwernigerode.app.participate.event.infrastructure.EventRecordRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.components.AttendeeDataGridTabPanel;
+import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendanceProjection;
+import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendanceSummaryEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDetailsSpecification;
 import de.kammerchorwernigerode.app.participate.wicket.ModelNotFoundException;
 import de.kammerchorwernigerode.app.participate.wicket.ParticipatePage;
@@ -17,8 +21,10 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
@@ -52,6 +58,7 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
 
         AttendeeDataGridTabPanel.Data attendeesTabPanelData = new AttendeeDataGridTabPanel.Data();
         attendeesTabPanelData.setSpecification(new AttendeeDetailsSpecification(model));
+        attendeesTabPanelData.setAttendanceSummaryModel(new AttendanceSummaryModel(model, eventRecordRepository));
         IModel<AttendeeDataGridTabPanel.Data> attendeesTabPanelModel =
             new CompoundPropertyModel<>(attendeesTabPanelData);
         tabs.add(new AttendeesTab(new ResourceModel("attendees"), attendeesTabPanelModel));
@@ -96,6 +103,66 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
             } catch (Exception e) {
                 throw new ModelNotFoundException("Event w/ id=" + idParam + " could not be found", e);
             }
+        }
+    }
+
+    @RequiredArgsConstructor
+    private static class AttendanceSummaryModel extends LoadableDetachableModel<AttendanceSummaryEntry> {
+
+        private final IModel<Long> eventId;
+        private final EventRecordRepository eventRecordRepository;
+
+        @Override
+        protected AttendanceSummaryEntry load() {
+            Long id = eventId.getObject();
+            AttendanceProjection projection = eventRecordRepository.findSummaryById(id)
+                .orElseThrow(() -> new IllegalStateException("Event w/ id=" + id + " expected to be present"));
+            return summarize(projection);
+        }
+
+        private AttendanceSummaryEntry summarize(AttendanceProjection event) {
+            LocalDateTime eventStartLocal = event.getStartDateTime()
+                .withZoneSameInstant(event.getStartZoneId())
+                .toLocalDateTime();
+            LocalDateTime eventEndLocal = event.getEndDateTime()
+                .withZoneSameInstant(event.getEndZoneId())
+                .toLocalDateTime();
+
+            int attendeeCount = 0;
+            int requiredBedCount = 0;
+            int permanentCount = 0;
+            int maxCount = 0;
+
+            for (AttendanceProjection.Participation participation : event.getAttendees()) {
+                InvitationStatus status = participation.getInvitationStatus();
+
+                if (status == InvitationStatus.ACCEPTED
+                    || status == InvitationStatus.TENTATIVE
+                    || status == InvitationStatus.DECLINED) {
+                    attendeeCount++;
+
+                    if (participation.getAccommodationStatus() == AccommodationStatus.SEARCHING) {
+                        requiredBedCount++;
+                    }
+
+                    if (status == InvitationStatus.ACCEPTED) {
+                        maxCount++;
+
+                        if (Objects.equals(participation.getFrom(), eventStartLocal)
+                            && Objects.equals(participation.getTo(), eventEndLocal)) {
+                            permanentCount++;
+                        }
+                    }
+                }
+            }
+
+            return new AttendanceSummaryEntry(
+                event.getId(),
+                attendeeCount,
+                requiredBedCount,
+                permanentCount,
+                maxCount
+            );
         }
     }
 }

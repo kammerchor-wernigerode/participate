@@ -1,8 +1,11 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.components;
 
+import de.kammerchorwernigerode.app.participate.event.presentation.components.AttendeeDataGrid.Event.ItemUpdated;
+import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendanceSummaryEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDetailsDataProvider;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDetailsEntryRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDetailsSpecification;
+import de.kammerchorwernigerode.app.participate.wicket.behavior.UpdateOnEventBehavior;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
@@ -39,11 +42,17 @@ public class AttendeeDataGridTabPanel extends GenericPanel<AttendeeDataGridTabPa
 
         AttendeeDataGrid dataGrid = new AttendeeDataGrid("dataGrid", dataProvider);
         add(dataGrid);
+
+        IModel<AttendanceSummaryEntry> attendanceSummaryModel = model.flatMap(Data::getAttendanceSummaryModel);
+        EventSummaryPanel eventSummary = new EventSummaryPanel("eventSummary", attendanceSummaryModel);
+        eventSummary.add(new UpdateOnEventBehavior<>(ItemUpdated.class));
+        add(eventSummary);
     }
 
     @lombok.Data
     public static class Data implements Serializable {
 
         private AttendeeDetailsSpecification specification;
+        private IModel<AttendanceSummaryEntry> attendanceSummaryModel;
     }
 }
