@@ -11,7 +11,23 @@
             <nav class="navbar bg-dark border-top border-body fixed-bottom" data-bs-theme="dark">
                 <div class="container">
                     <div class="d-flex gap-3 mx-auto">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a href="#" class="btn btn-link nav-link" wicket:id="previousLink">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+                        </ul>
+
                         <div class="navbar-text" wicket:id="title"></div>
+
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a href="#" class="btn btn-link nav-link" wicket:id="nextLink">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </nav>

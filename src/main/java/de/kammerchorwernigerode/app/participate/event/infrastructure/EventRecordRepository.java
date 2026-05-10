@@ -16,4 +16,8 @@ public interface EventRecordRepository extends JpaRepository<EventRecord, Long> 
     Optional<AttendanceProjection> findSummaryById(Long id);
 
     Optional<EventProjection> findProjectionById(Long eventId);
+
+    Optional<EventProjection> findFirstByStartInstantGreaterThanOrderByStartInstantAsc(Instant start);
+
+    Optional<EventProjection> findFirstByStartInstantLessThanOrderByStartInstantDesc(Instant start);
 }
