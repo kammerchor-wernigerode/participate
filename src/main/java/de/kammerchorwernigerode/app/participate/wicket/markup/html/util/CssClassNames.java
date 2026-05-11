@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
@@ -26,7 +27,9 @@ public class CssClassNames {
     }
 
     public static String join(Iterable<String> cssClasses) {
-        return String.join(" ", cssClasses);
+        return StreamSupport.stream(cssClasses.spliterator(), false)
+            .filter(cssClass -> !Strings.isEmpty(cssClass))
+            .collect(Collectors.joining(" "));
     }
 
     public static Builder parse(String cssClassName) {
