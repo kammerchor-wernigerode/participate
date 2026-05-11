@@ -114,6 +114,10 @@ public class CollapsibleTextPanel extends Panel {
             return State::toggle;
         }
 
+        static Toggle ensure(State state) {
+            return ignored -> state;
+        }
+
 
         enum State {
 
