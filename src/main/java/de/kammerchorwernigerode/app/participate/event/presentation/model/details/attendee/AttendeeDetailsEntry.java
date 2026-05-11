@@ -1,6 +1,7 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee;
 
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.InvitationStatus;
+import de.kammerchorwernigerode.app.participate.event.presentation.model.EventDates;
 import de.kammerchorwernigerode.app.participate.musician.infrastructure.Voice;
 import de.kammerchorwernigerode.app.participate.person.presentation.model.PersonProjection;
 import org.hibernate.annotations.Immutable;
@@ -78,7 +79,7 @@ import static de.kammerchorwernigerode.app.participate.event.infrastructure.Atte
 @Synchronize({"attendees", "persons", "musicians"})
 @NoArgsConstructor
 @Getter
-public class AttendeeDetailsEntry implements PersonProjection, Serializable {
+public class AttendeeDetailsEntry implements PersonProjection, EventDates, Serializable {
 
     @EmbeddedId
     @NonNull

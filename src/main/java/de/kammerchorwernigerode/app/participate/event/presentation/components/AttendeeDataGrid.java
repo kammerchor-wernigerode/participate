@@ -1,8 +1,8 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.components;
 
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.InvitationStatus;
-import de.kammerchorwernigerode.app.participate.event.presentation.AttendeePeriodPrinter;
 import de.kammerchorwernigerode.app.participate.event.presentation.components.AttendeeDataGrid.Event.ItemUpdated;
+import de.kammerchorwernigerode.app.participate.event.presentation.components.attendee.PeriodLabel;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDetailsEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDto;
 import de.kammerchorwernigerode.app.participate.musician.infrastructure.Voice;
@@ -43,21 +43,15 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.io.IClusterable;
 
-import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 
 public class AttendeeDataGrid extends Panel {
@@ -106,9 +100,6 @@ public class AttendeeDataGrid extends Panel {
         private Voice prevVoice;
         private Integer prevInvitationStatusOrder;
         private boolean startNewGroup;
-
-        @SpringBean
-        private AttendeePeriodPrinter attendeePeriodPrinter;
 
         protected AttendeeDataView(String id, IDataProvider<AttendeeDetailsEntry> dataProvider) {
             super(id, dataProvider);
@@ -219,8 +210,8 @@ public class AttendeeDataGrid extends Panel {
             AttendeeCells.decorateStatus(periodCell, invitationStatusModel);
             form.add(periodCell);
 
-            Label periodLabel = new Label("periodLabel", model.combineWith(item.getModel(), this::printPeriod));
-            periodLabel.add(new TooltipBehavior(model.map(this::printRange)));
+            PeriodLabel periodLabel = new PeriodLabel("periodLabel", model, item.getModel());
+            periodLabel.add(new TooltipBehavior(periodLabel.printDates()));
             periodCell.add(periodLabel);
 
             Modal modal = new Modal("modal")
@@ -310,56 +301,6 @@ public class AttendeeDataGrid extends Panel {
         private static List<InvitationStatus> supplyPresenceChoices() {
             InvitationStatus[] values = InvitationStatus.values();
             return List.of(values);
-        }
-
-        private String printRange(AttendeeDto dto) {
-            Locale locale = getLocale();
-            return attendeePeriodPrinter.print(dto, locale);
-        }
-
-        private String printPeriod(AttendeeDto dto, AttendeeDetailsEntry entry) {
-            AttendanceLabel label = create(dto, entry);
-
-            if (!label.hasCustomFrom() && !label.hasCustomTo()) {
-                return getString("attendance.full");
-            }
-
-            Map<String, Object> vars = new HashMap<>();
-            vars.put("from", getString(label.from().resourceKey()));
-            vars.put("to", getString(label.to().resourceKey()));
-
-            String key = switch ((label.hasCustomFrom() ? 1 : 0) + (label.hasCustomTo() ? 2 : 0)) {
-                case 1 -> "attendance.from";
-                case 2 -> "attendance.to";
-                case 3 -> "attendance.fromTo";
-                default -> "attendance.full";
-            };
-
-            return getString(key, () -> vars);
-        }
-
-        private AttendanceLabel create(AttendeeDto dto, AttendeeDetailsEntry entry) {
-            ZonedDateTime eventStart = entry.getStartInstant().atZone(entry.getStartZoneId());
-            ZonedDateTime eventEnd = entry.getEndInstant().atZone(entry.getEndZoneId());
-            LocalDateTime from = dto.getFromDateTime();
-            LocalDateTime to = dto.getToDateTime();
-
-            boolean hasCustomFrom = !from.equals(eventStart.toLocalDateTime());
-            boolean hasCustomTo = !to.equals(eventEnd.toLocalDateTime());
-
-            DayPeriodLabel fromLabel = new DayPeriodLabel(from.getDayOfWeek(), toDayPeriod(from));
-            DayPeriodLabel toLabel = new DayPeriodLabel(to.getDayOfWeek(), toDayPeriod(to));
-            return new AttendanceLabel(hasCustomFrom, hasCustomTo, fromLabel, toLabel);
-        }
-
-        private DayPeriod toDayPeriod(LocalDateTime dateTime) {
-            return switch (dateTime.getHour()) {
-                case 0, 1, 2, 3, 4, 5 -> DayPeriod.NIGHT;
-                case 6, 7, 8, 9, 10, 11 -> DayPeriod.MORNING;
-                case 12, 13, 14, 15, 16 -> DayPeriod.AFTERNOON;
-                case 17, 18, 19, 20, 21, 22, 23 -> DayPeriod.EVENING;
-                default -> throw new IllegalStateException();
-            };
         }
 
 
@@ -464,25 +405,6 @@ public class AttendeeDataGrid extends Panel {
                 }
             }
         }
-    }
-
-    private record AttendanceLabel(boolean hasCustomFrom, boolean hasCustomTo, DayPeriodLabel from, DayPeriodLabel to) {
-    }
-
-    private record DayPeriodLabel(DayOfWeek dayOfWeek, DayPeriod period) {
-
-        public String resourceKey() {
-            return String.format("dayPeriod.%s.%s", dayOfWeek, period);
-        }
-    }
-
-    private enum DayPeriod {
-
-        NIGHT,
-        MORNING,
-        AFTERNOON,
-        EVENING,
-        ;
     }
 
     public interface Event extends IClusterable {
