@@ -6,11 +6,12 @@ import de.kammerchorwernigerode.app.participate.event.presentation.model.Attende
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventDates;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.details.AttendeeTablePanel;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.ContentSpan;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.basic.CollapsibleTextPanel.Limit;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.CollapsibleColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
@@ -62,10 +63,12 @@ public class DetailedAttendeeTablePanel extends AttendeeTablePanel {
         }
     }
 
-    private static class CommentColumn<S> extends LambdaColumn<AttendeeEntry, S> {
+    private static class CommentColumn<S> extends CollapsibleColumn<AttendeeEntry, S> {
+
+        public static final Limit LIMIT = new Limit(50);
 
         public CommentColumn(IModel<String> displayModel) {
-            super(displayModel, AttendeeEntry::getComment);
+            super(displayModel, LIMIT, AttendeeEntry::getComment);
         }
     }
 }
