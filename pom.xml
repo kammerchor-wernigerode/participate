@@ -29,7 +29,7 @@
         <dependency.spring-boot-secrets-api.version>1.1.1</dependency.spring-boot-secrets-api.version>
         <dependency.throwing-function.version>1.6.1</dependency.throwing-function.version>
         <dependency.tika.version>3.2.2</dependency.tika.version>
-        <dependency.wicket.version>10.6.0</dependency.wicket.version>
+        <dependency.wicket.version>10.9.0</dependency.wicket.version>
         <dependency.wicket-bootstrap.version>7.0.11</dependency.wicket-bootstrap.version>
         <dependency.yuicompressor.version>2.4.8</dependency.yuicompressor.version>
 
