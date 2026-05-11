@@ -66,7 +66,7 @@ public class AttendeeTablePanel extends GenericPanel<AttendeeEntrySpecification>
     }
 
     // @checkstyle:off: LineLength
-    private List<IColumn<AttendeeEntry, String[]>> createColumns() {
+    protected List<IColumn<AttendeeEntry, String[]>> createColumns() {
         List<IColumn<AttendeeEntry, String[]>> columns = new ArrayList<>();
         columns.add(new InvitationStatusColumn<>(new String[]{"invitationStatusOrder"}));
         columns.add(new AttendeeNameColumn<>(new ResourceModel("person.name"), new String[]{"fileName", "firstName", "lastName"}));
@@ -75,7 +75,7 @@ public class AttendeeTablePanel extends GenericPanel<AttendeeEntrySpecification>
     }
     // @checkstyle:on: LineLength
 
-    private int getRowsPerPage() {
+    protected int getRowsPerPage() {
         Session session = Session.get();
         Long rowsPerPage = session.getMetaData(AttendeeTable.attendeeTablePageSize);
         return Math.toIntExact(rowsPerPage);

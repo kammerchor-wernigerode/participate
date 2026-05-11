@@ -7,6 +7,7 @@ import de.kammerchorwernigerode.app.participate.event.infrastructure.EventRefere
 import de.kammerchorwernigerode.app.participate.event.presentation.EventPeriodDatePrinter;
 import de.kammerchorwernigerode.app.participate.event.presentation.EventTitlePrinter;
 import de.kammerchorwernigerode.app.participate.event.presentation.components.AttendeeDataGridTabPanel;
+import de.kammerchorwernigerode.app.participate.event.presentation.components.details.overview.EventDetailsPanel;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventProjection;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendanceProjection;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendanceSummaryEntry;
@@ -139,6 +140,9 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
 
         IModel<Long> eventIdModel = model.map(EventProjection::getId);
 
+        tabs.add(new DetailsTab(new ResourceModel("overview"), model));
+
+
         AttendeeDataGridTabPanel.Data attendeesTabPanelData = new AttendeeDataGridTabPanel.Data();
         attendeesTabPanelData.setSpecification(new AttendeeDetailsSpecification(eventIdModel));
         AttendanceSummaryModel attendanceSummaryModel = new AttendanceSummaryModel(eventIdModel, eventRecordRepository);
@@ -150,6 +154,21 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
         return tabs;
     }
 
+
+    private static class DetailsTab extends AbstractTab {
+
+        private final IModel<EventProjection> model;
+
+        public DetailsTab(IModel<String> title, IModel<EventProjection> model) {
+            super(title);
+            this.model = model;
+        }
+
+        @Override
+        public EventDetailsPanel getPanel(String panelId) {
+            return new EventDetailsPanel(panelId, model);
+        }
+    }
 
     private static class AttendeesTab extends AbstractTab {
 
