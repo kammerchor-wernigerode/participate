@@ -57,7 +57,8 @@
         <dependency.checkstyle.version>10.17.0</dependency.checkstyle.version>
         <dependency.hypersistence.version>3.15.2</dependency.hypersistence.version>
         <dependency.java-uuid-generator.version>5.2.0</dependency.java-uuid-generator.version>
-        <dependency.wicket.version>10.8.0</dependency.wicket.version>
+        <dependency.wicket.version>10.9.0</dependency.wicket.version>
+        <dependency.wicketstuff.version>10.8.0</dependency.wicketstuff.version>
         <dependency.wicket-webjars.version>4.0.14</dependency.wicket-webjars.version>
 
         <webjar.bootstrap.version>5.3.8</webjar.bootstrap.version>
@@ -120,7 +121,7 @@
             <dependency>
                 <groupId>org.wicketstuff</groupId>
                 <artifactId>wicketstuff-clipboardjs</artifactId>
-                <version>${dependency.wicket.version}</version>
+                <version>${dependency.wicketstuff.version}</version>
             </dependency>
 
             <dependency>
