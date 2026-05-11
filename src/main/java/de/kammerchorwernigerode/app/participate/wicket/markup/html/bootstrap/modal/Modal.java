@@ -1,9 +1,12 @@
 package de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.modal;
 
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.Variant;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.BootstrapButton;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.ButtonBehavior;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.Buttons;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.Icon;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.IconType;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.ComponentListView;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -288,19 +291,33 @@ public class Modal extends Panel {
     }
 
 
-    public abstract static class Action extends WebMarkupContainer {
+    public abstract static class Action extends WebMarkupContainer implements BootstrapButton<Action> {
 
+        private final Icon icon;
         private final IModel<?> label;
-        private final Variant variant;
+        private final ButtonBehavior buttonBehavior = new ButtonBehavior();
 
         public Action(String id, IModel<?> label) {
-            this(id, label, Variant.SECONDARY);
+            super(id);
+            this.icon = new Icon("icon", null);
+            this.label = label;
         }
 
-        public Action(String id, IModel<?> label, Variant variant) {
-            super(id);
-            this.label = label;
-            this.variant = variant;
+        @Override
+        public Action setVariant(Buttons.Variant variant) {
+            buttonBehavior.setVariant(variant);
+            return this;
+        }
+
+        @Override
+        public Action setSize(Buttons.Size size) {
+            buttonBehavior.setSize(size);
+            return this;
+        }
+
+        public Action setIcon(IconType icon) {
+            this.icon.setType(icon);
+            return this;
         }
 
         @Override
@@ -309,10 +326,14 @@ public class Modal extends Panel {
 
             AbstractLink button = createButton("button");
             configure(button);
-            button.add(ClassAttributeModifier.append("class", "btn " + variant.getCssClassName()));
+            button.add(buttonBehavior);
             add(button);
 
-            button.add(new Label("label", label));
+            button.add(icon);
+
+            Label body = new Label("label", label);
+            body.setRenderBodyOnly(true);
+            button.add(body);
         }
 
         @Override
@@ -331,11 +352,7 @@ public class Modal extends Panel {
     public static class CloseAction extends Action {
 
         public CloseAction(String id, IModel<?> label) {
-            this(id, label, Variant.SECONDARY);
-        }
-
-        public CloseAction(String id, IModel<?> label, Variant variant) {
-            super(id, label, variant);
+            super(id, label);
         }
 
         @Override
@@ -347,11 +364,8 @@ public class Modal extends Panel {
     public static class SubmitAction extends Action {
 
         public SubmitAction(String id, IModel<?> label) {
-            this(id, label, Variant.PRIMARY);
-        }
-
-        public SubmitAction(String id, IModel<?> label, Variant variant) {
-            super(id, label, variant);
+            super(id, label);
+            setVariant(Buttons.Variant.PRIMARY);
         }
 
         @Override

@@ -4,28 +4,25 @@ import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.but
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.Buttons.Variant;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.Icon;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.IconType;
-import org.apache.wicket.Page;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-public class BootstrapBookmarkablePageLink<T> extends BookmarkablePageLink<T>
-    implements BootstrapButton<BootstrapBookmarkablePageLink<T>> {
+public abstract class BootstrapAjaxLink<T> extends AjaxLink<T> implements BootstrapButton<BootstrapAjaxLink<T>> {
 
     private final Icon icon;
     private final Label label;
     private final ButtonBehavior buttonBehavior = new ButtonBehavior();
 
-    public <P extends Page> BootstrapBookmarkablePageLink(String id, Class<P> pageClass) {
-        this(id, pageClass, null);
+    public BootstrapAjaxLink(String id) {
+        this(id, null);
     }
 
-    public <P extends Page> BootstrapBookmarkablePageLink(String id, Class<P> pageClass, PageParameters parameters) {
-        super(id, pageClass, parameters);
+    public BootstrapAjaxLink(String id, IModel<T> model) {
+        super(id, model);
         this.icon = new Icon("icon", null);
         this.label = new Label("label", Model.of());
     }
@@ -43,24 +40,24 @@ public class BootstrapBookmarkablePageLink<T> extends BookmarkablePageLink<T>
     }
 
     @Override
-    public BootstrapBookmarkablePageLink<T> setVariant(Variant variant) {
+    public BootstrapAjaxLink<T> setVariant(Variant variant) {
         buttonBehavior.setVariant(variant);
         return this;
     }
 
     @Override
-    public BootstrapBookmarkablePageLink<T> setSize(Size size) {
+    public BootstrapAjaxLink<T> setSize(Size size) {
         buttonBehavior.setSize(size);
         return this;
     }
 
-    public BootstrapBookmarkablePageLink<T> setIcon(IconType icon) {
+    public BootstrapAjaxLink<T> setIcon(IconType icon) {
         this.icon.setType(icon);
         return this;
     }
 
     @Override
-    public BootstrapBookmarkablePageLink<T> setBody(IModel<?> bodyModel) {
+    public BootstrapAjaxLink<T> setBody(IModel<?> bodyModel) {
         IModel<?> model = wrap(bodyModel);
         label.setDefaultModel(model);
         return this;

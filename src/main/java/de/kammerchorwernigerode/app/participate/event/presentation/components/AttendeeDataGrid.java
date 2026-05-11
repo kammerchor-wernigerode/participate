@@ -8,10 +8,13 @@ import de.kammerchorwernigerode.app.participate.event.presentation.model.details
 import de.kammerchorwernigerode.app.participate.musician.infrastructure.Voice;
 import de.kammerchorwernigerode.app.participate.wicket.behavior.FocusTrackingBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.Anchor;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.BootstrapAjaxLink;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.Buttons.Variant;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.form.CheckBoxBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.form.DropDownChoiceBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.form.TextFieldBehavior;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.modal.Modal;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.modal.ModalHiddenEventBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.form.LocalDateTimeFormControl;
@@ -338,10 +341,9 @@ public class AttendeeDataGrid extends Panel {
 
                     FormComponent<LocalDateTime> formComponent = fromControl.getFormComponent();
                     ResetLocalDateTimeLink link = new ResetLocalDateTimeLink(anchor.getLinkId(), start, formComponent);
-                    link.add(ClassAttributeModifier.append("class", "btn btn-outline-secondary"));
+                    link.setVariant(Variant.OUTLINE_SECONDARY);
                     link.add(new TooltipBehavior(start.map(PeriodModalContent.this::print)));
-                    link.setBody(() -> "<i class=\"bi bi-arrow-counterclockwise\"></i>");
-                    link.setEscapeModelStrings(false);
+                    link.setIcon(Bi.arrow_counterclockwise);
 
                     anchor.add(link);
                     return anchor;
@@ -365,10 +367,9 @@ public class AttendeeDataGrid extends Panel {
 
                     FormComponent<LocalDateTime> formComponent = toControl.getFormComponent();
                     ResetLocalDateTimeLink link = new ResetLocalDateTimeLink(anchor.getLinkId(), end, formComponent);
-                    link.add(ClassAttributeModifier.append("class", "btn btn-outline-secondary"));
+                    link.setVariant(Variant.OUTLINE_SECONDARY);
                     link.add(new TooltipBehavior(end.map(PeriodModalContent.this::print)));
-                    link.setBody(() -> "<i class=\"bi bi-arrow-counterclockwise\"></i>");
-                    link.setEscapeModelStrings(false);
+                    link.setIcon(Bi.arrow_counterclockwise);
 
                     anchor.add(link);
                     return anchor;
@@ -382,7 +383,7 @@ public class AttendeeDataGrid extends Panel {
             }
 
 
-            private static class ResetLocalDateTimeLink extends AjaxLink<LocalDateTime> {
+            private static class ResetLocalDateTimeLink extends BootstrapAjaxLink<LocalDateTime> {
 
                 private final FormComponent<LocalDateTime> formComponent;
 

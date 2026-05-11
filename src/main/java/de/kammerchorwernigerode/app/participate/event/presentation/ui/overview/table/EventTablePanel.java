@@ -11,6 +11,7 @@ import de.kammerchorwernigerode.app.participate.event.presentation.model.EventPr
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventSelected;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.creation.EventCreationPage;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.Buttons.Variant;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.LinkColumn;
@@ -72,6 +73,7 @@ public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
 
         BootstrapBookmarkablePageLink<Void> createEventLink = new BootstrapBookmarkablePageLink<>("createEventLink",
             EventCreationPage.class);
+        createEventLink.setVariant(Variant.PRIMARY);
         createEventLink.setIcon(Bi.plus_lg);
         createEventLink.setBody(new ResourceModel("EventTablePanel.create"));
         add(createEventLink);

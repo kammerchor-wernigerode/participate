@@ -8,6 +8,7 @@ import de.kammerchorwernigerode.app.participate.event.presentation.ui.details.Ev
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.edit.EventEditPage;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.basic.RelativeTimeLabel;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.Buttons.Variant;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
 import org.apache.wicket.extensions.markup.html.basic.SmartLinkMultiLineLabel;
 import org.apache.wicket.markup.html.basic.Label;
@@ -81,12 +82,14 @@ public class EventPanel extends GenericPanel<EventEntry> {
 
         BootstrapBookmarkablePageLink<Void> eventDetailsLink = new BootstrapBookmarkablePageLink<>("eventDetailsLink",
             EventDetailsPage.class, eventParameters);
+        eventDetailsLink.setVariant(Variant.PRIMARY);
         eventDetailsLink.setIcon(Bi.box_arrow_up_right);
         eventDetailsLink.setBody(new ResourceModel("EventPanel.event.details"));
         add(eventDetailsLink);
 
         BootstrapBookmarkablePageLink<Void> editEventLink = new BootstrapBookmarkablePageLink<>("editEventLink",
             EventEditPage.class, eventParameters);
+        editEventLink.setVariant(Variant.NONE);
         editEventLink.setIcon(Bi.pencil_square);
         editEventLink.setBody(new ResourceModel("EventPanel.event.edit"));
         add(editEventLink);

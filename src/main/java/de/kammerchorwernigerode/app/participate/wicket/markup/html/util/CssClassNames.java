@@ -33,6 +33,10 @@ public class CssClassNames {
         return new Builder(cssClassName);
     }
 
+    public static Builder builder() {
+        return new Builder("");
+    }
+
 
     @RequiredArgsConstructor
     public static class Builder {
@@ -46,6 +50,11 @@ public class CssClassNames {
         public Builder addRaw(String cssClassName) {
             Set<String> cssClasses = split(cssClassName);
             return add(cssClasses);
+        }
+
+        public Builder add(String... cssClasses) {
+            Set<String> cssClassSet = Set.of(cssClasses);
+            return add(cssClassSet);
         }
 
         public Builder add(Set<String> cssClasses) {

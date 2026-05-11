@@ -6,6 +6,7 @@ import de.kammerchorwernigerode.app.participate.security.AuthenticationResolver;
 import de.kammerchorwernigerode.app.participate.security.core.AccountUrl;
 import de.kammerchorwernigerode.app.participate.wicket.bootstrap.BootstrapPage;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.Buttons.Variant;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
 import org.apache.wicket.Application;
 import org.apache.wicket.AttributeModifier;
@@ -81,12 +82,14 @@ public class ParticipatePage extends BootstrapPage {
 
         BootstrapBookmarkablePageLink<Void> eventsNavbarLink =
             new BootstrapBookmarkablePageLink<>("eventsNavbarLink", EventsPage.class);
+        eventsNavbarLink.setVariant(Variant.NAV_LINK);
         eventsNavbarLink.setIcon(Bi.calendar_fill);
         eventsNavbarLink.setBody(new ResourceModel("events"));
         navbarCollapse.add(eventsNavbarLink);
 
         BootstrapBookmarkablePageLink<Void> personsNavbarLink =
             new BootstrapBookmarkablePageLink<>("personsNavbarLink", PersonsPage.class);
+        personsNavbarLink.setVariant(Variant.NAV_LINK);
         personsNavbarLink.setIcon(Bi.people_fill);
         personsNavbarLink.setBody(new ResourceModel("persons"));
         navbarCollapse.add(personsNavbarLink);
