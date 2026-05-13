@@ -1,9 +1,9 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.ui.details;
 
-import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.AccommodationStatus;
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.InvitationStatus;
 import de.kammerchorwernigerode.app.participate.event.infrastructure.EventRecordRepository;
 import de.kammerchorwernigerode.app.participate.event.infrastructure.EventReference;
+import de.kammerchorwernigerode.app.participate.event.model.Accommodation;
 import de.kammerchorwernigerode.app.participate.event.presentation.EventPeriodDatePrinter;
 import de.kammerchorwernigerode.app.participate.event.presentation.EventTitlePrinter;
 import de.kammerchorwernigerode.app.participate.event.presentation.components.AttendeeDataGridTabPanel;
@@ -242,7 +242,7 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
                     || status == InvitationStatus.DECLINED) {
                     attendeeCount++;
 
-                    if (participation.getAccommodationStatus() == AccommodationStatus.SEARCHING) {
+                    if (participation.getAccommodationStatus() == Accommodation.Status.SEARCHING) {
                         requiredBedCount++;
                     }
 

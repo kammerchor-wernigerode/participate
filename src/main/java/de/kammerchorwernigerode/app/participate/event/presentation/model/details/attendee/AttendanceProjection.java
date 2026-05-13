@@ -1,7 +1,7 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee;
 
-import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.AccommodationStatus;
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.InvitationStatus;
+import de.kammerchorwernigerode.app.participate.event.model.Accommodation;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeProjection;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventProjection;
 
@@ -17,6 +17,6 @@ public interface AttendanceProjection extends EventProjection, Serializable {
 
         InvitationStatus getInvitationStatus();
 
-        AccommodationStatus getAccommodationStatus();
+        Accommodation.Status getAccommodationStatus();
     }
 }

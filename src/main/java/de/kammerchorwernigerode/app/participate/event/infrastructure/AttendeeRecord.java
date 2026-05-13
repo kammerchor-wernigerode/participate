@@ -1,5 +1,6 @@
 package de.kammerchorwernigerode.app.participate.event.infrastructure;
 
+import de.kammerchorwernigerode.app.participate.event.model.Accommodation;
 import de.kammerchorwernigerode.app.participate.person.infrastructure.PersonRecord;
 import de.kammerchorwernigerode.app.participate.util.Urns;
 import org.jspecify.annotations.NonNull;
@@ -88,8 +89,7 @@ public class AttendeeRecord implements Persistable<AttendeeRecord.Id> {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "accommodation_status")
-    @Nullable
-    private AccommodationStatus accommodationStatus;
+    private Accommodation.@Nullable Status accommodationStatus;
 
     @Column(name = "accommodation_bed_count")
     @Nullable
@@ -157,14 +157,6 @@ public class AttendeeRecord implements Persistable<AttendeeRecord.Id> {
         ACCEPTED,
         DECLINED,
         PENDING,
-        ;
-    }
-
-    public enum AccommodationStatus {
-
-        SEARCHING,
-        OFFERING,
-        NO_NEED,
         ;
     }
 }
