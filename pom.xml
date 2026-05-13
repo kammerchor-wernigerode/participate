@@ -63,6 +63,7 @@
 
         <webjar.bootstrap.version>5.3.8</webjar.bootstrap.version>
         <webjar.bootstrap-icons.version>1.13.1</webjar.bootstrap-icons.version>
+        <webjar.font-awesome.version>7.2.0</webjar.font-awesome.version>
 
         <convergence.asm.version>9.9</convergence.asm.version>
         <convergence.commons-text.version>1.15.0</convergence.commons-text.version>
@@ -82,6 +83,11 @@
                 <groupId>org.webjars.npm</groupId>
                 <artifactId>bootstrap-icons</artifactId>
                 <version>${webjar.bootstrap-icons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>font-awesome</artifactId>
+                <version>${webjar.font-awesome.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.hypersistence</groupId>
@@ -170,6 +176,10 @@
         <dependency>
             <groupId>org.webjars.npm</groupId>
             <artifactId>bootstrap-icons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>font-awesome</artifactId>
         </dependency>
         <dependency>
             <groupId>io.hypersistence</groupId>
