@@ -70,7 +70,6 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
 
         List<ITab> tabs = createTabs(model);
         Tabs<ITab> tabbedPanel = new Tabs<>("tabs", tabs);
-        tabbedPanel.setSelectedTab(parameters.get("tab").toInt(0));
         add(tabbedPanel);
 
 
