@@ -25,7 +25,10 @@ public class Fa extends IconType {
 
     public enum Solid implements Graphic {
 
+        bed,
         car,
+        hand_holding,
+        magnifying_glass,
         ;
 
         @Override

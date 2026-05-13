@@ -9,7 +9,6 @@ import de.kammerchorwernigerode.app.participate.wicket.request.ExceptionMapper;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.application.ComponentInitializationListenerCollection;
 import org.apache.wicket.csp.CSPDirective;
-import org.apache.wicket.csp.CSPDirectiveSrcValue;
 import org.apache.wicket.csp.ContentSecurityPolicySettings;
 import org.apache.wicket.markup.html.HeaderResponseDecoratorCollection;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -22,6 +21,10 @@ import org.apache.wicket.settings.MarkupSettings;
 import java.nio.charset.StandardCharsets;
 
 import lombok.Setter;
+
+import static org.apache.wicket.csp.CSPDirectiveSrcValue.SELF;
+import static org.apache.wicket.csp.CSPDirectiveSrcValue.STRICT_DYNAMIC;
+import static org.apache.wicket.csp.CSPDirectiveSrcValue.UNSAFE_INLINE;
 
 public abstract class WicketApplication extends WebApplication {
 
@@ -78,7 +81,8 @@ public abstract class WicketApplication extends WebApplication {
 
     protected void configure(ContentSecurityPolicySettings settings) {
         settings.blocking().strict()
-            .add(CSPDirective.STYLE_SRC, CSPDirectiveSrcValue.SELF)
+            .remove(CSPDirective.STYLE_SRC)
+            .add(CSPDirective.STYLE_SRC, STRICT_DYNAMIC, SELF, UNSAFE_INLINE)
             .add(CSPDirective.IMG_SRC, "data:")
         ;
     }

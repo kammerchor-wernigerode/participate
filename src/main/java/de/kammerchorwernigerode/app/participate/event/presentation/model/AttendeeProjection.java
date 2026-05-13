@@ -1,5 +1,7 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.model;
 
+import de.kammerchorwernigerode.app.participate.event.model.Accommodation;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -17,5 +19,9 @@ public interface AttendeeProjection extends Serializable {
         default boolean isByCar() {
             return getCarSeatCount() != null && getCarSeatCount() >= 0;
         }
+
+        Accommodation.Status getAccommodationStatus();
+
+        Integer getAccommodationBedCount();
     }
 }

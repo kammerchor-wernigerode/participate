@@ -1,6 +1,7 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.model;
 
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.InvitationStatus;
+import de.kammerchorwernigerode.app.participate.event.model.Accommodation;
 import de.kammerchorwernigerode.app.participate.musician.infrastructure.Voice;
 import de.kammerchorwernigerode.app.participate.person.presentation.model.PersonProjection;
 import org.hibernate.annotations.Immutable;
@@ -38,6 +39,8 @@ import static de.kammerchorwernigerode.app.participate.event.infrastructure.Atte
            a.from_date_time          AS from_date_time,
            a.to_date_time            AS to_date_time,
            a.car_seat_count          AS car_seat_count,
+           a.accommodation_status    AS accommodation_status,
+           a.accommodation_bed_count AS accommodation_bed_count,
            CASE
                WHEN a.invitation_status = 'UNINVITED' THEN 0
                WHEN a.invitation_status = 'TENTATIVE' THEN 1
@@ -101,6 +104,14 @@ public class AttendeeEntry implements PersonProjection, AttendeeProjection, Atte
     @Column(name = "car_seat_count")
     @Nullable
     private Short carSeatCount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "accommodation_status")
+    private Accommodation.@Nullable Status accommodationStatus;
+
+    @Column(name = "accommodation_bed_count")
+    @Nullable
+    private Integer accommodationBedCount;
 
     @Column(name = "invitation_status_order", insertable = false, updatable = false)
     @NonNull
