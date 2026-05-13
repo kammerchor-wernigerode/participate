@@ -26,7 +26,7 @@ public class BootstrapBookmarkablePageLink<T> extends BookmarkablePageLink<T>
 
     public <P extends Page> BootstrapBookmarkablePageLink(String id, Class<P> pageClass, PageParameters parameters) {
         super(id, pageClass, parameters);
-        this.icon = new Icon("icon", null);
+        this.icon = new Icon("icon", (IconType) null);
         this.label = new Label("label", Model.of());
     }
 

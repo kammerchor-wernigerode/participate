@@ -4,6 +4,7 @@ import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRec
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.Icon;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.IconType;
 import org.apache.wicket.Application;
 import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -22,7 +23,7 @@ public class InvitationStatusIcon extends GenericPanel<InvitationStatus> {
 
         InvitationStatus invitationStatus = getModelObject();
 
-        Icon icon = new Icon("icon", null);
+        Icon icon = new Icon("icon", (IconType) null);
         add(icon);
 
         switch (invitationStatus) {

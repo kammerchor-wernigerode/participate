@@ -11,7 +11,11 @@ public class Icon extends WebMarkupContainer implements IGenericComponent<IconTy
     private final IconBehavior iconBehavior;
 
     public Icon(String id, IconType type) {
-        super(id, Model.of(type));
+        this(id, Model.of(type));
+    }
+
+    public Icon(String id, IModel<IconType> model) {
+        super(id, model);
         this.iconBehavior = new IconBehavior(getModel());
     }
 

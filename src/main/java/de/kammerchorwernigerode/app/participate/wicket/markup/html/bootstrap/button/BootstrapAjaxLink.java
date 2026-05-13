@@ -23,7 +23,7 @@ public abstract class BootstrapAjaxLink<T> extends AjaxLink<T> implements Bootst
 
     public BootstrapAjaxLink(String id, IModel<T> model) {
         super(id, model);
-        this.icon = new Icon("icon", null);
+        this.icon = new Icon("icon", (IconType) null);
         this.label = new Label("label", Model.of());
     }
 

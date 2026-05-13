@@ -299,7 +299,7 @@ public class Modal extends Panel {
 
         public Action(String id, IModel<?> label) {
             super(id);
-            this.icon = new Icon("icon", null);
+            this.icon = new Icon("icon", (IconType) null);
             this.label = label;
         }
 

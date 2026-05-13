@@ -24,7 +24,7 @@ public abstract class IconAjaxLink<T> extends AjaxLink<T> {
 
     public IconAjaxLink(String id, IModel<T> model) {
         super(id, model);
-        this.icon = new Icon("icon", null);
+        this.icon = new Icon("icon", (IconType) null);
         this.preLabel = new Label("preLabel", Model.of());
         this.postLabel = new Label("postLabel", Model.of());
     }
