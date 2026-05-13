@@ -23,6 +23,22 @@ public class Fa extends IconType {
         String getName();
     }
 
+    public enum Solid implements Graphic {
+
+        car,
+        ;
+
+        @Override
+        public String getPrefix() {
+            return "fa-solid";
+        }
+
+        @Override
+        public String getName() {
+            return "fa-" + name();
+        }
+    }
+
     public enum Rotation {
 
         flip_horizontal,

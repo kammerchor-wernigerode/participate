@@ -27,36 +27,38 @@ import static de.kammerchorwernigerode.app.participate.event.infrastructure.Atte
 @NoArgsConstructor
 @Getter
 @Subselect("""
-        SELECT a.event_id          AS event_id,
-               a.person_id         AS person_id,
-               a.invitation_status AS invitation_status,
-               p.first_name        AS first_name,
-               p.last_name         AS last_name,
-               p.file_name         AS file_name,
-               m.voice             AS voice,
-               a.comment           AS comment,
-               a.from_date_time    AS from_date_time,
-               a.to_date_time      AS to_date_time,
-               CASE
-                   WHEN a.invitation_status = 'UNINVITED' THEN 0
-                   WHEN a.invitation_status = 'TENTATIVE' THEN 1
-                   WHEN a.invitation_status = 'ACCEPTED' THEN 2
-                   WHEN a.invitation_status = 'DECLINED' THEN 3
-                   WHEN a.invitation_status = 'PENDING' THEN 4
-                   END             AS invitation_status_order,
-               CASE
-                   WHEN m.voice IS NULL THEN 0
-                   WHEN m.voice = 'SOPRANO' THEN 1
-                   WHEN m.voice = 'ALTO' THEN 2
-                   WHEN m.voice = 'TENOR' THEN 3
-                   WHEN m.voice = 'BASS' THEN 4
-                   END             as voice_order
-        FROM attendees AS a
-                 JOIN persons AS p ON a.person_id = p.id
-                 LEFT JOIN musicians AS m ON p.id = m.person_id
+    SELECT a.event_id                AS event_id,
+           a.person_id               AS person_id,
+           a.invitation_status       AS invitation_status,
+           p.first_name              AS first_name,
+           p.last_name               AS last_name,
+           p.file_name               AS file_name,
+           m.voice                   AS voice,
+           a.comment                 AS comment,
+           a.from_date_time          AS from_date_time,
+           a.to_date_time            AS to_date_time,
+           a.car_seat_count          AS car_seat_count,
+           CASE
+               WHEN a.invitation_status = 'UNINVITED' THEN 0
+               WHEN a.invitation_status = 'TENTATIVE' THEN 1
+               WHEN a.invitation_status = 'ACCEPTED' THEN 2
+               WHEN a.invitation_status = 'DECLINED' THEN 3
+               WHEN a.invitation_status = 'PENDING' THEN 4
+               END                   AS invitation_status_order,
+           CASE
+               WHEN m.voice IS NULL THEN 0
+               WHEN m.voice = 'SOPRANO' THEN 1
+               WHEN m.voice = 'ALTO' THEN 2
+               WHEN m.voice = 'TENOR' THEN 3
+               WHEN m.voice = 'BASS' THEN 4
+               END                   AS voice_order
+    FROM attendees AS a
+             JOIN persons AS p ON a.person_id = p.id
+             LEFT JOIN musicians AS m ON p.id = m.person_id
     """)
 @Synchronize({"attendees"})
-public class AttendeeEntry implements PersonProjection, AttendeeProjection, Serializable {
+public class AttendeeEntry implements PersonProjection, AttendeeProjection, AttendeeProjection.Attributes,
+    Serializable {
 
     @EmbeddedId
     @NonNull
@@ -95,6 +97,10 @@ public class AttendeeEntry implements PersonProjection, AttendeeProjection, Seri
     @Column(name = "to_date_time")
     @NonNull
     private LocalDateTime toDateTime;
+
+    @Column(name = "car_seat_count")
+    @Nullable
+    private Short carSeatCount;
 
     @Column(name = "invitation_status_order", insertable = false, updatable = false)
     @NonNull

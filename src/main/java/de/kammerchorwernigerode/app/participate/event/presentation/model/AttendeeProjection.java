@@ -8,4 +8,14 @@ public interface AttendeeProjection extends Serializable {
     LocalDateTime getFromDateTime();
 
     LocalDateTime getToDateTime();
+
+
+    interface Attributes extends Serializable {
+
+        Short getCarSeatCount();
+
+        default boolean isByCar() {
+            return getCarSeatCount() != null && getCarSeatCount() >= 0;
+        }
+    }
 }

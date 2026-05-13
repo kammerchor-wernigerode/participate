@@ -9,11 +9,13 @@ import de.kammerchorwernigerode.app.participate.wicket.markup.html.ContentSpan;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.basic.CollapsibleTextPanel.Limit;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.CollapsibleColumn;
+import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 
 import java.util.List;
@@ -31,6 +33,7 @@ public class DetailedAttendeeTablePanel extends AttendeeTablePanel {
     // @checkstyle:off: LineLength
     protected List<IColumn<AttendeeEntry, String[]>> createColumns() {
         List<IColumn<AttendeeEntry, String[]>> columns = super.createColumns();
+        columns.add(new AttributesColumn<>(Model.of()));
         columns.add(new PeriodColumn<>(new ResourceModel("attendee.presence"), event));
         columns.add(new CommentColumn<>(new ResourceModel("attendee.comment")));
         return columns;
@@ -40,6 +43,22 @@ public class DetailedAttendeeTablePanel extends AttendeeTablePanel {
     @Override
     protected int getRowsPerPage() {
         return Integer.MAX_VALUE;
+    }
+
+
+    private static class AttributesColumn<S> extends AbstractColumn<AttendeeEntry, S> {
+
+        public AttributesColumn(IModel<String> displayModel) {
+            super(displayModel);
+        }
+
+        @Override
+        public void populateItem(Item<ICellPopulator<AttendeeEntry>> cellItem, String componentId,
+                                 IModel<AttendeeEntry> rowModel) {
+            AttributesPanel panel = new AttributesPanel(componentId, rowModel);
+            panel.add(ClassAttributeModifier.append("class", "d-inline-flex gap-1"));
+            cellItem.add(panel);
+        }
     }
 
     private static class PeriodColumn<S> extends AbstractColumn<AttendeeEntry, S> {
