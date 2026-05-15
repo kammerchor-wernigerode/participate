@@ -4,9 +4,11 @@ import de.kammerchorwernigerode.app.participate.event.presentation.components.fo
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventDto;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.EventsPage;
 import de.kammerchorwernigerode.app.participate.wicket.ParticipatePage;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 
+@AuthorizeInstantiation({"ORGA", "ADMIN"})
 public class EventCreationPage extends ParticipatePage {
 
     @Override

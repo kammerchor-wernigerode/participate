@@ -15,11 +15,13 @@ import de.kammerchorwernigerode.app.participate.event.presentation.model.details
 import de.kammerchorwernigerode.app.participate.wicket.ModelNotFoundException;
 import de.kammerchorwernigerode.app.participate.wicket.ParticipateCssResourceReference;
 import de.kammerchorwernigerode.app.participate.wicket.ParticipatePage;
+import de.kammerchorwernigerode.app.participate.wicket.management.ManagementWicketSession;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.tabs.Tabs;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.IGenericComponent;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.head.CssContentHeaderItem;
@@ -142,13 +144,16 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
         tabs.add(new DetailsTab(new ResourceModel("overview"), model));
 
 
-        AttendeeDataGridTabPanel.Data attendeesTabPanelData = new AttendeeDataGridTabPanel.Data();
-        attendeesTabPanelData.setSpecification(new AttendeeDetailsSpecification(eventIdModel));
-        AttendanceSummaryModel attendanceSummaryModel = new AttendanceSummaryModel(eventIdModel, eventRecordRepository);
-        attendeesTabPanelData.setAttendanceSummaryModel(attendanceSummaryModel);
-        IModel<AttendeeDataGridTabPanel.Data> attendeesTabPanelModel =
-            new CompoundPropertyModel<>(attendeesTabPanelData);
-        tabs.add(new AttendeesTab(new ResourceModel("attendees"), attendeesTabPanelModel));
+        if (ManagementWicketSession.get().getRoles().hasAnyRole(new Roles("ORGA,ADMIN"))) {
+            AttendeeDataGridTabPanel.Data attendeesTabPanelData = new AttendeeDataGridTabPanel.Data();
+            attendeesTabPanelData.setSpecification(new AttendeeDetailsSpecification(eventIdModel));
+            AttendanceSummaryModel attendanceSummaryModel =
+                new AttendanceSummaryModel(eventIdModel, eventRecordRepository);
+            attendeesTabPanelData.setAttendanceSummaryModel(attendanceSummaryModel);
+            IModel<AttendeeDataGridTabPanel.Data> attendeesTabPanelModel =
+                new CompoundPropertyModel<>(attendeesTabPanelData);
+            tabs.add(new AttendeesTab(new ResourceModel("attendees"), attendeesTabPanelModel));
+        }
 
         return tabs;
     }

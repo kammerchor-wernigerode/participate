@@ -6,10 +6,12 @@ import de.kammerchorwernigerode.app.participate.event.presentation.model.Attende
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEntry;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.details.EventDetailsPage;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.edit.EventEditPage;
+import de.kammerchorwernigerode.app.participate.wicket.management.ManagementWicketSession;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.basic.RelativeTimeLabel;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.Buttons.Variant;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.extensions.markup.html.basic.SmartLinkMultiLineLabel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -89,6 +91,7 @@ public class EventPanel extends GenericPanel<EventEntry> {
 
         BootstrapBookmarkablePageLink<Void> editEventLink = new BootstrapBookmarkablePageLink<>("editEventLink",
             EventEditPage.class, eventParameters);
+        editEventLink.setVisible(ManagementWicketSession.get().getRoles().hasAnyRole(new Roles("ORGA,ADMIN")));
         editEventLink.setVariant(Variant.NONE);
         editEventLink.setIcon(Bi.pencil_square);
         editEventLink.setBody(new ResourceModel("EventPanel.event.edit"));

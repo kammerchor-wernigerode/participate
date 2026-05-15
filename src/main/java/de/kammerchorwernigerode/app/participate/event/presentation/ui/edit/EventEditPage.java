@@ -8,6 +8,7 @@ import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.E
 import de.kammerchorwernigerode.app.participate.wicket.ModelNotFoundException;
 import de.kammerchorwernigerode.app.participate.wicket.ParticipatePage;
 import org.apache.wicket.IGenericComponent;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 
+@AuthorizeInstantiation({"ORGA", "ADMIN"})
 public class EventEditPage extends ParticipatePage implements IGenericComponent<EventDto, EventEditPage> {
 
     @SpringBean

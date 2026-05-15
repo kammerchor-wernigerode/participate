@@ -10,6 +10,7 @@ import de.kammerchorwernigerode.app.participate.event.presentation.model.EventEn
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventProjection;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventSelected;
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.creation.EventCreationPage;
+import de.kammerchorwernigerode.app.participate.wicket.management.ManagementWicketSession;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.Buttons.Variant;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
@@ -19,6 +20,7 @@ import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
@@ -73,6 +75,7 @@ public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
 
         BootstrapBookmarkablePageLink<Void> createEventLink = new BootstrapBookmarkablePageLink<>("createEventLink",
             EventCreationPage.class);
+        createEventLink.setVisible(ManagementWicketSession.get().getRoles().hasAnyRole(new Roles("ORGA,ADMIN")));
         createEventLink.setVariant(Variant.PRIMARY);
         createEventLink.setIcon(Bi.plus_lg);
         createEventLink.setBody(new ResourceModel("EventTablePanel.create"));
