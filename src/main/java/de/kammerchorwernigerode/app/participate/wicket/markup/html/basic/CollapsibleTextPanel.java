@@ -99,9 +99,7 @@ public class CollapsibleTextPanel extends Panel {
         }
 
         public String abbreviate(String text) {
-            int maxWidth = value - 1 - ABBREVIATION_MARKER.length();
-            String abbreviate = StringUtils.abbreviate(text, "", maxWidth);
-            return abbreviate.trim().replaceAll("\\p{Punct}$", "") + ABBREVIATION_MARKER;
+            return StringUtils.abbreviate(text, ABBREVIATION_MARKER, value);
         }
     }
 
