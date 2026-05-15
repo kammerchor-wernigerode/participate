@@ -10,6 +10,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
@@ -36,7 +37,7 @@ public class ExceptionMapper extends DefaultExceptionMapper implements IExceptio
         AbstractErrorPage page = createErrorPage(errorAttributes);
 
         PageProvider pageProvider = new PageProvider(page);
-        return new RenderPageRequestHandler(pageProvider);
+        return new RenderPageRequestHandler(pageProvider, RedirectPolicy.NEVER_REDIRECT);
     }
 
     private int determineStatusCode(Throwable throwable) {
