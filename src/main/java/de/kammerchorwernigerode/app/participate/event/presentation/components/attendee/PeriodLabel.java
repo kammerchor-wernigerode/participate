@@ -76,8 +76,8 @@ public class PeriodLabel extends Label {
         return switch (dateTime.getHour()) {
             case 0, 1, 2, 3, 4, 5 -> DayPeriod.NIGHT;
             case 6, 7, 8, 9, 10, 11 -> DayPeriod.MORNING;
-            case 12, 13, 14, 15, 16 -> DayPeriod.AFTERNOON;
-            case 17, 18, 19, 20, 21, 22, 23 -> DayPeriod.EVENING;
+            case 12, 13, 14, 15, 16, 17 -> DayPeriod.AFTERNOON;
+            case 18, 19, 20, 21, 22, 23 -> DayPeriod.EVENING;
             default -> throw new IllegalStateException();
         };
     }
