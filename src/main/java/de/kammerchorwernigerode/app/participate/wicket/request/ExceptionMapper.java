@@ -3,9 +3,11 @@ package de.kammerchorwernigerode.app.participate.wicket.request;
 import de.kammerchorwernigerode.app.participate.wicket.ModelNotFoundException;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.pages.AbstractErrorPage;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.pages.ExceptionErrorPage;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.pages.ForbiddenErrorPage;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.pages.NotFoundErrorPage;
 import org.apache.wicket.DefaultExceptionMapper;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.IExceptionMapper;
@@ -42,6 +44,8 @@ public class ExceptionMapper extends DefaultExceptionMapper implements IExceptio
         while (null != cause && cause.getCause() != cause) {
             if (cause instanceof ModelNotFoundException) {
                 return HttpServletResponse.SC_NOT_FOUND;
+            } else if (cause instanceof UnauthorizedInstantiationException) {
+                return HttpServletResponse.SC_FORBIDDEN;
             }
 
             cause = cause.getCause();
@@ -54,6 +58,8 @@ public class ExceptionMapper extends DefaultExceptionMapper implements IExceptio
         int statusCode = errorAttributes.getStatusCode();
         if (HttpServletResponse.SC_NOT_FOUND == statusCode) {
             return new NotFoundErrorPage(errorAttributes);
+        } else if (HttpServletResponse.SC_FORBIDDEN == statusCode) {
+            return new ForbiddenErrorPage(errorAttributes);
         }
 
         return new ExceptionErrorPage(errorAttributes);
