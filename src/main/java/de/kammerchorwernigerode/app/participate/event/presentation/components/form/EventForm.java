@@ -1,23 +1,27 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.components.form;
 
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventDto;
-import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.EventsPage;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.form.BootstrapForm;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.form.BootstrapFormComponent.Layout;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.form.LocalDateTimeFormControl;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.form.TextAreaFormControl;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.form.TextFormControl;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.attributes.IAjaxCallListener;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.AbstractLink;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public abstract class EventForm extends GenericPanel<EventDto> {
 
@@ -109,10 +113,27 @@ public abstract class EventForm extends GenericPanel<EventDto> {
         }
     }
 
-    private static class BackLink extends BookmarkablePageLink<Void> {
+    private static class BackLink extends AjaxLink<Void> {
 
         public BackLink(String id) {
-            super(id, EventsPage.class);
+            super(id);
+        }
+
+        @Override
+        protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
+            AjaxCallListener listener = createCloseListener();
+            List<IAjaxCallListener> listeners = attributes.getAjaxCallListeners();
+            listeners.add(listener);
+        }
+
+        private AjaxCallListener createCloseListener() {
+            AjaxCallListener listener = new AjaxCallListener();
+            listener.onBeforeSend("history.back()");
+            return listener;
+        }
+
+        @Override
+        public void onClick(AjaxRequestTarget target) {
         }
     }
 
