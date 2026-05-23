@@ -233,4 +233,107 @@
         <dropUniqueConstraint tableName="attendees" constraintName="uc_event_to_member"/>
     </changeSet>
 
+    <changeSet id="v6.0.0-table-user_accounts" author="Vincent Nadoll">
+        <addColumn tableName="persons">
+            <column name="user_id" type="bigint">
+                <constraints unique="true" uniqueConstraintName="uc_user_id"/>
+            </column>
+        </addColumn>
+        <sql>
+            UPDATE persons
+            SET user_id = (SELECT users.id FROM users WHERE persons.id = users.person_id)
+        </sql>
+        <dropForeignKeyConstraint baseTableName="users" constraintName="fk_users_person_id"/>
+        <dropColumn tableName="users" columnName="person_id"/>
+
+
+        <createTable tableName="user_accounts">
+            <column name="provider_ref" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_ref" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)"/>
+        </createTable>
+        <addPrimaryKey tableName="user_accounts"
+                       columnNames="provider_ref,account_ref"
+                       constraintName="pk_user_accounts"/>
+        <addForeignKeyConstraint baseTableName="user_accounts"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_user_accounts_user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+
+        <sql>
+            INSERT INTO user_accounts (provider_ref, account_ref, user_id, password)
+            SELECT 'local', users.username, users.id, CONCAT('{sha256}', users.pwd_sha256)
+            FROM users
+            WHERE users.pwd_sha256 IS NOT NULL;
+        </sql>
+        <dropColumn tableName="users" columnName="pwd_sha256"/>
+
+
+        <renameColumn tableName="users" oldColumnName="username" newColumnName="name" columnDataType="varchar(255)"/>
+        <addColumn tableName="users">
+            <column name="email_address" type="varchar(255)"
+                    valueComputed="(SELECT persons.email_address FROM persons WHERE users.id = persons.user_id)">
+                <constraints unique="true" uniqueConstraintName="uc_users_email_address"/>
+            </column>
+            <column name="is_email_verified" type="boolean" defaultValueBoolean="false" valueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_locked" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+
+        <addColumn tableName="users">
+            <column name="is_deleted_tmp" type="boolean"/>
+        </addColumn>
+        <update tableName="users">
+            <column name="is_deleted_tmp" valueBoolean="false"/>
+            <where>is_active = true</where>
+        </update>
+        <update tableName="users">
+            <column name="is_deleted_tmp" valueBoolean="true"/>
+            <where>is_active = false</where>
+        </update>
+        <renameColumn tableName="users"
+                      oldColumnName="is_deleted_tmp"
+                      newColumnName="is_deleted"
+                      columnDataType="boolean"/>
+        <addDefaultValue tableName="users"
+                         columnName="is_deleted"
+                         columnDataType="boolean"
+                         defaultValueBoolean="false"/>
+        <dropColumn tableName="users" columnName="is_active"/>
+
+
+        <addColumn tableName="users">
+            <column name="is_disabled_tmp" type="boolean"/>
+        </addColumn>
+        <update tableName="users">
+            <column name="is_disabled_tmp" valueBoolean="false"/>
+            <where>is_enabled = true</where>
+        </update>
+        <update tableName="users">
+            <column name="is_disabled_tmp" valueBoolean="true"/>
+            <where>is_enabled = false</where>
+        </update>
+        <renameColumn tableName="users"
+                      oldColumnName="is_disabled_tmp"
+                      newColumnName="is_disabled"
+                      columnDataType="boolean"/>
+        <addDefaultValue tableName="users"
+                         columnName="is_disabled"
+                         columnDataType="boolean"
+                         defaultValueBoolean="false"/>
+        <dropColumn tableName="users" columnName="is_enabled"/>
+    </changeSet>
+
 </databaseChangeLog>

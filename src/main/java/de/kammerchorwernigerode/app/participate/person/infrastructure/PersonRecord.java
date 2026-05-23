@@ -2,6 +2,7 @@ package de.kammerchorwernigerode.app.participate.person.infrastructure;
 
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord;
 import de.kammerchorwernigerode.app.participate.musician.infrastructure.MusicianRecord;
+import de.kammerchorwernigerode.app.participate.user.infrastructure.jpa.UserRecord;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.jspecify.annotations.NonNull;
@@ -16,9 +17,12 @@ import java.util.Optional;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PostPersist;
@@ -36,6 +40,7 @@ import lombok.Setter;
 @Table(name = "persons", uniqueConstraints = {
     @UniqueConstraint(name = "uc_email_address", columnNames = "email_address"),
     @UniqueConstraint(name = "uc_file_name", columnNames = "file_name"),
+    @UniqueConstraint(name = "uc_user_id", columnNames = "user_id"),
 })
 @SequenceGenerator(name = "persons_seq", sequenceName = "seq_persons", allocationSize = 1)
 @Data
@@ -66,6 +71,12 @@ public class PersonRecord implements Persistable<Long> {
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "person", orphanRemoval = true)
     @Nullable
     private MusicianRecord musician;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true,
+        foreignKey = @ForeignKey(name = "fk_persons_user_id"))
+    @Nullable
+    private UserRecord user;
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "person", orphanRemoval = true)
     @NonNull
