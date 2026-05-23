@@ -147,7 +147,7 @@ class ManagementWicketConfiguration implements ApplicationContextAware, Environm
         public SecurityFilterChain managementSecurityFilterChain(HttpSecurity http) {
             http
                 .securityMatcher(PathPatternRequestMatcher.withDefaults()
-                    .matcher(appRoot() + "/**"))
+                    .matcher(appRoot().orElse("") + "/**"))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                     .anyRequest().authenticated())
@@ -169,15 +169,14 @@ class ManagementWicketConfiguration implements ApplicationContextAware, Environm
         private LogoutSuccessHandler logoutSuccessHandler() {
             OidcClientInitiatedLogoutSuccessHandler logoutSuccessHandler =
                 new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
-            logoutSuccessHandler.setPostLogoutRedirectUri("{baseUrl}" + appRoot());
+            logoutSuccessHandler.setPostLogoutRedirectUri("{baseUrl}" + appRoot().orElse("/"));
             return logoutSuccessHandler;
         }
 
-        private String appRoot() {
+        private Optional<String> appRoot() {
             return Optional.of(APP_ROOT)
                 .filter(StringUtils::hasText)
-                .map(LeadingSlash.ensure(PRESENT))
-                .orElse("");
+                .map(LeadingSlash.ensure(PRESENT));
         }
     }
 }
