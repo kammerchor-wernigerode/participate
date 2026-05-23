@@ -1,6 +1,9 @@
 package de.kammerchorwernigerode.app.participate.wicket.management;
 
 import de.kammerchorwernigerode.app.participate.event.infrastructure.EventRecordRepository;
+import de.kammerchorwernigerode.app.participate.security.web.oauth2.Oauth2AuthenticationSuccessHandler;
+import de.kammerchorwernigerode.app.participate.user.infrastructure.jpa.UserAccountRecordRepository;
+import de.kammerchorwernigerode.app.participate.user.infrastructure.jpa.UserRecordRepository;
 import de.kammerchorwernigerode.app.participate.util.LeadingSlash;
 import de.kammerchorwernigerode.app.participate.wicket.WicketProperties;
 import de.kammerchorwernigerode.app.participate.wicket.configuration.WicketConfigurer;
@@ -21,13 +24,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.util.StringUtils;
@@ -136,6 +140,8 @@ class ManagementWicketConfiguration implements ApplicationContextAware, Environm
     static class WebSecurity {
 
         private final ClientRegistrationRepository clientRegistrationRepository;
+        private final UserAccountRecordRepository userAccountRecordRepository;
+        private final UserRecordRepository userRecordRepository;
 
         @Bean
         public SecurityFilterChain managementSecurityFilterChain(HttpSecurity http) {
@@ -145,13 +151,19 @@ class ManagementWicketConfiguration implements ApplicationContextAware, Environm
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                     .anyRequest().authenticated())
-                .oauth2Login(Customizer.withDefaults())
+                .oauth2Login(login -> login
+                    .successHandler(authenticationSuccessHandler()))
                 .logout(logout -> logout
                     .logoutSuccessHandler(logoutSuccessHandler())
                     .invalidateHttpSession(true))
             ;
 
             return http.build();
+        }
+
+        private AuthenticationSuccessHandler authenticationSuccessHandler() {
+            SavedRequestAwareAuthenticationSuccessHandler subject = new SavedRequestAwareAuthenticationSuccessHandler();
+            return new Oauth2AuthenticationSuccessHandler(subject, userAccountRecordRepository, userRecordRepository);
         }
 
         private LogoutSuccessHandler logoutSuccessHandler() {
