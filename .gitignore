@@ -37,3 +37,6 @@ build/
 
 ### App Config ###
 /application*.yml
+
+### Claude Code ###
+.claude/settings.local.json
