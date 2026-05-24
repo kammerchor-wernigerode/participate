@@ -1,11 +1,10 @@
 package de.kammerchorwernigerode.app.participate.person.presentation.model;
 
-import de.kammerchorwernigerode.app.participate.person.infrastructure.PersonReference;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 
-public interface PersonProjection extends PersonReference, Serializable {
+public interface PersonNames extends Serializable {
 
     String getFirstName();
 

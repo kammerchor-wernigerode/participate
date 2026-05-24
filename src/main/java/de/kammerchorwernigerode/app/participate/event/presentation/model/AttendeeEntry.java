@@ -3,7 +3,7 @@ package de.kammerchorwernigerode.app.participate.event.presentation.model;
 import de.kammerchorwernigerode.app.participate.event.infrastructure.AttendeeRecord.InvitationStatus;
 import de.kammerchorwernigerode.app.participate.event.model.Accommodation;
 import de.kammerchorwernigerode.app.participate.musician.infrastructure.Voice;
-import de.kammerchorwernigerode.app.participate.person.presentation.model.PersonProjection;
+import de.kammerchorwernigerode.app.participate.person.presentation.model.PersonNames;
 import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.Subselect;
 import org.hibernate.annotations.Synchronize;
@@ -60,7 +60,7 @@ import static de.kammerchorwernigerode.app.participate.event.infrastructure.Atte
              LEFT JOIN musicians AS m ON p.id = m.person_id
     """)
 @Synchronize({"attendees"})
-public class AttendeeEntry implements PersonProjection, AttendeeProjection, AttendeeProjection.Attributes,
+public class AttendeeEntry implements PersonNames, AttendeeProjection, AttendeeProjection.Attributes,
     Serializable {
 
     @EmbeddedId
