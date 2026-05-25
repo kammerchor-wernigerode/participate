@@ -60,7 +60,7 @@ public class PersonRecord implements Persistable<Long> {
     @NonNull
     private String lastName;
 
-    @Column(name = "file_name", unique = true, nullable = false)
+    @Column(name = "file_name", unique = true)
     @Nullable
     private String fileName;
 
