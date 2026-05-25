@@ -57,6 +57,7 @@
         <dependency.checkstyle.version>10.17.0</dependency.checkstyle.version>
         <dependency.hypersistence.version>3.15.2</dependency.hypersistence.version>
         <dependency.java-uuid-generator.version>5.2.0</dependency.java-uuid-generator.version>
+        <dependency.objenesis.version>3.5</dependency.objenesis.version>
         <dependency.wicket.version>10.9.0</dependency.wicket.version>
         <dependency.wicketstuff.version>10.8.0</dependency.wicketstuff.version>
         <dependency.wicket-webjars.version>4.0.14</dependency.wicket-webjars.version>
@@ -98,6 +99,11 @@
                 <groupId>com.fasterxml.uuid</groupId>
                 <artifactId>java-uuid-generator</artifactId>
                 <version>${dependency.java-uuid-generator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.objenesis</groupId>
+                <artifactId>objenesis</artifactId>
+                <version>${dependency.objenesis.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.wicket</groupId>
@@ -188,6 +194,11 @@
         <dependency>
             <groupId>com.fasterxml.uuid</groupId>
             <artifactId>java-uuid-generator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.objenesis</groupId>
+            <artifactId>objenesis</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
