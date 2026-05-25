@@ -9,7 +9,6 @@ import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSessio
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.util.string.Strings;
-import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -28,13 +27,10 @@ public class ManagementWicketSession extends AbstractAuthenticatedWebSession {
 
     public static MetaDataKey<Long> selectedEventId = new MetaDataKey<>() { };
 
-    private final Environment environment;
     private final EventRecordRepository eventRecordRepository;
 
-    public ManagementWicketSession(Request request, Environment environment,
-                                   EventRecordRepository eventRecordRepository) {
+    public ManagementWicketSession(Request request, EventRecordRepository eventRecordRepository) {
         super(request);
-        this.environment = environment;
         this.eventRecordRepository = eventRecordRepository;
 
         setMetaData(selectedEventId, getNextEventId());
@@ -59,8 +55,6 @@ public class ManagementWicketSession extends AbstractAuthenticatedWebSession {
     public Roles getRoles() {
         if (!isSignedIn()) {
             return new Roles();
-        } else if (!environment.matchesProfiles("oauth2")) {
-            return new AlwaysAuthorizedRoles();
         }
 
         Collection<? extends GrantedAuthority> authorities = getAuthentication()
@@ -77,8 +71,7 @@ public class ManagementWicketSession extends AbstractAuthenticatedWebSession {
 
     @Override
     public boolean isSignedIn() {
-        return !environment.matchesProfiles("oauth2")
-            || getAuthentication()
+        return getAuthentication()
             .map(Authentication::isAuthenticated)
             .orElse(false);
     }
@@ -94,29 +87,5 @@ public class ManagementWicketSession extends AbstractAuthenticatedWebSession {
 
     private static String leadingRoleAbsent(String authority) {
         return authority.replaceFirst("^ROLE_", "");
-    }
-
-
-    private static class AlwaysAuthorizedRoles extends Roles {
-
-        @Override
-        public boolean hasRole(String role) {
-            return true;
-        }
-
-        @Override
-        public boolean hasAnyRole(Roles roles) {
-            return true;
-        }
-
-        @Override
-        public boolean hasAllRoles(Roles roles) {
-            return true;
-        }
-
-        @Override
-        public String toString() {
-            return "*";
-        }
     }
 }

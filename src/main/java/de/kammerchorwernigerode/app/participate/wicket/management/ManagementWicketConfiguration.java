@@ -19,11 +19,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -53,7 +50,7 @@ import static org.apache.wicket.protocol.http.WicketFilter.IGNORE_PATHS_PARAM;
 
 @Configuration
 @RequiredArgsConstructor
-class ManagementWicketConfiguration implements ApplicationContextAware, EnvironmentAware {
+class ManagementWicketConfiguration implements ApplicationContextAware {
 
     public static final String APP_ROOT = "";
 
@@ -68,9 +65,6 @@ class ManagementWicketConfiguration implements ApplicationContextAware, Environm
     @Setter
     private ApplicationContext applicationContext;
 
-    @Setter
-    private Environment environment;
-
     @Bean
     @ConfigurationProperties("wicket.management")
     public WicketProperties managementWicketProperties() {
@@ -80,7 +74,7 @@ class ManagementWicketConfiguration implements ApplicationContextAware, Environm
     @Bean
     public ManagementWicketApplication managementWicketApplication(
         ObjectProvider<WicketConfigurer> configurers, EventRecordRepository eventRecordRepository) {
-        return new SpringManagementWicketApplication(applicationContext, environment, eventRecordRepository,
+        return new SpringManagementWicketApplication(applicationContext, eventRecordRepository,
             configurers);
     }
 
@@ -108,13 +102,12 @@ class ManagementWicketConfiguration implements ApplicationContextAware, Environm
     private static class SpringManagementWicketApplication extends ManagementWicketApplication {
 
         private final ApplicationContext applicationContext;
-        private final Environment environment;
         private final EventRecordRepository eventRecordRepository;
         private final ObjectProvider<WicketConfigurer> configurers;
 
         @Override
         public Session newSession(Request request, Response response) {
-            return new ManagementWicketSession(request, environment, eventRecordRepository);
+            return new ManagementWicketSession(request, eventRecordRepository);
         }
 
         @Override
@@ -133,7 +126,6 @@ class ManagementWicketConfiguration implements ApplicationContextAware, Environm
         }
     }
 
-    @Profile("oauth2")
     @Configuration
     @EnableWebSecurity
     @RequiredArgsConstructor

@@ -7,7 +7,6 @@ import com.jayway.jsonpath.PathNotFoundException;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
 import de.kammerchorwernigerode.app.participate.security.web.oauth2.OidcClientProperties.Registration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
@@ -37,7 +36,6 @@ import lombok.extern.slf4j.Slf4j;
 import static org.springframework.security.oauth2.core.OAuth2ErrorCodes.INVALID_TOKEN;
 
 @Slf4j
-@Profile("oauth2")
 @Service
 @EnableConfigurationProperties(OidcClientProperties.class)
 public class ConfigurableOidcUserService extends OidcUserService {
