@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+    <wicket:container wicket:id="layout"></wicket:container>
+    <div wicket:id="feedback"></div>
+
+    <wicket:fragment wicket:id="default">
+        <label class="form-label" wicket:id="label"></label>
+        <div wicket:id="container">
+            <select wicket:id="control" />
+            <wicket:container wicket:id="endAdornment"></wicket:container>
+        </div>
+    </wicket:fragment>
+
+    <wicket:fragment wicket:id="floatingLabel">
+        <div wicket:id="container">
+            <select wicket:id="control" />
+            <wicket:container wicket:id="endAdornment"></wicket:container>
+        </div>
+        <label wicket:id="label"></label>
+    </wicket:fragment>
+</wicket:panel>
