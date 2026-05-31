@@ -55,3 +55,9 @@ Integration tests use TestContainers (real PostgreSQL or MariaDB). Test class na
 - Indent: 4 spaces; LF line endings; final newlines required
 - No star imports; static imports only from: JUnit Jupiter, AssertJ, Mockito, MockitoArgumentMatchers
 - Lombok `@NonNull` throws `IllegalArgumentException` (configured in `lombok.config`)
+
+## JPQL Conventions
+
+- Keywords lowercase: `select`, `from`, `where`, `group by`, `order by`, etc.
+- Case-insensitive string matching: use `ilike` (Hibernate HQL extension), not `lower(...) like lower(...)`
+- Multi-line queries: use Java text blocks (`"""..."""`), not string concatenation
