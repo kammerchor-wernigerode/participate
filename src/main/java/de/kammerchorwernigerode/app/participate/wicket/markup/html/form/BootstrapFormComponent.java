@@ -20,11 +20,12 @@ import lombok.Getter;
 
 public abstract class BootstrapFormComponent<T, R> extends FormComponentPanel<R> {
 
-    @Getter
-    private final FormComponent<T> formComponent;
     private final WebMarkupContainer container;
     private final InputAdornment endAdornment;
     private final Feedback feedback;
+
+    @Getter
+    private FormComponent<T> formComponent;
 
     @Getter
     private Layout layout = Layout.DEFAULT;
@@ -32,7 +33,6 @@ public abstract class BootstrapFormComponent<T, R> extends FormComponentPanel<R>
     public BootstrapFormComponent(String id, IModel<R> model) {
         super(id, model);
         this.container = new WebMarkupContainer("container");
-        this.formComponent = createFormComponent("control");
         this.endAdornment = new InputAdornment("endAdornment");
         this.feedback = new Feedback("feedback", this);
     }
@@ -52,6 +52,8 @@ public abstract class BootstrapFormComponent<T, R> extends FormComponentPanel<R>
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        this.formComponent = createFormComponent("control");
 
         Fragment fragment;
         switch (layout) {
