@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.time.Instant;
 import java.util.Optional;
 
-public interface EventRecordRepository extends JpaRepository<EventRecord, Long> {
+public interface EventRecordRepository extends JpaRepository<EventRecord, Long>, EventSummarySuggestionProvider {
 
     Optional<EventReference> findFirstByEndInstantGreaterThanEqualOrderByStartInstantAsc(Instant end);
 

@@ -29,11 +29,15 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import jakarta.servlet.ServletContext;
 
 public abstract class EventForm extends GenericPanel<EventDto> {
 
     @SpringBean
     private EventRecordRepository eventRecordRepository;
+
+    @SpringBean
+    private ServletContext servletContext;
 
     private final Form form;
 
@@ -84,6 +88,7 @@ public abstract class EventForm extends GenericPanel<EventDto> {
         };
         Datalist<String> summaryDatalist = new Datalist<>("summaryDatalist", summaryControl.getFormComponent(),
             summarySuggestions);
+        summaryDatalist.setAutocompleteUrl(servletContext.getContextPath() + "/api/bff/events/summaries/suggestions");
         form.add(summaryDatalist);
 
         IModel<LocalDateTime> startDateTimeModel = LambdaModel.of(model, EventDto::getStartDateTime,

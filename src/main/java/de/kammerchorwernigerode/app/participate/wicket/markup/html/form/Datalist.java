@@ -1,8 +1,10 @@
 package de.kammerchorwernigerode.app.participate.wicket.markup.html.form;
 
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.references.DatalistAutocompleteJavaScriptResourceReference;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.util.Components;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -19,6 +21,8 @@ public class Datalist<T> extends Panel {
     private final IModel<? extends List<T>> choices;
     private final IChoiceRenderer<T> renderer;
 
+    private String autocompleteUrl;
+
     public Datalist(String id, FormComponent<T> component, IModel<? extends List<T>> choices) {
         this(id, component, choices, new ChoiceRenderer<>());
     }
@@ -31,17 +35,35 @@ public class Datalist<T> extends Panel {
         this.renderer = renderer;
     }
 
+    public Datalist<T> setAutocompleteUrl(String autocompleteUrl) {
+        this.autocompleteUrl = autocompleteUrl;
+        return this;
+    }
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
         setOutputMarkupId(true);
 
+        if (null != autocompleteUrl) {
+            add(AttributeModifier.replace("data-autocomplete-url", autocompleteUrl));
+        }
+
         Options options = new Options("options", choices, renderer);
         add(options);
 
         component.setOutputMarkupId(true);
         component.add(AttributeModifier.replace("list", getMarkupId()));
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+
+        if (null != autocompleteUrl) {
+            response.render(DatalistAutocompleteJavaScriptResourceReference.asHeaderItem());
+        }
     }
 
     @Override

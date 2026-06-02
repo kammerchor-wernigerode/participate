@@ -57,6 +57,7 @@ class ManagementWicketConfiguration implements ApplicationContextAware {
     private static final String RUNTIME_CONFIGURATION_PARAM = "configuration";
     private static final EnumSet<DispatcherType> DISPATCHER_TYPES = EnumSet.of(REQUEST, ERROR);
     private static final String[] IGNORED_PATHS = {
+        "/api",
         "/favicon.ico",
         "/robots.txt",
         "/static",
