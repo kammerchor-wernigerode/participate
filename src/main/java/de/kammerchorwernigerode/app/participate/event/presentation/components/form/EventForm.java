@@ -1,9 +1,11 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.components.form;
 
+import de.kammerchorwernigerode.app.participate.event.infrastructure.EventRecordRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.EventDto;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.components.TooltipBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.form.BootstrapForm;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.form.BootstrapFormComponent.Layout;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.form.Datalist;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.form.LocalDateTimeFormControl;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.form.TextAreaFormControl;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.form.TextFormControl;
@@ -18,12 +20,20 @@ import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public abstract class EventForm extends GenericPanel<EventDto> {
+
+    @SpringBean
+    private EventRecordRepository eventRecordRepository;
 
     private final Form form;
 
@@ -61,6 +71,20 @@ public abstract class EventForm extends GenericPanel<EventDto> {
         summaryControl.setLayout(Layout.FLOATING_LABEL);
         summaryControl.setLabel(new ResourceModel("EventForm.summary"));
         form.add(summaryControl);
+
+        IModel<List<String>> summarySuggestions = new LoadableDetachableModel<>() {
+
+            @Override
+            protected List<String> load() {
+                Pageable pageable = PageRequest.of(0, 5);
+                Page<String> page = eventRecordRepository
+                    .findAllSummariesBySummaryNotNullGroupBySummaryOrderBySummaryCountDesc(pageable);
+                return page.getContent();
+            }
+        };
+        Datalist<String> summaryDatalist = new Datalist<>("summaryDatalist", summaryControl.getFormComponent(),
+            summarySuggestions);
+        form.add(summaryDatalist);
 
         IModel<LocalDateTime> startDateTimeModel = LambdaModel.of(model, EventDto::getStartDateTime,
             EventDto::setStartDateTime);
