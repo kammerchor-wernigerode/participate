@@ -6,6 +6,7 @@ import de.kammerchorwernigerode.app.participate.event.presentation.model.details
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDetailsEntryRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee.AttendeeDetailsSpecification;
 import de.kammerchorwernigerode.app.participate.wicket.behavior.UpdateOnEventBehavior;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.sort.SortState;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
@@ -36,9 +37,10 @@ public class AttendeeDataGridTabPanel extends GenericPanel<AttendeeDataGridTabPa
 
         IModel<Data> model = getModel();
         IModel<AttendeeDetailsSpecification> filterState = model.map(Data::getSpecification);
+        SortState sortState = new SortState();
         AttendeeDetailsDataProvider dataProvider =
-            new AttendeeDetailsDataProvider(attendeeDetailsEntryRepository, filterState);
-        dataProvider.setSort(SORT_PROPERTIES, SortOrder.ASCENDING);
+            new AttendeeDetailsDataProvider(filterState, sortState, attendeeDetailsEntryRepository);
+        dataProvider.setPropertySortOrder(SORT_PROPERTIES, SortOrder.ASCENDING);
 
         AttendeeDataGrid dataGrid = new AttendeeDataGrid("dataGrid", dataProvider);
         add(dataGrid);

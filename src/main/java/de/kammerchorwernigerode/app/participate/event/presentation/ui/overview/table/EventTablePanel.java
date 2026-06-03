@@ -29,6 +29,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterToolbar;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilterStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.Item;
@@ -58,12 +59,12 @@ public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
     protected void onInitialize() {
         super.onInitialize();
 
-        IModel<EventEntrySpecification> model = getModel();
-        EventDataProvider dataProvider = new EventDataProvider(eventEntryRepository, model);
+        FilterStateLocator filterStateLocator = new FilterStateLocator();
+        EventDataProvider dataProvider = new EventDataProvider(filterStateLocator, eventEntryRepository);
         dataProvider.setOrder("startInstant", SortOrder.ASCENDING);
 
 
-        FilterForm<EventEntrySpecification> filterForm = new FilterForm<>("filterForm", dataProvider);
+        FilterForm<EventEntrySpecification> filterForm = new FilterForm<>("filterForm", filterStateLocator);
         add(filterForm);
 
         List<IColumn<EventEntry, String>> columns = createColumns();
@@ -91,6 +92,19 @@ public class EventTablePanel extends GenericPanel<EventEntrySpecification> {
         return columns;
     }
 
+
+    private class FilterStateLocator implements IFilterStateLocator<EventEntrySpecification> {
+
+        @Override
+        public EventEntrySpecification getFilterState() {
+            return getModelObject();
+        }
+
+        @Override
+        public void setFilterState(EventEntrySpecification state) {
+            setModelObject(state);
+        }
+    }
 
     private class SummaryColumn<S> extends LinkColumn<EventEntry, S>
         implements IFilteredColumn<EventEntry, S> {

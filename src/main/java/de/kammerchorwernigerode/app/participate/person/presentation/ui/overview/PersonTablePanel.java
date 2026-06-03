@@ -10,6 +10,7 @@ import de.kammerchorwernigerode.app.participate.wicket.clipboardjs.ClipboardJsBe
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.ContentDivision;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.Icon;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.sort.SortState;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.EnumLambdaColumn;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.filter.BootstrapMultipleChoiceFilter;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.filter.BootstrapTextFilter;
@@ -57,8 +58,9 @@ public class PersonTablePanel extends GenericPanel<PersonEntrySpecification> {
         super.onInitialize();
 
         IModel<PersonEntrySpecification> model = getModel();
-        PersonDataProvider dataProvider = new PersonDataProvider(personEntryRepository, model);
-        dataProvider.setSort(NAME_SORT_PROPERTY, SortOrder.ASCENDING);
+        SortState sortState = new SortState();
+        PersonDataProvider dataProvider = new PersonDataProvider(model, sortState, personEntryRepository);
+        dataProvider.setPropertySortOrder(NAME_SORT_PROPERTY, SortOrder.ASCENDING);
 
 
         FilterForm<PersonEntrySpecification> filterForm = new FilterForm<>("filterForm", dataProvider);

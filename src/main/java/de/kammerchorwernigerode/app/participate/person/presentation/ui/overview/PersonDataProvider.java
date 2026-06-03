@@ -4,7 +4,8 @@ import de.kammerchorwernigerode.app.participate.person.presentation.model.Person
 import de.kammerchorwernigerode.app.participate.person.presentation.model.PersonEntryRepository;
 import de.kammerchorwernigerode.app.participate.person.presentation.model.PersonEntrySpecification;
 import de.kammerchorwernigerode.app.participate.person.presentation.model.PersonEntry_;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.util.CompoundJpaDataProvider;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.sort.SpringSortState;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.util.JpaSpecificationDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.springframework.data.domain.Sort;
@@ -13,7 +14,7 @@ import org.springframework.data.jpa.domain.JpaSort;
 
 import java.util.Objects;
 
-public class PersonDataProvider extends CompoundJpaDataProvider<PersonEntry, PersonEntrySpecification> {
+public class PersonDataProvider extends JpaSpecificationDataProvider<PersonEntry, String[], PersonEntrySpecification> {
 
     public static final String[] NAME_SORT_PROPERTY = {
         "fileName",
@@ -21,9 +22,9 @@ public class PersonDataProvider extends CompoundJpaDataProvider<PersonEntry, Per
         "lastName",
     };
 
-    public PersonDataProvider(PersonEntryRepository personEntryRepository,
-                              IModel<PersonEntrySpecification> filterState) {
-        super(personEntryRepository, filterState);
+    public PersonDataProvider(IModel<PersonEntrySpecification> filterState, SpringSortState<String[]> sortState,
+                              PersonEntryRepository personEntryRepository) {
+        super(filterState, sortState, personEntryRepository);
     }
 
     public Sort getSort() {

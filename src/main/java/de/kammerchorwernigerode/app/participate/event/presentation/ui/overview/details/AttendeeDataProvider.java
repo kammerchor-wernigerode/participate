@@ -4,7 +4,8 @@ import de.kammerchorwernigerode.app.participate.event.presentation.model.Attende
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeEntryRepository;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeEntrySpecification;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeEntry_;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.util.CompoundJpaDataProvider;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.sort.SpringSortState;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.util.JpaSpecificationDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.springframework.data.domain.Sort;
@@ -13,11 +14,12 @@ import org.springframework.data.jpa.domain.JpaSort;
 
 import java.util.Objects;
 
-public class AttendeeDataProvider extends CompoundJpaDataProvider<AttendeeEntry, AttendeeEntrySpecification> {
+public class AttendeeDataProvider
+    extends JpaSpecificationDataProvider<AttendeeEntry, String[], AttendeeEntrySpecification> {
 
-    public AttendeeDataProvider(AttendeeEntryRepository attendeeEntryRepository,
-                                IModel<AttendeeEntrySpecification> filterState) {
-        super(attendeeEntryRepository, filterState);
+    public AttendeeDataProvider(IModel<AttendeeEntrySpecification> filterState, SpringSortState<String[]> sortState,
+                                AttendeeEntryRepository attendeeEntryRepository) {
+        super(filterState, sortState, attendeeEntryRepository);
     }
 
     @Override

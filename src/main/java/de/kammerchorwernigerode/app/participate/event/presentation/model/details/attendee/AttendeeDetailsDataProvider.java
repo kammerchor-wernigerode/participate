@@ -1,17 +1,19 @@
 package de.kammerchorwernigerode.app.participate.event.presentation.model.details.attendee;
 
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.util.CompoundJpaDataProvider;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.sort.SpringSortState;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.util.JpaSpecificationDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import java.util.Objects;
 
 public class AttendeeDetailsDataProvider
-    extends CompoundJpaDataProvider<AttendeeDetailsEntry, AttendeeDetailsSpecification> {
+    extends JpaSpecificationDataProvider<AttendeeDetailsEntry, String[], AttendeeDetailsSpecification> {
 
-    public AttendeeDetailsDataProvider(AttendeeDetailsEntryRepository attendeeDetailsEntryRepository,
-                                       IModel<AttendeeDetailsSpecification> filterState) {
-        super(attendeeDetailsEntryRepository, filterState);
+    public AttendeeDetailsDataProvider(IModel<AttendeeDetailsSpecification> filterState,
+                                       SpringSortState<String[]> sortState,
+                                       AttendeeDetailsEntryRepository attendeeDetailsEntryRepository) {
+        super(filterState, sortState, attendeeDetailsEntryRepository);
     }
 
     @Override

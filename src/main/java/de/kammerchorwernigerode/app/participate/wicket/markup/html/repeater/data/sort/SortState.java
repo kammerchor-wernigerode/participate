@@ -1,8 +1,6 @@
 package de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.sort;
 
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
-import org.apache.wicket.util.io.IClusterable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
@@ -12,13 +10,11 @@ import java.util.Objects;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 
-@Getter
-@Setter
-public class SortState implements ISortState<String[]>, IClusterable {
+public class SortState implements SpringSortState<String[]> {
 
     @NonNull
+    @Getter
     private Sort sort = Sort.unsorted();
 
     @Override
@@ -45,7 +41,7 @@ public class SortState implements ISortState<String[]>, IClusterable {
             .map(sort::getOrderFor)
             .filter(Objects::nonNull)
             .map(Order::getDirection)
-            .map(SortState::translate)
+            .map(this::translate)
             .findAny()
             .orElse(SortOrder.NONE);
     }
@@ -54,17 +50,5 @@ public class SortState implements ISortState<String[]>, IClusterable {
         return sort.stream()
             .map(Order::getProperty)
             .toArray(String[]::new);
-    }
-
-    private static Direction translate(SortOrder sortOrder) {
-        return sortOrder == SortOrder.ASCENDING
-            ? Direction.ASC
-            : Direction.DESC;
-    }
-
-    private static SortOrder translate(Direction direction) {
-        return direction.isAscending()
-            ? SortOrder.ASCENDING
-            : SortOrder.DESCENDING;
     }
 }

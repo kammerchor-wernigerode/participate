@@ -8,6 +8,7 @@ import de.kammerchorwernigerode.app.participate.event.presentation.model.Attende
 import de.kammerchorwernigerode.app.participate.event.presentation.model.AttendeeEntrySpecification;
 import de.kammerchorwernigerode.app.participate.event.presentation.model.InvitationStatusSelection;
 import de.kammerchorwernigerode.app.participate.musician.infrastructure.Voice;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.sort.SortState;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.EnumLambdaColumn;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.filter.BootstrapMultipleChoiceFilter;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.filter.BootstrapTextFilter;
@@ -50,8 +51,9 @@ public class AttendeeTablePanel extends GenericPanel<AttendeeEntrySpecification>
         super.onInitialize();
 
         IModel<AttendeeEntrySpecification> model = getModel();
-        AttendeeDataProvider dataProvider = new AttendeeDataProvider(attendeeEntryRepository, model);
-        dataProvider.setSort(new String[]{"invitationStatusOrder"}, SortOrder.ASCENDING);
+        SortState sortState = new SortState();
+        AttendeeDataProvider dataProvider = new AttendeeDataProvider(model, sortState, attendeeEntryRepository);
+        dataProvider.setPropertySortOrder(new String[]{"invitationStatusOrder"}, SortOrder.ASCENDING);
 
 
         FilterForm<AttendeeEntrySpecification> filterForm = new FilterForm<>("filterForm", dataProvider);

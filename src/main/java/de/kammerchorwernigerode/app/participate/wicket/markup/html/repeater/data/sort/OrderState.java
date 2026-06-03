@@ -1,9 +1,8 @@
 package de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.sort;
 
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
-import org.apache.wicket.util.io.IClusterable;
 import org.jspecify.annotations.Nullable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 
@@ -12,7 +11,7 @@ import java.util.Optional;
 import lombok.NonNull;
 import lombok.Setter;
 
-public class OrderSortState implements ISortState<String>, IClusterable {
+public class OrderState implements SpringSortState<String> {
 
     @Nullable
     @Setter
@@ -38,19 +37,14 @@ public class OrderSortState implements ISortState<String>, IClusterable {
         return translate(order.getDirection());
     }
 
+    @Override
+    public Sort getSort() {
+        return getOrder()
+            .map(Sort::by)
+            .orElseGet(Sort::unsorted);
+    }
+
     public Optional<Order> getOrder() {
         return Optional.ofNullable(order);
-    }
-
-    private static Direction translate(SortOrder sortOrder) {
-        return sortOrder == SortOrder.ASCENDING
-            ? Direction.ASC
-            : Direction.DESC;
-    }
-
-    private static SortOrder translate(Direction direction) {
-        return direction.isAscending()
-            ? SortOrder.ASCENDING
-            : SortOrder.DESCENDING;
     }
 }
