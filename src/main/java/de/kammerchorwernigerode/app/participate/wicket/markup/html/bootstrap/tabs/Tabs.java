@@ -1,11 +1,14 @@
 package de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.tabs;
 
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.util.Attributes;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.list.LoopItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -16,6 +19,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class Tabs<T extends ITab> extends AjaxTabbedPanel<T> {
+
+    private boolean fill;
 
     private final String queryParameterKey;
 
@@ -35,6 +40,12 @@ public class Tabs<T extends ITab> extends AjaxTabbedPanel<T> {
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        WebMarkupContainer tabsContainer = (WebMarkupContainer) get("tabs-container");
+
+        Tablist tablist = new Tablist("tablist");
+        tabsContainer.add(tablist);
+
         int selectedTab = resolveSelectedTab();
         setSelectedTab(selectedTab);
     }
@@ -90,6 +101,11 @@ public class Tabs<T extends ITab> extends AjaxTabbedPanel<T> {
         return link;
     }
 
+    public Tabs<T> setFill(boolean fill) {
+        this.fill = fill;
+        return this;
+    }
+
     protected void appendUpdateUrlScript(AjaxRequestTarget target, int index) {
         target.appendJavaScript(createUpdateUrlScript(queryParameterKey, index));
     }
@@ -100,5 +116,20 @@ public class Tabs<T extends ITab> extends AjaxTabbedPanel<T> {
             url.searchParams.set('%s', %d);
             history.replaceState(null, '', url.toString())\
             """.formatted(queryParameterKey.replace("'", "\\'"), index);
+    }
+
+
+    private class Tablist extends TransparentWebMarkupContainer {
+
+        public Tablist(String id) {
+            super(id);
+        }
+
+        @Override
+        protected void onComponentTag(ComponentTag tag) {
+            super.onComponentTag(tag);
+
+            Attributes.addClass(tag, fill ? "nav-fill" : "");
+        }
     }
 }
