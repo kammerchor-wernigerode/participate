@@ -17,7 +17,6 @@ public class LocalDateTimeFormControl extends FormControl<LocalDateTime> {
     protected FormComponent<LocalDateTime> createFormComponent(String wicketId) {
         return new DateTimeLocalTextField(wicketId, getModel()) {
 
-
             @Override
             protected void onComponentTag(ComponentTag tag) {
                 tag.put("type", "datetime-local");
