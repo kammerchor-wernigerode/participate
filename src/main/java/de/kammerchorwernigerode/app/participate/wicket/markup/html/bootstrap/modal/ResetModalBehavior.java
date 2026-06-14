@@ -22,6 +22,6 @@ public class ResetModalBehavior extends ModalHiddenEventBehavior {
             .disableAnimation(false)
             .size(Size.DEFAULT)
             .fullscreen(Fullscreen.DEFAULT)
-            .clearActions();
+            .labelledby(null);
     }
 }

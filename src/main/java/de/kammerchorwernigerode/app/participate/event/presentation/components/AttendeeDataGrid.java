@@ -15,6 +15,7 @@ import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.for
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.form.DropDownChoiceBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.form.TextFieldBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.modal.GenericModalBody;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.modal.Modal;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.modal.ModalHiddenEventBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.form.LocalDateTimeFormControl;
@@ -37,7 +38,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -220,10 +220,10 @@ public class AttendeeDataGrid extends Panel {
             Modal modal = new Modal("modal")
                 .centered(true)
                 .size(Modal.Size.SMALL)
-                .title(new ResourceModel("attendee.presence"))
-                .content(id -> new PeriodModalContent(id, model, item.getModel()))
-                .addCloseAction(new ResourceModel("close"))
-                .addSubmitAction(new ResourceModel("save"));
+                .content(id -> new PeriodModalContent(id, model, item.getModel())
+                    .title(new ResourceModel("attendee.presence"))
+                    .addCloseAction(new ResourceModel("close"))
+                    .addSubmitAction(new ResourceModel("save")));
             modal.add(new ModalHiddenEventBehavior() {
 
                 @Override
@@ -307,7 +307,7 @@ public class AttendeeDataGrid extends Panel {
         }
 
 
-        private static class PeriodModalContent extends GenericPanel<AttendeeDto> {
+        private static class PeriodModalContent extends GenericModalBody<AttendeeDto> {
 
             private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
                 .ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.SHORT);

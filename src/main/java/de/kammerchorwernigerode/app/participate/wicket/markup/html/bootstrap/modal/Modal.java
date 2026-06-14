@@ -1,12 +1,5 @@
 package de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.modal;
 
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.BootstrapButton;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.ButtonBehavior;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.button.Buttons;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.Icon;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.IconType;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.ComponentListView;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -14,25 +7,15 @@ import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.util.string.Strings;
-import org.danekja.java.util.function.serializable.SerializableConsumer;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -41,13 +24,8 @@ import lombok.RequiredArgsConstructor;
 public class Modal extends Panel {
 
     public static final String CONTENT_WICKET_ID = "content";
-    public static final String ACTION_WICKET_ID = "action";
 
-    private final Label title;
-    private final WebMarkupContainer header;
-    private final WebMarkupContainer body;
-    private final WebMarkupContainer footer;
-    private final List<Component> actions = new LinkedList<>();
+    private final Dialog dialog;
 
     private boolean staticBackdrop = false;
     private boolean scrollable = false;
@@ -55,14 +33,12 @@ public class Modal extends Panel {
     private boolean disableAnimation = false;
     private Size size = Size.DEFAULT;
     private Fullscreen fullscreen = Fullscreen.DEFAULT;
+    private Component label;
 
     public Modal(String id) {
         super(id);
 
-        this.title = new Label("title", Model.of());
-        this.header = new WebMarkupContainer("header");
-        this.body = new WebMarkupContainer("body");
-        this.footer = new WebMarkupContainer("footer");
+        this.dialog = new Dialog("dialog");
 
         initialize();
     }
@@ -76,23 +52,11 @@ public class Modal extends Panel {
         return CONTENT_WICKET_ID;
     }
 
-    public final String getActionId() {
-        return ACTION_WICKET_ID;
-    }
-
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
-        title.setOutputMarkupId(true);
-
-        header.add(title);
-        header.add(new CloseButton("closeButton"));
-        footer.add(new ComponentListView("actions", actions));
-
-        WebMarkupContainer dialog;
-        add(dialog = new Dialog("dialog"));
-        dialog.add(header, body, footer);
+        add(dialog);
     }
 
     @Override
@@ -107,25 +71,15 @@ public class Modal extends Panel {
 
         tag.put("class", String.join(" ", cssClassNames));
         tag.put("tabindex", -1);
-        tag.put("aria-labelledby", title.getMarkupId());
+        if (null != label) {
+            tag.put("aria-labelledby", label.getMarkupId());
+        }
         tag.put("aria-hidden", true);
 
         if (staticBackdrop) {
             tag.put("data-bs-backdrop", "static");
             tag.put("data-bs-keyboard", false);
         }
-    }
-
-    @Override
-    protected void onConfigure() {
-        super.onConfigure();
-
-        if (Strings.isEmpty(title.getDefaultModelObjectAsString())) {
-            title.setDefaultModelObject("&nbsp;");
-            title.setEscapeModelStrings(false);
-        }
-
-        footer.setVisible(!actions.isEmpty());
     }
 
     @Override
@@ -167,8 +121,8 @@ public class Modal extends Panel {
         return this;
     }
 
-    public Modal title(IModel<?> title) {
-        this.title.setDefaultModel(title);
+    public Modal labelledby(Component component) {
+        this.label = component;
         return this;
     }
 
@@ -182,46 +136,12 @@ public class Modal extends Panel {
             throw new IllegalArgumentException("Invalid content Wicket ID. Must be '" + CONTENT_WICKET_ID + "'.");
         }
 
-        content.setRenderBodyOnly(true);
-        body.addOrReplace(content);
-        return this;
-    }
-
-    public Modal addSubmitAction(IModel<?> label) {
-        return addSubmitAction(label, target -> { });
-    }
-
-    public Modal addSubmitAction(IModel<?> label, SerializableConsumer<AjaxRequestTarget> onAfterSubmit) {
-        return addAction(id -> new SubmitAction(id, label) {
-
-            @Override
-            protected void onAfterSubmit(AjaxRequestTarget target) {
-                super.onAfterSubmit(target);
-                onAfterSubmit.accept(target);
-            }
-        });
-    }
-
-    public Modal addCloseAction(IModel<?> label) {
-        return addAction(id -> new CloseAction(id, label));
-    }
-
-    public Modal addAction(SerializableFunction<String, Action> constructor) {
-        Action button = constructor.apply(ACTION_WICKET_ID);
-        return addAction(button);
-    }
-
-    public Modal addAction(Action action) {
-        if (!ACTION_WICKET_ID.equals(action.getId())) {
-            throw new IllegalArgumentException("Invalid action Wicket ID. Must be '" + ACTION_WICKET_ID + "'.");
+        if (content instanceof ModalBody body) {
+            labelledby(body.getDialogContent().getLabel());
         }
 
-        actions.add(action);
-        return this;
-    }
-
-    public Modal clearActions() {
-        actions.clear();
+        content.setRenderBodyOnly(true);
+        this.dialog.addOrReplace(content);
         return this;
     }
 
@@ -233,7 +153,7 @@ public class Modal extends Panel {
     }
 
     private void assertContent() {
-        if (null == body.get(CONTENT_WICKET_ID)) {
+        if (null == dialog.get(CONTENT_WICKET_ID)) {
             throw new WicketRuntimeException("Missing modal content. Use modal.content(...).show(...)");
         }
     }
@@ -256,11 +176,11 @@ public class Modal extends Panel {
         target.prependJavaScript(createActionScript(getMarkupId(true), "hide"));
     }
 
-    protected static String createInitializationScript(String markupId) {
+    public static String createInitializationScript(String markupId) {
         return "new bootstrap.Modal(document.getElementById('" + markupId + "'));";
     }
 
-    protected static String createActionScript(String markupId, String action) {
+    public static String createActionScript(String markupId, String action) {
         return "bootstrap.Modal.getInstance(document.getElementById('" + markupId + "'))." + action + "();";
     }
 
@@ -290,128 +210,6 @@ public class Modal extends Panel {
         }
     }
 
-
-    public abstract static class Action extends WebMarkupContainer implements BootstrapButton<Action> {
-
-        private final Icon icon;
-        private final IModel<?> label;
-        private final ButtonBehavior buttonBehavior = new ButtonBehavior();
-
-        public Action(String id, IModel<?> label) {
-            super(id);
-            this.icon = new Icon("icon", (IconType) null);
-            this.label = label;
-        }
-
-        @Override
-        public Action setVariant(Buttons.Variant variant) {
-            buttonBehavior.setVariant(variant);
-            return this;
-        }
-
-        @Override
-        public Action setSize(Buttons.Size size) {
-            buttonBehavior.setSize(size);
-            return this;
-        }
-
-        public Action setIcon(IconType icon) {
-            this.icon.setType(icon);
-            return this;
-        }
-
-        @Override
-        protected void onInitialize() {
-            super.onInitialize();
-
-            AbstractLink button = createButton("button");
-            configure(button);
-            button.add(buttonBehavior);
-            add(button);
-
-            button.add(icon);
-
-            Label body = new Label("label", label);
-            body.setRenderBodyOnly(true);
-            button.add(body);
-        }
-
-        @Override
-        protected void onDetach() {
-            super.onDetach();
-            label.detach();
-        }
-
-        protected abstract AbstractLink createButton(String wicketId);
-
-        protected void configure(AbstractLink button) {
-            button.add(new AttributeModifier("type", "button"));
-        }
-    }
-
-    public static class CloseAction extends Action {
-
-        public CloseAction(String id, IModel<?> label) {
-            super(id, label);
-        }
-
-        @Override
-        protected AbstractLink createButton(String wicketId) {
-            return new CloseButton(wicketId);
-        }
-    }
-
-    public static class SubmitAction extends Action {
-
-        public SubmitAction(String id, IModel<?> label) {
-            super(id, label);
-            setVariant(Buttons.Variant.PRIMARY);
-        }
-
-        @Override
-        protected AbstractLink createButton(String wicketId) {
-            Form<?> form = form().orElse(null);
-            return new AjaxSubmitLink(wicketId, form) {
-
-                @Override
-                protected void onAfterSubmit(AjaxRequestTarget target) {
-                    SubmitAction.this.onAfterSubmit(target);
-                }
-
-                @Override
-                protected void onError(AjaxRequestTarget target) {
-                    SubmitAction.this.onError(target);
-                }
-            };
-        }
-
-        @Override
-        protected void configure(AbstractLink link) {
-            super.configure(link);
-
-            form().ifPresent(form -> {
-                link.add(new AttributeModifier("type", "submit"));
-                link.add(new AttributeModifier("form", form.getMarkupId(true)));
-            });
-        }
-
-        @SuppressWarnings("rawtypes")
-        private Optional<Form> form() {
-            Modal modal = findParent(Modal.class);
-            return modal.streamChildren()
-                .filter(Form.class::isInstance)
-                .map(Form.class::cast)
-                .findFirst();
-        }
-
-        protected void onAfterSubmit(AjaxRequestTarget target) {
-            Modal modal = findParent(Modal.class);
-            modal.appendHideDialogJavaScript(target);
-        }
-
-        protected void onError(AjaxRequestTarget target) {
-        }
-    }
 
     public static class CloseButton extends AjaxLink<Void> {
 
