@@ -170,7 +170,9 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
 
         @Override
         public EventDetailsPanel getPanel(String panelId) {
-            return new EventDetailsPanel(panelId, model);
+            EventDetailsPanel tabPanel = new EventDetailsPanel(panelId, model);
+            tabPanel.add(ClassAttributeModifier.append("class", "mt-3"));
+            return tabPanel;
         }
     }
 
@@ -185,7 +187,9 @@ public class EventDetailsPage extends ParticipatePage implements IGenericCompone
 
         @Override
         public AttendeeDataGridTabPanel getPanel(String panelId) {
-            return new AttendeeDataGridTabPanel(panelId, model);
+            AttendeeDataGridTabPanel tabPanel = new AttendeeDataGridTabPanel(panelId, model);
+            tabPanel.add(ClassAttributeModifier.append("class", "mt-3"));
+            return tabPanel;
         }
     }
 
