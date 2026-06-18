@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+    <div class="modal-body">
+        <ul class="list-group overflow-y-auto" style="height: 50dvh">
+            <li wicket:id="persons" class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <span wicket:id="name"></span>
+                    <wicket:enclosure>
+                        <br />
+                        <small class="text-muted" wicket:id="emailAddress"></small>
+                    </wicket:enclosure>
+                </div>
+                <button type="button" wicket:id="pickButton"></button>
+            </li>
+        </ul>
+    </div>
+    <div class="modal-footer" wicket:id="footer"></div>
+</wicket:panel>

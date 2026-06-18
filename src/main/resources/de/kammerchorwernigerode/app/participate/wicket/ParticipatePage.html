@@ -30,6 +30,14 @@
                                     <span wicket:id="usernameLabel"></span>
                                 </a>
                                 <ul class="dropdown-menu">
+                                    <wicket:enclosure>
+                                        <li>
+                                            <a href="#" class="dropdown-item" wicket:id="createProfileLink">
+                                                <i class="bi bi-person-add"></i>
+                                                <wicket:message key="createProfileLink.body"></wicket:message>
+                                            </a>
+                                        </li>
+                                    </wicket:enclosure>
                                     <li>
                                         <a href="#" target="_blank" class="dropdown-item"
                                            wicket:id="accountSettingsLink">

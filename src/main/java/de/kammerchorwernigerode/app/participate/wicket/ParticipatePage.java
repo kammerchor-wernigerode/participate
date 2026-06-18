@@ -1,6 +1,10 @@
 package de.kammerchorwernigerode.app.participate.wicket;
 
 import de.kammerchorwernigerode.app.participate.event.presentation.ui.overview.EventsPage;
+import de.kammerchorwernigerode.app.participate.person.infrastructure.PersonRecordRepository;
+import de.kammerchorwernigerode.app.participate.person.presentation.components.profile.ProfileCreationModalContent;
+import de.kammerchorwernigerode.app.participate.person.presentation.model.PersonDto;
+import de.kammerchorwernigerode.app.participate.person.presentation.model.ProfileDto;
 import de.kammerchorwernigerode.app.participate.person.presentation.ui.overview.PersonsPage;
 import de.kammerchorwernigerode.app.participate.security.AuthenticationResolver;
 import de.kammerchorwernigerode.app.participate.security.core.AccountUrl;
@@ -12,6 +16,8 @@ import org.apache.wicket.Application;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.CssContentHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -20,6 +26,8 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
@@ -28,6 +36,10 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.springframework.security.core.AuthenticatedPrincipal;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 
 import java.net.URI;
 import jakarta.servlet.ServletContext;
@@ -48,6 +60,9 @@ public class ParticipatePage extends BootstrapPage {
 
     @SpringBean
     private ServletContext servletContext;
+
+    @SpringBean
+    private PersonRecordRepository personRecordRepository;
 
     @Getter
     private Layout layout = Layout.BOXED;
@@ -99,6 +114,21 @@ public class ParticipatePage extends BootstrapPage {
         userNameLabel.setRenderBodyOnly(true);
         navbarCollapse.add(userNameLabel);
 
+        ProfileDto profileDto = createProfileDto();
+        IModel<ProfileDto> profileModel = new CompoundPropertyModel<>(profileDto);
+        AjaxLink<ProfileDto> createProfileLink = new AjaxLink<>("createProfileLink", profileModel) {
+
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                BootstrapPage.get().getModal()
+                    .content(id -> new ProfileCreationModalContent(id, getModel()))
+                    .show(target);
+            }
+        };
+        createProfileLink.setVisible(!personRecordRepository.existsByUserEmailAddress(
+            profileDto.getModel().getEmailAddress()));
+        navbarCollapse.add(createProfileLink);
+
         ExternalLink accountSettingsLink = new ExternalLink("accountSettingsLink", new AccountUrlModel());
         navbarCollapse.add(accountSettingsLink);
 
@@ -129,6 +159,26 @@ public class ParticipatePage extends BootstrapPage {
             }\
             """, "participate-page"));
         response.render(ParticipateCssResourceReference.asHeaderItem());
+    }
+
+    private ProfileDto createProfileDto() {
+        ProfileDto profileDto = new ProfileDto();
+        PersonDto personDto = new PersonDto();
+        populate(personDto);
+        profileDto.setModel(personDto);
+        return profileDto;
+    }
+
+    private void populate(PersonDto personDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof OAuth2AuthenticationToken token) {
+            if (token.getPrincipal() instanceof DefaultOidcUser user) {
+                personDto.setFirstName(user.getGivenName());
+                personDto.setLastName(user.getFamilyName());
+                personDto.setFileName(user.getNickName());
+                personDto.setEmailAddress(user.getEmail());
+            }
+        }
     }
 
 
