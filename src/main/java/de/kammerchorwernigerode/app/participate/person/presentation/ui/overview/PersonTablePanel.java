@@ -9,7 +9,7 @@ import de.kammerchorwernigerode.app.participate.wicket.bootstrap.BootstrapPage;
 import de.kammerchorwernigerode.app.participate.wicket.clipboardjs.ClipboardJsBehavior;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.ContentDivision;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.bootstrap.icon.Bi;
-import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.Icon;
+import de.kammerchorwernigerode.app.participate.wicket.markup.html.image.IconPanel;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.sort.SortState;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.EnumLambdaColumn;
 import de.kammerchorwernigerode.app.participate.wicket.markup.html.repeater.data.table.filter.BootstrapMultipleChoiceFilter;
@@ -146,7 +146,7 @@ public class PersonTablePanel extends GenericPanel<PersonEntrySpecification> {
             EmailLinkLabel emailLinkLabel = new EmailLinkLabel(view.newChildId(), rowModel);
             view.add(emailLinkLabel);
 
-            Icon.Panel icon = new Icon.Panel(view.newChildId(), Bi.copy);
+            IconPanel icon = new IconPanel(view.newChildId(), Bi.copy);
             icon.add(new ClipboardJsBehavior() {
 
                 @Override
