@@ -64,4 +64,4 @@ A few things only become clear after reading several files:
 
 - Branching follows git-flow: `release/x.y.z` and `hotfix/x.y.z` branches merge into `main`. The version is set in `pom.xml` ("Bump version number to …" commits).
 - Pushing a `v*` tag builds and pushes the multi-arch `kchwr/participate` Docker image. CI (`maven.yml`) runs on pushes and PRs to `main`.
-- `.editorconfig`: 4-space indent, LF line endings.
+- `.editorconfig`: 4-space indent (2 for YAML/Markdown), LF line endings.
