@@ -6,64 +6,84 @@ singers did not answer to invitations of the board members.
 
 ## Setup
 
-Copy or move the sample files in the rest and configure your properties.
+You need JDK 17, Maven, and Docker for the local database and mail server. Configuration lives in
+`src/main/resources/application*.yml`; there are no sample files to copy. Override individual properties with
+environment variables or command-line arguments instead of editing those files.
+
+Start a database and [FakeSMTP](https://github.com/Nilhcem/FakeSMTP). Both databases sit behind compose profiles, so
+pick one; FakeSMTP always starts. Received emails are stored in `$HOME/received-emails`.
 
 ```bash
-cp src/main/resources/application.sample.properties src/main/resources/application.properties
-
-cp src/main/resources/liquibase.sample.properties src/main/resources/liquibase.properties
+docker compose --profile mariadb up -d     # or: --profile postgres
 ```
 
-Install the maven dependencies.
+Start the application with the matching Spring profile. The default profile has no datasource.
 
 ```bash
-mvn install
+SPRING_PROFILES_ACTIVE=mariadb mvn spring-boot:run     # or: postgres
 ```
 
-You'll need a MySQL database or a running Docker Container with MySQL. Start the application with
+The application listens on http://localhost:8080 (actuator on port 8081). Liquibase creates the schema on first start.
+Sign in with the password configured in `app.participate-password`.
+
+### Profiles
+
+| Profile               | Purpose                                                                       |
+|-----------------------|-------------------------------------------------------------------------------|
+| `mariadb`, `postgres` | Datasource for the respective database                                        |
+| `keycloak`            | OAuth2 client registration for the local Keycloak realm                       |
+| `oauth2`, `oidc`      | Sign in through an OAuth2/OIDC provider (`oidc` implies `oauth2`)             |
+| `metrics`             | Exposes the Prometheus endpoint on the actuator port                          |
+
+To try single sign-on locally, start Keycloak on port 8180 and add the profiles:
 
 ```bash
-mvn spring-boot:run
+docker compose -f compose.keycloak.yaml up -d
+SPRING_PROFILES_ACTIVE=mariadb,keycloak,oidc mvn spring-boot:run
 ```
 
 ### Docker
 
-Start a container with
+The image activates the `mariadb` profile by default. Configure it with Spring Boot's
+[environment variable binding](https://docs.spring.io/spring-boot/reference/features/external-config.html#features.external-config.typesafe-configuration-properties.relaxed-binding.environment-variables):
+
 ```bash
+docker network create participate
+
 docker run \
- --env APPLICATION_NAME='Application Name' \
- --env APPLICATION_CUSTOMER='Application Customer' \
- --env APPLICATION_PASSWORD='application_password' \
- --env DATABASE_HOST='mysql' \
- --env DATABASE_PORT=3306 \
- --env DATABASE_NAME='participate' \
- --env DATABASE_USER='participate' \
- --env DATABASE_PASSWORD='participate' \
- --env SMTP_HOST='mail.domain.tld' \
- --env SMTP_PORT=587 \
- --env SMTP_USER='mail.user@domain.tld' \
- --env SMTP_PASSWORD='mail_password' \
- --env MAIL_FROM='mail.user@domain.tld' \
- --env MAIL_REPLY_TO='no-reply@domain.tld' \
- --env BASE_URL='http://localhost:8080' \
- --env LOG_PATH=/tmp \
+ --env SPRING_DATASOURCE_URL='jdbc:mariadb://participate-db:3306/participate' \
+ --env SPRING_DATASOURCE_USERNAME='participate' \
+ --env SPRING_DATASOURCE_PASSWORD='participate' \
+ --env SPRING_MAIL_HOST='mail.domain.tld' \
+ --env SPRING_MAIL_PORT=587 \
+ --env SPRING_MAIL_USERNAME='mail.user@domain.tld' \
+ --env SPRING_MAIL_PASSWORD='mail_password' \
+ --env SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true \
+ --env SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true \
+ --env APP_NOTIFICATION_EMAIL_SENDER_FROM='mail.user@domain.tld' \
+ --env APP_NOTIFICATION_EMAIL_SENDER_REPLYTO='no-reply@domain.tld' \
+ --env APP_BASEURL='http://localhost:8080' \
+ --env APP_CUSTOMER='Application Customer' \
+ --env APP_PARTICIPATEPASSWORD='application_password' \
+ --env APP_CRYPTO_SESSIONSECRET='a-long-random-secret' \
+ --env APP_CRYPTO_PBESALT='8charsxx' \
  -p 8080:8080 \
+ --network participate \
  --name participate \
- --link participate-db:mysql \
  kchwr/participate
 ```
-make sure you are running a database container too.
 
-*The Docker example does not cover proprietary features. Check the `Feature` class for more information.*
+The database container must run on the same network as `participate-db`. For PostgreSQL, set
+`SPRING_PROFILES_ACTIVE=postgres` and a `jdbc:postgresql://` URL.
 
----
-
-Run the command below to start a development database as well as [FakeSMTP](https://github.com/Nilhcem/FakeSMTP).
-Received emails will be stored in `$HOME/received-emails`.
-
-```bash
-docker compose up -d
-```
+- `APP_CRYPTO_PBESALT` must be exactly 8 characters. If you leave both crypto values empty, the application generates
+  random ones on each start, which invalidates "remember me" logins after every restart.
+- Credentials can also be read from files (Docker secrets) by passing a path in one of `SPRING_DATASOURCE_USERNAME_FILE`,
+  `SPRING_DATASOURCE_PASSWORD_FILE`, `SPRING_MAIL_USERNAME_FILE`, `SPRING_MAIL_PASSWORD_FILE`,
+  `APP_CRYPTO_SESSION_SECRET_FILE`, `APP_CRYPTO_PBE_SALT_FILE` or
+  `SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT_SECRET_FILE`. Note that these names keep the underscores.
+- The optional features below are configured under `app.features` (for example
+  `APP_FEATURES_REMINDOVERDUE_ENABLED=true`).
 
 ## Deployment
 
@@ -76,8 +96,8 @@ creates an executable jar file. Start the application with
 java -jar target/participate-5.4.1.jar
 ```
 
-on your machine. Don't forget to configure the properties files to fit your environment or follow the
-[Docker instructions](#docker) above to deploy the application with Docker.
+on your machine with `SPRING_PROFILES_ACTIVE` and the environment variables from the [Docker instructions](#docker)
+set to fit your environment, or deploy the application with Docker.
 
 ## Features
 

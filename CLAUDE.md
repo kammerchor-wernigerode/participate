@@ -36,8 +36,6 @@ docker compose -f compose.keycloak.yaml up -d   # optional, for the keycloak/oau
 - Actuator runs on port 8081; the app runs on 8080.
 - `DockerSecretProcessor` (registered in `META-INF/spring.factories`) resolves `*_FILE` environment variables into credential properties for Docker secrets.
 
-The README's setup section is outdated: it mentions `application.sample.properties`, which no longer exists. Configuration lives in `application*.yml`.
-
 ## Tests
 
 - Most tests run against H2 in PostgreSQL mode with `ddl-auto: create` and Liquibase disabled (`src/test/resources/application.yml`).
