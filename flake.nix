@@ -7,9 +7,14 @@
     let
       lib = nixpkgs.lib;
       forSystems = systems: f: lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
-      allSystems = [ "aarch64-linux" "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
+      linuxSystems = [ "aarch64-linux" "x86_64-linux" ];
+      allSystems = linuxSystems ++ [ "aarch64-darwin" "x86_64-darwin" ];
     in
     {
+      packages = forSystems linuxSystems (pkgs: {
+        default = pkgs.callPackage ./nix/package.nix { };
+      });
+
       devShells = forSystems allSystems (pkgs: {
         default = pkgs.mkShell {
           packages = [ pkgs.jdk17 (pkgs.maven.override { jdk_headless = pkgs.jdk17; }) ];

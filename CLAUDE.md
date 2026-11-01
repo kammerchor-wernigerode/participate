@@ -56,7 +56,26 @@ running Docker daemon.
 
 ## Nix Flake
 
-`devShells.<system>.default` provides JDK 17 and Maven for Linux and macOS.
+| Output | Purpose |
+|-|-|
+| `devShells.<system>.default` | JDK 17 and Maven for all four systems |
+| `packages.{aarch64,x86_64}-linux.default` | App built offline from `nix/package.nix` |
+
+```bash
+nix build --no-link .#packages.aarch64-linux.default -L
+```
+
+On a Mac, Linux derivations build on a `linux-builder`. Flakes only see files tracked by Git, so `git add` new files
+before building.
+
+The package resolves Maven dependencies in a fixed-output derivation pinned by
+`mvnHash` in `nix/package.nix`. Any change to `pom.xml` that touches
+dependencies or plugins must update the hash in the same commit. Set it to
+`lib.fakeHash`, build, and copy the hash from the error message.
+
+The Nix build skips the Sass Maven plugin, because it downloads a binary that
+does not run in the sandbox. It compiles the SCSS with `dart-sass` from nixpkgs
+instead.
 
 The Docker build in `Dockerfile` stays in use until the host runs NixOS.
 
