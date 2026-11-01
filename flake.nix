@@ -15,6 +15,13 @@
         default = pkgs.callPackage ./nix/package.nix { };
       });
 
+      nixosModules.default = import ./nix/module.nix self;
+
+      checks.aarch64-darwin.vm = import ./nix/test.nix {
+        inherit self;
+        pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+      };
+
       devShells = forSystems allSystems (pkgs: {
         default = pkgs.mkShell {
           packages = [ pkgs.jdk17 (pkgs.maven.override { jdk_headless = pkgs.jdk17; }) ];

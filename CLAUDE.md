@@ -60,13 +60,25 @@ running Docker daemon.
 |-|-|
 | `devShells.<system>.default` | JDK 17 and Maven for all four systems |
 | `packages.{aarch64,x86_64}-linux.default` | App built offline from `nix/package.nix` |
+| `nixosModules.default` | `services.participate` from `nix/module.nix` |
+| `checks.aarch64-darwin.vm` | NixOS VM test from `nix/test.nix` |
 
 ```bash
 nix build --no-link .#packages.aarch64-linux.default -L
+nix build --no-link .#checks.aarch64-darwin.vm -L
 ```
 
-On a Mac, Linux derivations build on a `linux-builder`. Flakes only see files tracked by Git, so `git add` new files
+On a Mac, Linux derivations build on a `linux-builder`. The VM test itself runs
+on the Mac with QEMU and needs the system features `nixos-test` and
+`apple-virt`. Flakes only see files tracked by Git, so `git add` new files
 before building.
+
+The module runs the app as `DynamicUser` named `participate`. It reaches
+PostgreSQL through `/run/postgresql` with `peer` authentication via
+junixsocket. Secrets are file paths passed as systemd credentials. Spring reads
+them with `configtree`, each file named after its property. Non-secret options
+end up in a generated YAML file. Property names in `nix/module.nix` must match
+the `@ConfigurationProperties` in the code.
 
 The package resolves Maven dependencies in a fixed-output derivation pinned by
 `mvnHash` in `nix/package.nix`. Any change to `pom.xml` that touches
