@@ -193,10 +193,9 @@ in
         RestartSec = 10;
         SuccessExitStatus = 143;
 
-        MemoryMax = "1G";
-        MemoryHigh = "896M";
-        CPUQuota = "100%";
-        TasksMax = 256;
+        MemoryMax = lib.mkDefault "1G";
+        CPUQuota = lib.mkDefault "100%";
+        TasksMax = lib.mkDefault 256;
 
         PrivateTmp = true;
         PrivateDevices = true;

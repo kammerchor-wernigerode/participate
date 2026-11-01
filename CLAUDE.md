@@ -78,7 +78,9 @@ PostgreSQL through `/run/postgresql` with `peer` authentication via
 junixsocket. Secrets are file paths passed as systemd credentials. Spring reads
 them with `configtree`, each file named after its property. Non-secret options
 end up in a generated YAML file. Property names in `nix/module.nix` must match
-the `@ConfigurationProperties` in the code.
+the `@ConfigurationProperties` in the code. Resource limits are defaults that
+the host overrides through `systemd.services.participate.serviceConfig`. The JVM
+sizes its heap from the memory limit of the cgroup.
 
 The package resolves Maven dependencies in a fixed-output derivation pinned by
 `mvnHash` in `nix/package.nix`. Any change to `pom.xml` that touches
