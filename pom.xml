@@ -14,7 +14,7 @@
     <groupId>de.vinado.wicket</groupId>
     <artifactId>participate</artifactId>
     <packaging>jar</packaging>
-    <version>5.4.1</version>
+    <version>5.4.2</version>
 
     <name>participate</name>
     <description>Participation Manager for Kammerchor Wernigerode e.V.</description>
@@ -23,7 +23,7 @@
         <resource.delimiter>^</resource.delimiter>
         <java.version>17</java.version>
 
-        <dependency.guava.version>32.0.0-jre</dependency.guava.version>
+        <dependency.guava.version>33.7.2-jre</dependency.guava.version>
         <dependency.junixsocket.version>2.10.1</dependency.junixsocket.version>
         <dependency.opencsv.version>5.12.0</dependency.opencsv.version>
         <dependency.sass.version>1.92.1</dependency.sass.version>
