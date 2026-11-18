@@ -73,6 +73,9 @@ on the Mac with QEMU and needs the system features `nixos-test` and
 `apple-virt`. Flakes only see files tracked by Git, so `git add` new files
 before building.
 
+`.github/workflows/nix.yml` builds both Linux packages natively. It fails
+early when `mvnHash` or the build breaks on one system.
+
 The module runs the app as `DynamicUser` named `participate`. It reaches
 PostgreSQL through `/run/postgresql` with `peer` authentication via
 junixsocket. Secrets are file paths passed as systemd credentials. Spring reads
